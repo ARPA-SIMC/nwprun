@@ -63,9 +63,8 @@ mkdir -p $BUFR_WORKDIR
 rm -f $BUFR_WORKDIR/*
 cd $BUFR_WORKDIR
 
-#ftpurl="ftp://ftp.meteoam.it/BUFR/"
-#ftpgrep='^[A-Z]\{4\}_[0-9]\{10\}.bz2$'
-ncftpauth="-f $NWPCONFDIR/.login.cfg"
+# improve
+ncftpauth="-f $basedir/.auth/meteoam.cfg"
 ftpdir="BUFR/"
 #obstypes="AIRC AMDA AMDN B002 B004 BUON OCEA PILN PILO RAOB SHIN SHIP SYNN SYNO TEMP"
 obstypes="AIRC AMDA B002 B004 OCEA PILO SHIP SYNO TEMP"
