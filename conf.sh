@@ -11,11 +11,11 @@ else
 fi
 
 # ARKIMET
-ARKI_DIR=/arkimet/arkimet
+ARKI_DIR=$OPE/arkimet
 ARKI_CONF=$ARKI_DIR/config
 ARKI_SCAN_METHOD=arki_importer
-ARKI_IMPDIR=~arki-imp/arki-imp
-#
+ARKI_IMPDIR=$ARKI_DIR/inbound
+ARKI_URL=http://maialinux.metarpa:8090
 ARKI_USE_INOTIFY=Y
 
 # GRIB coding
