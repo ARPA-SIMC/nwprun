@@ -54,7 +54,7 @@ set -e
 # end of setup
 
 # redirect all to logfile
-exec >>$HOME/log/`basename $0`.log 2>&1
+exec >>$LOGDIR/`basename $0`.log 2>&1
 
 set -x
 
