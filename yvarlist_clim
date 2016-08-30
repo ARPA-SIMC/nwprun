@@ -1,0 +1,7 @@
+         'HSURF   ','FR_LAND ','SOILTYP ','PLCOV   ',
+         'LAI     ','ROOTDP  ','VIO3    ','HMO3    ','HHL     ',
+         'FOR_E   ','FOR_D   ',
+         'SSO_STDH','SSO_GAMMA','SSO_THETA','SSO_SIGMA',
+         'AER_SO4 ','AER_DUST','AER_ORG ','AER_BC  ','AER_SS  ',
+         'FR_LAKE ','DEPTH_LK'
+! all but Z0 also contained in lfff000000c
