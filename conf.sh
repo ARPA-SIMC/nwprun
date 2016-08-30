@@ -1,3 +1,15 @@
+# General
+if [ -n "$OPE" ]; then
+  WORKDIR=$OPE/$NWPCONF
+else
+  WORKDIR=$HOME/$NWPCONF
+fi
+if [ -n "$SCRATCH" ]; then
+  LOGDIR=$SCRATCH/log
+else
+  LOGDIR=$HOME/log
+fi
+
 # ARKIMET
 ARKI_DIR=/arkimet/arkimet
 ARKI_CONF=$ARKI_DIR/config
