@@ -10,7 +10,7 @@ dl_ftp() {
     if ncftpget $ncftpauth . $filelist; then
 
 # something downloaded, archive
-#	waitfor="$waitfor `putarki_archive_and_wait grib $localfilelist`"
+	waitfor="$waitfor `putarki_archive_and_wait grib $localfilelist`"
 	return 0
     fi
     return 1
@@ -34,7 +34,7 @@ set -e
 # end of setup
 
 # redirect all to logfile
-#exec >>$HOME/log/`basename $0`.log 2>&1
+exec >>$HOME/log/`basename $0`.log 2>&1
 
 set -x
 
