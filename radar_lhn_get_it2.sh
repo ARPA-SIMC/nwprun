@@ -37,7 +37,8 @@ if [ -n "$1" ]; then
 else
     restore_state radar_lhn_get.state
     # initial date from end of previous run or yesterday at 12
-    [ -n "$lastdate" ] || lastdate=`date -u --date '1 day ago' '+%Y%m%d1200'`
+    mindate=`date -u --date '1 day ago' '+%Y%m%d1200'`
+    [ -n "$lastdate" -a "$lastdate" -gt "$mindate" ] || lastdate=$mindate
     todate=`date -u '+%Y%m%d%H%M'`
     lastdate=`simc_create_radar_grib $lastdate $todate`
     [ -n "$lastdate" ] && save_state radar_lhn_get.state lastdate
