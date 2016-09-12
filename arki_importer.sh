@@ -1,8 +1,5 @@
 #!/bin/sh
 
-# avoid duplicates
-ps -u $USER -o pid= -o comm= | grep -v "^ *$$ " | grep arki_importer > /dev/null && exit 0
-
 unset LANG
 basedir=$HOME/ope
 # setup common to user scripts
@@ -15,8 +12,9 @@ set -e
 # source the main library module
 . $NWPCONFBINDIR/nwpconf.sh
 # source other optional modules
-#. $NWPCONFBINDIR/putarki.sh
 # end of setup
+
+nonunique_exit
 
 # redirect all to logfile
 exec >>$HOME/log/`basename $0`.log 2>&1
