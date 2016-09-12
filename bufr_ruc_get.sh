@@ -83,7 +83,7 @@ else
     lastdate=`datetime_add $lastdate 3`
 
     while [ "$lastdate" -lt "$curdate" ]; do
-	dl_ftp $lastdate && save_state bufr_ruc_get.state lastdate
+	dl_ftp $lastdate && save_state bufr_ruc_get.state lastdate || true
 	lastdate=`datetime_add $lastdate 3`
     done
 fi

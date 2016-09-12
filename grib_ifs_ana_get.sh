@@ -33,6 +33,8 @@ set -e
 . $NWPCONFBINDIR/putarki.sh
 # end of setup
 
+nonunique_exit
+
 # redirect all to logfile
 exec >>$HOME/log/`basename $0`.log 2>&1
 
@@ -59,7 +61,7 @@ else
     lastdate=`datetime_add $lastdate 6`
 
     while [ "$lastdate" -lt "$curdate" ]; do
-	dl_ftp $lastdate && save_state grib_ecmwf_ana_get.state lastdate
+	dl_ftp $lastdate && save_state grib_ecmwf_ana_get.state lastdate || true
 	lastdate=`datetime_add $lastdate 6`
     done
 fi
