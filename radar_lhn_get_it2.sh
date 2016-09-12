@@ -16,6 +16,8 @@ set -e
 . $NWPCONFBINDIR/simc_site.sh
 # end of setup
 
+nonunique_exit
+
 # redirect all to logfile
 exec >>$LOGDIR/`basename $0`.log 2>&1
 
