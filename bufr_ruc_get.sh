@@ -53,6 +53,8 @@ set -e
 . $NWPCONFBINDIR/putarki.sh
 # end of setup
 
+nonunique_exit
+
 # redirect all to logfile
 exec >>$LOGDIR/`basename $0`.log 2>&1
 
@@ -75,7 +77,7 @@ if [ -n "$1" ]; then
 else
     restore_state bufr_ruc_get.state
     # initial date from end of previous run or yesterday at 12
-    mindate=`date -u --date '1 day ago' '+%Y%m%d1200'`
+    mindate=`date -u --date '1 day ago' '+%Y%m%d12'`
     [ -n "$lastdate" -a "$lastdate" -gt "$mindate" ] || lastdate=$mindate
     curdate=`datetime_now`
     lastdate=`datetime_add $lastdate 3`
