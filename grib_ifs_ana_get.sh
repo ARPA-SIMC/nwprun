@@ -55,7 +55,7 @@ if [ -n "$1" ]; then
 else
     restore_state grib_ecmwf_ana_get.state
     # initial date from end of previous run or yesterday at 12
-    mindate=`date -u --date '1 day ago' '+%Y%m%d1200'`
+    mindate=`date -u --date '1 day ago' '+%Y%m%d12'`
     [ -n "$lastdate" -a "$lastdate" -gt "$mindate" ] || lastdate=$mindate
     curdate=`datetime_now`
     lastdate=`datetime_add $lastdate 6`
