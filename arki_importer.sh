@@ -57,7 +57,7 @@ daily_cleanup() {
 	mm=`date -u --date "$back days ago" "+%m"`
 	dd=`date -u --date "$back days ago" "+%d"`
 	log "cleaning $yy/$mm-$dd.grib1"
-	for file in $ARKI_DIR/*/$yy/$mm-$dd.grib1 $ARKI_DIR/*/$yy/$mm-$dd.bufr; do
+	for file in $ARKI_DIR/*/$yy/$mm-$dd.grib* $ARKI_DIR/*/$yy/$mm-$dd.bufr; do
 	    if [ "`stat -c %D $file 2>/dev/null`" = "$arki_dev" ]; then
 		rm -f $file
 	    fi
