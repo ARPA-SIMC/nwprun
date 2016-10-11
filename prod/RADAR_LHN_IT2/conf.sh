@@ -5,5 +5,4 @@ RADAR_LHN_GP=10
 ARKI_SCAN_METHOD=remote_arki_importer
 #
 ARKI_IMPDIR=~arki-imp/arki-imp
-#
 

@@ -8,7 +8,7 @@ case "$HOSTNAME" in
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=arki_importer
     ARKI_IMPDIR=$ARKI_DIR/inbound
-    ARKI_URL=http://maialinux.metarpa:8090
+    ARKI_URL=http://maialinux.metarpa:8090/dataset
     ARKI_USE_INOTIFY=Y
 # Radar
     RADAR_MOSAICODIR=$HOME/prelhn/Composito
@@ -24,7 +24,7 @@ case "$HOSTNAME" in
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=arki_importer
     ARKI_IMPDIR=~arki-imp/arki-imp
-    ARKI_URL=http://localhost:8090
+    ARKI_URL=/arkimet/arkimet
     ARKI_USE_INOTIFY=Y
     ;;
   node* ) # Cineca HPC
@@ -41,7 +41,7 @@ esac
 
 # GRIB coding
 GRIB_CENTER=80
-BUFR_ARKI_DS="$ARKI_URL/dataset/cnmc_acars $ARKI_URL/dataset/cnmc_airep $ARKI_URL/dataset/cnmc_amdar $ARKI_URL/dataset/cnmc_buoy $ARKI_URL/dataset/cnmc_pilot $ARKI_URL/dataset/cnmc_ship11 $ARKI_URL/dataset/cnmc_ship13 $ARKI_URL/dataset/cnmc_ship9 $ARKI_URL/dataset/cnmc_synop1 $ARKI_URL/dataset/cnmc_synop3 $ARKI_URL/dataset/cnmc_temp $ARKI_URL/dataset/cnmc_tempship $ARKI_URL/dataset/cnmc_wprof"
+BUFR_ARKI_DS="$ARKI_URL/cnmc_acars $ARKI_URL/cnmc_airep $ARKI_URL/cnmc_amdar $ARKI_URL/cnmc_buoy $ARKI_URL/cnmc_pilot $ARKI_URL/cnmc_ship11 $ARKI_URL/cnmc_ship13 $ARKI_URL/cnmc_ship9 $ARKI_URL/cnmc_synop1 $ARKI_URL/cnmc_synop3 $ARKI_URL/cnmc_temp $ARKI_URL/cnmc_tempship $ARKI_URL/cnmc_wprof"
 
 # ensemble prediction
 ENS_MODE=.FALSE.
