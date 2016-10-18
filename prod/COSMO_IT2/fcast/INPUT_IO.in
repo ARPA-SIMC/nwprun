@@ -47,7 +47,6 @@
   yvarml=
   @INCLUDE yvarlist_ic@
   @INCLUDE yvarlist_diagn@
-  @INCLUDE yvarlist_conv@
   yvarpl='T       ','RELHUM  ','U       ','V       ','FI      ',
          'OMEGA   ','QV      ',
 
@@ -56,6 +55,6 @@
   yvarsl=' ',
   lcheck = .TRUE.,
   lwrite_const=.TRUE.
-  ydir='@MODEL_DATADIR@/fc',
+  ydir='@MODEL_DATADIR@',
   yform_write = 'api1',
  /END

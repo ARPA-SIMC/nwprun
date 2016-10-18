@@ -47,27 +47,11 @@
   yvarml=
   @INCLUDE yvarlist_ic@
   @INCLUDE yvarlist_diagn@
-  @INCLUDE yvarlist_conv@
+  @INCLUDE yvarlist_clim@
   yvarpl='T       ','RELHUM  ','U       ','V       ','FI      ',
          'OMEGA   ','QV      ',
 
   plev=50.,100.,150.,200.,250.,300.,400.,500.,600.,700.,850.,925.,950.,1000.,
-  yvarzl=' ',
-  yvarsl=' ',
-  lcheck = .TRUE.,
-  lwrite_const=.TRUE.
-  ydir='@MODEL_DATADIR@/fc',
-  yform_write = 'api1',
- /END
- &GRIBOUT
-  nprocess_ini=@MODEL_ASSIM_GP@,
-  nprocess_bd=@MODEL_ASSIM_GP@,
-  hcomb=0,@MODEL_STOP@,1,
-  lanalysis=.TRUE.,
-  luvmasspoint=.FALSE.,
-  yvarml=
-  @INCLUDE yvarlist_ic@
-  yvarpl=' ',
   yvarzl=' ',
   yvarsl=' ',
   lcheck = .TRUE.,

@@ -1,9 +1,8 @@
  &NUDGING
+  ycdfdir ='@BUFR_WORKDIR@',
   lnudge = @MODEL_NUDG@,
   hnudgsta = 0.,
   hnudgend = @MODEL_NH_NUDG@,
-  qcc = 0., 500., 0., 0.7,
-  maxuso=2000,
 
   llhn=@MODEL_LHN@,
   llhnverif=@MODEL_LHN@,
@@ -30,7 +29,7 @@
   nlhn_relax=2,
   lhn_limit=.TRUE.,
   abs_lhn_lim=0.013889,
-  lhn_dt_obs=@RADAR_DT@,
+  lhn_dt_obs=@MODEL_LHN_DT@,
   lhn_spqual=.FALSE.,
   lhn_incloud=.TRUE.,
   lhn_black=.FALSE.,
@@ -39,5 +38,5 @@
   lhn_wweight=.TRUE.,
   lhn_height=.FALSE.,
   lhn_bright=.FALSE.,
-  radar_in='@MODEL_LHN_WORKDIR@'
+  radar_in='@MODEL_LHN_WORKDIR@/'
  /END

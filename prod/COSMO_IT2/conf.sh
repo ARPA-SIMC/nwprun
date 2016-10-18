@@ -40,10 +40,19 @@ MODEL_SLOW_PAST_H=144
 MODEL_FREQINI=3
 # difference (hours) between $DATE$TIME (end of assimilation window /
 # start of forecast) and start of last available input forecast
-# providing BC (for BCANA=N)
+# providing BC (for MODEL_BCANA=N)
 # in reassim this is overridden in conf.sh because of MODEL_BCANA
-MODEL_DELTABD=0
-#MODEL_DELTABD=6
+# 00->12 12->00 => 12
+# 06->00 18->12 => 6
+if [ "$TIME" = "00" -o "$TIME" = "12" ]; then
+    MODEL_DELTABD=12
+elif [ "$TIME" = "09" -o "$TIME" = "21" ]; then
+    MODEL_DELTABD=9
+elif [ "$TIME" = "06" -o "$TIME" = "18" ]; then
+    MODEL_DELTABD=6
+else # 03 15
+    MODEL_DELTABD=3
+fi
 
 # for distinguishing assimilation from forecast results
 MODEL_ARKI_TIMERANGE_ASSIM="timerange:Timedef,0,254;proddef:GRIB:tod=0"
