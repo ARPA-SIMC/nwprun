@@ -9,7 +9,7 @@
   hstart=0, hstop=@MODEL_STOP@,
   ydate_ini='@DATES@@TIMES@',
   itype_timing = 1,
-  lreproduce=.TRUE., luseobs=@MODEL_NUDG@,
+  lreproduce=.TRUE., luseobs=.TRUE.,
   lphys=.TRUE., ldiagnos=.FALSE., ldfi=.FALSE.,
   nprocx=@NPX@, nprocy=@NPY@, nprocio=@NPIO@,
   nboundlines=3,

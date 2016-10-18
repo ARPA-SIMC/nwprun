@@ -42,7 +42,7 @@
   nprocess_ini=@MODEL_ASSIM_GP@,
   nprocess_bd=@MODEL_ASSIM_GP@,
   hcomb=0,@MODEL_STOP@,1,
-  lanalysis=.FALSE.,
+  lanalysis=.TRUE.,
   luvmasspoint=.FALSE.,
   yvarml=
   @INCLUDE yvarlist_ic@
