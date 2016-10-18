@@ -46,8 +46,8 @@
   luvmasspoint=.FALSE.,
   yvarml=
   @INCLUDE yvarlist_ic@
-  @INCLUDE yvarlist_clim@
   @INCLUDE yvarlist_diagn@
+  @INCLUDE yvarlist_clim@
   yvarpl=' ',
   yvarzl=' ',
   yvarsl=' ',
