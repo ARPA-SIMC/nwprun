@@ -1,2 +1,2 @@
-ARKI_IMPDIR=~arki-imp/arki-imp/DEV/galileo/00/lm5
+ARKI_IMPDIR="/home/arki-imp/arki-imp/DEV /home/arki-imp/arki-imp/PROD"
 ARKI_CONF=$ARKI_DIR/config.cosmo5m
