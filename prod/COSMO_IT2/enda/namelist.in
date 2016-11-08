@@ -107,11 +107,11 @@ t%use       = 7
    model          = 'COSMO'     
    nex            = 9259                 ! experiment number
    run_type       = 2            ! haupt=0, (vor=1), ass=2, test=3
-   input          = "%DIR_IN%"   ! input directory
-   output         = "%DIR_OUT%"  ! output directory
+   input          = "@LETKF_WORKDIR@/input"   ! input directory
+   output         = "@LETKF_WORKDIR@/output"  ! output directory
    aux            = "."                   ! output auxiliary data to working directory
-   time_ana       = @DATE@@TIME@00         ! analysis           date
-   time_ref       = @DATES@@TIMES@00       ! forecast reference date
+   time_ana       = @DATE@@TIME@0000         ! analysis           date
+   time_ref       = @DATES@@TIMES@0000       ! forecast reference date
    npe_read_obs   = 100000                ! read observations from all PEs
 !  nproc_repro    = 4                     ! (-1) # of PEs for reproducable runs
    runtime        = 1900010100
@@ -125,7 +125,7 @@ t%use       = 7
    !-------------------------
    ! settings for COSMO LETKF
    !-------------------------
-   fg_file        = '%FG_FILE%' ! det. analysis (det_run=0|1)
+   fg_file        = '@LETKF_WORKDIR@/@DATE@@TIME@0000.0' ! det. analysis (det_run=0|1)
    read_fields    = 'pp tsurf t u v w q qcl qci qr qs qg z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow t_ice h_ice fr_ice T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK ALB_DIF'
    pass_fields    = 'w tsurf qci qr qs qg z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow h_ice t_ice'
    opt_fields     = 'fr_ice'
@@ -155,7 +155,7 @@ t%use       = 7
    q_bound = T     ! apply bounds to humidity variables
    ane_fname = '%'
    ana_file  = '%' ! det. an. filename 
-   fce_fname = '@LETKF_WORKDIR@/lff@DATES@@TIMES@00' ! xxx.001 - generic
+   fce_fname = '@LETKF_WORKDIR@/lff@DATES@@TIMES@0000' ! xxx.001 - generic
    ana_read  = 'analysis_op' ! oper. analysis (compute statistics) - rms_diag=0|1
    no_ps_inc = .true.  ! no surface pressure    increment
    no_tv_inc = .false.  ! no virtual temperature increment

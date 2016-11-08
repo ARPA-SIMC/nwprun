@@ -1,6 +1,0 @@
- &EPSCTL
-  iepstyp=55,
-  iepstot=@ENS_TOTAL_MEMB@,
-  iepsmem=@ENS_MEMB@,
- /
-

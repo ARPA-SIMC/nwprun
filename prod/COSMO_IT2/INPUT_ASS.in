@@ -3,6 +3,7 @@
   lnudge = @MODEL_NUDG@,
   hnudgsta = 0.,
   hnudgend = @MODEL_NH_NUDG@,
+  yform_lansfc = 'api1',
 
   llhn=@MODEL_LHN@,
   llhnverif=@MODEL_LHN@,
