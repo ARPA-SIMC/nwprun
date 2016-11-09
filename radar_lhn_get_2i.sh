@@ -6,7 +6,7 @@ basedir=$HOME/ope
 # basic variables
 export NWPCONFDIR=$basedir/conf
 export NWPCONFBINDIR=$basedir/libexec/nwpconf
-export NWPCONF=prod/RADAR_LHN_IT2
+export NWPCONF=prod/RADAR_LHN_2I
 
 set -e
 # source the main library module
