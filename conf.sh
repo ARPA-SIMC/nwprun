@@ -8,6 +8,7 @@ case "$HOSTNAME" in
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=arki_importer
     ARKI_IMPDIR=$ARKI_DIR/inbound
+    ARKI_IMPROOT=$ARKI_IMPDIR
     ARKI_URL=http://maialinux.metarpa:8090/dataset
     ARKI_USE_INOTIFY=Y
 # Radar
@@ -23,7 +24,8 @@ case "$HOSTNAME" in
     ARKI_DIR=/arkimet/arkimet
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=arki_importer
-    ARKI_IMPDIR=~arki-imp/arki-imp
+    ARKI_IMPDIR=~arki-imp/arki-imp/generic
+    ARKI_IMPROOT=~arki-imp/arki-imp
     ARKI_URL=/arkimet/arkimet
     ARKI_USE_INOTIFY=Y
     ;;
@@ -34,7 +36,7 @@ case "$HOSTNAME" in
 # Arkimet
     ARKI_SCAN_METHOD=remote_arki_importer
 #
-    ARKI_IMPDIR=~arki-imp/arki-imp
+    ARKI_IMPDIR=~arki-imp/arki-imp/generic
 #
     ;;
 esac
