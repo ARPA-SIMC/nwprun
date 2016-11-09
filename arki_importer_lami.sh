@@ -6,7 +6,7 @@ basedir=$HOME/ope
 # basic variables
 export NWPCONFDIR=$basedir/conf
 export NWPCONFBINDIR=$basedir/libexec/nwpconf
-export NWPCONF=prod/COSMO_5M
+export NWPCONF=prod
 
 set -e
 # source the main library module
@@ -40,8 +40,8 @@ import_one() {
 	*/PROD/*)
 	    case $1 in
 		*/lm5/*)
-		    log "start importing $1"
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+		    log "start importing PROD/lm5 $1"
+#		    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 		    noext=${1%.*}
 		    ext=${1##*.}
 		    time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=coord \
@@ -52,6 +52,11 @@ import_one() {
 		    log "done importing $1"
 		    ;;
 	    esac
+	    ;;
+	./generic/*)
+	    log "start importing generic $1"
+	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+	    log "done importing $1"
 	    ;;
     esac
     rm -f $1
@@ -77,8 +82,7 @@ final_cleanup() {
     exit
 }
 
-cd $ARKI_IMPDIR
-#cd $ARKI_DIR
+cd $ARKI_IMPROOT
 # make a check before start
 # periodic_check
 
@@ -86,12 +90,12 @@ trap '{ final_cleanup; }' EXIT
 
 while true; do
     donenothing=Y
-    for file in `find $ARKI_IMPDIR -type f -name '[^.]*'`; do
+    for file in `find . -type f -name '[^.]*'`; do
 	import_one $file
 	donenothing=
     done
     [ -n "$mustexit" ] && exit 1 || true
-# if something has been done do not waste time
+# if something has been done do not cool down
     if [ -n "$donenothing" ]; then
 	sleep $tmout
 	log "Performing check"
