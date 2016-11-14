@@ -28,10 +28,10 @@
    ! RULES for obs
    !================
    &RULES
-%fl%comment     = 'specific parameters for RADAR'
-%fl%type        = 1024           ! modtype RADAR
-%fl%uv%v_loc    = 0.3
-%fl%uv%h_loc    = 16.0
+!%fl%comment     = 'specific parameters for RADAR'
+!%fl%type        = 1024           ! modtype RADAR
+!%fl%uv%v_loc    = 0.3
+!%fl%uv%h_loc    = 16.0
 !!  uv%ekf_pass = 1
 comment     = 'specific parameters for SYNOP'
 type        = 1           ! modtype SYNOP
@@ -97,6 +97,7 @@ t%use       = 7
         err= 0.09 0.13 0.12 0.13 0.13
              0.14 0.14,0.14 0.14 0.14
              0.14,0.14 0.14 0.14 0.14  /
+
  &run
    !===================
    ! general parameters
@@ -105,10 +106,14 @@ t%use       = 7
    !nproc2         = 40 !1     
    method         = 'LETKF'
    model          = 'COSMO'     
+   center         = @GRIB_CENTER@
+   cosmo_refatm   = 2
+   cosmo_ivctype  = 2
+   l_ke_in_gds    = .true.
    nex            = 9259                 ! experiment number
    run_type       = 2            ! haupt=0, (vor=1), ass=2, test=3
    input          = "@LETKF_WORKDIR@/input"   ! input directory
-   output         = "@LETKF_WORKDIR@/output"  ! output directory
+   output         = "@LETKF_DATADIR@"  ! output directory
    aux            = "."                   ! output auxiliary data to working directory
    time_ana       = @DATE@@TIME@0000         ! analysis           date
    time_ref       = @DATES@@TIMES@0000       ! forecast reference date
@@ -125,10 +130,13 @@ t%use       = 7
    !-------------------------
    ! settings for COSMO LETKF
    !-------------------------
-   fg_file        = '@LETKF_WORKDIR@/@DATE@@TIME@0000.0' ! det. analysis (det_run=0|1)
-   read_fields    = 'pp tsurf t u v w q qcl qci qr qs qg z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow t_ice h_ice fr_ice T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK ALB_DIF'
-   pass_fields    = 'w tsurf qci qr qs qg z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow h_ice t_ice'
-   opt_fields     = 'fr_ice'
+   fg_file        = '@LETKF_WORKDIR@/input/laf@DATE@@TIME@0000' ! det. analysis (det_run=0|1)
+!   read_fields    = 'pp tsurf t u v w q qcl qci qr qs qg z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow t_ice h_ice fr_ice T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK ALB_DIF'
+   read_fields    = 'pp tsurf t u v w q qcl qci qr qs z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow t_ice h_ice fr_ice T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK ALB_DIF - qg'
+!   pass_fields    = 'w tsurf qci qr qs qg z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow h_ice t_ice'
+   pass_fields    = 'w tsurf qci qr qs z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow h_ice t_ice'
+   opt_fields     = 'fr_ice - qg'
+   urun_fields    = '- qg'
    runtype        =  ''
    ensemble_id    = 2 ! +++ to be replaced by NUMEX +++         
    io_max_gather  = 50000000  ! max.gather buffer size for write: 100MB
@@ -155,7 +163,7 @@ t%use       = 7
    q_bound = T     ! apply bounds to humidity variables
    ane_fname = '%'
    ana_file  = '%' ! det. an. filename 
-   fce_fname = '@LETKF_WORKDIR@/lff@DATES@@TIMES@0000' ! xxx.001 - generic
+   fce_fname = '@LETKF_WORKDIR@/input/laf@DATE@@TIME@0000' ! xxx.001 - generic
    ana_read  = 'analysis_op' ! oper. analysis (compute statistics) - rms_diag=0|1
    no_ps_inc = .true.  ! no surface pressure    increment
    no_tv_inc = .false.  ! no virtual temperature increment
@@ -200,15 +208,13 @@ t%use       = 7
    apply_rtps = F
    rtpp_alpha = 0.75
    adj_wso    = .5 .5 .5 .5 .5 .5 .5 .5
-   par_diagn = '- pp + pf'
+   par_diagn = '- pp + pf - qg' ! - qg
    par_trans = '- pp + pf'   ! variables to explicitly update (opposites in par_fce)
-   par_read  = 'pf t u v w q qcl qci qr qs qg h_ice t_ice - pp'
-%fs0%   par_write = '- pp + pf'   ! no SST/SNOW
-%fst%   par_write = '- pp + pf - t_s - h_ice - t_ice'   ! SST only
-%fsn%   par_write = '- pp + pf - w_snow - t_snow - w_i - freshsnw - rho_snow - h_snow - tsurf'   ! SNOW only
-%fs2%   par_write = '- pp + pf - w_snow - t_snow - w_i - freshsnw - rho_snow - h_snow - tsurf - t_s - h_ice - t_ice - plcov - lai - rootdp - vio3 - hmo3 - for_e - for_d - alb_dif'   ! SST and SNOW plus CLIM
-   par_fc_en = '+ h_ice + t_ice - pp + pf + freshsnw + rho_snow + h_snow' ! should be same as par_read (all SST/SNOW variables)
-   par_fce   = 'qv_s freshsnw for_e for_d rho_snow tsurf t_snow t_so w_so w_i w_snow + h_ice + t_ice + h_snow T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK ALB_DIF'
+!   par_read  = 'pf t u v w q qcl qci qr qs qg h_ice t_ice - pp'
+   par_read  = 'pf t u v w q qcl qci qr qs h_ice t_ice - pp qg'
+   par_write = '- pp + pf'   ! no SST/SNOW
+   par_fc_en = '+ h_ice + t_ice - pp + pf + freshsnw + rho_snow' ! should be same as par_read (all SST/SNOW variables) + h_snow
+   par_fce   = 'qv_s freshsnw for_e for_d rho_snow tsurf t_snow t_so w_so w_i w_snow + h_ice + t_ice T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK - qg' ! +h_snow ALB_DIF
    par_fcm   = '- qv_s - freshsnw - for_e - for_d - rho_snow - tsurf - t_snow - t_so - w_so - w_i - w_snow'
    par_fc_det = 'SMA_ANA'
    write_grid  = T
