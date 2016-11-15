@@ -13,7 +13,7 @@ MODEL_NUDG=.TRUE.
 # definitions for parent model
 PARENTMODEL=IFS
 PARENTMODEL_DATADIR=$WORKDIR/input/data
-PARENTMODEL_ARKI_DS=$ARKI_URL/IFS_ME
+PARENTMODEL_ARKI_DS=$ARKI_URL/ifs_med
 PARENTMODEL_FREQINI=6
 PARENTMODEL_FREQANA=6
 PARENTMODEL_FREQFC=3
@@ -28,7 +28,8 @@ MODEL_PRE_BIN=$WORK/srcgnu/int2lm_150611_2.02/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
-MODEL_BIN=$WORK/srcgnu/cosmo_160510_5.04a/lmparbin_all
+#MODEL_BIN=$WORK/srcgnu/cosmo_160510_5.04a/lmparbin_all
+MODEL_BIN=$WORK/srcgnu/cosmo_160712_5.04b_sp/lmparbin_all
 MODEL_STATIC=$WORK/data/cosmo
 
 # configuration of assimilation
