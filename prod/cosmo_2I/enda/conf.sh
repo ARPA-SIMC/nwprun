@@ -8,4 +8,5 @@ MODEL_BCANA=Y
 #LOGSIM_PROCESS=rucn2_ope_ra_run
 LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data
+LETKF_BIN=$WORK/srcgnu/3dvar/build/obj/var3d
 
