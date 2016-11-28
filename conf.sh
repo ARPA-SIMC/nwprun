@@ -47,9 +47,7 @@ BUFR_ARKI_DS="$ARKI_URL/cnmc_acars $ARKI_URL/cnmc_airep $ARKI_URL/cnmc_amdar $AR
 
 # ensemble prediction
 ENS_MODE=.FALSE.
-if [ -n "$ENS_TOTAL_MEMB" ]; then
-    if [ "$ENS_TOTAL_MEMB" -gt 1 -a -n "$ENS_MEMB" ]; then
-        ENS_MODE=.TRUE.
-    fi
+if [ -n "$ENS_TOTAL_MEMB" -a -n "$ENS_MEMB" ]; then
+    ENS_MODE=.TRUE.
 fi
 
