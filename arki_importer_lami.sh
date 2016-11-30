@@ -58,6 +58,24 @@ import_one() {
 	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    log "done importing $1"
 	    ;;
+	./comet/*)
+	    log "start importing comet $1"
+	    tmpdir=`mktemp -d $ARKI_IMPROOT/tmptar.XXXXXXXXXX`
+	    tar --transform='s?.*/??g' -C $tmpdir -xvf $1
+	    for file in $tmpdir/*; do
+		nmemb=${file##*lfff????0000_}
+		nmemb=${nmemb%%_*.grb}
+#		grib_set -s 'subCentre=98,setLocalDefinition=28,localDefinitionNumber=28,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=1,numberOfForecastsInEnsemble=20,baseDateEPS=20161130,baseTimeEPS=00,numberOfRepresentativeMember=0,numberOfMembersInCluster=20,totalInitialConditions=20' input.raw cleps.out
+		grib_set -s "subCentre=98,setLocalDefinition=1,localDefinitionNumber=1,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=$nmemb,numberOfForecastsInEnsemble=20" $file $file.ls.grib
+
+		eatmydata arki-scan --dispatch=$ARKI_CONF $file.ls.grib > /dev/null
+		rm -f $file $file.ls.grib
+	    done
+	    safe_rm_rf $tmpdir
+
+	    mv $1 /arkimet/arkimet/comet
+	    log "done importing $1"
+	    ;;
     esac
     rm -f $1
 
