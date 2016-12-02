@@ -41,14 +41,19 @@ import_one() {
 	    case $1 in
 		*/lm5/*)
 		    log "start importing PROD/lm5 $1"
-#		    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 		    noext=${1%.*}
 		    ext=${1##*.}
+# area itr (~"lama")
 		    time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=coord \
 			--ilon=6.5 --ilat=36. --flon=21. --flat=47. \
-			$1 ${noext}_its.${ext}
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF ${noext}_its.${ext} > /dev/null
-		    rm -f ${noext}_its.${ext}
+			$1 ${noext}_itr.${ext}
+		    time eatmydata arki-scan --dispatch=$ARKI_CONF ${noext}_itr.${ext} > /dev/null
+		    rm -f ${noext}_itr.${ext}
+# area medl
+		    time vg6d_transform --trans-mode=s --trans-type=boxregrid --sub-type=average \
+			--npx=4 --npy=4 $1 ${noext}_medl.${ext}
+		    time eatmydata arki-scan --dispatch=$ARKI_CONF ${noext}_medl.${ext} > /dev/null
+		    rm -f ${noext}_medl.${ext}
 		    log "done importing $1"
 		    ;;
 	    esac
