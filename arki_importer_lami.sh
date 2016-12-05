@@ -77,8 +77,6 @@ import_one() {
 		rm -f $file $file.ls.grib
 	    done
 	    safe_rm_rf $tmpdir
-
-	    mv $1 /arkimet/arkimet/comet
 	    log "done importing $1"
 	    ;;
     esac
