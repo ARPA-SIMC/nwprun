@@ -28,13 +28,14 @@ tmout=30
 #lastcleanup=`date --date '1 day ago' -u '+%Y%m%d'`
 lastcleanup=`date -u '+%Y%m%d'`
 mustexit=
+mustreload=
 
 log() {
     echo `date -u --rfc-3339=seconds` "|$$|$@"
 }
 
 import_one() {
-    trap '{ mustexit=Y; }' 15 20 2
+#    trap '{ mustexit=Y; }' 15 20 2
 
     case $1 in
 	*/PROD/*)
@@ -82,7 +83,7 @@ import_one() {
     esac
     rm -f $1
 
-    trap 15 20 2
+#    trap 15 20 2
 }
 
 periodic_check() {
@@ -90,12 +91,12 @@ periodic_check() {
     local now
     now=`date -u '+%Y%m%d'`
     if [ "$now" != "$lastcleanup" ]; then
-	trap '{ mustexit=Y; }' 15 20 2
+#	trap '{ mustexit=Y; }' 15 20 2
 	log "daily cleanup"
 #	arki_dailycleanup $ARKI_CONF 3 12
 	arki_dailycleanup $ARKI_CONF
 	lastcleanup=$now
-	trap 15 20 2
+#	trap 15 20 2
     fi
 }
 
@@ -105,20 +106,25 @@ final_cleanup() {
 }
 
 cd $ARKI_IMPROOT
-# make a check before start
-# periodic_check
 
+trap '{ mustexit=Y; }' 15 20 2
+trap '{ mustreload=Y; }' 1
 trap '{ final_cleanup; }' EXIT
 
 while true; do
     donenothing=Y
     for file in `find . -type f -name '[^.]*'`; do
+# do homework before classwork
+	[ -n "$mustexit" ] && exit 1 || true
+	[ -n "$mustreload" ] && exec "$0" "$@" || true
 	import_one $file
 	donenothing=
     done
-    [ -n "$mustexit" ] && exit 1 || true
 # if something has been done do not cool down
     if [ -n "$donenothing" ]; then
+# do homework before going to sleep
+	[ -n "$mustexit" ] && exit 1 || true
+	[ -n "$mustreload" ] && exec "$0" "$@" || true
 	sleep $tmout
 	log "Performing check"
 	periodic_check
