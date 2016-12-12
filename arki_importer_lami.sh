@@ -34,6 +34,56 @@ log() {
     echo `date -u --rfc-3339=seconds` "|$$|$@"
 }
 
+make_itr()
+{
+    # area itr (~"lama")
+    time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=coord \
+	--ilon=6.5 --ilat=36. --flon=21. --flat=47. \
+	$1 ${1}_itr
+    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1}_itr > /dev/null
+    rm -f ${1}_itr
+}
+
+make_medl()
+{
+    time vg6d_transform --trans-mode=s \
+	--trans-type=boxregrid --sub-type=average --npx=4 --npy=4 \
+	$1 ${1}_medl
+    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1}_medl > /dev/null
+    rm -f ${1}_medl
+}
+
+make_prof()
+{
+    # equivalente (quasi, bisogna escludere qi) con grib_copy
+#    grib_copy -w indicatorOfParameter=40,indicatorOfTypeOfLevel=109 $1 ${1}_109
+#    grib_copy -w indicatorOfParameter=1/33/34/11/17/51,indicatorOfTypeOfLevel=110 $1 ${1}_110
+
+    arki-query --data -o ${1}_109 \
+	'level:GRIB1,109; product:GRIB1,,2,40;' \
+	grib:$1
+    arki-query --data -o ${1}_110 \
+	'level:GRIB1,110; product:GRIB1,,2,33 or GRIB1,,2,34 or GRIB1,,2,11 or GRIB1,,2,17 or GRIB1,,2,51 or GRIB1,,2,1;' \
+	grib:$1
+
+    # interpolazione verticale
+    vg6d_transform --component-flag=1 --trans-type=vertint --sub-type=linear \
+	--trans-level-type=105,,105,105 \
+	${1}_109 ${1}_109_110
+    cat ${1}_109_110 >> ${1}_110
+    # destaggering u e v
+    vg6d_transform --a-grid ${1}_110 ${1}_destag
+    # interpolazione sui punti
+    time vg6d_getpoint --output-format=native \
+	${1}_destag ${1}.v7d
+    # ricalcolo delle variabili derivate e scrittura in BUFR
+    time v7d_transform --input-format=native --output-format=BUFR  \
+	--output-variable-list=B10004,B11001,B11002,B11003,B11004,B11006,B12101,B12103,B13001,B13003 \
+	${1}.v7d ${1}.bufr
+    time eatmydata arki-scan --dispatch=$ARKI_CONF bufr:${1}.bufr > /dev/null
+    rm -f ${1}_109 ${1}_110 ${1}_109_110 ${1}_destag ${1}.v7d ${1}.bufr
+}
+
 import_one() {
 #    trap '{ mustexit=Y; }' 15 20 2
 
@@ -42,19 +92,12 @@ import_one() {
 	    case $1 in
 		*/lm5/*)
 		    log "start importing PROD/lm5 $1"
-		    noext=${1%.*}
-		    ext=${1##*.}
 # area itr (~"lama")
-		    time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=coord \
-			--ilon=6.5 --ilat=36. --flon=21. --flat=47. \
-			$1 ${noext}_itr.${ext}
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF ${noext}_itr.${ext} > /dev/null
-		    rm -f ${noext}_itr.${ext}
+		    make_itr $1
 # area medl
-		    time vg6d_transform --trans-mode=s --trans-type=boxregrid --sub-type=average \
-			--npx=4 --npy=4 $1 ${noext}_medl.${ext}
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF ${noext}_medl.${ext} > /dev/null
-		    rm -f ${noext}_medl.${ext}
+		    make_medl $1
+# profili verticali
+		    make_prof $1
 		    log "done importing $1"
 		    ;;
 	    esac
