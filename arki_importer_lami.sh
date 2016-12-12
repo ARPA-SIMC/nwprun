@@ -38,7 +38,7 @@ make_itr()
 {
     # area itr (~"lama")
     time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=coord \
-	--ilon=6.5 --ilat=36. --flon=21. --flat=47. \
+	--ilon=6.1 --ilat=36. --flon=21. --flat=47.2 \
 	$1 ${1}_itr
     time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1}_itr > /dev/null
     rm -f ${1}_itr
