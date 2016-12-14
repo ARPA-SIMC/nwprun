@@ -90,6 +90,14 @@ import_one() {
     case $1 in
 	*/PROD/*)
 	    case $1 in
+		*/lm5/*c) # dati constanti
+		    log "start importing PROD/lm5/c $1"
+# area itr (~"lama")
+		    make_itr $1
+# area medl
+		    make_medl $1
+		    log "done importing $1"
+		    ;;
 		*/lm5/*)
 		    log "start importing PROD/lm5 $1"
 # area itr (~"lama")
