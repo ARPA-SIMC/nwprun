@@ -131,6 +131,9 @@ import_one() {
 	    safe_rm_rf $tmpdir
 	    log "done importing $1"
 	    ;;
+	./save/*)
+	    cp -p $1 ~/save/
+	    ;;
     esac
     rm -f $1
 
