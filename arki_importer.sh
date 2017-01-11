@@ -1,31 +1,5 @@
 #!/bin/sh
 
-unset LANG
-basedir=$HOME/ope
-# setup common to user scripts
-# basic variables
-export NWPCONFDIR=$basedir/conf
-export NWPCONFBINDIR=$basedir/libexec/nwpconf
-export NWPCONF=prod
-
-set -e
-# source the main library module
-. $NWPCONFBINDIR/nwpconf.sh
-# source other optional modules
-# end of setup
-
-nonunique_exit
-
-# redirect all to logfile
-exec >>$HOME/log/`basename $0`.log 2>&1
-set -x
-# set -e disabled because it fails when a file is arki-scanned
-# to error dataset and do not know yet in which occasions
-set +e
-
-tmout=600
-lastcleanup=`date -u '+%Y%m%d'`
-
 log() {
     echo `date -u --rfc-3339=seconds` "|$$|$@"
 }
@@ -74,7 +48,33 @@ final_cleanup() {
     exit
 }
 
+unset LANG
+basedir=$HOME/ope
+# setup common to user scripts
+# basic variables
+export NWPCONFDIR=$basedir/conf
+export NWPCONFBINDIR=$basedir/libexec/nwpconf
+export NWPCONF=prod
+
+set -e
+# source the main library module
+. $NWPCONFBINDIR/nwpconf.sh
+# source other optional modules
+# end of setup
+
+nonunique_exit
+
+# redirect all to logfile
+exec >>$HOME/log/`basename $0`.log 2>&1
+set -x
+
+tmout=600
+lastcleanup=`date -u '+%Y%m%d'`
+[ -n "$ARKI_IMPDIR" ] || exit 1
 cd $ARKI_IMPDIR
+# set -e disabled because it fails when a file is arki-scanned
+# to error dataset and do not know yet in which occasions
+set +e
 # make a check before start
 periodic_check
 

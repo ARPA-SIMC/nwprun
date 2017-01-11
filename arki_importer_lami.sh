@@ -1,34 +1,5 @@
 #!/bin/sh
 
-unset LANG
-basedir=$HOME/ope
-# setup common to user scripts
-# basic variables
-export NWPCONFDIR=$basedir/conf
-export NWPCONFBINDIR=$basedir/libexec/nwpconf
-export NWPCONF=prod
-
-set -e
-# source the main library module
-. $NWPCONFBINDIR/nwpconf.sh
-# source other optional modules
-. $NWPCONFBINDIR/arki_tools.sh
-# end of setup
-
-nonunique_exit
-
-# redirect all to logfile
-exec >>$HOME/log/`basename $0`.log 2>&1
-set -x
-# set -e disabled because it fails when a file is arki-scanned
-# to error dataset and do not know yet in which occasions
-set +e
-
-tmout=30
-#lastcleanup=`date --date '1 day ago' -u '+%Y%m%d'`
-lastcleanup=`date -u '+%Y%m%d'`
-mustexit=
-
 log() {
     echo `date -u --rfc-3339=seconds` "|$$|$@"
 }
@@ -82,7 +53,38 @@ final_cleanup() {
     exit
 }
 
+unset LANG
+basedir=$HOME/ope
+# setup common to user scripts
+# basic variables
+export NWPCONFDIR=$basedir/conf
+export NWPCONFBINDIR=$basedir/libexec/nwpconf
+export NWPCONF=prod
+
+set -e
+# source the main library module
+. $NWPCONFBINDIR/nwpconf.sh
+# source other optional modules
+. $NWPCONFBINDIR/arki_tools.sh
+# end of setup
+
+nonunique_exit
+
+# redirect all to logfile
+exec >>$HOME/log/`basename $0`.log 2>&1
+set -x
+
+tmout=30
+#lastcleanup=`date --date '1 day ago' -u '+%Y%m%d'`
+lastcleanup=`date -u '+%Y%m%d'`
+mustexit=
+
+# security check
+[ -n "$ARKI_IMPROOT" ] || exit 1
 cd $ARKI_IMPROOT
+# set -e disabled because it fails when a file is arki-scanned
+# to error dataset and do not know yet in which occasions
+set +e
 # make a check before start
 # periodic_check
 
