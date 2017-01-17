@@ -16,7 +16,7 @@ case "$HOSTNAME" in
     RADAR_LHNDIR=$HOME/prelhn/bufr2grib-RUC
     RADAR_DT=10
     ;;
-  *.novalocal ) # Cineca cloud
+  lami* ) # Cineca cloud
 # General
     WORKDIR=$HOME/$NWPCONF
     LOGDIR=$HOME/log
