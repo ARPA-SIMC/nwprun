@@ -110,6 +110,35 @@ import_one() {
 #    trap 15 20 2
 }
 
+create_static() {
+    ds=$1
+    staticdir=$HOME/static/$ds
+    mkdir -p $staticdir
+    rm -f $staticdir/tmp.grib
+    arki-query --data -o $staticdir/tmp.grib 'Reftime:=yesterday 00:00; product:GRIB1,80,2,8 or GRIB1,80,2,81; level:GRIB1,109 or GRIB1,1; timerange:GRIB1,0,0;' $ARKI_DIR/$ds
+    if [ -s "$staticdir/tmp.grib" ]; then # got some data
+	if [ -s "$staticdir/last.grib" ]; then # have already some data
+	    if ! grib_compare -b yearOfCentury,month,day,hour,centuryOfReferenceTimeOfData $staticdir/tmp.grib $staticdir/last.grib; then # data have changed
+		mv $staticdir/last.grib $staticdir/`date -u '+%Y%m%d'`.grib
+		mv $staticdir/last_110.grib $staticdir/`date -u '+%Y%m%d'`_110.grib
+		mv $staticdir/tmp.grib $staticdir/last.grib
+		vg6d_transform --component-flag=1 \
+		    --trans-type=vertint --sub-type=linear \
+		    --trans-level-type=105,,105,105 \
+		    $staticdir/last.grib $staticdir/last_110.grib
+	    else
+		rm -f $staticdir/tmp.grib
+	    fi
+	else # first time
+	    mv -f $staticdir/tmp.grib $staticdir/last.grib
+	    vg6d_transform --component-flag=1 \
+		--trans-type=vertint --sub-type=linear \
+		--trans-level-type=105,,105,105 \
+		$staticdir/last.grib $staticdir/last_110.grib
+	fi
+    fi
+}
+
 periodic_check() {
 # need a dataset cleanup?
     local now
@@ -119,6 +148,7 @@ periodic_check() {
 	log "daily cleanup"
 #	arki_dailycleanup $ARKI_CONF 3 12
 	arki_dailycleanup $ARKI_CONF
+	create_static cosmo_5M_itr
 	lastcleanup=$now
 #	trap 15 20 2
     fi
