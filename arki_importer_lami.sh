@@ -41,8 +41,9 @@ make_prof()
 	--trans-level-type=105,,105,105 \
 	${1}_109 ${1}_109_110
     cat ${1}_109_110 >> ${1}_110
+    cat $HOME/static/$2/last_110.grib >> ${1}_110 || true
     # destaggering u e v
-    vg6d_transform --a-grid ${1}_110 ${1}_destag
+    vg6d_transform --a-grid --anavariable-list=B10007 ${1}_110 ${1}_destag
     # interpolazione sui punti
     time vg6d_getpoint --output-format=native \
 	${1}_destag ${1}.v7d
@@ -75,7 +76,7 @@ import_one() {
 # area medl
 		    make_medl $1
 # profili verticali
-		    make_prof $1
+		    make_prof $1 cosmo_5M_itr
 		    log "done importing $1"
 		    ;;
 	    esac
