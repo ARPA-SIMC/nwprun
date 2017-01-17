@@ -69,7 +69,7 @@ cd $BUFR_WORKDIR
 ncftpauth="-f $basedir/.auth/meteoam.cfg"
 ftpdir="BUFR/"
 #obstypes="AIRC AMDA AMDN B002 B004 BUON OCEA PILN PILO RAOB SHIN SHIP SYNN SYNO TEMP"
-obstypes="AIRC AMDA B002 B004 OCEA PILO SHIP SYNO TEMP"
+obstypes="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNO TEMP"
 waitfor=
 
 if [ -n "$1" ]; then
