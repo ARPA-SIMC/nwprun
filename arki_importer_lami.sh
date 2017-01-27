@@ -113,10 +113,14 @@ import_one() {
 
 create_static() {
     ds=$1
+    origin=
+    if [ -n "$2" ]; then
+	origin="origin:GRIB1,,,$2;"
+    fi
     staticdir=$HOME/static/$ds
     mkdir -p $staticdir
     rm -f $staticdir/tmp.grib
-    arki-query --data -o $staticdir/tmp.grib 'Reftime:=yesterday 00:00; product:GRIB1,80,2,8 or GRIB1,80,2,81; level:GRIB1,109 or GRIB1,1; timerange:GRIB1,0,0;' $ARKI_DIR/$ds
+    arki-query --data -o $staticdir/tmp.grib "Reftime:=yesterday 00:00; $origin product:GRIB1,80,2,8 or GRIB1,80,2,81; level:GRIB1,109 or GRIB1,1; timerange:GRIB1,0,0;" $ARKI_DIR/$ds
     if [ -s "$staticdir/tmp.grib" ]; then # got some data
 	if [ -s "$staticdir/last.grib" ]; then # have already some data
 	    if ! grib_compare -b yearOfCentury,month,day,hour,centuryOfReferenceTimeOfData $staticdir/tmp.grib $staticdir/last.grib; then # data have changed
@@ -149,7 +153,7 @@ periodic_check() {
 	log "daily cleanup"
 #	arki_dailycleanup $ARKI_CONF 3 12
 	arki_dailycleanup $ARKI_CONF
-	create_static cosmo_5M_itr
+	create_static cosmo_5M_itr 22
 	lastcleanup=$now
 #	trap 15 20 2
     fi
