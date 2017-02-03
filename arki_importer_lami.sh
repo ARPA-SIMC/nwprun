@@ -151,8 +151,8 @@ periodic_check() {
     if [ "$now" != "$lastcleanup" ]; then
 #	trap '{ mustexit=Y; }' 15 20 2
 	log "daily cleanup"
-#	arki_dailycleanup $ARKI_CONF 3 12
-	arki_dailycleanup $ARKI_CONF
+#	arki_dailycleanup $ARKI_CONF
+	arki_dailyarchivecleanup $ARKI_CONF /gpfs_arkimet/archive
 	create_static cosmo_5M_itr 22
 	lastcleanup=$now
 #	trap 15 20 2
