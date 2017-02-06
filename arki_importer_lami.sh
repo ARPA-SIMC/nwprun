@@ -11,7 +11,9 @@ make_itr()
 	--ilon=6.1 --ilat=36. --flon=21. --flat=47.2 \
 	$1 ${1}_itr
     time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1}_itr > /dev/null
-    rm -f ${1}_itr
+#    rm -f ${1}_itr
+# file is not removed in order to be used with the vertical profiles,
+# find a better way
 }
 
 make_medl()
@@ -65,6 +67,7 @@ import_one() {
 		    log "start importing PROD/lm5/c $1"
 # area itr (~"lama")
 		    make_itr $1
+		    rm -f ${1}_itr
 # area medl
 		    make_medl $1
 		    log "done importing $1"
@@ -73,10 +76,11 @@ import_one() {
 		    log "start importing PROD/lm5 $1"
 # area itr (~"lama")
 		    make_itr $1
+# profili verticali
+		    make_prof ${1}_itr cosmo_5M_itr
+		    rm -f ${1}_itr
 # area medl
 		    make_medl $1
-# profili verticali
-		    make_prof $1 cosmo_5M_itr
 		    log "done importing $1"
 		    ;;
 	    esac
