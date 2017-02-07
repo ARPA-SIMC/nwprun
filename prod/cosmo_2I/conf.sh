@@ -24,12 +24,14 @@ MODEL_NLEV=65
 # preprocessing (interpolation)
 MODEL_PRE_WORKDIR=$WORKDIR/int2lm
 MODEL_PRE_DATADIR=$WORKDIR/int2lm/data
-MODEL_PRE_BIN=$WORK/srcgnu/int2lm_150611_2.02/tstint2lm
+#MODEL_PRE_BIN=$WORK/srcgnu/int2lm_150611_2.02/tstint2lm
+MODEL_PRE_BIN=/gpfs/meteo/lami/srcgnu/int2lm_150611_2.02/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
 #MODEL_BIN=$WORK/srcgnu/cosmo_160510_5.04a/lmparbin_all
-MODEL_BIN=$WORK/srcgnu/cosmo_160712_5.04b_sp/lmparbin_all
+#MODEL_BIN=$WORK/srcgnu/cosmo_160712_5.04b_sp/lmparbin_all
+MODEL_BIN=/gpfs/meteo/lami/srcgnu/cosmo_161215_5.04e_beta/lmparbin_all
 MODEL_STATIC=$WORK/data/cosmo
 
 # configuration of assimilation
