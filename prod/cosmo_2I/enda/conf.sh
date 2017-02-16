@@ -6,17 +6,17 @@ MODEL_BACK=0
 MODEL_STOP=3
 MODEL_BCANA=N
 MODEL_FREQINI=3
-MODEL_DELTABD=3
 
 PARENTMODEL=COSMO
-PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
-PARENTMODEL_FREQINI=3
-PARENTMODEL_FREQANA=3
-PARENTMODEL_FREQFC=3
-PARENTMODEL_QRQS=.FALSE.
 
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then
+    MODEL_DELTABD=3
+    PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
+    PARENTMODEL_FREQINI=3
+    PARENTMODEL_FREQANA=3
+    PARENTMODEL_FREQFC=3
+    PARENTMODEL_QRQS=.FALSE.
 # input data
     PARENTMODEL_DATADIR=$WORKDIR/input.$ENS_MEMB/data
     MODEL_ARKI_PARAM="proddef:GRIB:nn=$ENS_MEMB;"
@@ -28,7 +28,27 @@ if [ -n "$ENS_MEMB" ]; then
     MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 # setup for arkilocal
     ARKI_URL=$WORKDIR/arki.$ENS_MEMB
-else
+else # deterministic run or analysis
+#    MODEL_DELTABD=...
+    case $TIME in
+	00 | 12)
+	MODEL_DELTABD=12
+	;;
+	03 | 15)
+	MODEL_DELTABD=3
+	;;
+	06 | 18)
+	MODEL_DELTABD=6
+	;;
+	09 | 21)
+	MODEL_DELTABD=9
+	;;
+    esac
+    PARENTMODEL_ARKI_DS=o_lm5_ope_forecast
+    PARENTMODEL_FREQINI=12
+    PARENTMODEL_FREQANA=1
+    PARENTMODEL_FREQFC=1
+    PARENTMODEL_QRQS=.TRUE.
 # setup for arkilocal
     ARKI_URL=$WORKDIR/arki
 fi
