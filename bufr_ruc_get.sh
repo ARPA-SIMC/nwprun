@@ -30,6 +30,8 @@ dl_ftp() {
 	done
 	shopt -u nullglob
 # decommentare per archiviare
+# this should probably be changed to (please change and test):
+#	waitfor="$waitfor `putarki_archive bufr $dlfilelist`"
 	waitfor="$waitfor `putarki_archive_and_wait bufr $dlfilelist`"
 	return 0
     fi
@@ -70,6 +72,7 @@ ncftpauth="-f $basedir/.auth/meteoam.cfg"
 ftpdir="BUFR/"
 #obstypes="AIRC AMDA AMDN B002 B004 BUON OCEA PILN PILO RAOB SHIN SHIP SYNN SYNO TEMP"
 obstypes="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNO TEMP"
+readydir=/arkimet/staticweb/ready
 waitfor=
 
 if [ -n "$1" ]; then
@@ -83,7 +86,12 @@ else
     lastdate=`datetime_add $lastdate 3`
 
     while [ "$lastdate" -lt "$curdate" ]; do
-	dl_ftp $lastdate && save_state bufr_ruc_get.state lastdate || true
+	if dl_ftp $lastdate; then
+	    save_state bufr_ruc_get.state lastdate
+	    if [ -d "$readydir" ]; then
+		echo $lastdate > $readydir/cnmc_obs
+	    fi
+	fi
 	lastdate=`datetime_add $lastdate 3`
     done
 fi
