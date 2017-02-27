@@ -45,9 +45,9 @@ esac
 GRIB_CENTER=80
 BUFR_ARKI_DS="$ARKI_URL/cnmc_acars $ARKI_URL/cnmc_airep $ARKI_URL/cnmc_amdar $ARKI_URL/cnmc_amdar146 $ARKI_URL/cnmc_buoy $ARKI_URL/cnmc_pilot $ARKI_URL/cnmc_ship11 $ARKI_URL/cnmc_ship13 $ARKI_URL/cnmc_ship9 $ARKI_URL/cnmc_synop1 $ARKI_URL/cnmc_synop3 $ARKI_URL/cnmc_temp $ARKI_URL/cnmc_tempship $ARKI_URL/cnmc_wprof"
 
-# ensemble prediction
-ENS_MODE=.FALSE.
-if [ -n "$ENS_TOTAL_MEMB" -a -n "$ENS_MEMB" ]; then
-    ENS_MODE=.TRUE.
-fi
+# ensemble prediction moved to nwpconf/cosmo_model
+#ENS_MODE=.FALSE.
+#if [ -n "$ENS_TOTAL_MEMB" -a -n "$ENS_MEMB" ]; then
+#    ENS_MODE=.TRUE.
+#fi
 
