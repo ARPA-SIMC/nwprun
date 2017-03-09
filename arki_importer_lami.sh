@@ -104,6 +104,11 @@ import_one() {
 		rm -f $file $file.ls.grib
 	    done
 	    safe_rm_rf $tmpdir
+	    sfn=${1##*/}
+	    sfn=${sfn%%.*}
+	    sdate=${sfn#*_}
+	    sfile=${sfn%_*}
+	    import_signal_imported cnmc_cosmo_eps $sdate $sfile
 	    log "done importing $1"
 	    ;;
 	./save/*)

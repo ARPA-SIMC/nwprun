@@ -1,6 +1,10 @@
 #!/bin/bash
 # script for downloading the new bufr provided by COMET (CNMCA)
 
+log() {
+    echo `date -u --rfc-3339=seconds` "|$$|$@"
+}
+
 dl_ftp() {
 
     filelist=""
@@ -53,6 +57,7 @@ set -e
 . $NWPCONFBINDIR/nwpconf.sh
 # source other optional modules
 . $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
 # end of setup
 
 nonunique_exit
@@ -72,7 +77,6 @@ ncftpauth="-f $basedir/.auth/meteoam.cfg"
 ftpdir="BUFR/"
 #obstypes="AIRC AMDA AMDN B002 B004 BUON OCEA PILN PILO RAOB SHIN SHIP SYNN SYNO TEMP"
 obstypes="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNO TEMP"
-readydir=/arkimet/staticweb/ready
 waitfor=
 
 if [ -n "$1" ]; then
@@ -88,9 +92,7 @@ else
     while [ "$lastdate" -lt "$curdate" ]; do
 	if dl_ftp $lastdate; then
 	    save_state bufr_ruc_get.state lastdate
-	    if [ -d "$readydir" ]; then
-		echo $lastdate > $readydir/cnmc_obs
-	    fi
+	    import_signal_imported cnmc_bufr $lastdate
 	fi
 	lastdate=`datetime_add $lastdate 3`
     done
