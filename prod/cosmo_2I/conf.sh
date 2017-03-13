@@ -31,7 +31,8 @@ MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
 #MODEL_BIN=$WORK/srcgnu/cosmo_160510_5.04a/lmparbin_all
 #MODEL_BIN=$WORK/srcgnu/cosmo_160712_5.04b_sp/lmparbin_all
-MODEL_BIN=/gpfs/meteo/lami/srcgnu/cosmo_161215_5.04e_beta/lmparbin_all
+#MODEL_BIN=/gpfs/meteo/lami/srcgnu/cosmo_161215_5.04e_beta/lmparbin_all
+MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3/lmparbin_all
 MODEL_STATIC=$WORK/data/cosmo
 
 # configuration of assimilation
