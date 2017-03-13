@@ -29,7 +29,7 @@ case "$HOSTNAME" in
     ARKI_URL=/arkimet/arkimet
     ARKI_USE_INOTIFY=Y
     IMPORT_SIGNAL_METHOD=psql
-    IMPORT_SIGNAL_INFO="-h localhost -d import -U logsim"
+    IMPORT_SIGNAL_ARGS="-h localhost -d import -U logsim"
     ;;
   node* ) # Cineca HPC
 # General
@@ -41,6 +41,7 @@ case "$HOSTNAME" in
     ARKI_IMPDIR=~arki-imp/arki-imp/generic
 #
     IMPORT_SIGNAL_METHOD=curl
+    IMPORT_SIGNAL_ARGS="-n"
 #
     ;;
 esac
