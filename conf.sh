@@ -41,7 +41,7 @@ case "$HOSTNAME" in
     ARKI_IMPDIR=~arki-imp/arki-imp/generic
 #
     IMPORT_SIGNAL_METHOD=curl
-    IMPORT_SIGNAL_ARGS="-n"
+    IMPORT_SIGNAL_ARGS="-n -s"
 #
     ;;
 esac

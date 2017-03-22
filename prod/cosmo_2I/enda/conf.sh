@@ -58,7 +58,7 @@ LETKF_BIN=$WORK/srcgnu/3dvar/build/obj/var3d
 
 # scheduler resources
 PARRES="-l select=2:ncpus=16:mpiprocs=16:mem=100gb -q meteoenda"
-SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -q meteoenda"
+SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
 MODEL_WALLTIME=01:00:00
-DELAY=5
+DELAY=4
 OPERATIONS=OMA
