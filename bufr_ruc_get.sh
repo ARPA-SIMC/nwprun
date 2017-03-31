@@ -73,10 +73,11 @@ rm -f $BUFR_WORKDIR/*
 cd $BUFR_WORKDIR
 
 # improve
-ncftpauth="-f $basedir/.auth/meteoam.cfg"
+ncftpauth="-f $basedir/.auth/meteoam_cineca.cfg"
 ftpdir="BUFR/"
+ftpdir=""
 #obstypes="AIRC AMDA AMDN B002 B004 BUON OCEA PILN PILO RAOB SHIN SHIP SYNN SYNO TEMP"
-obstypes="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNO TEMP"
+obstypes="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNN SYNO TEMP"
 waitfor=
 
 if [ -n "$1" ]; then
