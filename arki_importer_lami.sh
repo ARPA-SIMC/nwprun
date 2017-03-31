@@ -47,14 +47,14 @@ make_prof()
     # destaggering u e v
     vg6d_transform --a-grid --anavariable-list=B10007 ${1}_110 ${1}_destag
     # interpolazione sui punti
-    time vg6d_getpoint --output-format=native \
-	${1}_destag ${1}.v7d
     # ricalcolo delle variabili derivate e scrittura in BUFR
-    time v7d_transform --input-format=native --output-format=BUFR  \
+    time vg6d_getpoint --output-format=native --network=temp \
+	${1}_destag - | \
+	v7d_transform --input-format=native --output-format=BUFR  \
 	--output-variable-list=B10004,B11001,B11002,B11003,B11004,B11006,B12101,B12103,B13001,B13003 \
-	${1}.v7d ${1}.bufr
+	- ${1}.bufr
     time eatmydata arki-scan --dispatch=$ARKI_CONF bufr:${1}.bufr > /dev/null
-    rm -f ${1}_109 ${1}_110 ${1}_109_110 ${1}_destag ${1}.v7d ${1}.bufr
+    rm -f ${1}_109 ${1}_110 ${1}_109_110 ${1}_destag ${1}.bufr
 }
 
 import_one() {
@@ -90,6 +90,14 @@ import_one() {
 	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    log "done importing $1"
 	    ;;
+	./cosmo_2I_assim/*)
+	    log "start importing cosmo_2I_assim $1"
+	    sdate=${1%.grib}
+	    sdate=${sdate##*.}
+	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+	    import_signal_imported cosmo_2I_assim $sdate ''
+	    log "done importing $1"
+	    ;;
 	./comet/*)
 	    log "start importing comet $1"
 	    tmpdir=`mktemp -d $ARKI_IMPROOT/tmptar.XXXXXXXXXX`
@@ -115,6 +123,8 @@ import_one() {
 	    cp -p $1 ~/save/
 	    ;;
     esac
+# after eatmydata make a sync on the filesystem to clean the soul
+    sync # not all versions of sync support -f: -f $ARKI_CONF
     rm -f $1
 
 #    trap 15 20 2
@@ -161,7 +171,9 @@ periodic_check() {
 #	trap '{ mustexit=Y; }' 15 20 2
 	log "daily cleanup"
 #	arki_dailycleanup $ARKI_CONF
-	arki_dailyarchivecleanup $ARKI_CONF /gpfs_arkimet/archive
+#	arki_dailyarchivecleanup $ARKI_CONF /gpfs_arkimet/archive
+#	arki-check --fix --repack --config=$ARKI_CONF
+	import_signal_dailycleanup 20 || true
 	create_static cosmo_5M_itr 22
 	lastcleanup=$now
 #	trap 15 20 2
