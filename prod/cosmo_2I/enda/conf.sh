@@ -11,7 +11,7 @@ ENS_TOTAL_MEMB=12
 
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then
-    MODEL_DELTABD=3
+    MODEL_DELTABD=0
     PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
     PARENTMODEL_FREQINI=3
     PARENTMODEL_FREQANA=3
@@ -50,6 +50,7 @@ else # deterministic run or analysis
     esac
 # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki
+    ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_assim
 fi
 # letkf analysis
 LETKF_WORKDIR=$WORKDIR/letkf
