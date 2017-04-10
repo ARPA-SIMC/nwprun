@@ -98,6 +98,16 @@ import_one() {
 	    import_signal_imported cosmo_2I_assim $sdate ''
 	    log "done importing $1"
 	    ;;
+	./cosmo_2I_fcast/*)
+	    log "start importing cosmo_2I_fcast $1"
+	    sdate=${1%.grib}
+	    sdate=${sdate##*.}
+	    sfile=${1##*/}
+	    sfile=${sfn%%.*}
+	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+	    import_signal_imported cosmo_2I_fcast $sdate $sfile
+	    log "done importing $1"
+	    ;;
 	./comet/*)
 	    log "start importing comet $1"
 	    tmpdir=`mktemp -d $ARKI_IMPROOT/tmptar.XXXXXXXXXX`
@@ -116,7 +126,8 @@ import_one() {
 	    sfn=${sfn%%.*}
 	    sdate=${sfn#*_}
 	    sfile=${sfn%_*}
-	    import_signal_imported cnmc_cosmo_eps $sdate $sfile
+# go back 3 hours, check with Lucio why
+	    import_signal_imported cnmc_cosmo_eps `datetime_sub $sdate 3` $sfile
 	    log "done importing $1"
 	    ;;
 	./save/*)
@@ -170,8 +181,7 @@ periodic_check() {
     if [ "$now" != "$lastcleanup" ]; then
 #	trap '{ mustexit=Y; }' 15 20 2
 	log "daily cleanup"
-#	arki_dailycleanup $ARKI_CONF
-#	arki_dailyarchivecleanup $ARKI_CONF /gpfs_arkimet/archive
+	arki_dailycleanup $ARKI_CONF
 #	arki-check --fix --repack --config=$ARKI_CONF
 	import_signal_dailycleanup 20 || true
 	create_static cosmo_5M_itr 22
