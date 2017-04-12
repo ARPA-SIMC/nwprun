@@ -95,9 +95,9 @@ import_one() {
 #	    sdate=${1%.grib}
 #	    sdate=${sdate##*.}
 	    sfile=${1##*/}
-	    sfile=${sfn%%.*}
+	    sfile=${sfile%%.*}
 	    sdate=${sfile#laf}
-	    sdate=${sfile::8}
+	    sdate=${sdate::10}
 	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    import_signal_imported cosmo_2I_assim $sdate $sfile
 	    log "done importing $1"
