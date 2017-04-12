@@ -18,9 +18,12 @@ make_itr()
 
 make_medl()
 {
-    time vg6d_transform --trans-mode=s \
+
+    time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=index \
+	--ix=1 --iy=4 --fx=1083 --fy=559 ${1} - | \
+	vg6d_transform --trans-mode=s \
 	--trans-type=boxregrid --sub-type=average --npx=4 --npy=4 \
-	$1 ${1}_medl
+	- ${1}_medl
     time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1}_medl > /dev/null
     rm -f ${1}_medl
 }
