@@ -21,16 +21,16 @@
   lreorder=.FALSE.,
  /END
  &GRID_IN
-  ie_in_tot = 132, je_in_tot = 162, ke_in_tot = 45,
-  startlat_in_tot = -8.28, startlon_in_tot = -3.96,
+  ie_in_tot = 134, je_in_tot = 167, ke_in_tot = 45,
+  startlat_in_tot = -8.73, startlon_in_tot = -4.05,
   pollat_in = 47., pollon_in = -170.,
   dlat_in = 0.09, dlon_in = 0.09,
  /END
  &LMGRID
-  startlat_tot=-7.7, startlon_tot=-3.5,
-  pollat=47.000,      pollon=-170.000,
+  startlat_tot=-8.5, startlon_tot=-3.8,
+  ielm_tot=576, jelm_tot=701, kelm_tot=65,
+  pollat=47.000, pollon=-170.000,
   dlon=0.02, dlat=0.02,
-  ielm_tot=545, jelm_tot=671, kelm_tot=65,
   ivctype=2, irefatm=2, lanalyt_calc_t0p0=.true., vcflat=11357.0,
   vcoord_d=22000.00, 21040.00, 20108.89, 19206.23, 18331.56, 17484.43,
            16664.39, 15870.99, 15103.78, 14362.31, 13646.12, 12954.77,
