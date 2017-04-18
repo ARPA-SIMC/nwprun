@@ -3,7 +3,7 @@ MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
 MODEL_NH_NUDG=3
 MODEL_NH_LHN=3
-MODEL_BACK=0
+MODEL_BACK=3
 MODEL_STOP=3
 MODEL_BCANA=N
 MODEL_FREQINI=3
@@ -11,7 +11,20 @@ ENS_TOTAL_MEMB=12
 
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then
-    MODEL_DELTABD=0
+    case $TIME in
+	00 | 12)
+	    MODEL_DELTABD=3
+	    ;;
+	03 | 15)
+	    MODEL_DELTABD=6
+	    ;;
+	06 | 18)
+	    MODEL_DELTABD=3
+	    ;;
+	09 | 21)
+	    MODEL_DELTABD=6
+	    ;;
+    esac
     PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
     PARENTMODEL_FREQINI=3
     PARENTMODEL_FREQANA=3
@@ -50,6 +63,7 @@ else # deterministic run or analysis
     esac
 # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki
+# setup for remote import
     ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_assim
 fi
 # letkf analysis
@@ -61,5 +75,5 @@ LETKF_BIN=$WORK/srcgnu/3dvar/build/obj/var3d
 PARRES="-l select=2:ncpus=16:mpiprocs=16:mem=100gb -q meteoenda"
 SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
 MODEL_WALLTIME=01:00:00
-DELAY=4
+DELAY=1
 OPERATIONS=OMA
