@@ -39,8 +39,8 @@
  /END
   lbd_frame=.TRUE.,
  &GRIBOUT
-  nprocess_ini=@MODEL_FCAST_GP@,
-  nprocess_bd=@MODEL_FCAST_GP@,
+  nprocess_ini=@MODEL_FCRUC_GP@,
+  nprocess_bd=@MODEL_FCRUC_GP@,
   hcomb=0,@MODEL_STOP@,1,
   lanalysis=.FALSE.,
   luvmasspoint=.FALSE.,
