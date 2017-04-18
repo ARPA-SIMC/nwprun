@@ -32,7 +32,7 @@ case $TIME in
 esac
 ENS_TOTAL_MEMB=0
 # setup for remote import
-ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcast
+ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcruc
 
 # scheduler resources
 PARRES="-l select=12:ncpus=16:mpiprocs=16:mem=100gb -q meteoenda"
