@@ -127,6 +127,8 @@ import_one() {
 	    log "done importing $1"
 	    ;;
 	./comet/*)
+# ./comet/lfff00060000_2017050506.tar.bz2
+# ./comet/fc_lfff02000000_2017050418.tar.bz2
 	    log "start importing comet $1"
 	    tmpdir=`mktemp -d $ARKI_IMPROOT/tmptar.XXXXXXXXXX`
 	    tar --transform='s?.*/??g' -C $tmpdir -xvf $1
@@ -142,10 +144,11 @@ import_one() {
 	    safe_rm_rf $tmpdir
 	    sfn=${1##*/}
 	    sfn=${sfn%%.*}
-	    sdate=${sfn#*_}
+# modificato per tenere conto delle segnalazioni dei forecast,
+# per ora usiamo lo stesso dataset
+	    sdate=${sfn#*lfff????0000_}
 	    sfile=${sfn%_*}
-# go back 3 hours, check with Lucio why
-	    import_signal_imported cnmc_cosmo_eps `datetime_sub $sdate 3` $sfile
+	    import_signal_imported cnmc_cosmo_eps $sdate $sfile
 	    log "done importing $1"
 	    ;;
 	./save/*)
