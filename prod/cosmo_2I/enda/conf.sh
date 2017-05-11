@@ -7,7 +7,7 @@ MODEL_BACK=3
 MODEL_STOP=3
 MODEL_BCANA=N
 MODEL_FREQINI=3
-ENS_TOTAL_MEMB=12
+ENS_TOTAL_MEMB=20
 
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then
@@ -74,6 +74,9 @@ LETKF_BIN=$WORK/srcgnu/3dvar/build/obj/var3d
 # scheduler resources
 PARRES="-l select=2:ncpus=16:mpiprocs=16:mem=100gb -q meteoenda"
 SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
-MODEL_WALLTIME=01:00:00
+MODEL_WALLTIME=00:45:00
 DELAY=1
+NWPWAITELAPS=10200
+NWPWAITSOLAR=36000
+NWPWAITWAIT=30
 OPERATIONS=OMA

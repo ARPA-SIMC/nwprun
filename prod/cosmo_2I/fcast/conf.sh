@@ -26,4 +26,7 @@ PARRES="-l select=12:ncpus=16:mpiprocs=16:mem=100gb -q meteoenda"
 SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -q meteoenda"
 MODEL_WALLTIME=02:00:00
 DELAY=3
+NWPWAITELAPS=10200
+NWPWAITSOLAR=36000
+NWPWAITWAIT=30
 OPERATIONS=OM
