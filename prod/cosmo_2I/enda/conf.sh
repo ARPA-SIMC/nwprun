@@ -8,6 +8,7 @@ MODEL_STOP=3
 MODEL_BCANA=N
 MODEL_FREQINI=3
 ENS_TOTAL_MEMB=20
+ENS_DET_MEMB=Y
 
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then

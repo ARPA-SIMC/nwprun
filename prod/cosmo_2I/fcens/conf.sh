@@ -13,6 +13,7 @@ MODEL_SLOW_PAST_H=144
 MODEL_FREQINI=24
 MODEL_DELTABD=9
 ENS_TOTAL_MEMB=1
+ENS_DET_MEMB=
 # setup for remote import
 ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcens
 
