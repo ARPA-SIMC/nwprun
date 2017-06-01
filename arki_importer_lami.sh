@@ -86,6 +86,11 @@ import_one() {
 		    make_medl $1
 		    log "done importing $1"
 		    ;;
+		*/swan/*)
+		    log "start importing PROD/swan $1"
+		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
+		    log "done importing $1"
+		    ;;
 	    esac
 	    ;;
 	./generic/*)
