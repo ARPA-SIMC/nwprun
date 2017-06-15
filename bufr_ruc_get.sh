@@ -8,8 +8,8 @@ log() {
 dl_ftp() {
 
     filelist=""
-    for obstype in $obstypes; do
-	filelist="$filelist ${ftpdir}${obstype}_${1}.bz2"
+    for obstype in $OBSTYPES; do
+	filelist="$filelist ${FTPDIR}${obstype}_${1}.bz2"
     done
 
     ncftpget $ncftpauth . $filelist || true
@@ -73,11 +73,7 @@ rm -f $BUFR_WORKDIR/*
 cd $BUFR_WORKDIR
 
 # improve
-ncftpauth="-f $basedir/.auth/meteoam_cineca.cfg"
-ftpdir="BUFR/"
-ftpdir=""
-#obstypes="AIRC AMDA AMDN B002 B004 BUON OCEA PILN PILO RAOB SHIN SHIP SYNN SYNO TEMP"
-obstypes="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNN SYNO TEMP"
+ncftpauth="-f $basedir/.auth/bufr_ruc_get.cfg"
 waitfor=
 
 if [ -n "$1" ]; then
