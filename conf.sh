@@ -31,7 +31,7 @@ case "$HOSTNAME" in
     IMPORT_SIGNAL_METHOD=psql
     IMPORT_SIGNAL_ARGS="-h localhost -d import -U logsim"
     ;;
-  node??? | r???u??l?? ) # Cineca HPC galileo | marconi
+  node??? | r????????? ) # Cineca HPC galileo | marconi
 # General
     WORKDIR=$CINECA_SCRATCH/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
