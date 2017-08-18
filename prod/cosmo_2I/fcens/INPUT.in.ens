@@ -4,11 +4,11 @@
   nincwait=0, nmaxwait=0,
   nprocx=@NPX@, nprocy=@NPY@, luvcor=.TRUE., lprog_qi=.TRUE., lprog_qr_qs=@PARENTMODEL_QRQS@,
   lvertwind_ini=.TRUE., lvertwind_bd=.TRUE., lforest=.TRUE.,
-  lmulti_layer_lm=.TRUE., lsso=.FALSE.,
+  lmulti_layer_lm=.TRUE., lsso=.TRUE.,
   itype_w_so_rel=1, itype_t_cl=0,
   llake=.TRUE., llake_coldstart=.TRUE., lforest=.TRUE.,
   lmulti_layer_in=.TRUE., l_smi=.TRUE.,
-  itype_aerosol=2, itype_ndvi=1,
+  itype_aerosol=2, itype_ndvi=1, itype_albedo = 3,
   linitial=.TRUE., lboundaries=.TRUE.,
   ltime_proc=.FALSE., ltime_mean=.TRUE., 
   lroutine=.FALSE., yinput_model='@PARENTMODEL@',
@@ -17,7 +17,8 @@
   ilow_pass_xso=5,
   rxso_mask=625.0000,
   lfilter_pp=.TRUE.,
-  lbalance_pp=.TRUE.,
+  itype_balance_pp = 2,
+  itype_fast_waves_lm = 2,
   lreorder=.FALSE.,
  /END
  &GRID_IN
@@ -54,8 +55,8 @@
   yinext_cat='@MODEL_STATIC@',
   yin_cat='@PARENTMODEL_DATADIR@',
   ylm_cat='@MODEL_PRE_DATADIR@',
-  ymode_read='r b'
-  ymode_write='w b'
+  ymode_read='r  '
+  ymode_write='w  '
   nprocess_ini=@MODEL_INTER_GP@, 
   nprocess_bd=@MODEL_INTER_GP@,
   ncenter=@GRIB_CENTER@,

@@ -1,3 +1,5 @@
+MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a/tstint2lm
+#MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3_dp/lmparbin_all
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
@@ -12,7 +14,7 @@ MODEL_LAKE=Y
 MODEL_SLOW_PAST_H=144
 MODEL_FREQINI=24
 MODEL_DELTABD=9
-ENS_TOTAL_MEMB=1
+ENS_TOTAL_MEMB=2
 ENS_DET_MEMB=
 # setup for remote import
 ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcens
@@ -35,9 +37,9 @@ MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
 
 # scheduler resources
-PARRES="-l select=4:ncpus=16:mpiprocs=16:mem=100gb -q meteoenda"
-SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -q meteoenda"
-MODEL_WALLTIME=02:00:00
+PARRES="-l select=4:ncpus=36:mpiprocs=36:mem=100gb"
+SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb"
+MODEL_WALLTIME=03:00:00
 DELAY=3
 NWPWAITELAPS=10200
 NWPWAITSOLAR=36000

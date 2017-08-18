@@ -1,0 +1,38 @@
+ &LMGRID
+  startlat_tot=-8.5, startlon_tot=-3.8,
+  ie_tot=576, je_tot=701, ke_tot=65,
+  pollat=47.000, pollon=-170.000,
+  dlon=0.02, dlat=0.02,
+ /END
+ &RUNCTL
+  dt=18.0,
+  hstart=0, hstop=@MODEL_STOP@,
+  ydate_ini='@DATES@@TIMES@',
+  itype_timing = 1,
+  lreproduce=.TRUE., luseobs=.TRUE.,
+  lphys=.TRUE., ldiagnos=.FALSE., ldfi=.FALSE.,
+  nprocx=@NPX@, nprocy=@NPY@, nprocio=@NPIO@,
+  nboundlines=3,
+  lreorder=.FALSE.,
+  hincmxu=1.,
+  hincmxt=1.,
+  ldatatypes=.FALSE.,
+  ltime_barrier=.FALSE.,
+  ncomm_type=2,
+  luse_rttov=.FALSE.,
+  lartif_data=.FALSE.,
+  leps=@ENS_MODE@,
+  idbg_level=40,
+ /END
+ &TUNING
+  rlam_heat=1.0,
+  rlam_mom=0.0,
+  rat_lam=1.0,
+  rat_can=1.0,
+  c_lnd=2.0,
+  c_soil=1.0,
+  c_sea=1.5,
+  z0m_dia=0.2,
+  crsmin=150.,
+  securi=0.5,
+/END 
