@@ -1,5 +1,5 @@
 case "$HOSTNAME" in
-  *.metarpa | maialinux ) # Arpae
+  *.metarpa | maialinux* ) # Arpae
 # General
     WORKDIR=$OPE/$NWPCONF
     LOGDIR=$SCRATCH/log
