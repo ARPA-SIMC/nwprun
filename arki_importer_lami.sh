@@ -68,6 +68,8 @@ import_one() {
 	    case $1 in
 		*/lm5/*c) # dati constanti
 		    log "start importing PROD/lm5/c $1"
+# principale
+		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
 # area itr (~"lama")
 		    make_itr $1
 		    rm -f ${1}_itr
@@ -77,6 +79,8 @@ import_one() {
 		    ;;
 		*/lm5/*)
 		    log "start importing PROD/lm5 $1"
+# principale
+		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
 # area itr (~"lama")
 		    make_itr $1
 # profili verticali
@@ -84,6 +88,14 @@ import_one() {
 		    rm -f ${1}_itr
 # area medl
 		    make_medl $1
+		    log "done importing $1"
+		    ;;
+		*/lm2.2/*)
+		    log "start importing PROD/lm2.2 $1"
+		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
+		    mkdir -p $dir_discarica/cosmo_2I_fcast
+		    arki-query --data "$query_discarica" grib:${1} >> $dir_discarica/cosmo_2I_fcast/verifica.grib
+
 		    log "done importing $1"
 		    ;;
 		*/swan/*)
@@ -109,17 +121,19 @@ import_one() {
 	    import_signal_imported cosmo_2I_assim $sdate $sfile
 	    log "done importing $1"
 	    ;;
-	./cosmo_2I_fcast/*)
-	    log "start importing cosmo_2I_fcast $1"
-# trust the additional date for the reftime
-	    sdate=${1%.grib}
-	    sdate=${sdate##*.}
-	    sfile=${1##*/}
-	    sfile=${sfile%%.*}
-	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
-	    import_signal_imported cosmo_2I_fcast $sdate $sfile
-	    log "done importing $1"
-	    ;;
+#	./cosmo_2I_fcast/*)
+#	    log "start importing cosmo_2I_fcast $1"
+## trust the additional date for the reftime
+#	    sdate=${1%.grib}
+#	    sdate=${sdate##*.}
+#	    sfile=${1##*/}
+#	    sfile=${sfile%%.*}
+#	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+##	    mkdir -p $dir_discarica/fcast/ # $dir_discarica = /gpfs_arkimet/archive
+##	    arki-query --data -o $dir_discarica/fcast/${date}_${file}.grib $query_discarica $1
+#	    import_signal_imported cosmo_2I_fcast $sdate $sfile
+#	    log "done importing $1"
+#	    ;;
 	./cosmo_2I_fcruc/*)
 	    log "start importing cosmo_2I_fcruc $1"
 # trust the additional date for the reftime
@@ -128,6 +142,8 @@ import_one() {
 	    sfile=${1##*/}
 	    sfile=${sfile%%.*}
 	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+	    mkdir -p $dir_discarica/cosmo_2I_fcruc
+	    arki-query --data "$query_discarica" $1 >> $dir_discarica/cosmo_2I_fcruc/verifica.grib
 	    import_signal_imported cosmo_2I_fcruc $sdate $sfile
 	    log "done importing $1"
 	    ;;
@@ -157,11 +173,12 @@ import_one() {
 	    log "done importing $1"
 	    ;;
 	./save/*)
+#	./*) # save-everything mode
 	    cp -p $1 ~/save/
 	    ;;
     esac
 # after eatmydata make a sync on the filesystem to clean the soul
-    sync # not all versions of sync support -f: -f $ARKI_CONF
+#    sync # not all versions of sync support -f: -f $ARKI_CONF
     rm -f $1
 
 #    trap 15 20 2
@@ -247,6 +264,8 @@ tmout=30
 lastcleanup=`date -u '+%Y%m%d'`
 mustexit=
 mustreload=
+dir_discarica=/gpfs_arkimet/archive
+query_discarica='level:GRIB1,105 or GRIB1,102 or GRIB1,1; product:GRIB1,,2,11 or GRIB1,,2,17 or GRIB1,,2,85 or GRIB1,,2,33 or GRIB1,,2,34 or GRIB1,,2,61 or GRIB1,,2,1 or GRIB1,,2,2'
 
 # security check
 [ -n "$ARKI_IMPROOT" ] || exit 1
