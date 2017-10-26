@@ -280,7 +280,9 @@ trap '{ final_cleanup; }' EXIT
 
 while true; do
     donenothing=Y
-    for file in `find . -type f -name '[^.]*'`; do
+# tried with find -regex '.*/[^.][^/].*((?!tmp).)*$' or
+# '.*/[^.][^/].*\(?!tmp\).$' unsuccessfully
+    for file in `find . -type f -name '[^.]*'|grep -v '\.tmp$'`; do
 # do homework before classwork
 	[ -n "$mustexit" ] && exit 1 || true
 	[ -n "$mustreload" ] && exec "$0" "$@" || true
