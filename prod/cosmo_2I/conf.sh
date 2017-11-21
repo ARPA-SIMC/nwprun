@@ -24,8 +24,7 @@ MODEL_NLEV=65
 # preprocessing (interpolation)
 MODEL_PRE_WORKDIR=$WORKDIR/int2lm
 MODEL_PRE_DATADIR=$WORKDIR/int2lm/data
-#MODEL_PRE_BIN=$WORK/srcgnu/int2lm_150611_2.02/tstint2lm
-MODEL_PRE_BIN=/gpfs/meteo/lami/srcgnu/int2lm_150611_2.02/tstint2lm
+MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data

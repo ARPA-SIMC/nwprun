@@ -37,7 +37,7 @@ MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
 
 # scheduler resources
-PARRES="-l select=4:ncpus=36:mpiprocs=36:mem=100gb"
+PARRES="-l select=4:ncpus=34:mpiprocs=34:mem=100gb"
 SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb"
 MODEL_WALLTIME=03:00:00
 DELAY=3
