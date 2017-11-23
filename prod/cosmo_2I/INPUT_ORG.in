@@ -16,7 +16,7 @@
   lreorder=.FALSE.,
   hincmxu=1.,
   hincmxt=1.,
-  ldatatypes=.TRUE.,
+  ldatatypes=.FALSE.,
   ltime_barrier=.FALSE.,
   ncomm_type=2,
   luse_rttov=.FALSE.,
