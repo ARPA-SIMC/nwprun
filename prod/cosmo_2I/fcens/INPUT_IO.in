@@ -39,19 +39,20 @@
  /END
   lbd_frame=.TRUE.,
  &GRIBOUT
-  nprocess_ini=@MODEL_FCAST_GP@,
-  nprocess_bd=@MODEL_FCAST_GP@,
+  nprocess_ini=@MODEL_FCENS_GP@,
+  nprocess_bd=@MODEL_FCENS_GP@,
   hcomb=0,@MODEL_STOP@,1,
   lanalysis=.FALSE.,
   luvmasspoint=.FALSE.,
-  yvarml=
-  @INCLUDE yvarlist_ic@
-  @INCLUDE yvarlist_diagn@
-  yvarpl=' ',
+  yvarml='PS      ','PMSL    ','RAIN_GSP','SNOW_GSP','TOT_PREC',
+         'U_10M   ','V_10M   ','T_2M    ','TD_2M   ',
+         'CLCT    ',
+  yvarpl='T       ','FI      ','QV      '
   yvarzl=' ',
   yvarsl=' ',
+  plev=500.,700.,850.
   lcheck = .TRUE.,
   lwrite_const=.TRUE.
   ydir='@MODEL_DATADIR@',
-  yform_write = 'api1',
+  yform_write = 'api2',
  /END
