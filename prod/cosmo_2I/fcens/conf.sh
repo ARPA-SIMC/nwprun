@@ -37,8 +37,8 @@ MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
 
 # scheduler resources
-PARRES="-l select=4:ncpus=34:mpiprocs=34:mem=100gb"
-SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb"
+PARRES="-l select=4:ncpus=32:mpiprocs=32:mem=118gb -q meteoenda"
+SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
 MODEL_WALLTIME=03:00:00
 DELAY=3
 NWPWAITELAPS=10200

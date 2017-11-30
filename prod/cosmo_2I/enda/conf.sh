@@ -73,7 +73,7 @@ LETKF_DATADIR=$WORKDIR/letkf/data
 LETKF_BIN=$WORK/srcintel/dace_code/build/LINUX64.intel-mpi/bin/var3d
 
 # scheduler resources
-PARRES="-l select=2:ncpus=34:mpiprocs=34:mem=100gb -q meteoenda"
+PARRES="-l select=2:ncpus=32:mpiprocs=32:mem=100gb -q meteoenda"
 SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
 MODEL_WALLTIME=00:45:00
 DELAY=1

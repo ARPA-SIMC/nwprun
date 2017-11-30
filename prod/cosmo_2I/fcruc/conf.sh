@@ -35,8 +35,8 @@ ENS_TOTAL_MEMB=0
 ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcruc
 
 # scheduler resources
-PARRES="-l select=12:ncpus=16:mpiprocs=16:mem=100gb -q meteoenda"
-SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -q meteoenda"
+PARRES="-l select=6:ncpus=32:mpiprocs=32:mem=118gb -q meteoenda"
+SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
 MODEL_WALLTIME=00:55:00
 DELAY=2
 NWPWAITELAPS=10200
