@@ -1,5 +1,5 @@
-MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a/tstint2lm
-#MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3_dp/lmparbin_all
+MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a_upd/tstint2lm
+MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3_debug/lmparbin_all
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
