@@ -1,12 +1,16 @@
 MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a_upd/tstint2lm
 MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3_debug/lmparbin_all
+FXTR_HOME=$WORK/srcintel/fieldExtra-12.6.0/
+FXTR_BIN=$FXTR_HOME/src/fieldextra_intel_opt_omp
+FXTR_WORKDIR=$WORKDIR/fxtr
+FXTR_DATADIR=$FXTR_WORKDIR/data
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
 MODEL_NH_NUDG=4
 MODEL_NH_LHN=4
 MODEL_BACK=0
-MODEL_STOP=48
+MODEL_STOP=51
 MODEL_BCANA=N
 #MODEL_SOIL_PARENT=Y
 #MODEL_SNOW_PARENT=Y
@@ -37,11 +41,12 @@ MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
 
 # scheduler resources
-PARRES="-l select=4:ncpus=32:mpiprocs=32:mem=118gb -q meteoenda"
-SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
-MODEL_WALLTIME=03:00:00
+PARRES="-l select=8:ncpus=32:mpiprocs=32:mem=118gb -q meteoeps"
+SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoeps"
+OMPRES="-l select=1:ncpus=32:mpiprocs=32:mem=110gb -l place=pack:shared -q meteoeps"
+MODEL_WALLTIME=04:00:00
 DELAY=3
-NWPWAITELAPS=10200
+NWPWAITELAPS=14400
 NWPWAITSOLAR=36000
 NWPWAITWAIT=30
-OPERATIONS=OM
+OPERATIONS=OMP
