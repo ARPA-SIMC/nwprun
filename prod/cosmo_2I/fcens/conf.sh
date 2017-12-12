@@ -1,5 +1,5 @@
-MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a_upd/tstint2lm
-MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3_debug/lmparbin_all
+MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a/tstint2lm
+MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3/lmparbin_all
 FXTR_HOME=$WORK/srcintel/fieldExtra-12.6.0/
 FXTR_BIN=$FXTR_HOME/src/fieldextra_intel_opt_omp
 FXTR_WORKDIR=$WORKDIR/fxtr
@@ -18,7 +18,7 @@ MODEL_LAKE=Y
 MODEL_SLOW_PAST_H=144
 MODEL_FREQINI=24
 MODEL_DELTABD=9
-ENS_TOTAL_MEMB=2
+ENS_TOTAL_MEMB=20
 ENS_DET_MEMB=
 # setup for remote import
 ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcens
