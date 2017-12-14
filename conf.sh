@@ -1,15 +1,15 @@
 case "$HOSTNAME" in
-  *.metarpa | maialinux* ) # Arpae
+  *.metarpa | maial* ) # Arpae
 # General
-    WORKDIR=$OPE/$NWPCONF
+    WORKDIR=$WORK/$NWPCONF
     LOGDIR=$SCRATCH/log
 # Arkimet
-    ARKI_DIR=$OPE/arkimet
+    ARKI_DIR=/fs/archive/arkimet/arkimet
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=arki_importer
-    ARKI_IMPDIR=$ARKI_DIR/inbound
+    ARKI_IMPDIR=/fs/work/arkimet/inbound
     ARKI_IMPROOT=$ARKI_IMPDIR
-    ARKI_URL=http://maialinux.metarpa:8090/dataset
+    ARKI_URL=http://maialtest.metarpa:8090/dataset
     ARKI_USE_INOTIFY=Y
 # Radar
     RADAR_MOSAICODIR=$HOME/prelhn/Composito

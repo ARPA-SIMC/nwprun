@@ -1,8 +1,8 @@
 BUFR_WORKDIR=$WORKDIR/bufr
 case "$HOSTNAME" in
-  *.metarpa | maialinux ) # Arpae
+  *.metarpa | maial* ) # Arpae
 	FTPDIR="BUFR/"
-	OBSTYPES="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNO TEMP"
+	OBSTYPES="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNN SYNO TEMP"
     ;;
   lami* ) # Cineca cloud
 	FTPDIR=""
