@@ -5,12 +5,24 @@ log() {
 }
 
 import_one() {
-    trap '' 15
     log "start importing $1"
     eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
     log "done importing $1"
     rm -f $1
-    trap '{ exit 0; }' 15
+}
+
+periodic_check() {
+# need a dataset cleanup?
+    local now
+    now=`date -u '+%Y%m%d'`
+    if [ "$now" != "$lastcleanup" ]; then
+	log "daily cleanup"
+	arki_dailycleanup $ARKI_CONF
+#	arki-check --fix --repack --config=$ARKI_CONF
+	import_signal_dailycleanup 20 || true
+	create_static cosmo_5M_itr 22
+	lastcleanup=$now
+    fi
 }
 
 periodic_check() {
@@ -24,26 +36,8 @@ periodic_check() {
     fi
 }
 
-daily_cleanup() {
-    arki_dev=`stat -c %D $ARKI_DIR`
-    for back in `seq 8 12`; do
-	yy=`date -u --date "$back days ago" "+%Y"`
-	mm=`date -u --date "$back days ago" "+%m"`
-	dd=`date -u --date "$back days ago" "+%d"`
-	log "cleaning $yy/$mm-$dd.grib1"
-	for file in $ARKI_DIR/*/$yy/$mm-$dd.grib* $ARKI_DIR/*/$yy/$mm-$dd.bufr; do
-	    if [ "`stat -c %D $file 2>/dev/null`" = "$arki_dev" ]; then
-		rm -f $file
-	    fi
-	done
-    done
-    log "start arki-check"
-    arki-check --fix --config=$ARKI_CONF # --repack
-    log "done arki-check"
-}
-
 final_cleanup() {
-    [ -n "$COPROC_PID" ] && kill $COPROC_PID
+#    [ -n "$COPROC_PID" ] && kill $COPROC_PID
     trap - EXIT
     exit
 }
@@ -60,26 +54,57 @@ set -e
 # source the main library module
 . $NWPCONFBINDIR/nwpconf.sh
 # source other optional modules
+. $NWPCONFBINDIR/arki_tools.sh
 # end of setup
 
 nonunique_exit
 
 # redirect all to logfile
-exec >>$HOME/log/`basename $0`.log 2>&1
+exec >>$LOGDIR/`basename $0`.log 2>&1
 set -x
 
-tmout=600
+tmout=30
+#lastcleanup=`date --date '1 day ago' -u '+%Y%m%d'`
 lastcleanup=`date -u '+%Y%m%d'`
-[ -n "$ARKI_IMPDIR" ] || exit 1
-cd $ARKI_IMPDIR
+mustexit=
+mustreload=
+
+[ -n "$ARKI_IMPROOT" ] || exit 1
+cd $ARKI_IMPROOT
 # set -e disabled because it fails when a file is arki-scanned
 # to error dataset and do not know yet in which occasions
 set +e
 # make a check before start
 periodic_check
 
+trap '{ mustexit=Y; }' 15 20 2
+trap '{ mustreload=Y; }' 1
 trap '{ final_cleanup; }' EXIT
 
+while true; do
+    donenothing=Y
+# tried with find -regex '.*/[^.][^/].*((?!tmp).)*$' or
+# '.*/[^.][^/].*\(?!tmp\).$' unsuccessfully
+    for file in `find . -type f -name '[^.]*'|grep -v '\.tmp$'`; do
+# do homework before classwork
+	[ -n "$mustexit" ] && exit 1 || true
+	[ -n "$mustreload" ] && exec "$0" "$@" || true
+	import_one $file
+	donenothing=
+    done
+# if something has been done do not cool down
+    if [ -n "$donenothing" ]; then
+# do homework before going to sleep
+	[ -n "$mustexit" ] && exit 1 || true
+	[ -n "$mustreload" ] && exec "$0" "$@" || true
+	sleep $tmout
+	log "Performing check"
+	periodic_check
+    fi
+done
+
+# old code with inotify
+__unused__() {
 # remember files already queued for import, if very unlucky something
 # could be missed here
 #shopt -s nullglob
@@ -102,3 +127,5 @@ while true; do
     log "Performing check"
     periodic_check
 done
+
+}
