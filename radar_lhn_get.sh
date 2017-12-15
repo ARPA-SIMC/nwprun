@@ -6,7 +6,8 @@ basedir=$HOME/ope
 # basic variables
 export NWPCONFDIR=$basedir/conf
 export NWPCONFBINDIR=$basedir/libexec/nwpconf
-export NWPCONF=prod/RADAR_LHN_2I
+export NWPCONF=$1
+shift
 
 set -e
 # source the main library module
@@ -23,9 +24,8 @@ exec >>$LOGDIR/`basename $0`.log 2>&1
 
 set -x
 
-[ -n "$RADAR_LHN_WORKDIR" ] || exit 1
+safe_rm_rf $RADAR_LHN_WORKDIR
 mkdir -p $RADAR_LHN_WORKDIR
-rm -f $RADAR_LHN_WORKDIR/*
 cd $RADAR_LHN_WORKDIR
 
 if [ -n "$1" ]; then

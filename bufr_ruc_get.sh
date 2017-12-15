@@ -69,9 +69,8 @@ exec >>$LOGDIR/`basename $0`.log 2>&1
 
 set -x
 
-[ -n "$BUFR_WORKDIR" ] || exit 1
+safe_rm_rf $BUFR_WORKDIR
 mkdir -p $BUFR_WORKDIR
-rm -f $BUFR_WORKDIR/*
 cd $BUFR_WORKDIR
 
 # improve
