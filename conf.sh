@@ -31,7 +31,7 @@ case "$HOSTNAME" in
     IMPORT_SIGNAL_METHOD=psql
     IMPORT_SIGNAL_ARGS="-h localhost -d import -U logsim"
     ;;
-  node??? | r????????? ) # Cineca HPC galileo | marconi
+  node??? ) # Cineca HPC galileo
 # General
     WORKDIR=$CINECA_SCRATCH/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
@@ -45,6 +45,23 @@ case "$HOSTNAME" in
     IMPORT_SIGNAL_METHOD=curl
 #
 #
+    CINECA_ARCHIVE_PRE=/gpfs/meteo/lm/galileo/auto/archive/PROD
+    ;;
+  r????????? ) # Cineca HPC marconi
+# General
+    WORKDIR=$CINECA_SCRATCH/$NWPCONF
+    LOGDIR=$CINECA_SCRATCH/log
+# Arkimet
+    ARKI_SCAN_METHOD=remote_arki_importer
+#
+#
+    ARKI_IMPDIR=~arki-imp/arki-imp/generic
+#
+#
+    IMPORT_SIGNAL_METHOD=curl
+#
+#
+    CINECA_ARCHIVE_PRE=/marconi_meteo/lm/marconi/auto/archive/PROD
     ;;
 esac
 
