@@ -18,7 +18,7 @@ MODEL_LAKE=Y
 MODEL_SLOW_PAST_H=144
 MODEL_FREQINI=24
 MODEL_DELTABD=9
-ENS_TOTAL_MEMB=20
+ENS_TOTAL_MEMB=8
 ENS_DET_MEMB=
 # setup for remote import
 ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcens
@@ -39,6 +39,7 @@ MODEL_WORKDIR=$WORKDIR/cosmo.$ENS_MEMB
 MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
+CINECA_ARCHIVE_ANA=$WORKDIR/../enda/archive
 
 # scheduler resources
 PARRES="-l select=8:ncpus=32:mpiprocs=32:mem=118gb -q meteoeps"

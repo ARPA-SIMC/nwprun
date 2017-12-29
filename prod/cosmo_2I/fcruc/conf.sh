@@ -33,6 +33,9 @@ esac
 ENS_TOTAL_MEMB=0
 # setup for remote import
 ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcruc
+# setup for arkilocal
+ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
+CINECA_ARCHIVE_ANA=$WORKDIR/../enda/archive
 
 # scheduler resources
 PARRES="-l select=6:ncpus=32:mpiprocs=32:mem=118gb -q meteoenda"
