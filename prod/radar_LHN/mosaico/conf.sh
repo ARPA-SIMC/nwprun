@@ -1,0 +1,2 @@
+RADAR_MOSAICOCONF=$RADAR_MOSAICODIR/configurazioni.maialinux/LHN_ITA.CONF
+
