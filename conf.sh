@@ -1,5 +1,5 @@
 case "$HOSTNAME" in
-  *.metarpa | maial* ) # Arpae
+  *.metarpa | maial* | nodo* ) # Arpae
 # General
     WORKDIR=$WORK/$NWPCONF
     LOGDIR=$SCRATCH/log
@@ -11,6 +11,9 @@ case "$HOSTNAME" in
     ARKI_IMPROOT=$ARKI_IMPDIR
     ARKI_URL=http://maialtest.metarpa:8090/dataset
     ARKI_USE_INOTIFY=Y
+#    IMPORT_SIGNAL_METHOD=simc
+    IMPORT_SIGNAL_METHOD=psql
+    IMPORT_SIGNAL_ARGS="-h localhost -d import -U logsim"
 # Radar
     RADAR_MOSAICODIR=$HOME/prelhn/Composito
     RADAR_LHNDIR=$HOME/prelhn/bufr2grib-RUC
