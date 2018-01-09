@@ -77,7 +77,8 @@ PARRES="-l select=2:ncpus=32:mpiprocs=32:mem=100gb -q meteoenda"
 SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
 MODEL_WALLTIME=00:45:00
 DELAY=1
-NWPWAITELAPS=10200
+NWPWAITELAPS=10800
 NWPWAITSOLAR=36000
+NWPWAITSOLAR_RUN=3600
 NWPWAITWAIT=30
 OPERATIONS=OMA
