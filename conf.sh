@@ -51,6 +51,7 @@ case "$HOSTNAME" in
     CINECA_ARCHIVE_PRE=/gpfs/meteo/lm/galileo/auto/archive/PROD
     CINECA_ARCHIVE_REMOTE=login.marconi.cineca.it
     CINECA_ARCHIVE_REMOTE_PRE=/marconi_meteo/lm/marconi/auto/archive/PROD
+    CINECA_ARCHIVE_POST=/gpfs/meteo/lami/arkimet/archive
     ;;
   r????????? ) # Cineca HPC marconi
 # General
@@ -69,6 +70,7 @@ case "$HOSTNAME" in
     CINECA_ARCHIVE_PRE=/marconi_meteo/lm/marconi/auto/archive/PROD
     CINECA_ARCHIVE_REMOTE=login.galileo.cineca.it
     CINECA_ARCHIVE_REMOTE_PRE=/gpfs/meteo/lm/galileo/auto/archive/PROD
+    CINECA_ARCHIVE_POST=/marconi_meteo/lami/arkimet/archive
     ;;
 esac
 
