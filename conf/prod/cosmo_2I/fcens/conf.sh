@@ -41,7 +41,7 @@ MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcens
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
-CINECA_ARCHIVE_ANA=$WORKDIR/../enda/archive
+MODEL_ARCHIVE_ANA=$WORKDIR/../enda/archive
 
 # scheduler resources
 PARRES="-l select=8:ncpus=32:mpiprocs=32:mem=118gb -q meteoeps"

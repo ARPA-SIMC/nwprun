@@ -67,6 +67,7 @@ else # deterministic run or analysis
 # setup for remote import
     ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_assim
 fi
+MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive
 # letkf analysis
 LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data
