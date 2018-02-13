@@ -3,6 +3,7 @@ case "$HOSTNAME" in
 # General
     WORKDIR=$WORK/$NWPCONF
     LOGDIR=$SCRATCH/log
+    GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
 # Arkimet
     ARKI_DIR=/fs/archive/arkimet/arkimet
     ARKI_CONF=$ARKI_DIR/config
@@ -38,6 +39,7 @@ case "$HOSTNAME" in
 # General
     WORKDIR=$CINECA_SCRATCH/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
+    GRIB_API_EDZW=$WORK/grib_api_edzw
 # Arkimet
     ARKI_SCAN_METHOD=remote_arki_importer
 #
@@ -57,6 +59,7 @@ case "$HOSTNAME" in
 # General
     WORKDIR=$CINECA_SCRATCH/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
+    GRIB_API_EDZW=$WORK/grib_api_edzw
 # Arkimet
     ARKI_SCAN_METHOD=remote_arki_importer
 #
