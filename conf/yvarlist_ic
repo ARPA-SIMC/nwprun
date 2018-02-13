@@ -1,0 +1,8 @@
+         'U       ','V       ','W       ','T       ','PP      ',
+         'P       ','T_SNOW  ','W_I     ','QV_S    ','W_SNOW  ',
+         'T_S     ','T_SO    ','W_SO    ','W_SO_ICE',
+         'FRESHSNW','RHO_SNOW','H_SNOW  '
+         'QV      ','QC      ','QI      ','QR      ','QS      ',
+         'QG      ',
+         'T_ICE   ','H_ICE   ','T_MNW_LK','T_WML_LK','T_BOT_LK',
+         'C_T_LK  ','H_ML_LK ','T_B1_LK ','H_B1_LK '

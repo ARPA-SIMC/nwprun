@@ -1,0 +1,16 @@
+         'PS      ','TKE     ','RAIN_GSP','SNOW_GSP',
+         'U_10M   ','V_10M   ','T_2M    ','TD_2M   ','TMIN_2M ',
+         'TMAX_2M ','VMAX_10M','TCM     ','TCH     ','CLCT    ',
+         'CLCH    ','CLCM    ','CLCL    ','ALB_RAD ','ASOB_S  ',
+         'ATHB_S  ','ASOB_T  ','ATHB_T  ','APAB_S  ','TOT_PREC',
+         'Z0      ','AUMFL_S ','AVMFL_S ','ASHFL_S ','ALHFL_S ',
+         'BAS_CON ','TOP_CON',
+         'HTOP_DC ','RUNOFF_S','RUNOFF_G',
+         'PMSL    ','T_G     ','HTOP_CON','HBAS_CON','CLC     ',
+         'HZEROCL ','CLCT_MOD','CLDEPTH ','TDIV_HUM',
+         'TWATER  ','TQV     ','AEVAP_S ',
+         'CAPE_ML ','CIN_ML  ',
+         'ASWDIR_S','ASWDIFD_S',
+! servono senza il ml soil?
+!        'T_CL    ','W_CL    ',
+! vedere organize_data.f90
