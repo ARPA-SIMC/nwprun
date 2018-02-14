@@ -20,7 +20,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["OPE"], "ecflow"),
                         "TASK_PER_CORE": "1"
                     })
 
-enda = ModelSuite("enda")
+enda = ModelSuite("cosmo_2I_enda")
 basicenv.add_to(enda.suite)
 day = enda.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD", 
@@ -59,7 +59,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["OPE"], "ecflow"),
                         "TASK_PER_CORE": "1"
                     })
 
-fcruc = ModelSuite("fcruc")
+fcruc = ModelSuite("cosmo_2I_fcruc")
 basicenv.add_to(fcruc.suite)
 day = fcruc.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD", 
@@ -97,7 +97,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["OPE"], "ecflow"),
                         "TASK_PER_CORE": "1"
                     })
 
-fcens = ModelSuite("fcens")
+fcens = ModelSuite("cosmo_2I_fcens")
 basicenv.add_to(fcens.suite)
 day = fcens.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD", 

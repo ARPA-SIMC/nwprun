@@ -16,7 +16,7 @@ case "%SUITE%" in
         mkdir -p $ARCHIVE/%SUITE%
         cp -p laf?????????? $ARCHIVE/%SUITE%
         ;;
-    fcens)
+    cosmo_2I_fcens)
         putarki_model_output $(($MODEL_STOP + 1)) -w
 # copy to archive
         subdir=cosmo_2I_fcens/$DATE$TIME.`printf %%03d $ENS_MEMB`

@@ -20,8 +20,6 @@ MODEL_FREQINI=24
 MODEL_DELTABD=9
 ENS_TOTAL_MEMB=20
 ENS_DET_MEMB=
-# setup for remote import
-ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_fcens
 
 PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
 PARENTMODEL_SIGNAL=${PARENTMODEL_ARKI_DS##*/}

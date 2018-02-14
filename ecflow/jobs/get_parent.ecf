@@ -26,13 +26,13 @@ arki_loop() {
 
 
 case "%SUITE%" in
-    *reassim* | cosmo_5i* | cosmo_28n*)
+    *reassim* | cosmo_5I* | cosmo_28N*)
         . $NWPCONFBINDIR/simc_site.sh
 # end of setup
         arki_loop
         ;;
 
-    enda | fcens | fcruc) # to be renamed, cineca suites
+    cosmo_2I*) # to be renamed, cineca suites
         . $NWPCONFBINDIR/cineca_site.sh
 # end of setup
 
