@@ -1,0 +1,20 @@
+%include <sched_wait.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/cosmo_model.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/getarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+# end of setup
+
+safe_rm_rf $BUFR_WORKDIR
+mkdir -p $BUFR_WORKDIR
+cd $BUFR_WORKDIR
+if import_signal_wait cnmc_bufr $DATE$TIME "*"; then
+    cosmo_getarki_obsncdf
+else
+    touch noobs
+    touch blklsttmp
+fi

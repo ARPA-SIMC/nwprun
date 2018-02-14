@@ -1,0 +1,67 @@
+%include <sched_heavy.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/parcomp.sh
+
+set -x
+safe_rm_rf $FXTR_WORKDIR
+mkdir -p $FXTR_WORKDIR $FXTR_DATADIR
+cd $FXTR_WORKDIR
+
+# evaluate availability
+# ensemble members
+set -a ma
+lma=
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    if [ -f "$WORKDIR/cosmo.$n/data/lfff01000000" ]; then
+        ma[$n]=Y
+        lma=$n
+    else
+        ma[$n]=N
+    fi
+done
+echo "Ensemble member forecasts: ${ma[*]}"
+echo "Last available forecast: $lma"
+
+# no analyses available at all, we are in canvas breeches (Bassini),
+# abort
+if [ -z "$lma" ]; then
+    exit 1
+fi
+
+# link or replace forecasts
+# ensemble members
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    # rm -r input.$n3 # senza la barra
+    n3=`printf "%%03d" $n`
+    if [ "${ma[$n]}" = Y ]; then
+        ln -s $WORKDIR/cosmo.$n/data \
+            $FXTR_WORKDIR/input.$n3
+    elif [ -n "$lma" ]; then # use another member
+        for file in $WORKDIR/cosmo.$lma/data/lfff????????; do
+            mkdir -p input.$n3
+            grib_set -s perturbationNumber=$n $file input.$n3/${file##*/}
+        done
+    fi
+done
+
+# prepare fxtr namelist
+for delta in 01 03 24; do
+    conf_template fxtr_tpp${delta}h.nl
+    $FXTR_BIN fxtr_tpp${delta}h.nl
+done
+conf_template fxtr_wspeedp1h.nl
+$FXTR_BIN fxtr_wspeedp1h.nl
+
+# correct grib table number for old grib_api versions
+for file in $FXTR_DATADIR/*.grib; do
+    grib_set -s tablesVersion=11 $file $file.tmp
+    mv $file.tmp $file
+done
+
+# copy to archive
+subdir=cosmo_2I_fcens/$DATE$TIME
+mkdir -p $CINECA_ARCHIVE_POST/$subdir
+cp -a $FXTR_DATADIR/*.grib $CINECA_ARCHIVE_POST/$subdir
+ 

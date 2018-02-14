@@ -1,0 +1,54 @@
+%include <sched_wait.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/cosmo_model.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arkilocal.sh
+# end of setup
+
+set -x
+# archive first on remote server
+if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
+    putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.det
+fi
+
+# then archive locally
+export LD_PRELOAD=$WORK/srcgnu/install/lib/libeatmydata.so
+
+if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
+    arkilocal_setup
+    arkilocal_create
+    time putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.det
+fi
+
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    n3=`printf "%%03d" $n`
+# override conf.sh
+    ARKI_DIR=$WORKDIR/arki.$n
+    if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.$n3" ]; then
+        arkilocal_setup
+        arkilocal_create
+        time putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.$n3
+    fi
+done
+unset LD_PRELOAD
+
+if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
+if [ "$TIME" = "21" ]; then
+# transfer to marconi for ensemble forecast, use rsync to create
+# temporary file during copy
+    mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
+    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA
+# for galileo do remote copy:
+#    ext=${LETKF_DATADIR#$WORKDIR}
+#    remdir=/marconi_scratch/usera07smr/a07smr03/$NWPCONF/$ext
+#    host=login.marconi.cineca.it
+#    ssh $host mkdir -p $remdir || true
+#    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $host:$remdir || true
+else
+    mkdir -p $WORKDIR/archive
+    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA
+fi
+fi

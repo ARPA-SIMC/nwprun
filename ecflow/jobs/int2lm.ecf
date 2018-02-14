@@ -1,0 +1,29 @@
+%include <sched_mpi.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/cosmo_model.sh
+. $NWPCONFBINDIR/parcomp.sh
+# end of setup
+
+set -x
+
+export GRIB_DEFINITION_PATH=$GRIB_API_EDZW/1.16.0/definitions.cnmc:$GRIB_API_EDZW/1.16.0/definitions
+export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.16.0/samples
+
+safe_rm_rf $MODEL_PRE_WORKDIR $MODEL_PRE_DATADIR
+mkdir -p $MODEL_PRE_WORKDIR $MODEL_PRE_DATADIR
+cd $MODEL_PRE_WORKDIR
+
+conf_template INPUT
+# publish just one set of namelists
+if [ -n "$MODEL_NAML_ARCHIVE" -a -z "$ENS_MEMB" ]; then
+    (rsync -t INPUT "$MODEL_NAML_ARCHIVE" || true) &
+fi
+
+rm -f YU*
+parcomp_mpirun $MODEL_PRE_BIN
+
+# rename the analysis for further repeatable postprocessing
+mv -f $MODEL_PRE_DATADIR/laf${DATES}${TIMES} $MODEL_PRE_DATADIR/laf${DATES}${TIMES}_parent

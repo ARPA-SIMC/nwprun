@@ -1,0 +1,6 @@
+%include <sched_wait.h>
+%include <head.h>
+
+set -x
+
+$ecflow_client --event=ready

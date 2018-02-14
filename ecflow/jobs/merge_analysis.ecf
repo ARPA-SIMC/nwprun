@@ -1,0 +1,73 @@
+%include <sched_wait.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/cosmo_model.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/getarki.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arkiana.sh
+. $NWPCONFBINDIR/arkilocal.sh
+. $NWPCONFBINDIR/arki_tools.sh
+# end of setup
+
+set -x
+if [ -n "$ARKI_DIR" ]; then
+    # analysis is managed locally
+    # create local dataset if not existing
+    arkilocal_setup
+    if [ "$MODEL_BACK" == "0" ]; then # if forecast run, erase dataset
+        arkilocal_create -c
+    else # if analysis, keep it (it will be erased when archiving analysis)
+        arkilocal_create
+    fi
+    # retrieve and locally archive ensemble analysis (fceps and fcruc)
+
+   if [ -n "$MODEL_ARCHIVE_ANA" ]; then
+   # if analysis is provided externally, wait for it and archive locally
+        if [ -n "$ENS_MEMB" ]; then
+            ext=.`printf "%%03d" $ENS_MEMB`
+        else
+            ext=$ANA_DET_EXT
+        fi
+	ana=$MODEL_ARCHIVE_ANA/laf$DATES$TIMES$ANA_EXT$ext
+	nwpwait_setup
+
+    	while true; do
+            [ -f "$ana" ] && break || true
+            nwpwait_wait || exit 1
+        done
+        putarki_archive grib $ana
+    fi
+else
+    # analysis is retrieved through arkimet
+    import_signal_wait ${ARKI_DS_ASSIM##*/} $DATES$TIMES laf$DATES$TIMES$ANA_EXT
+fi
+cd $MODEL_PRE_WORKDIR
+#touch ./atm_coldstart ./soil_coldstart
+arkiana_archive $MODEL_PRE_DATADIR/laf${DATES}${TIMES}_parent
+
+# merge 004 and 005:
+arkiana_retrieve $MODEL_PRE_DATADIR/laf${DATES}${TIMES}_parent \
+    $MODEL_PRE_DATADIR/laf${DATES}${TIMES}
+
+echo "$MODEL_CLIM_PARENT:$MODEL_SLOW_ASSIM:$MODEL_FAST_ASSIM"
+
+if [ "$MODEL_CLIM_PARENT" = N ]; then
+    export COSMO_CLIM_NML=.FALSE.
+else
+    export COSMO_CLIM_NML=.TRUE.
+fi
+if [ "$MODEL_SLOW_ASSIM" = Y ]; then
+    export COSMO_SLOW_NML=.FALSE.
+else
+    export COSMO_SLOW_NML=.TRUE.
+fi
+# moved here to simplify dependencies of postproc job
+#safe_rm_rf $MODEL_WORKDIR
+safe_rm_rf $MODEL_DATADIR
+mkdir -p $MODEL_WORKDIR
+mkdir -p $MODEL_DATADIR
+cd $MODEL_WORKDIR
+conf_template INPUT_IO

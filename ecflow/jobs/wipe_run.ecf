@@ -1,0 +1,36 @@
+%include <sched_wait.h>
+%include <head.h>
+
+# end of setup
+
+set -x
+if [ "$STOP_ON_FAIL" != "Y" ]; then
+    tobecompleted=${ECF_NAME%%/wipe/wipe_run}/run
+    sleep 10
+    $ecflow_client --kill $tobecompleted
+    sleep 10
+    $ecflow_client --force=complete recursive $tobecompleted
+fi
+
+# once a day clean:
+if [ "%SUITE%" = "enda" -a "$TIME" = "21" ]; then
+# held pbs jobs
+#    qstat -u $USER | awk -e '{if ($10 == "H") {a=gensub("\\..*$","","g",$1); print "cleaning job"a; system("qdel "a);}}' || true
+# old analyses
+    pm=`date -u --date '2 months ago' '+%%Y%%m'`
+    rm -f $WORKDIR/archive/laf${pm}????0000.???
+fi
+
+
+restore_state model.state || true
+if [ -z "$lastdate$lasttime" ]; then
+# initialise
+    lastdate=$DATE
+    lasttime=$TIME
+    save_state model.state lastdate lasttime
+elif [ "$lastdate$lasttime" -lt "$DATE$TIME" ]; then
+# update only if something has been done, i.e. do not decrement state
+    lastdate=$DATE
+    lasttime=$TIME
+    save_state model.state lastdate lasttime
+fi

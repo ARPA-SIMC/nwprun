@@ -1,0 +1,23 @@
+%include <sched_wait.h>
+%include <head.h>
+
+# source other optional modules
+    . $NWPCONFBINDIR/nwptime.sh
+    . $NWPCONFBINDIR/nwpwait.sh
+# end of setup
+
+set -x
+
+if [ -n "$NWPWAITSOLAR_RUN" ]; then
+    unset NWPWAITELAPS
+    export NWPWAITSOLAR=$NWPWAITSOLAR_RUN
+    unset NWPWAIT # do not wait, just test
+    nwpwait_setup
+    if ! nwpwait_wait; then
+        $ecflow_client --event=checked
+        sleep 30
+    fi
+else
+    $ecflow_client --event=checked
+    sleep 30
+fi

@@ -1,0 +1,29 @@
+%include <sched_postproc.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/cosmo_model.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/putarki.sh
+# end of setup
+
+set -x
+cd $MODEL_DATADIR
+
+case "%SUITE%" in
+    *reassim*)
+        mkdir -p $ARCHIVE/%SUITE%
+        cp -p laf?????????? $ARCHIVE/%SUITE%
+        ;;
+    fcens)
+        putarki_model_output $(($MODEL_STOP + 1)) -w
+# copy to archive
+        subdir=cosmo_2I_fcens/$DATE$TIME.`printf %%03d $ENS_MEMB`
+        mkdir -p $CINECA_ARCHIVE_POST/$subdir
+        cp -a lfff* $CINECA_ARCHIVE_POST/$subdir
+        ;;
+    *)
+        putarki_model_output $(($MODEL_STOP + 1)) -w
+        ;;
+esac

@@ -1,0 +1,68 @@
+%include <sched_wait.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/cosmo_model.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/getarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+# end of setup
+
+set -x
+safe_rm_rf $PARENTMODEL_DATADIR
+mkdir -p $PARENTMODEL_DATADIR
+cd $PARENTMODEL_DATADIR
+
+arki_loop() {
+    nwpbctimeloop_init
+    while nwpbctimeloop_loop; do
+        if [ -n "$PARENTMODEL_SIGNAL" ]; then
+            import_signal_wait $PARENTMODEL_SIGNAL $DATES_SLICE$TIMES_SLICE "*" "$PARENTMODEL_SIGNAL_NFILES"
+        fi
+        getarki_icbc
+    done
+}
+
+
+case "%SUITE%" in
+    *reassim* | cosmo_5i* | cosmo_28n*)
+        . $NWPCONFBINDIR/simc_site.sh
+# end of setup
+        arki_loop
+        ;;
+
+    enda | fcens | fcruc) # to be renamed, cineca suites
+        . $NWPCONFBINDIR/cineca_site.sh
+# end of setup
+
+        if [ -n "$ENS_MEMB" ]; then # perturbed bc
+	    if [ "$ENS_MEMB" -gt 0 ]; then
+	        arki_loop
+	    elif [ "$ENS_MEMB" -eq -2 ]; then
+# gestire il caso -2=loop su tutti i membri (compreso/escluso det?)
+                echo "ENS_MEMB -2 not managed yet"
+            fi
+        else # deterministic bc (improve condition)
+            nwpbctimeloop_init
+            while nwpbctimeloop_loop; do
+# wait
+                import_signal_wait_cineca $DATES_SLICE$TIMES_SLICE
+# get deterministic bc from local cineca filesystem
+                getarki_icbc_cineca
+            done
+        fi
+        ;;
+esac
+
+
+# mars code, to be inserted somewhere conditionally
+#. $NWPCONFBINDIR/getmars.sh
+# end of setup
+
+#nwpbctimeloop_init
+#while nwpbctimeloop_loop; do
+#    getmars_icbc
+#done
+
+

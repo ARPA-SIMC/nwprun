@@ -1,0 +1,15 @@
+%include <sched_light.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/cosmo_model.sh
+#. $NWPCONFBINDIR/nwpwait.sh #?
+. $NWPCONFBINDIR/getarki.sh
+# end of setup
+
+safe_rm_rf $MODEL_LHN_WORKDIR
+mkdir -p $MODEL_LHN_WORKDIR
+cd $MODEL_LHN_WORKDIR
+
+cosmo_getarki_lhn

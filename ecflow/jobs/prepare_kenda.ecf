@@ -1,0 +1,119 @@
+%include <sched_light.h>
+%include <head.h>
+
+# source other optional modules
+# dirty trick
+MODEL_BACK=$MODEL_STOP
+. $NWPCONFBINDIR/nwptime.sh
+#. $NWPCONFBINDIR/cosmo_model.sh
+# end of setup
+
+safe_rm_rf $LETKF_DATADIR
+safe_rm_rf $LETKF_WORKDIR/input
+mkdir -p $LETKF_WORKDIR $LETKF_DATADIR
+mkdir -p $LETKF_WORKDIR/input
+cd $LETKF_WORKDIR
+rm -f $LETKF_WORKDIR/letkf_skip
+
+# evaluate availability
+# deterministic
+da=
+do=
+if [ -f "$WORKDIR/cosmo/data/laf$DATE$TIME" ]; then
+    da=Y
+fi
+if [ -f "$WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc" ]; then
+    do=Y
+fi
+echo "Deterministic analysis: $da"
+echo "Deterministic foffo: $do"
+
+# ensemble members
+set -a ma
+lma=
+set -a mo
+lmo=
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    if [ -f "$WORKDIR/cosmo.$n/data/laf$DATE$TIME" ]; then
+	ma[$n]=Y
+	lma=$n
+    else
+	ma[$n]=N
+    fi
+
+    if [ -f "$WORKDIR/cosmo.$n/data/fof_${DATES}${TIMES}0000.nc" ]; then
+	mo[$n]=Y
+	lmo=$n
+    else
+	mo[$n]=N
+    fi
+done
+# hopefully we have "$lma" = "$lmo" -o -z "$lmo"
+echo "Ensemble member analyses: ${ma[*]}"
+echo "Last available analysis: $lma"
+echo "Ensemble member foffi: ${mo[*]}"
+echo "Last available foffo: $lmo"
+
+# no analyses available at all, we are in canvas breeches (Bassini),
+# abort
+if [ "$da" != Y -a -z "$lma" ]; then
+    exit 1
+fi
+
+# replace analysis
+# deterministic
+if [ "$da" = Y ]; then
+    ln -s $WORKDIR/cosmo/data/laf$DATE$TIME \
+	$LETKF_WORKDIR/input/laf${DATE}${TIME}0000
+else
+    ln -s $WORKDIR/cosmo.$lma/data/laf$DATE$TIME \
+	$LETKF_WORKDIR/input/laf${DATE}${TIME}0000
+fi
+# ensemble members
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    n3=`printf "%%03d" $n`
+    if [ "${ma[$n]}" = Y ]; then
+	ln -s $WORKDIR/cosmo.$n/data/laf$DATE$TIME \
+	    $LETKF_WORKDIR/input/laf${DATE}${TIME}0000.$n3
+    elif [ -n "$lma" ]; then # use another member
+	ln -s $WORKDIR/cosmo.$lma/data/laf$DATE$TIME \
+	    $LETKF_WORKDIR/input/laf${DATE}${TIME}0000.$n3
+    else # use det
+	ln -s $WORKDIR/cosmo/data/laf$DATE$TIME \
+	    $LETKF_WORKDIR/input/laf${DATE}${TIME}0000.$n3
+    fi
+done
+
+# no observations available at all, tell next job to skip letfk and
+# use det analysis, no foffi are linked, no namelist created
+if [ "$do" != Y -a -z "$lmo" ]; then
+    touch $LETKF_WORKDIR/letkf_skip
+    exit 0
+fi
+
+# replace foffi
+# deterministic
+if [ "$do" = Y ]; then
+    ln -s $WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc \
+	$LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000.nc
+else
+    ln -s $WORKDIR/cosmo.$lmo/data/fof_${DATES}${TIMES}0000.nc \
+	$LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000.nc
+fi
+# ensemble members
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    n3=`printf "%%03d" $n`
+    if [ "${mo[$n]}" = Y ]; then
+	ln -s $WORKDIR/cosmo.$n/data/fof_${DATES}${TIMES}0000.nc \
+	    $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
+    elif [ -n "$lmo" ]; then # use another member
+	ln -s $WORKDIR/cosmo.$lmo/data/fof_${DATES}${TIMES}0000.nc \
+	    $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
+    else # use det
+	ln -s $WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc \
+	    $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
+    fi
+done
+
+# prepare kenda namelist
+conf_template namelist
