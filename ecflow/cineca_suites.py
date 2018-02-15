@@ -6,10 +6,10 @@ import ecflow
 from nwprun import *
 
 # Suite enda
-basicenv = BasicEnv(srctree=os.path.join(os.environ["OPE"], "ecflow"),
+basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"], "ecflow", "ec_wrap"),
+                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=1,
                     extra_env={
                         "NWPCONF": "prod/cosmo_2I/enda",
@@ -45,10 +45,10 @@ enda.write()
 enda.replace()
 
 # Suite fcruc
-basicenv = BasicEnv(srctree=os.path.join(os.environ["OPE"], "ecflow"),
+basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"], "ecflow", "ec_wrap"),
+                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=1,
                     extra_env={
                         "NWPCONF": "prod/cosmo_2I/fcruc",
@@ -83,10 +83,10 @@ fcruc.write()
 fcruc.replace()
 
 # Suite fcens
-basicenv = BasicEnv(srctree=os.path.join(os.environ["OPE"], "ecflow"),
+basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"], "ecflow", "ec_wrap"),
+                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=1,
                     extra_env={
                         "NWPCONF": "prod/cosmo_2I/fcens",

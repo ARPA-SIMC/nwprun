@@ -203,8 +203,9 @@ class BasicEnv():
             sched_suff = "_"+self.sched
         else:
             sched_suff = ""
-        node.add_variable("ECF_INCLUDE", os.path.join(self.srctree, "include"+sched_suff))
-        node.add_variable("ECF_FILES", os.path.join(self.srctree, "jobs"))
+        node.add_variable("ECF_INCLUDE", os.path.join(self.srctree,"ecflow","include"+sched_suff))
+        node.add_variable("ECF_FILES", os.path.join(self.srctree,"ecflow","jobs"))
+        node.add_variable("BASEDIR", self.srctree)
         node.add_variable("ECF_HOME", self.worktree)
         node.add_variable("ecflow_client", self.ecflow_client)
         node.add_variable("ECF_TRIES", str(self.ntries))

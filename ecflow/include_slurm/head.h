@@ -67,9 +67,8 @@ trap '{ echo "Killed by a signal"; ERROR ; }' 1 2 3 4 5 6 7 8 10 12 13 15
 # nwpconf setup, NWPCONF comes from the suite def
 export NWPCONF=%NWPCONF:%
 if [ -n "$NWPCONF" ]; then
-    basedir=$OPE
-    export NWPCONFDIR=$basedir/conf
-    export NWPCONFBINDIR=$basedir/libexec/nwpconf
+    export NWPCONFDIR=%BASEDIR%/conf
+    export NWPCONFBINDIR=%BASEDIR%/libexec/nwpconf
     export DATE=%YMD:%
     export TIME=%TIME:00%
 # source the main nwpconf library module other modules must be sourced
