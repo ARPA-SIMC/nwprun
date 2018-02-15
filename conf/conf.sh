@@ -1,20 +1,12 @@
+# local configuration
+[ -f "$HOME/.nwpconf" ] && source $HOME/.nwpconf
+
 case "$HOSTNAME" in
   *.metarpa | maial* | nodo* ) # Arpae
 # General
     WORKDIR=$WORK/$NWPCONF
     LOGDIR=$SCRATCH/log
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
-# Arkimet
-    ARKI_DIR=/fs/archive/arkimet/arkimet
-    ARKI_CONF=$ARKI_DIR/config
-    ARKI_SCAN_METHOD=arki_importer
-    ARKI_IMPDIR=/fs/work/arkimet/inbound
-    ARKI_IMPROOT=$ARKI_IMPDIR
-    ARKI_URL=http://maialtest.metarpa:8090/dataset
-    ARKI_USE_INOTIFY=Y
-#    IMPORT_SIGNAL_METHOD=simc
-    IMPORT_SIGNAL_METHOD=psql
-    IMPORT_SIGNAL_ARGS="-h localhost -d import -U logsim"
 # Radar
     RADAR_MOSAICODIR=$HOME/prelhn/Composito
     RADAR_LHNDIR=$HOME/prelhn/bufr2grib-RUC
@@ -24,56 +16,18 @@ case "$HOSTNAME" in
 # General
     WORKDIR=$HOME/$NWPCONF
     LOGDIR=$HOME/log
-# Arkimet
-    ARKI_DIR=/arkimet/arkimet
-    ARKI_CONF=$ARKI_DIR/config
-    ARKI_SCAN_METHOD=arki_importer
-    ARKI_IMPDIR=~arki-imp/arki-imp/generic
-    ARKI_IMPROOT=~arki-imp/arki-imp
-    ARKI_URL=/arkimet/arkimet
-    ARKI_USE_INOTIFY=Y
-    IMPORT_SIGNAL_METHOD=psql
-    IMPORT_SIGNAL_ARGS="-h localhost -d import -U logsim"
     ;;
   node??? ) # Cineca HPC galileo
 # General
     WORKDIR=$CINECA_SCRATCH/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
     GRIB_API_EDZW=$WORK/grib_api_edzw
-# Arkimet
-    ARKI_SCAN_METHOD=remote_arki_importer
-#
-#
-    ARKI_IMPDIR=~arki-imp/arki-imp/generic
-#
-#
-    IMPORT_SIGNAL_METHOD=curl
-#
-#
-    CINECA_ARCHIVE_PRE=/gpfs/meteo/lm/galileo/auto/archive/PROD
-    CINECA_ARCHIVE_REMOTE=login.marconi.cineca.it
-    CINECA_ARCHIVE_REMOTE_PRE=/marconi_meteo/lm/marconi/auto/archive/PROD
-    CINECA_ARCHIVE_POST=/gpfs/meteo/lami/arkimet/archive
     ;;
   r????????? ) # Cineca HPC marconi
 # General
     WORKDIR=$CINECA_SCRATCH/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
     GRIB_API_EDZW=$WORK/grib_api_edzw
-# Arkimet
-    ARKI_SCAN_METHOD=remote_arki_importer
-#
-#
-    ARKI_IMPDIR=~arki-imp/arki-imp/generic
-#
-#
-    IMPORT_SIGNAL_METHOD=curl
-#
-#
-    CINECA_ARCHIVE_PRE=/marconi_meteo/lm/marconi/auto/archive/PROD
-    CINECA_ARCHIVE_REMOTE=login.galileo.cineca.it
-    CINECA_ARCHIVE_REMOTE_PRE=/gpfs/meteo/lm/galileo/auto/archive/PROD
-    CINECA_ARCHIVE_POST=/marconi_meteo/lami/arkimet/archive
     ;;
 esac
 

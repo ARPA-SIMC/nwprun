@@ -30,7 +30,7 @@ MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
 MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3/lmparbin_all
 MODEL_STATIC=$WORK/data/cosmo
-#
+MODEL_PUBLISH_CONF=Y
 
 # configuration of assimilation
 #MODEL_BCANA=Y

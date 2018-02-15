@@ -18,8 +18,8 @@ cd $MODEL_PRE_WORKDIR
 
 conf_template INPUT
 # publish just one set of namelists
-if [ -n "$MODEL_NAML_ARCHIVE" -a -z "$ENS_MEMB" ]; then
-    (rsync -t INPUT "$MODEL_NAML_ARCHIVE" || true) &
+if [ "$MODEL_PUBLISH_CONF" = "Y" -a -z "$ENS_MEMB" ]; then
+    (rsync -t INPUT "$MODEL_CONF_ARCHIVE" || true) &
 fi
 
 rm -f YU*
