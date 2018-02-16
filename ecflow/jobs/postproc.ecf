@@ -27,3 +27,8 @@ case "%SUITE%" in
         putarki_model_output $(($MODEL_STOP + 1)) -w
         ;;
 esac
+
+if [ -n "$LOGSIM_PROCESS" ]; then
+    . $NWPCONFBINDIR/simc_site.sh
+    simc_send_logevent
+fi

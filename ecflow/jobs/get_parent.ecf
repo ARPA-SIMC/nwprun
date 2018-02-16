@@ -26,9 +26,16 @@ arki_loop() {
 
 
 case "%SUITE%" in
-    *reassim* | cosmo_5I* | cosmo_28N*)
+    *reassim* | cosmo_28N*)
         . $NWPCONFBINDIR/simc_site.sh
 # end of setup
+        arki_loop
+        ;;
+
+    *cosmo_5I*)
+        . $NWPCONFBINDIR/simc_site.sh
+# end of setup
+        IMPORT_SIGNAL_METHOD=simc
         arki_loop
         ;;
 
