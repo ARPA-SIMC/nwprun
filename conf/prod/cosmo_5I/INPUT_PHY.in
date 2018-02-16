@@ -1,0 +1,36 @@
+ &PHYCTL
+  lgsp    =.TRUE.,
+      itype_gscp=4,
+  lrad    =.TRUE.,
+      hincrad = 0.5,
+      itype_aerosol = 2,
+  ltur    =.TRUE.,
+      ninctura=1,
+      lexpcor=.false.,
+      ltmpcor=.false.,
+      lprfcor=.false.,
+      lnonloc=.false.,
+      lcpfluc=.false.,
+      itype_turb=3,
+      imode_turb=1,
+      itype_tran=2,
+      imode_tran=1,
+    itype_wcld=2,
+      icldm_rad=4,
+      icldm_turb=2,
+      icldm_tran=0,
+      itype_synd=2,
+    lsso=.false.,
+    lsoil=.true.,
+      lmulti_layer=.true.,
+      itype_evsl=2,
+      itype_trvg=2,
+      lforest=.true.
+      llake=.true.
+      lseaice=.false.
+    lconv=.true.,
+      itype_conv=0,
+      lcape=.false.,
+      lconf_avg=.true.,
+ /END
+

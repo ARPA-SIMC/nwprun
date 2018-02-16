@@ -1,0 +1,72 @@
+ &CONTRL
+  ydate_ini='@DATES@@TIMES@', ydate_bd='@DATES@@TIMES@',
+  hstart=0, hstop=@MODEL_STOP@, hincbound=@PARENTMODEL_FREQ@,
+  nincwait=0, nmaxwait=0,
+  nprocx=@NPX@, nprocy=@NPY@, luvcor=.TRUE., lprog_qi=.TRUE., lprog_qr_qs=@PARENTMODEL_QRQS@,
+  lvertwind_ini=.TRUE., lvertwind_bd=.TRUE., lforest=.TRUE.,
+  lmulti_layer_lm=.TRUE., lsso=.TRUE.,
+  itype_w_so_rel=1, itype_t_cl=0,
+  llake=.TRUE., llake_coldstart=.TRUE., lforest=.TRUE.,
+  lmulti_layer_in=.TRUE., l_smi=.TRUE.,
+  itype_aerosol=2, itype_ndvi=1, itype_albedo=1,
+  linitial=.TRUE., lboundaries=.TRUE.,
+  ltime_proc=.FALSE., ltime_mean=.TRUE., 
+  lroutine=.FALSE., yinput_model='@PARENTMODEL@',
+  lfilter_oro=.TRUE.,
+  eps_filter=0.1,
+  norder_filter=5,
+  lfilter_pp=.TRUE.,
+  itype_balance_pp=2,
+  itype_fast_waves_lm=2,
+  lreorder=.FALSE.,
+  lcheck_uuidOfHGrid=.FALSE.
+ /END
+ &GRID_IN
+  ni_gme = @ICON_NI@, i3e_gme = @ICON_NLEV@, kcontrol_fi = @ICON_KCONTROL_FI@,
+  ke_in_tot = 90, nlevskip = 20,
+  yicon_grid_cat='@PARENTMODEL_STATIC@',
+  yicon_grid_lfn='icon_grid_arpa_R03B07.nc',
+ /END
+ &LMGRID
+  ielm_tot=386, jelm_tot=434, kelm_tot=@MODEL_NLEV@,
+  pollat=47., pollon=-170.0, 
+  dlon=0.045, dlat=0.045, 
+  startlat_tot=-10.575, startlon_tot=-7.785,
+  ivctype=2, irefatm=2, lanalyt_calc_t0p0=.true., vcflat=11430.0,
+  vcoord_d=     22700.00, 21300.00, 19959.39, 18676.88, 17451.15, 16280.90,
+                15164.83, 14101.64, 13090.02, 12128.67, 11216.28, 10351.55,
+                 9533.18,  8759.86,  8030.29,  7343.16,  6697.18,  6091.04, 5523.43,
+                 4993.04,  4498.59,  4038.76,  3612.25,  3217.75,  2853.97, 2519.59,
+                 2213.32,  1933.85,  1679.87,  1450.09,  1243.20,  1057.89,  892.87,
+                  746.82,   618.45,   506.45,   409.51,   326.34,   255.63,  196.08, 146.37,
+                  105.22,    71.30,    43.33,    20.00,     0.00,
+
+ /END
+ &DATABASE
+ /END
+ &DATA
+  ie_ext=1520, je_ext=1120,
+  ylmext_lfn='topogr_cosmo_0.045_47_m170',
+  ylmext_cat='@MODEL_STATIC@',
+  yinext_lfn='icon_extpar_arpa_R03B07_20150805.nc',
+  yin_hhl='icon_hhl_arpa_R03B07.g2',
+  yinext_cat='@PARENTMODEL_STATIC@',
+  yin_cat='@PARENTMODEL_DATADIR@',
+  ylm_cat='@MODEL_PRE_DATADIR@',
+  ymode_read='r  '
+  ymode_write='w  '
+  nprocess_ini=@MODEL_INTER_GP@, 
+  nprocess_bd=@MODEL_INTER_GP@,
+  ncenter=@GRIB_CENTER@,
+  l_ke_in_gds=.TRUE.,
+  nl_soil_in=2, nl_soil_lm=2,
+  yinext_form_read='ncdf',
+  yin_form_read='apix',
+  ylmext_form_read='apix',
+  ylm_form_write='api1',
+ /END
+ &PRICTR
+  igp_tot = 36, 40, 48, 44, 48, 85, 77,
+  jgp_tot = 30, 94, 38, 26, 26, 96, 12,
+  lchkin=.TRUE., lchkout=.TRUE.,
+ /END

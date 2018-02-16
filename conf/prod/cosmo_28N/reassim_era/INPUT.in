@@ -1,0 +1,79 @@
+ &CONTRL
+  ydate_ini='@DATES@@TIMES@', ydate_bd='@DATES@@TIMES@',
+  hstart=0, hstop=@MODEL_STOP@, hincbound=@PARENTMODEL_FREQ@,
+  nincwait=0, nmaxwait=0,
+  nprocx=@NPX@, nprocy=@NPY@, luvcor=.TRUE., lprog_qi=.TRUE., lprog_qr_qs=@PARENTMODEL_QRQS@,
+  lvertwind_ini=.TRUE., lvertwind_bd=.TRUE., lforest=.TRUE.,
+  lmulti_layer_lm=.TRUE., lsso=.TRUE.,
+  itype_w_so_rel=1, itype_t_cl=0,
+  llake=.TRUE., llake_coldstart=.TRUE., lforest=.TRUE.,
+  lmulti_layer_in=.FALSE., l_smi=.TRUE.,
+  itype_aerosol=2, itype_ndvi=1, itype_albedo=1,
+  linitial=.TRUE., lboundaries=.TRUE.,
+  ltime_proc=.FALSE., ltime_mean=.TRUE., 
+  lroutine=.FALSE., yinput_model='@PARENTMODEL@',
+  lfilter_oro=.TRUE.,
+  ilow_pass_oro=4,
+  ilow_pass_xso=5,
+  rxso_mask=625.0000,
+  lfilter_pp=.TRUE.,
+  lfilter_pp=.TRUE.,
+  itype_balance_pp=2,
+  itype_fast_waves_lm=2,
+  lreorder=.FALSE.,
+  lcheck_uuidOfHGrid=.FALSE.
+ /END
+ &GRID_IN
+  ie_in_tot = 53, je_in_tot = 27, ke_in_tot = 137,
+  startlat_in_tot = 42., startlon_in_tot = 3.5,
+  pollat_in = 90., pollon_in = 180.,
+  dlat_in = 0.25, dlon_in = 0.25,
+  pcontrol_fi=20000.0,
+ /END
+ &LMGRID
+  ielm_tot=301, jelm_tot=191, kelm_tot=45,
+  pollat=32.5, pollon=-170.0, 
+  dlon=0.025, dlat=0.025, 
+  startlat_tot=-14.5, startlon_tot=-3.75,
+  ivctype=2, irefatm=2, lanalyt_calc_t0p0=.true., vcflat=11430.0,
+  vcoord_d=     22700.0000, 21011.1111, 19477.7778, 18066.6667,
+                16772.2222, 15594.4444, 14533.3333, 13574.4444,
+                12683.8889, 11875.0000, 11115.0000, 10386.1111,
+                9695.0000,  9034.4444,  8401.1111,  7795.0000,
+                7215.0000,  6658.8889,  6130.0000,  5627.7778,
+                5152.7778,  4698.3333,  4268.8889,  3862.2222,
+                3476.6667,  3114.4444,  2775.0000,  2455.0000,
+                2161.6667,  1887.7778,  1636.6667,  1406.1111,
+                1195.0000,  1003.3333,   831.1111,   678.0000,
+                542.0000,   426.4444,   327.2222,   243.6667,
+                174.5556,   119.0000,    75.6667,    42.5556,
+                20.0000,     0.0000
+
+ /END
+ &DATABASE
+ /END
+ &DATA
+  ie_ext=561, je_ext=921,
+  ylmext_lfn='extpar_cosmo_globcover_i2.g1',
+  ylmext_cat='@MODEL_STATIC@',
+  yinext_lfn='ep_era5_ni.grib',
+  yinext_cat='@PARENTMODEL_STATIC@',
+  yin_cat='@PARENTMODEL_DATADIR@',
+  ylm_cat='@MODEL_PRE_DATADIR@',
+  ymode_read='r  '
+  ymode_write='w  '
+  nprocess_ini=@MODEL_INTER_GP@, 
+  nprocess_bd=@MODEL_INTER_GP@,
+  ncenter=@GRIB_CENTER@,
+  l_ke_in_gds=.TRUE.,
+  nl_soil_in=2, nl_soil_lm=2,
+  yinext_form_read='apix',
+  yin_form_read='apix',
+  ylmext_form_read='apix',
+  ylm_form_write='api1',
+ /END
+ &PRICTR
+  igp_tot = 36, 40, 48, 44, 48, 85, 77,
+  jgp_tot = 30, 94, 38, 26, 26, 96, 12,
+  lchkin=.TRUE., lchkout=.TRUE.,
+ /END
