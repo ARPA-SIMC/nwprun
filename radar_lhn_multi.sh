@@ -1,7 +1,7 @@
 #!/bin/bash
 
 unset LANG
-basedir=$HOME/ope
+basedir=$HOME/nwprun
 # setup common to user scripts
 # basic variables
 export NWPCONFDIR=$basedir/conf
