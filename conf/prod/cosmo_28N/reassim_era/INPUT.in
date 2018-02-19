@@ -17,7 +17,6 @@
   ilow_pass_xso=5,
   rxso_mask=625.0000,
   lfilter_pp=.TRUE.,
-  lfilter_pp=.TRUE.,
   itype_balance_pp=2,
   itype_fast_waves_lm=2,
   lreorder=.FALSE.,
@@ -48,7 +47,6 @@
                 542.0000,   426.4444,   327.2222,   243.6667,
                 174.5556,   119.0000,    75.6667,    42.5556,
                 20.0000,     0.0000
-
  /END
  &DATABASE
  /END

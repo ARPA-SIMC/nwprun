@@ -1,24 +1,13 @@
 # RADAR for LHN
 ARKI_LHN_DS=$ARKI_URL/cosmo_2I_radar
-#RADAR_LHN_GP=10
-MODEL_LHN=.FALSE.
 MODEL_LHN_WORKDIR=$WORKDIR/lhn
 MODEL_LHN_DT=10
-MODEL_NH_LHN=0
 
 # observations for nudging
 BUFR_WORKDIR=$WORKDIR/bufr
-MODEL_NUDG=.FALSE.
-MODEL_NH_NUDG=0
 
-# _GP=10(radarobs),11(an),12(fc)
 # definitions for parent model
-PARENTMODEL=IFS
 PARENTMODEL_DATADIR=$WORKDIR/input/data
-PARENTMODEL_FREQINI=6
-PARENTMODEL_FREQANA=3
-PARENTMODEL_FREQFC=3
-PARENTMODEL_QRQS=.FALSE.
 
 # definitions for the model run
 MODEL_NLEV=45
@@ -39,21 +28,6 @@ MODEL_SNOW_PARENT=N
 MODEL_LAKE=Y
 MODEL_SLOW_PAST_H=144
 MODEL_FREQINI=24
-# difference (hours) between $DATE$TIME (end of assimilation window /
-# start of forecast) and start of last available input forecast
-# providing BC (for MODEL_BCANA=N)
-# in reassim this is overridden in conf.sh because of MODEL_BCANA
-# 00->12 12->00 => 12
-# 06->00 18->12 => 6
-if [ "$TIME" = "00" -o "$TIME" = "12" ]; then
-    MODEL_DELTABD=12
-elif [ "$TIME" = "09" -o "$TIME" = "21" ]; then
-    MODEL_DELTABD=9
-elif [ "$TIME" = "06" -o "$TIME" = "18" ]; then
-    MODEL_DELTABD=6
-else # 03 15
-    MODEL_DELTABD=3
-fi
 
 # for distinguishing assimilation from forecast results
 MODEL_ARKI_TIMERANGE_ASSIM="timerange:Timedef,0,254;proddef:GRIB:tod=0"
@@ -63,10 +37,10 @@ ARKI_DIR=$WORKDIR/arki
 #ARKI_DS_ASSIM=$ARKI_URL/cosmo_2I_assim
 #ARKI_DS_FCAST=$ARKI_URL/cosmo_2I_fcast
 #ARKI_DS_INTER=$ARKI_URL/cosmo_2I_inter
-MODEL_ASSIM_GP=11
-MODEL_FCAST_GP=12
-#MODEL_FCRUC_GP=14
-MODEL_INTER_GP=13
+MODEL_ASSIM_GP=41
+MODEL_FCAST_GP=42
+MODEL_FCRUC_GP=44
+MODEL_INTER_GP=43
 
 #NWPWAITELAPS=10200
 #NWPWAITSOLAR=36000
