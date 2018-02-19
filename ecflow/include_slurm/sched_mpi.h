@@ -9,6 +9,7 @@
 #SBATCH --ntasks-per-core=%TASK_PER_CORE%
 #SBATCH --nodes=%NNODES_MODEL%
 #SBATCH --time=%WALL_TIME%
+#SBATCH --signal=B:15
 
 module load autoload
 module load intel
