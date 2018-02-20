@@ -1,5 +1,5 @@
 # RADAR for LHN
-ARKI_LHN_DS=$ARKI_URL/cosmo_2I_radar
+ARKI_LHN_DS=$ARKI_URL/cosmo_28N_radar
 MODEL_LHN_WORKDIR=$WORKDIR/lhn
 MODEL_LHN_DT=10
 
@@ -34,9 +34,6 @@ MODEL_ARKI_TIMERANGE_ASSIM="timerange:Timedef,0,254;proddef:GRIB:tod=0"
 MODEL_ARKI_TIMERANGE_FCAST="timerange:Timedef,0,254;proddef:GRIB:tod=1"
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki
-#ARKI_DS_ASSIM=$ARKI_URL/cosmo_2I_assim
-#ARKI_DS_FCAST=$ARKI_URL/cosmo_2I_fcast
-#ARKI_DS_INTER=$ARKI_URL/cosmo_2I_inter
 MODEL_ASSIM_GP=41
 MODEL_FCAST_GP=42
 MODEL_FCRUC_GP=44
