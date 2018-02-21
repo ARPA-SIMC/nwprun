@@ -64,7 +64,7 @@ import_one() {
 #    trap '{ mustexit=Y; }' 15 20 2
 
     case $1 in
-	*/PROD/*)
+	*/PROD/marconi/*)
 	    case $1 in
 		*/lm5/*c) # dati constanti
 		    log "start importing PROD/lm5/c $1"
@@ -145,6 +145,19 @@ import_one() {
 	    mkdir -p $dir_discarica/cosmo_2I_fcruc
 	    arki-query --data "$query_discarica" $1 >> $dir_discarica/cosmo_2I_fcruc/verifica.grib
 	    import_signal_imported cosmo_2I_fcruc $sdate $sfile
+	    log "done importing $1"
+	    ;;
+	./cosmo_2I_fcens/*)
+	    log "start importing cosmo_2I_fcens $1"
+# trust the additional date for the reftime
+	    sdate=${1%.grib}
+	    sdate=${sdate##*.}
+	    sfile=${1##*/}
+	    sfile=${sfile%%.*}
+	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+#	    mkdir -p $dir_discarica/cosmo_2I_fcruc
+#	    arki-query --data "$query_discarica" $1 >> $dir_discarica/cosmo_2I_fcruc/verifica.grib
+	    import_signal_imported cosmo_2I_fcens $sdate $sfile
 	    log "done importing $1"
 	    ;;
 	./comet/*)
