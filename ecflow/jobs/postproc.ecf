@@ -30,7 +30,7 @@ esac
 
 if [ -n "$LOGSIM_PROCESS" ]; then
     . $NWPCONFBINDIR/simc_site.sh
-    simc_send_logevent
+    simc_send_logevent ''
 fi
 if [ -n "$MODEL_SIGNAL" ]; then # simc, move to importer?
     . $NWPCONFBINDIR/arki_tools.sh
