@@ -6,7 +6,7 @@
   ymode_write='w  ',
   yform_read='apix',
   l_ke_in_gds=.TRUE.,
-  ngribout=1,
+  ngribout=2,
  /END
 
  &DATABASE
@@ -58,4 +58,21 @@
   lwrite_const=.TRUE.
   ydir='@MODEL_DATADIR@',
   yform_write = 'api1',
+ /END
+ &GRIBOUT
+  nprocess_ini=@MODEL_FCAST_GP@,
+  nprocess_bd=@MODEL_FCAST_GP@,
+  hcomb=0,@MODEL_STOP@,1,
+  lanalysis=.FALSE.,
+  luvmasspoint=.FALSE.,
+  yvarml=
+  @INCLUDE yvarlist_ic@
+  @INCLUDE yvarlist_diagn@
+  @INCLUDE yvarlist_conv@
+  yvarzl=' ',
+  yvarsl=' ',
+  lcheck = .FALSE.,
+  lwrite_const=.TRUE.
+  ydir='@MODEL_DATADIR@/extra1',
+  yform_write = 'api2',
  /END
