@@ -27,12 +27,16 @@ if [ "$TIME" = "00" -o "$TIME" = "12" ]; then
 # or 12/N? check setup
     MODEL_DELTABD=0
     MODEL_BCANA=Y
+    PARENTMODEL_SIGNAL=cosmo_5I_assim
 elif [ "$TIME" = "09" -o "$TIME" = "21" ]; then
     MODEL_DELTABD=9
+    PARENTMODEL_SIGNAL=cosmo_5I_fcast
 elif [ "$TIME" = "06" -o "$TIME" = "18" ]; then
     MODEL_DELTABD=6
+    PARENTMODEL_SIGNAL=cosmo_5I_fcast
 else # 03 15
     MODEL_DELTABD=3
+    PARENTMODEL_SIGNAL=cosmo_5I_fcast
 fi
 
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive

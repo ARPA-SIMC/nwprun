@@ -6,6 +6,7 @@
 . $NWPCONFBINDIR/cosmo_model.sh
 . $NWPCONFBINDIR/nwpwait.sh
 . $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
 # end of setup
 
 set -x
@@ -32,7 +33,8 @@ if [ -n "$LOGSIM_PROCESS" ]; then
     . $NWPCONFBINDIR/simc_site.sh
     simc_send_logevent ''
 fi
-if [ -n "$MODEL_SIGNAL" ]; then # simc, move to importer?
-    . $NWPCONFBINDIR/arki_tools.sh
+# done here for forecast and in putarki.sh for analysis
+# improve
+if [ -n "$MODEL_SIGNAL" -a "$MODEL_BACK" -eq 0 ]; then
     import_signal_imported $MODEL_SIGNAL $DATE$TIME
 fi
