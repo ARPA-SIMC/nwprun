@@ -26,7 +26,7 @@ arki_loop() {
 
 
 arki_loop_backup() {
-    MOPDEL_DELTABD=$(($MODEL_DELTABD+3))
+    MODEL_DELTABD=$(($MODEL_DELTABD+3))
     nwpbctimeloop_init
     while nwpbctimeloop_loop; do
         getarki_icbc || return 1
