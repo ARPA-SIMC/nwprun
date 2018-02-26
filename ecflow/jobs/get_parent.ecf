@@ -20,7 +20,16 @@ arki_loop() {
         if [ -n "$PARENTMODEL_SIGNAL" ]; then
             import_signal_wait $PARENTMODEL_SIGNAL $DATES_SLICE$TIMES_SLICE "*" "$PARENTMODEL_SIGNAL_NFILES"
         fi
-        getarki_icbc
+        getarki_icbc || return 1
+    done
+}
+
+
+arki_loop_backup() {
+    MOPDEL_DELTABD=$(($MODEL_DELTABD+3))
+    nwpbctimeloop_init
+    while nwpbctimeloop_loop; do
+        getarki_icbc || return 1
     done
 }
 
@@ -53,7 +62,7 @@ case "%SUITE%" in
 
         if [ -n "$ENS_MEMB" ]; then # perturbed bc
 	    if [ "$ENS_MEMB" -gt 0 ]; then
-	        arki_loop
+	        arki_loop || arki_loop_backup
 	    elif [ "$ENS_MEMB" -eq -2 ]; then
 # gestire il caso -2=loop su tutti i membri (compreso/escluso det?)
                 echo "ENS_MEMB -2 not managed yet"
