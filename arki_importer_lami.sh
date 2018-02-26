@@ -162,12 +162,13 @@ import_one() {
 	    ;;
 	./comet/*)
 # ./comet/lfff00060000_2017050506.tar.bz2
+# ./comet/lbff00060000_2017050506.tar.bz2
 # ./comet/fc_lfff02000000_2017050418.tar.bz2
 	    log "start importing comet $1"
 	    tmpdir=`mktemp -d $ARKI_IMPROOT/tmptar.XXXXXXXXXX`
 	    tar --transform='s?.*/??g' -C $tmpdir -xvf $1
 	    for file in $tmpdir/*; do
-		nmemb=${file##*lfff????0000_}
+		nmemb=${file##*l?ff????0000_}
 		nmemb=${nmemb%%_*.grb}
 #		grib_set -s 'subCentre=98,setLocalDefinition=28,localDefinitionNumber=28,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=1,numberOfForecastsInEnsemble=20,baseDateEPS=20161130,baseTimeEPS=00,numberOfRepresentativeMember=0,numberOfMembersInCluster=20,totalInitialConditions=20' input.raw cleps.out
 		grib_set -s "subCentre=98,setLocalDefinition=1,localDefinitionNumber=1,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=$nmemb,numberOfForecastsInEnsemble=20" $file $file.ls.grib
@@ -180,7 +181,7 @@ import_one() {
 	    sfn=${sfn%%.*}
 # modificato per tenere conto delle segnalazioni dei forecast,
 # per ora usiamo lo stesso dataset
-	    sdate=${sfn#*lfff????0000_}
+	    sdate=${sfn#*l?ff????0000_}
 	    sfile=${sfn%_*}
 	    import_signal_imported cnmc_cosmo_eps $sdate $sfile
 	    log "done importing $1"
