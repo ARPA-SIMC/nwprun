@@ -25,17 +25,6 @@ periodic_check() {
     fi
 }
 
-periodic_check() {
-# need a dataset cleanup?
-    local now
-    now=`date -u '+%Y%m%d'`
-    if [ "$now" != "$lastcleanup" ]; then
-	log "daily cleanup"
-	daily_cleanup
-	lastcleanup=$now
-    fi
-}
-
 final_cleanup() {
 #    [ -n "$COPROC_PID" ] && kill $COPROC_PID
     trap - EXIT
