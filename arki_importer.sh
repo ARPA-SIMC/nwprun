@@ -43,7 +43,7 @@ final_cleanup() {
 }
 
 unset LANG
-basedir=$HOME/ope
+basedir=$OPE
 # setup common to user scripts
 # basic variables
 export NWPCONFDIR=$basedir/conf
