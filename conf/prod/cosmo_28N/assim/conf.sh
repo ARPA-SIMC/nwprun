@@ -24,9 +24,7 @@ MODEL_NH_NUDG=$(($MODEL_FREQINI + 4))
 # providing BC (for MODEL_BCANA=N)
 MODEL_BCANA=N
 if [ "$TIME" = "00" -o "$TIME" = "12" ]; then
-# or 12/N? check setup
-    MODEL_DELTABD=0
-    MODEL_BCANA=Y
+    MODEL_DELTABD=12
     PARENTMODEL_SIGNAL=cosmo_5I_assim
 elif [ "$TIME" = "09" -o "$TIME" = "21" ]; then
     MODEL_DELTABD=9

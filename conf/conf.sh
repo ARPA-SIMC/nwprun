@@ -5,7 +5,7 @@ case "$HOSTNAME" in
   *.metarpa | maial* | nodo* ) # Arpae
 # General
     WORKDIR=$WORK/$NWPCONF
-    LOGDIR=$SCRATCH/log
+    LOGDIR=$HOME/log
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
 # Radar
     RADAR_MOSAICODIR=$HOME/prelhn/Composito
