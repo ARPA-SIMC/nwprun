@@ -1,0 +1,60 @@
+ &IOCTL
+  lasync_io=.FALSE.,
+  ytrans_out='@MODEL_DATADIR@/',
+  ncenter=@GRIB_CENTER@,
+  ymode_read='r  ',
+  ymode_write='w  ',
+  yform_read='apix',
+  l_ke_in_gds=.TRUE.,
+  ngribout=1,
+ /END
+
+ &DATABASE
+ /END 
+
+ &GRIBIN
+  lbdana=.FALSE.,
+  ydirini='@MODEL_PRE_DATADIR@',
+  lchkini=.TRUE.,
+  hincbound=@PARENTMODEL_FREQ@,
+  ydirbd='@MODEL_PRE_DATADIR@',
+  lchkbd =.TRUE.,
+  lan_t_so0  = @COSMO_CLIM_NML@,
+  lan_t_snow = @COSMO_SLOW_NML@,
+  lan_t_cl   = @COSMO_CLIM_NML@,
+  lan_w_snow = @COSMO_SLOW_NML@,
+  lan_w_so   = @COSMO_CLIM_NML@,
+  lan_w_i    = @COSMO_CLIM_NML@,
+  lan_w_cl   = @COSMO_CLIM_NML@,
+  lan_vio3   = @COSMO_CLIM_NML@,
+  lan_hmo3   = @COSMO_CLIM_NML@,
+  lan_plcov  = @COSMO_CLIM_NML@,
+  lan_lai    = @COSMO_CLIM_NML@,
+  lan_rootdp = @COSMO_CLIM_NML@,
+  lana_qi    = .TRUE.,
+  llb_qi     = .TRUE.,
+! should be ~MODEL_FAST_ASSIM
+  lana_qr_qs = @PARENTMODEL_QRQS@,
+  llb_qr_qs = @PARENTMODEL_QRQS@,
+ /END
+  lbd_frame=.TRUE.,
+ &GRIBOUT
+  nprocess_ini=@MODEL_ASSIM_GP@,
+  nprocess_bd=@MODEL_ASSIM_GP@,
+  hcomb=0,@MODEL_STOP@,1,
+  lanalysis=.FALSE.,
+  luvmasspoint=.FALSE.,
+  yvarml=
+  @INCLUDE yvarlist_diagn@
+  @INCLUDE yvarlist_clim@
+  yvarpl='T       ','RELHUM  ','U       ','V       ','FI      ',
+         'OMEGA   ','QV      ',
+
+  plev=50.,100.,150.,200.,250.,300.,400.,500.,600.,700.,850.,925.,950.,1000.,
+  yvarzl=' ',
+  yvarsl=' ',
+  lcheck = .TRUE.,
+  lwrite_const=.TRUE.
+  ydir='@MODEL_DATADIR@',
+  yform_write = 'api1',
+ /END

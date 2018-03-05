@@ -25,7 +25,7 @@ MODEL_NH_NUDG=$(($MODEL_FREQINI + 4))
 MODEL_BCANA=N
 if [ "$TIME" = "00" -o "$TIME" = "12" ]; then
     MODEL_DELTABD=12
-    PARENTMODEL_SIGNAL=cosmo_5I_assim
+    PARENTMODEL_SIGNAL=cosmo_5I_fcast
 elif [ "$TIME" = "09" -o "$TIME" = "21" ]; then
     MODEL_DELTABD=9
     PARENTMODEL_SIGNAL=cosmo_5I_fcast
