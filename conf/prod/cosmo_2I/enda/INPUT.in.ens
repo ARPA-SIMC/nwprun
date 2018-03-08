@@ -51,8 +51,8 @@
   ie_ext=784, je_ext=824,
   ylmext_lfn='ep_cosmo_it2_784x824.g1',
   ylmext_cat='@MODEL_STATIC@',
-  yinext_lfn='lfff00000000',
-  yinext_cat='@PARENTMODEL_DATADIR@',
+  yinext_lfn='ep_cnmc_cosmo_eps.g1',
+  yinext_cat='@MODEL_STATIC@',
   yin_cat='@PARENTMODEL_DATADIR@',
   ylm_cat='@MODEL_PRE_DATADIR@',
   ymode_read='r  '
