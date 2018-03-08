@@ -46,7 +46,7 @@
   luvmasspoint=.FALSE.,
   yvarml=
   @INCLUDE yvarlist_diagn@
-  @INCLUDE yvarlist_clim@
+  @INCLUDE yvarlist_surf@
   yvarpl='T       ','RELHUM  ','U       ','V       ','FI      ',
          'OMEGA   ','QV      ',
 
