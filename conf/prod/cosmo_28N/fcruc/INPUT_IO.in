@@ -47,6 +47,7 @@
   yvarml=
   @INCLUDE yvarlist_diagn@
   @INCLUDE yvarlist_surf@
+  @INCLUDE yvarlist_conv@
   yvarpl='T       ','RELHUM  ','U       ','V       ','FI      ',
          'OMEGA   ','QV      ',
 
