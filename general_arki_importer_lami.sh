@@ -75,6 +75,9 @@ import_one() {
 #	./*) # save-everything mode
 	    cp -p $1 ~/save/
 	    ;;
+	*)
+	    return 1
+	    ;;
     esac
     rm -f $1
 

@@ -44,6 +44,9 @@ import_one() {
 		    ;;
 	    esac
 	    ;;
+	*)
+	    return 1
+	    ;;
     esac
     rm -f $1
 

@@ -130,8 +130,7 @@ import_loop() {
 	    # do homework before classwork
 	    [ -n "$mustexit" ] && exit 1 || true
 	    [ -n "$mustreload" ] && exec "$0" "$@" || true
-	    import_one $file
-	    donenothing=
+	    import_one $file && donenothing= || true
 	done
 	# if something has been done do not cool down
 	if [ -n "$donenothing" ]; then
