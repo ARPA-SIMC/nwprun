@@ -5,45 +5,6 @@
 import_one() {
 
     case $1 in
-	*/PROD/marconi/*)
-	    case $1 in
-		*/lm5/*c) # dati constanti
-		    log "start importing PROD/lm5/c $1"
-# principale
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
-# area itr (~"lama")
-		    make_itr $1
-		    rm -f ${1}_itr
-# area medl
-		    make_medl $1
-		    log "done importing $1"
-		    ;;
-		*/lm5/*)
-		    log "start importing PROD/lm5 $1"
-# principale
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
-# area itr (~"lama")
-		    make_itr $1
-# profili verticali
-		    make_prof ${1}_itr cosmo_5M_itr
-		    rm -f ${1}_itr
-# area medl
-		    make_medl $1
-		    log "done importing $1"
-		    ;;
-		*/lm2.2/*)
-		    log "start importing PROD/lm2.2 $1"
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
-
-		    log "done importing $1"
-		    ;;
-		*/swan/*)
-		    log "start importing PROD/swan $1"
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
-		    log "done importing $1"
-		    ;;
-	    esac
-	    ;;
 	./generic/*)
 	    log "start importing generic $1"
 	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
@@ -129,7 +90,6 @@ periodic_check() {
 	arki_dailycleanup $ARKI_CONF
 #	arki-check --fix --repack --config=$ARKI_CONF
 	import_signal_dailycleanup 20 || true
-	create_static cosmo_5M_itr 22
 	lastcleanup=$now
     fi
 }
