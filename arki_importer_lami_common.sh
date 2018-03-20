@@ -2,6 +2,20 @@ log() {
     echo `date -u --rfc-3339=seconds` "|$$|$@"
 }
 
+import_cosmo_fileinfo()
+{
+    sfile=${1##*/}
+    sfile=${sfile%%.*}
+    if [ "${sfile::3}" = "laf" ]; then # if laf use date given by model
+	sdate=${sfile#laf}
+	sdate=${sdate::10}
+    else # use appended date
+	sdate=${1%.grib}
+	sdate=${sdate##*.}
+    fi
+
+}
+
 make_itr()
 {
     # area itr (~"lama")
@@ -94,12 +108,10 @@ create_static() {
     fi
 }
 
-
 final_cleanup() {
     trap - EXIT
     exit
 }
-
 
 import_loop() {
 

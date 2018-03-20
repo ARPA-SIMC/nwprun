@@ -12,22 +12,16 @@ import_one() {
 	    ;;
 	./cosmo_2I_assim/*)
 	    log "start importing cosmo_2I_assim $1"
-# trust the filename for the reftime
-	    sfile=${1##*/}
-	    sfile=${sfile%%.*}
-	    sdate=${sfile#laf}
-	    sdate=${sdate::10}
+	    import_cosmo_fileinfo $1
 	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
-	    import_signal_imported cosmo_2I_assim $sdate $sfile
+	    if [ "$sfile" != "lfff00000000c" ]; then # do no signal constant
+		import_signal_imported cosmo_2I_assim $sdate $sfile
+	    fi
 	    log "done importing $1"
 	    ;;
 	./cosmo_2I_fcruc/*)
 	    log "start importing cosmo_2I_fcruc $1"
-# trust the additional date for the reftime
-	    sdate=${1%.grib}
-	    sdate=${sdate##*.}
-	    sfile=${1##*/}
-	    sfile=${sfile%%.*}
+	    import_cosmo_fileinfo $1
 	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    mkdir -p $dir_discarica/cosmo_2I_fcruc
 	    arki-query --data "$query_discarica" $1 >> $dir_discarica/cosmo_2I_fcruc/verifica.grib
@@ -36,11 +30,7 @@ import_one() {
 	    ;;
 	./cosmo_2I_fcens/*)
 	    log "start importing cosmo_2I_fcens $1"
-# trust the additional date for the reftime
-	    sdate=${1%.grib}
-	    sdate=${sdate##*.}
-	    sfile=${1##*/}
-	    sfile=${sfile%%.*}
+	    import_cosmo_fileinfo $1
 	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    import_signal_imported cosmo_2I_fcens $sdate $sfile
 	    log "done importing $1"
