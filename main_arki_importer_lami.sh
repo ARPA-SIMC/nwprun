@@ -44,6 +44,8 @@ import_one() {
 		    ;;
 	    esac
 	    ;;
+	*/marconi/*)
+	    ;;
 	*)
 	    return 1
 	    ;;

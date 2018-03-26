@@ -44,6 +44,8 @@ import_one() {
 		    ;;
 	    esac
 	    ;;
+	*/galileo/*)
+	    ;;
 	*)
 	    return 1
 	    ;;
