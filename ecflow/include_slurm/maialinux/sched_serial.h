@@ -1,0 +1,1 @@
+#SBATCH --partition=net-disk

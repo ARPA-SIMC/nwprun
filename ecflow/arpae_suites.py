@@ -16,7 +16,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                         "NNODES_MODEL": 4,
                         "EXTRA_SCHED": "",
                         "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1"
+                        "TASK_PER_CORE": "1",
+                        "HPCENV": "maialinux"
                     })
 
 cosmo_5i_assim = ModelSuite("cosmo_5I_assim")
@@ -54,7 +55,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                         "NNODES_MODEL": 4,
                         "EXTRA_SCHED": "",
                         "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1"
+                        "TASK_PER_CORE": "1",
+                        "HPCENV": "maialinux"
                     })
 
 cosmo_5i_fcast = ModelSuite("cosmo_5I_fcast")
@@ -91,7 +93,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                         "NNODES_MODEL": 4,
                         "EXTRA_SCHED": "",
                         "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1"
+                        "TASK_PER_CORE": "1",
+                        "HPCENV": "maialinux"
                     })
 
 cosmo_28n_assim = ModelSuite("cosmo_28N_assim")
@@ -129,7 +132,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                         "NNODES_MODEL": 4,
                         "EXTRA_SCHED": "",
                         "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1"
+                        "TASK_PER_CORE": "1",
+                        "HPCENV": "maialinux"
                     })
 
 cosmo_28n_fcruc = ModelSuite("cosmo_28N_fcruc")
@@ -166,7 +170,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                         "NNODES_MODEL": 4,
                         "EXTRA_SCHED": "",
                         "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1"
+                        "TASK_PER_CORE": "1",
+                        "HPCENV": "maialinux"
                     })
 
 cosmo_28n_reassim_era = ModelSuite("cosmo_28N_reassim_era")
