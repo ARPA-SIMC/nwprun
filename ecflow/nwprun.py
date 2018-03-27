@@ -76,7 +76,7 @@ class Preproc:
         task = fam.add_task("get_parent")
         SchedEnv("sh").add_to(task) # interactive because net access required for galileo
         task = fam.add_task("int2lm").add_trigger("./get_parent == complete")
-        task.add_variable("WALL_TIME", "00:10:00")
+        task.add_variable("WALL_TIME", "01:00:00")
         fam.add_task("merge_analysis").add_trigger("./int2lm == complete")
 
 class Model:
@@ -100,7 +100,7 @@ class Model:
                 fam.add_task("postproc").add_trigger("./"+self.modelname+" == complete")
 
 class EpsMembers:
-    def __init__(self, membrange="0", nofail=False, modelname="cosmo", postprocrange=None, postproctype="async", wait_obs=True):
+    def __init__(self, membrange="0", nofail=False, modelname="cosmo", postprocrange=None, postproctype="async", wait_obs=True, timer=None):
         self.membrange = rangeexpand(membrange)
         self.nofail = nofail
         self.modelname = modelname
@@ -108,6 +108,7 @@ class EpsMembers:
         else: self.postprocrange = rangeexpand(postprocrange)
         self.postproctype = postproctype
         self.wait_obs = wait_obs
+        self.timer = timer
 
     def add_to(self, node):
         ensfam = node.add_family("eps_members")
@@ -127,11 +128,20 @@ class EpsMembers:
             Model(postproc=(eps_memb in self.postprocrange),
                   postproctype=self.postproctype,
                   modelname=self.modelname, wait_obs=self.wait_obs).add_to(fam)
-            task = fam.add_family("wipe").add_task("wipe_member")
-            SchedEnv(sched="sh").add_to(task)
+
+            wipe = fam.add_family("wipe")
+            SchedEnv(sched="sh").add_to(wipe)
+            timerdep = ""
+            if self.timer is not None:
+                task = wipe.add_task("wipe_timer")
+                task.add_complete("./wipe_member == complete")
+                task.add_time(self.timer)
+                task.add_variable("ECF_DUMMY_TASK","Y")
+                timerdep = " || ./wipe_timer == complete"
+
+            task = wipe.add_task("wipe_member")
             task.add_complete("../model == complete")
-#            task.add_trigger("../model == complete || ../model == aborted || ../preproc == aborted || ../check_memb == aborted")
-            task.add_trigger("../model == aborted || ../preproc == aborted || ../check_memb == aborted")
+            task.add_trigger("../model == aborted || ../preproc == aborted || ../check_memb == aborted"+timerdep)
 
 class EndaAnalysis:
     def __init__(self):
@@ -167,13 +177,22 @@ class EpsPostproc:
 # family to complete, possibly with more fine-grain control on tasks,
 # and exiting thus resubmitting the suite for next run
 class WipeRun:
-    def __init__(self, time=None, runlist=[]):
-        self.time = time
+    def __init__(self, runlist=[], timer=None):
         self.runlist = runlist
+        self.timer = timer
 
     def add_to(self, node):
-        task = node.add_family("wipe").add_task("wipe_run")
-        SchedEnv(sched="sh").add_to(task)
+        wipe = node.add_family("wipe")
+        SchedEnv(sched="sh").add_to(wipe)
+        timerdep = ""
+        if self.timer is not None:
+            task = wipe.add_task("wipe_timer")
+            task.add_complete("./wipe_run == complete")
+            task.add_time(self.timer)
+            task.add_variable("ECF_DUMMY_TASK","Y")
+            timerdep = " || ./wipe_timer == complete"
+
+        task = wipe.add_task("wipe_run")
         task.add_complete("../run == complete")
         trig = ""
         for fam in self.runlist:
@@ -185,8 +204,7 @@ class WipeRun:
                 trig = expr_or(trig, "../run/continuous_analysis == aborted")
             elif isinstance(fam, EpsPostproc):
                 trig = expr_or(trig, "../run/eps_postproc == aborted")
-        task.add_trigger(trig) # || ../check_run == aborted")
-        if self.time is not None: task.add_time(self.time)
+        task.add_trigger(trig+timerdep) # || ../check_run == aborted")
 
 class BasicEnv():
     def __init__(self, srctree=None, worktree=None, sched=None, client_wrap="", ntries=1, extra_env=None):
@@ -209,17 +227,17 @@ class BasicEnv():
         node.add_variable("ECF_HOME", self.worktree)
         node.add_variable("ecflow_client", self.ecflow_client)
         node.add_variable("ECF_TRIES", str(self.ntries))
-        node.add_variable("ECF_TIMEOUT", "7200")
         SchedEnv(sched=self.sched).add_to(node)
         if self.extra_env is not None:
             for var in self.extra_env:
                 node.add_variable(var, self.extra_env[var])
 
 class WaitAndRun:
-    def __init__(self, dep=None, time=None, runlist=None):
+    def __init__(self, dep=None, time=None, runlist=None, timer=None):
         self.dep = dep
         self.time = time
         self.runlist = runlist
+        self.timer = timer
 
     def add_to(self, node):
         if self.time is None:
@@ -250,7 +268,7 @@ class WaitAndRun:
         if self.runlist is not None:
             for run in self.runlist:
                 run.add_to(fam)
-        WipeRun(runlist=self.runlist).add_to(node)
+        WipeRun(runlist=self.runlist, timer=self.timer).add_to(node)
 
 class ModelSuite():
     def __init__(self, name):
