@@ -17,7 +17,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                         "NNODES_ENDA": 4,
                         "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoenda -A smr_prod",
                         "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1"
+                        "TASK_PER_CORE": "1",
+                        "HPCENV": "marconi"
                     })
 
 enda = ModelSuite("cosmo_2I_enda")
@@ -56,7 +57,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                         "NNODES_ENDA": 4,
                         "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoenda -A smr_prod",
                         "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1"
+                        "TASK_PER_CORE": "1",
+                        "HPCENV": "marconi"
                     })
 
 fcruc = ModelSuite("cosmo_2I_fcruc")
@@ -94,7 +96,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                         "NNODES_ENDA": 4,
                         "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoeps -A smr_prod",
                         "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1"
+                        "TASK_PER_CORE": "1",
+                        "HPCENV": "marconi"
                     })
 
 fcens = ModelSuite("cosmo_2I_fcens")
