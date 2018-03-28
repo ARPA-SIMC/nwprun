@@ -48,7 +48,7 @@
   ie_ext=1520, je_ext=1120,
   ylmext_lfn='topogr_cosmo_0.045_47_m170',
   ylmext_cat='@MODEL_STATIC@',
-  yinext_lfn='icon_extpar_arpa_R03B07_20150805.nc',
+  yinext_lfn='icon_extpar_arpa_R03B07_20180103.nc',
   yin_hhl='icon_hhl_arpa_R03B07.g2',
   yinext_cat='@PARENTMODEL_STATIC@',
   yin_cat='@PARENTMODEL_DATADIR@',
