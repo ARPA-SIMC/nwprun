@@ -35,7 +35,7 @@ if [ -n "$ENS_MEMB" ]; then
     PARENTMODEL_QRQS=.FALSE.
 # input data
     PARENTMODEL_DATADIR=$WORKDIR/input.$ENS_MEMB/data
-    MODEL_ARKI_PARAM="proddef:GRIB:nn=$ENS_MEMB;"
+    MODEL_ARKI_PARAM="proddef:GRIB:nn=$ENS_MEMB;origin:GRIB1,80"
 # preprocessing (interpolation)
     MODEL_PRE_WORKDIR=$WORKDIR/int2lm.$ENS_MEMB
     MODEL_PRE_DATADIR=$WORKDIR/int2lm.$ENS_MEMB/data
