@@ -233,11 +233,12 @@ class BasicEnv():
                 node.add_variable(var, self.extra_env[var])
 
 class WaitAndRun:
-    def __init__(self, dep=None, time=None, runlist=None, timer=None):
+    def __init__(self, dep=None, time=None, runlist=None, timer=None, cronfreq=10):
         self.dep = dep
         self.time = time
         self.runlist = runlist
         self.timer = timer
+        self.cronfreq = cronfreq
 
     def add_to(self, node):
         if self.time is None:
@@ -252,7 +253,7 @@ class WaitAndRun:
             # second task
             task = fam.add_task("check_run")
             task.add_complete("can_run:ready")
-            task.add_cron(daily_cron(10))
+            task.add_cron(daily_cron(self.cronfreq))
             if self.dep is not None:
                 task.add_trigger("../../"+self.dep+" == complete")
             task.add_event("checked")

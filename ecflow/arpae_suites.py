@@ -187,8 +187,7 @@ for h in range(0, 24, 12):
     WaitAndRun(dep=hdep, runlist=[
         EpsMembers(membrange="0", postprocrange="0", postproctype="sync", wait_obs=False),
         ContinuousAnalysis()
-    ]
-    ).add_to(hour)
+    ], cronfreq=1).add_to(hour)
     hdep = famname # dependency for next repetition
 
 cosmo_28n_reassim_era.check()
