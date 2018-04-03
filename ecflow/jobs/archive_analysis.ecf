@@ -6,7 +6,10 @@
 . $NWPCONFBINDIR/cosmo_model.sh
 . $NWPCONFBINDIR/putarki.sh
 . $NWPCONFBINDIR/arkilocal.sh
+. $NWPCONFBINDIR/arki_tools.sh
 # end of setup
+
+set -x
 
 if [ -f "$MODEL_DATADIR/laf$DATE$TIME$ANA_EXT$ANA_DET_EXT" ]; then
 # check existence of ARKI_DIR?
@@ -14,7 +17,6 @@ if [ -f "$MODEL_DATADIR/laf$DATE$TIME$ANA_EXT$ANA_DET_EXT" ]; then
     arkilocal_setup
     arkilocal_create
     time putarki_archive grib $MODEL_DATADIR/laf$DATE$TIME$ANA_EXT$ANA_DET_EXT
-
 
 # archive on special dir for other forecast suites
     if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
@@ -24,3 +26,7 @@ if [ -f "$MODEL_DATADIR/laf$DATE$TIME$ANA_EXT$ANA_DET_EXT" ]; then
     fi
 fi
 
+# daily cleaning
+if [ "$TIME" = "00" -a -n "$ARKI_CONF" ]; then
+    arki_dailycleanup $ARKI_CONF 6 12
+fi
