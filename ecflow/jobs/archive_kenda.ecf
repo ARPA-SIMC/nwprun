@@ -15,13 +15,16 @@ if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
     putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.det
 fi
 
-# then archive locally
+# then archive locally, including daily cleaning
 export LD_PRELOAD=$WORK/srcgnu/install/lib/libeatmydata.so
 
 if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
     arkilocal_setup
     arkilocal_create
     time putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.det
+    if [ "$TIME" = "00" ]; then
+        arki_dailycleanup $ARKI_CONF 6 12
+    fi
 fi
 
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
@@ -32,6 +35,9 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
         arkilocal_setup
         arkilocal_create
         time putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.$n3
+        if [ "$TIME" = "00" ]; then
+            arki_dailycleanup $ARKI_CONF 6 12
+        fi
     fi
 done
 unset LD_PRELOAD
@@ -52,11 +58,4 @@ else
     mkdir -p $WORKDIR/archive
     rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA
 fi
-fi
-
-# daily cleaning
-if [ "$TIME" = "00" -a -n "$ARKI_CONF" ]; then
-    for n in `seq 1 $ENS_TOTAL_MEMB`; do
-        arki_dailycleanup $ARKI_CONF 6 12
-    done
 fi
