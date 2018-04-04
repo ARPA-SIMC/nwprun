@@ -1,0 +1,6 @@
+#!/bin/sh
+
+export LD_LIBRARY_PATH=/marconi_work/smr_prod/srcgnu/install/lib:/cineca/prod/opt/libraries/qt/5.9.0/gnu--6.1.0/lib:/cineca/prod/opt/compilers/gnu/6.1.0/none/lib64
+export PATH=/marconi_work/smr_prod/srcgnu/install/bin:/cineca/prod/opt/libraries/qt/5.9.0/gnu--6.1.0/bin:/cineca/prod/opt/compilers/gnu/6.1.0/none/bin:/cineca/bin:/usr/lib64/qt-3.3/bin:/cineca/sysprod/pbs/default/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/marconi/home/usera07smr/a07smr03/.local/bin:/marconi/home/usera07smr/a07smr03/bin
+export PYTHONPATH=/marconi_work/smr_prod/srcgnu/install/lib/python2.7/site-packages
+exec "$@"
