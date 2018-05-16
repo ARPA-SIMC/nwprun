@@ -4,7 +4,7 @@ PARENTMODEL_FREQINI=12
 PARENTMODEL_FREQANA=1
 PARENTMODEL_FREQFC=1
 PARENTMODEL_QRQS=.TRUE.
-PARENTMODEL_ARKI_DS=http://maialtest.metarpa:8090/dataset/cosmo_5I
+PARENTMODEL_ARKI_DS=http://maialinux.metarpa:8090/dataset/cosmo_5I
 
 # configuration of assimilation
 MODEL_SOIL_PARENT=Y
