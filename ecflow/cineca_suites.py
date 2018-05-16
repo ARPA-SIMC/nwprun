@@ -5,21 +5,28 @@ import datetime
 import ecflow
 from nwprun import *
 
+common_extra_env = {
+    "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoenda -A smr_prod",
+    "NO_FAIL": "FALSE",
+    "TASK_PER_CORE": "1",
+    "HPCENV": "marconi",
+    "ECF_TIMEOUT": "7200",
+    "ECF_DENIED": "1"
+}
+
 # Suite enda
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_2I/enda",
+    "NNODES_MODEL": 2,
+    "NNODES_ENDA": 4
+})
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=1,
-                    extra_env={
-                        "NWPCONF": "prod/cosmo_2I/enda",
-                        "NNODES_MODEL": 2,
-                        "NNODES_ENDA": 4,
-                        "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoenda -A smr_prod",
-                        "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1",
-                        "HPCENV": "marconi"
-                    })
+                    extra_env=extra_env)
 
 enda = ModelSuite("cosmo_2I_enda")
 basicenv.add_to(enda.suite)
@@ -46,20 +53,18 @@ enda.write()
 enda.replace()
 
 # Suite fcruc
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_2I/fcruc",
+    "NNODES_MODEL": 8,
+    "NNODES_ENDA": 4
+})
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=1,
-                    extra_env={
-                        "NWPCONF": "prod/cosmo_2I/fcruc",
-                        "NNODES_MODEL": 8,
-                        "NNODES_ENDA": 4,
-                        "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoenda -A smr_prod",
-                        "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1",
-                        "HPCENV": "marconi"
-                    })
+                    extra_env=extra_env)
 
 fcruc = ModelSuite("cosmo_2I_fcruc")
 basicenv.add_to(fcruc.suite)
@@ -85,20 +90,20 @@ fcruc.write()
 fcruc.replace()
 
 # Suite fcens
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_2I/fcens",
+    "NNODES_MODEL": 6,
+    "NNODES_ENDA": 4,
+    "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoeps -A smr_prod",
+    "ECF_TIMEOUT": "14400"
+})
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=1,
-                    extra_env={
-                        "NWPCONF": "prod/cosmo_2I/fcens",
-                        "NNODES_MODEL": 6,
-                        "NNODES_ENDA": 4,
-                        "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoeps -A smr_prod",
-                        "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1",
-                        "HPCENV": "marconi"
-                    })
+                    extra_env=extra_env)
 
 fcens = ModelSuite("cosmo_2I_fcens")
 basicenv.add_to(fcens.suite)

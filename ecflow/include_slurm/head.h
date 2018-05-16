@@ -9,6 +9,7 @@ export ECF_HOST=%ECF_HOST%    # The host name where the server is running
 export ECF_NAME=%ECF_NAME%    # The name of this current task
 export ECF_PASS=%ECF_PASS%    # A unique password
 export ECF_TRYNO=%ECF_TRYNO%  # Current try number of the task
+export ECF_DENIED=%ECF_DENIED:% # Optional, if set, ecflow_client exits when connection with server fails
 # record the process id. Also used for zombie detection
 if [ -n "$PBS_JOBID" ]; then
     export ECF_RID=${PBS_JOBID%%.*}
@@ -64,14 +65,14 @@ trap '{ CLEANEXIT ; }' EXIT
 trap '{ echo "Exiting with error"; ERROR ; }' ERR
 trap '{ echo "Killed by a signal"; ERROR ; }' 1 2 3 4 5 6 7 8 10 12 13 15
 
-# nwpconf setup, NWPCONF comes from the suite def
+# optional nwpconf setup, NWPCONF comes from the suite def
 export NWPCONF=%NWPCONF:%
 if [ -n "$NWPCONF" ]; then
     export NWPCONFDIR=%BASEDIR%/conf
     export NWPCONFBINDIR=%BASEDIR%/libexec/nwpconf
     export DATE=%YMD:%
     export TIME=%TIME:00%
-# source the main nwpconf library module other modules must be sourced
+# source the main nwpconf library module, other modules must be sourced
 # in the job
     . $NWPCONFBINDIR/nwpconf.sh
 fi
