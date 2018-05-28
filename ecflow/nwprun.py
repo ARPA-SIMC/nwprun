@@ -67,17 +67,20 @@ class GetObs:
             if self.lhn: fam.add_task("get_radarlhn")
 
 class Preproc:
-    def __init__(self):
-        pass
+    def __init__(self, modelname="cosmo"):
+        if modelname == "cosmo":
+            self.modelname = "int2lm"
+        else:
+            self.modelname = "pre" + modelname
 
     def add_to(self, node):
         fam = node.add_family("preproc")
         fam.add_trigger("./check_memb:required == 2")
         task = fam.add_task("get_parent")
         SchedEnv("sh").add_to(task) # interactive because net access required for galileo
-        task = fam.add_task("int2lm").add_trigger("./get_parent == complete")
+        task = fam.add_task(self.modelname).add_trigger("./get_parent == complete")
         task.add_variable("WALL_TIME", "01:00:00")
-        fam.add_task("merge_analysis").add_trigger("./int2lm == complete")
+        fam.add_task("merge_analysis").add_trigger("./"+self.modelname+" == complete")
 
 class Model:
     def __init__(self, postproc=True, postproctype="async", modelname="cosmo", wait_obs=True):
@@ -124,7 +127,7 @@ class EpsMembers:
                 fam.add_variable("NO_FAIL", "TRUE") # do not fail in case of error
             task = fam.add_task("check_memb").add_meter("required", 0, 2)
             SchedEnv(sched="sh").add_to(task)
-            Preproc().add_to(fam)
+            Preproc(modelname=self.modelname).add_to(fam)
             Model(postproc=(eps_memb in self.postprocrange),
                   postproctype=self.postproctype,
                   modelname=self.modelname, wait_obs=self.wait_obs).add_to(fam)

@@ -1,0 +1,19 @@
+%include <sched_serial.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/parcomp.sh
+# end of setup
+
+set -x
+
+cd $MODEL_PRE_WORKDIR
+conf_template premoloch.inp
+
+$MODEL_PRE_PRE_BIN $MODEL_ARCHIVE_ANA/$DATE$TIME.lfff00000000c \
+  $MODEL_ARCHIVE_ANA/$DATE$TIME.lfff0[0-1]??0000 \
+  $MODEL_ARCHIVE_ANA/$DATE$TIME.lfff02000000
+
+$MODEL_PRE_BIN
+rm -f grib_???

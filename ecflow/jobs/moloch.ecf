@@ -1,0 +1,16 @@
+%include <sched_mpi.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/parcomp.sh
+# end of setup
+
+set -x
+
+cd $MODEL_WORKDIR
+
+conf_template moloch.inp
+# not needed
+$ecflow_client --event=started # trigger start of postproc
+parcomp_mpirun $MODEL_BIN

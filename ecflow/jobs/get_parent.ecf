@@ -34,6 +34,16 @@ arki_loop_backup() {
 }
 
 
+signal_loop() {
+    nwpbctimeloop_init
+    while nwpbctimeloop_loop; do
+        if [ -n "$PARENTMODEL_SIGNAL" ]; then
+            import_signal_wait $PARENTMODEL_SIGNAL $DATES_SLICE$TIMES_SLICE "*" "$PARENTMODEL_SIGNAL_NFILES"
+        fi
+    done
+}
+
+
 case "%SUITE%" in
     *reassim*)
         . $NWPCONFBINDIR/simc_site.sh
@@ -77,6 +87,13 @@ case "%SUITE%" in
             done
         fi
         ;;
+
+    moloch*)
+        . $NWPCONFBINDIR/simc_site.sh
+# end of setup
+        signal_loop
+        ;;
+
 esac
 
 
