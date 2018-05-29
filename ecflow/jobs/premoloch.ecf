@@ -1,5 +1,7 @@
-%include <sched_serial.h>
+%include <sched_heavy.h>
 %include <head.h>
+
+# add sched_serial to run on nodes
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh

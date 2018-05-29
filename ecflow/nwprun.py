@@ -16,6 +16,8 @@ def rangeexpand(txt):
 def expr_or(expr, orexpr):
     if expr == "":
         return orexpr
+    elif orexpr == "":
+        return expr
     else:
         return expr+" || "+orexpr
 
@@ -193,10 +195,8 @@ class WipeRun:
             task.add_complete("./wipe_run == complete")
             task.add_time(self.timer)
             task.add_variable("ECF_DUMMY_TASK","Y")
-            timerdep = " || ./wipe_timer == complete"
+            timerdep = "./wipe_timer == complete"
 
-        task = wipe.add_task("wipe_run")
-        task.add_complete("../run == complete")
         trig = ""
         for fam in self.runlist:
             if isinstance(fam, GetObs):
@@ -207,7 +207,12 @@ class WipeRun:
                 trig = expr_or(trig, "../run/continuous_analysis == aborted")
             elif isinstance(fam, EpsPostproc):
                 trig = expr_or(trig, "../run/eps_postproc == aborted")
-        task.add_trigger(trig+timerdep) # || ../check_run == aborted")
+
+        task = wipe.add_task("wipe_run")
+        task.add_complete("../run == complete")
+        fulldep = expr_or(trig, timerdep)
+        if fulldep != "":
+            task.add_trigger(fulldep) # || ../check_run == aborted")
 
 class BasicEnv():
     def __init__(self, srctree=None, worktree=None, sched=None, client_wrap="", ntries=1, extra_env=None):
