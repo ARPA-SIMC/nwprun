@@ -30,9 +30,11 @@ case "%SUITE%" in
 esac
 
 if [ -n "$MODEL_ARCHIVE_OUTPUT_EXTRA" ]; then
+    mkdir -p $MODEL_ARCHIVE_OUTPUT_EXTRA
     for file in $MODEL_DATADIR/extra1/*; do
         if [ -f "$file" ]; then
-	    cp -l $file $MODEL_ARCHIVE_OUTPUT_EXTRA/$DATE$TIME.$file
+	    filename=${file##*/}
+	    cp -l $file $MODEL_ARCHIVE_OUTPUT_EXTRA/$DATE$TIME.$filename
 	fi
     done
 fi
