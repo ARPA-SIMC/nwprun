@@ -187,8 +187,6 @@ class WipeRun:
         self.timer = timer
 
     def add_to(self, node):
-        wipe = node.add_family("wipe")
-        SchedEnv(sched="sh").add_to(wipe)
         timerdep = ""
         if self.timer is not None:
             task = wipe.add_task("wipe_timer")
@@ -208,10 +206,12 @@ class WipeRun:
             elif isinstance(fam, EpsPostproc):
                 trig = expr_or(trig, "../run/eps_postproc == aborted")
 
-        task = wipe.add_task("wipe_run")
-        task.add_complete("../run == complete")
         fulldep = expr_or(trig, timerdep)
         if fulldep != "":
+            wipe = node.add_family("wipe")
+            SchedEnv(sched="sh").add_to(wipe)
+            task = wipe.add_task("wipe_run")
+            task.add_complete("../run == complete")
             task.add_trigger(fulldep) # || ../check_run == aborted")
 
 class BasicEnv():
