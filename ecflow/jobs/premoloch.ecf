@@ -10,7 +10,11 @@
 
 set -x
 
+safe_rm_rf $MODEL_PRE_WORKDIR
+# $MODEL_PRE_DATADIR
+mkdir -p $MODEL_PRE_WORKDIR
 cd $MODEL_PRE_WORKDIR
+
 conf_template premoloch.inp
 
 $MODEL_PRE_PRE_BIN $MODEL_ARCHIVE_ANA/$DATE$TIME.lfff00000000c \

@@ -3,16 +3,16 @@
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
-. $NWPCONFBINDIR/cosmo_model.sh
 . $NWPCONFBINDIR/nwpwait.sh
 . $NWPCONFBINDIR/getarki.sh
 . $NWPCONFBINDIR/arki_tools.sh
-# end of setup
 
 set -x
-safe_rm_rf $PARENTMODEL_DATADIR
-mkdir -p $PARENTMODEL_DATADIR
-cd $PARENTMODEL_DATADIR
+if [ -n "$PARENTMODEL_DATADIR" ]; then
+    safe_rm_rf $PARENTMODEL_DATADIR
+    mkdir -p $PARENTMODEL_DATADIR
+    cd $PARENTMODEL_DATADIR
+fi
 
 arki_loop() {
     nwpbctimeloop_init
@@ -46,12 +46,14 @@ signal_loop() {
 
 case "%SUITE%" in
     *reassim*)
+        . $NWPCONFBINDIR/cosmo_model.sh
         . $NWPCONFBINDIR/simc_site.sh
 # end of setup
         arki_loop
         ;;
 
     cosmo_28N*)
+        . $NWPCONFBINDIR/cosmo_model.sh
         . $NWPCONFBINDIR/simc_site.sh
 # end of setup
         arki_loop
@@ -60,6 +62,7 @@ case "%SUITE%" in
         ;;
 
     cosmo_5I*)
+        . $NWPCONFBINDIR/cosmo_model.sh
         . $NWPCONFBINDIR/simc_site.sh
 # end of setup
         IMPORT_SIGNAL_METHOD=simc
@@ -67,6 +70,7 @@ case "%SUITE%" in
         ;;
 
     cosmo_2I*) # to be renamed, cineca suites
+        . $NWPCONFBINDIR/cosmo_model.sh
         . $NWPCONFBINDIR/cineca_site.sh
 # end of setup
 
