@@ -5,20 +5,25 @@ import datetime
 import ecflow
 from nwprun import *
 
+common_extra_env = {
+    "NNODES_MODEL": 4,
+    "EXTRA_SCHED": "",
+    "NO_FAIL": "FALSE",
+    "TASK_PER_CORE": "1",
+    "HPCENV": "maialinux"
+}
+
 # suite cosmo_5i_assim
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_5I/assim"
+})
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
                     ntries=1,
-                    extra_env={
-                        "NWPCONF": "prod/cosmo_5I/assim",
-                        "NNODES_MODEL": 4,
-                        "EXTRA_SCHED": "",
-                        "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1",
-                        "HPCENV": "maialinux"
-                    })
+                    extra_env=extra_env)
 
 cosmo_5i_assim = ModelSuite("cosmo_5I_assim")
 basicenv.add_to(cosmo_5i_assim.suite)
@@ -45,19 +50,16 @@ cosmo_5i_assim.write()
 cosmo_5i_assim.replace()
 
 # suite cosmo_5i_fcast
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_5I/fcast"
+})
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
                     ntries=1,
-                    extra_env={
-                        "NWPCONF": "prod/cosmo_5I/fcast",
-                        "NNODES_MODEL": 4,
-                        "EXTRA_SCHED": "",
-                        "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1",
-                        "HPCENV": "maialinux"
-                    })
+                    extra_env=extra_env)
 
 cosmo_5i_fcast = ModelSuite("cosmo_5I_fcast")
 basicenv.add_to(cosmo_5i_fcast.suite)
@@ -83,19 +85,16 @@ cosmo_5i_fcast.write()
 cosmo_5i_fcast.replace()
 
 # suite cosmo_28n_assim
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_28N/assim"
+})
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
                     ntries=1,
-                    extra_env={
-                        "NWPCONF": "prod/cosmo_28N/assim",
-                        "NNODES_MODEL": 4,
-                        "EXTRA_SCHED": "",
-                        "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1",
-                        "HPCENV": "maialinux"
-                    })
+                    extra_env=extra_env)
 
 cosmo_28n_assim = ModelSuite("cosmo_28N_assim")
 basicenv.add_to(cosmo_28n_assim.suite)
@@ -122,19 +121,16 @@ cosmo_28n_assim.write()
 cosmo_28n_assim.replace()
 
 # suite cosmo_28n_fcruc
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_28N/fcruc"
+})
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
                     ntries=1,
-                    extra_env={
-                        "NWPCONF": "prod/cosmo_28N/fcruc",
-                        "NNODES_MODEL": 4,
-                        "EXTRA_SCHED": "",
-                        "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1",
-                        "HPCENV": "maialinux"
-                    })
+                    extra_env=extra_env)
 
 cosmo_28n_fcruc = ModelSuite("cosmo_28N_fcruc")
 basicenv.add_to(cosmo_28n_fcruc.suite)
@@ -160,19 +156,16 @@ cosmo_28n_fcruc.write()
 cosmo_28n_fcruc.replace()
 
 # suite 28n_reassim_era
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_28N/reassim_era"
+})
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
                     ntries=1,
-                    extra_env={
-                        "NWPCONF": "prod/cosmo_28N/reassim_era",
-                        "NNODES_MODEL": 4,
-                        "EXTRA_SCHED": "",
-                        "NO_FAIL": "FALSE",
-                        "TASK_PER_CORE": "1",
-                        "HPCENV": "maialinux"
-                    })
+                    extra_env=extra_env)
 
 cosmo_28n_reassim_era = ModelSuite("cosmo_28N_reassim_era")
 basicenv.add_to(cosmo_28n_reassim_era.suite)
