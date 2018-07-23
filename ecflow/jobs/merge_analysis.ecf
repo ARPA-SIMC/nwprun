@@ -64,6 +64,11 @@ if [ "$MODEL_SLOW_ASSIM" = Y ]; then
 else
     export COSMO_SLOW_NML=.TRUE.
 fi
+if [ "$MODEL_FAST_ASSIM" = Y ]; then
+    export COSMO_FAST_NML=.TRUE.
+else
+    export COSMO_FAST_NML=.FALSE.
+fi
 # moved here to simplify dependencies of postproc job
 #safe_rm_rf $MODEL_WORKDIR
 safe_rm_rf $MODEL_DATADIR
