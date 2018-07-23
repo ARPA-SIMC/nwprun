@@ -32,7 +32,7 @@
       itype_conv=3,
       lcape=.false.,
       lconf_avg=.false.,
-      itype_vdif=-1,
+      itype_vdif=1,
       itype_albedo=3,
       cwimax_ml=0.0005,
  /END
