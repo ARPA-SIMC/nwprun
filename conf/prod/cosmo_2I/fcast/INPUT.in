@@ -4,11 +4,11 @@
   nincwait=0, nmaxwait=0,
   nprocx=@NPX@, nprocy=@NPY@, luvcor=.TRUE., lprog_qi=.TRUE., lprog_qr_qs=@PARENTMODEL_QRQS@,
   lvertwind_ini=.TRUE., lvertwind_bd=.TRUE., lforest=.TRUE.,
-  lmulti_layer_lm=.TRUE., lsso=.FALSE.,
+  lmulti_layer_lm=.TRUE., lsso=.TRUE.,
   itype_w_so_rel=1, itype_t_cl=0,
   llake=.TRUE., llake_coldstart=.TRUE., lforest=.TRUE.,
   lmulti_layer_in=.TRUE., l_smi=.TRUE.,
-  itype_aerosol=2, itype_ndvi=1,
+  itype_aerosol=2, itype_ndvi=1, itype_albedo = 3,
   linitial=.TRUE., lboundaries=.TRUE.,
   ltime_proc=.FALSE., ltime_mean=.TRUE., 
   lroutine=.FALSE., yinput_model='@PARENTMODEL@',
@@ -17,7 +17,8 @@
   ilow_pass_xso=5,
   rxso_mask=625.0000,
   lfilter_pp=.TRUE.,
-  lbalance_pp=.TRUE.,
+  itype_balance_pp = 2,
+  itype_fast_waves_lm = 2,
   lreorder=.FALSE.,
  /END
  &GRID_IN
@@ -29,7 +30,7 @@
  &LMGRID
   startlat_tot=-8.5, startlon_tot=-3.8,
   ielm_tot=576, jelm_tot=701, kelm_tot=65,
-  pollat=47.000,      pollon=-170.000,
+  pollat=47.000, pollon=-170.000,
   dlon=0.02, dlat=0.02,
   ivctype=2, irefatm=2, lanalyt_calc_t0p0=.true., vcflat=11357.0,
   vcoord_d=22000.00, 21040.00, 20108.89, 19206.23, 18331.56, 17484.43,
@@ -54,8 +55,8 @@
   yinext_cat='@PARENTMODEL_DATADIR@',
   yin_cat='@PARENTMODEL_DATADIR@',
   ylm_cat='@MODEL_PRE_DATADIR@',
-  ymode_read='r b'
-  ymode_write='w b'
+  ymode_read='r  '
+  ymode_write='w  '
   nprocess_ini=@MODEL_INTER_GP@, 
   nprocess_bd=@MODEL_INTER_GP@,
   ncenter=@GRIB_CENTER@,
