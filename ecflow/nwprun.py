@@ -82,7 +82,8 @@ class Preproc:
         SchedEnv("sh").add_to(task) # interactive because net access required for galileo
         task = fam.add_task(self.modelname).add_trigger("./get_parent == complete")
         task.add_variable("WALL_TIME", "01:00:00")
-        fam.add_task("merge_analysis").add_trigger("./"+self.modelname+" == complete")
+        if self.modelname == "int2lm":
+            fam.add_task("merge_analysis").add_trigger("./"+self.modelname+" == complete")
 
 class Model:
     def __init__(self, postproc=True, postproctype="async", modelname="cosmo", wait_obs=True):

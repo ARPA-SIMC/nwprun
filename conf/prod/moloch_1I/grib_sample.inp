@@ -1,0 +1,3 @@
+ &GRIB_SAMPLE
+GRIBSAMPLENAME = "/home/oper/grib_api/grib_api_ifort/share/grib_api/samples/regular_ll_sfc_grib2.tmpl"
+ &END

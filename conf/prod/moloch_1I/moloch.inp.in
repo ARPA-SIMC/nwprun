@@ -1,0 +1,30 @@
+&model
+dtstep = 45.0, nadv = 3, nsound = 6, anu2 = 0.06,
+nbl = 8, nradm = 1,
+hrun = 48., hist = 3., hbound = 1., hdiag = 0.001
+srad = 480., mswshf = 60., htop = 0.92,
+nlmic2=.false., nlbfix=.false., nlana=.true.,
+nlradar=.false., nlwshf=.true., mhfr=1
+&end
+
+! dtstep    integration time step (in seconds)
+! nadv      number of advection steps in dtstep sec.
+! nsound    number of steps for sound waves
+! anu2      second order diffusion (max=1.0)
+! nbl       no. of lateral boundary lines
+! nradm     radiation scheme flag: 0 - no radiation,
+!                                  1 - Geleyn only every srad seconds
+!                                  2 - Geleyn and ECMWF combined
+! hrun      forecast duration in hours
+! hist      interval (in hours) between two writings of model output (mhf)
+! hbound    interval (in hours) between two boundary conditions
+! hdiag     interval (in hours) between two model diagnostics printouts
+! srad      interval (in seconds) between two calls of radiation parameterization
+! mswshf    interval (in minutes) between two writings of surface fields (shf)
+! htop      fraction of vertical column where microphys. and turbul. are active (<= 1.)
+! nlmic2    if true, 2-moment microphysics
+! nlbfix    if true, fixed boundary conditions
+! nlana     if true, saves initial condition in output (mhf)
+! nlradar   if true, simulation of radar reflectivity
+! nlwshf    if true, writes surface fields (shf)
+! mhfr      1: full mhf resolution; 2: half mhf resolution
