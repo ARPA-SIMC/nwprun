@@ -22,7 +22,10 @@ for extfile in era40_glob_lsm_htop_tg5_qg5.bin orogr_global_latlon_1km.bin soil_
 done
 $MODEL_PRE_PRE_BIN $MODEL_ARCHIVE_ANA/$DATE$TIME.lfff00000000c \
   $MODEL_ARCHIVE_ANA/$DATE$TIME.lfff0[0-1]??0000 \
-  $MODEL_ARCHIVE_ANA/$DATE$TIME.lfff02000000
+  $MODEL_ARCHIVE_ANA/$DATE$TIME.lfff02000000 &
+# wait for first grib file to be complete, improve
+sleep 30
 
+ulimit -s unlimited
 $MODEL_PRE_BIN
 #rm -f grib_???
