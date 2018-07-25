@@ -35,6 +35,5 @@
       lconf_avg=.false.,
       itype_vdif=-2,
       itype_albedo=3,
-      cwimax_ml=0.0005,
  /END
 
