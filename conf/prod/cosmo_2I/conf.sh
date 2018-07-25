@@ -28,7 +28,7 @@ MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
-MODEL_BIN=$WORK/srcintel/cosmo_170323_5.04e/lmparbin_all
+MODEL_BIN=$WORK/srcintel/cosmo_170123_5.04d3/lmparbin_all
 MODEL_STATIC=$WORK/data/cosmo
 MODEL_PUBLISH_CONF=Y
 
