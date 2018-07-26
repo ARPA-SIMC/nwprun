@@ -44,7 +44,7 @@ if [ -n "$LOGSIM_PROCESS" ]; then
     simc_send_logevent ''
 fi
 # done here for forecast and in putarki.sh for analysis
-# improve
+# improve, may also consider -z "$ENS_MEMB"
 if [ -n "$MODEL_SIGNAL" -a "$MODEL_BACK" -eq 0 ]; then
     import_signal_imported $MODEL_SIGNAL $DATE$TIME
 fi

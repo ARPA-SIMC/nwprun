@@ -3,6 +3,9 @@
 
 # source other optional modules
 . $NWPCONFBINDIR/parcomp.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
 
 set -x
 safe_rm_rf $FXTR_WORKDIR
@@ -59,6 +62,8 @@ for file in $FXTR_DATADIR/*.grib; do
     grib_set -s tablesVersion=11 $file $file.tmp
     mv $file.tmp $file
 done
+
+putarki_archive_and_wait grib $FXTR_DATADIR/*.grib
 
 # copy to archive
 subdir=cosmo_2I_fcens/$DATE$TIME
