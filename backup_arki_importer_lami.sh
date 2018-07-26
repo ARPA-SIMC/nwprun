@@ -10,7 +10,7 @@ import_one() {
 		*/lm5/*c) # dati constanti
 		    log "start importing PROD/lm5/c $1"
 # principale
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
+		    time arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
 # area itr (~"lama")
 		    make_itr $1
 		    rm -f ${1}_itr
@@ -21,7 +21,7 @@ import_one() {
 		*/lm5/*)
 		    log "start importing PROD/lm5 $1"
 # principale
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
+		    time arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
 # area itr (~"lama")
 		    make_itr $1
 # profili verticali
@@ -33,13 +33,13 @@ import_one() {
 		    ;;
 		*/lm2.2/*)
 		    log "start importing PROD/lm2.2 $1"
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
+		    time arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
 
 		    log "done importing $1"
 		    ;;
 		*/swan/*)
 		    log "start importing PROD/swan $1"
-		    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
+		    time arki-scan --dispatch=$ARKI_CONF grib:${1} > /dev/null
 		    log "done importing $1"
 		    ;;
 	    esac

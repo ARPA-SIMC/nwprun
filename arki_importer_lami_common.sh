@@ -24,7 +24,7 @@ make_itr()
     time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=coord \
 	--ilon=3.6 --ilat=33.8 --flon=23.5 --flat=49. \
 	$1 ${1}_itr
-    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1}_itr > /dev/null
+    time arki-scan --dispatch=$ARKI_CONF grib:${1}_itr > /dev/null
 #    rm -f ${1}_itr
 # file is not removed in order to be used with the vertical profiles,
 # find a better way
@@ -38,7 +38,7 @@ make_medl()
 	vg6d_transform --trans-mode=s \
 	--trans-type=boxregrid --sub-type=average --npx=4 --npy=4 \
 	- ${1}_medl
-    time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1}_medl > /dev/null
+    time arki-scan --dispatch=$ARKI_CONF grib:${1}_medl > /dev/null
     rm -f ${1}_medl
 }
 
@@ -72,7 +72,7 @@ make_prof()
 	v7d_transform --input-format=native --output-format=BUFR  \
 	--output-variable-list=B10007,B10004,B11001,B11002,B11003,B11004,B11006,B12101,B12103,B13001,B13003 \
 	- ${1}.bufr
-    time eatmydata arki-scan --dispatch=$ARKI_CONF bufr:${1}.bufr > /dev/null
+    time arki-scan --dispatch=$ARKI_CONF bufr:${1}.bufr > /dev/null
     rm -f ${1}_109 ${1}_110 ${1}_109_110 ${1}_destag ${1}.bufr
 }
 

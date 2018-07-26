@@ -7,13 +7,13 @@ import_one() {
     case $1 in
 	./generic/*)
 	    log "start importing generic $1"
-	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    log "done importing $1"
 	    ;;
 	./cosmo_2I_assim/*)
 	    log "start importing cosmo_2I_assim $1"
 	    import_cosmo_fileinfo $1
-	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    if [ "$sfile" != "lfff00000000c" ]; then # do no signal constant
 		import_signal_imported cosmo_2I_assim $sdate $sfile
 	    fi
@@ -22,7 +22,7 @@ import_one() {
 	./cosmo_2I_fcruc/*)
 	    log "start importing cosmo_2I_fcruc $1"
 	    import_cosmo_fileinfo $1
-	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    mkdir -p $dir_discarica/cosmo_2I_fcruc
 	    arki-query --data "$query_discarica" $1 >> $dir_discarica/cosmo_2I_fcruc/verifica.grib
 	    import_signal_imported cosmo_2I_fcruc $sdate $sfile
@@ -31,7 +31,7 @@ import_one() {
 	./cosmo_2I_fcens/*)
 	    log "start importing cosmo_2I_fcens $1"
 	    import_cosmo_fileinfo $1
-	    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    import_signal_imported cosmo_2I_fcens $sdate $sfile
 	    log "done importing $1"
 	    ;;
@@ -48,7 +48,7 @@ import_one() {
 #		grib_set -s 'subCentre=98,setLocalDefinition=28,localDefinitionNumber=28,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=1,numberOfForecastsInEnsemble=20,baseDateEPS=20161130,baseTimeEPS=00,numberOfRepresentativeMember=0,numberOfMembersInCluster=20,totalInitialConditions=20' input.raw cleps.out
 		grib_set -s "subCentre=98,setLocalDefinition=1,localDefinitionNumber=1,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=$nmemb,numberOfForecastsInEnsemble=20" $file $file.ls.grib
 
-		eatmydata arki-scan --dispatch=$ARKI_CONF $file.ls.grib > /dev/null
+		arki-scan --dispatch=$ARKI_CONF $file.ls.grib > /dev/null
 		rm -f $file $file.ls.grib
 	    done
 	    safe_rm_rf $tmpdir
