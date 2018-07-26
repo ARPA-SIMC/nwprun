@@ -18,9 +18,11 @@ import_cosmo_fileinfo()
 
 make_itr()
 {
+    # --ilon=6.1 --ilat=36. --flon=21. --flat=47.2 \
+    # --ilon=3.6 --ilat=33.8 --flon=23.5 --flat=49. \
     # area itr (~"lama")
     time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=coord \
-	--ilon=6.1 --ilat=36. --flon=21. --flat=47.2 \
+	--ilon=3.6 --ilat=33.8 --flon=23.5 --flat=49. \
 	$1 ${1}_itr
     time eatmydata arki-scan --dispatch=$ARKI_CONF grib:${1}_itr > /dev/null
 #    rm -f ${1}_itr
