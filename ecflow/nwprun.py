@@ -89,6 +89,8 @@ class Model:
     def __init__(self, postproc=True, postproctype="async", modelname="cosmo", wait_obs=True):
         self.postproc = postproc
         self.modelname = modelname
+        if self.modelname == "cosmo": self.postprocname = "postproc"
+        else: self.postprocname = "postproc_"+self.modelname
         self.wait_obs = wait_obs
         self.postproctype = postproctype
 
@@ -101,9 +103,9 @@ class Model:
         fam.add_task(self.modelname).add_event("started")
         if self.postproc:
             if self.postproctype == "async":
-                fam.add_task("postproc").add_trigger("./"+self.modelname+":started == set")
+                fam.add_task(self.postprocname).add_trigger("./"+self.modelname+":started == set")
             else:
-                fam.add_task("postproc").add_trigger("./"+self.modelname+" == complete")
+                fam.add_task(self.postprocname).add_trigger("./"+self.modelname+" == complete")
 
 class EpsMembers:
     def __init__(self, membrange="0", nofail=False, modelname="cosmo", postprocrange=None, postproctype="async", wait_obs=True, timer=None):

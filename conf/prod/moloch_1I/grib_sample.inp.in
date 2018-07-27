@@ -1,0 +1,3 @@
+ &GRIB_SAMPLE
+GRIBSAMPLENAME = "regular_ll_sfc_grib2"
+ &END

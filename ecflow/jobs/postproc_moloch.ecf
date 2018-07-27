@@ -1,0 +1,41 @@
+%include <sched_postproc.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+# end of setup
+
+set -x
+cd $MODEL_WORKDIR
+
+rm -f *.shf
+conf_template grib_sample.inp
+for file in $MODEL_PRE_WORKDIR/*.shf; do
+    rm -f input.shf
+    ln -s $file input.shf
+    $MODEL_POST_BIN
+done
+putarki_archive_and_wait grib moloch_*.grib2
+
+if [ -n "$MODEL_ARCHIVE_OUTPUT_EXTRA" ]; then
+    mkdir -p $MODEL_ARCHIVE_OUTPUT_EXTRA
+    for file in $MODEL_DATADIR/extra1/*; do
+        if [ -f "$file" ]; then
+	    filename=${file##*/}
+	    cp -l $file $MODEL_ARCHIVE_OUTPUT_EXTRA/$DATE$TIME.$filename
+	fi
+    done
+fi
+
+if [ -n "$LOGSIM_PROCESS" ]; then
+    . $NWPCONFBINDIR/simc_site.sh
+    simc_send_logevent ''
+fi
+# done here for forecast and in putarki.sh for analysis
+# improve
+if [ -n "$MODEL_SIGNAL" -a "$MODEL_BACK" -eq 0 ]; then
+    import_signal_imported $MODEL_SIGNAL $DATE$TIME
+fi

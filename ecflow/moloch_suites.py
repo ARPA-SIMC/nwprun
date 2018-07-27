@@ -41,7 +41,7 @@ for h in range(0, 24, 12):
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
     WaitAndRun(dep=hdep, runlist=[
-        EpsMembers(membrange="0", modelname="moloch", postprocrange="1-0", wait_obs=False)
+        EpsMembers(membrange="0", modelname="moloch", postprocrange="0", postproctype="sync", wait_obs=False)
     ]
     ).add_to(hour)
     hdep = famname # dependency for next repetition

@@ -1,9 +1,9 @@
 &model
 dtstep = 45.0, nadv = 3, nsound = 6, anu2 = 0.06,
 nbl = 8, nradm = 1,
-hrun = 48., hist = 3., hbound = 1., hdiag = 0.001
+hrun = 48., hist = 240., hbound = 1., hdiag = 0.001
 srad = 480., mswshf = 60., htop = 0.92,
-nlmic2=.false., nlbfix=.false., nlana=.true.,
+nlmic2=.false., nlbfix=.false., nlana=.false.,
 nlradar=.false., nlwshf=.true., mhfr=1
 &end
 

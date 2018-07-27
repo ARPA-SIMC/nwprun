@@ -14,6 +14,7 @@ MODEL_PRE_WORKDIR=$WORKDIR/premoloch
 MODEL_PRE_DATADIR=$WORKDIR/premoloch/data
 MODEL_PRE_PRE_BIN=$HOME/srcgnu/NWP_ISAC_PACKAGE/moloch/executable_premodel/cosmo_to_premoloch
 MODEL_PRE_BIN=$HOME/srcgnu/NWP_ISAC_PACKAGE/moloch/executable_premodel/premoloch
+MODEL_POST_BIN=$HOME/srcgnu/NWP_ISAC_PACKAGE/common/executable_convert_shf_to_grib2/convert_shf_to_grib2
 # model run
 MODEL_WORKDIR=$WORKDIR/moloch
 MODEL_DATADIR=$WORKDIR/moloch/data
@@ -36,4 +37,7 @@ NWPWAITSOLAR=36000
 NWPWAITSOLAR_RUN=7200
 NWPWAITWAIT=30
 
+# reconfigure arkimet for remote archiving at Cineca
+ARKI_SCAN_METHOD=remote_arki_importer
+ARKI_IMPDIR=~arki-imp/arki-imp/generic
 
