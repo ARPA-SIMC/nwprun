@@ -8,8 +8,8 @@
 
 set -x
 
-#safe_rm_rf $MODEL_WORKDIR
-#mkdir -p $MODEL_WORKDIR
+safe_rm_rf $MODEL_WORKDIR
+mkdir -p $MODEL_WORKDIR
 cd $MODEL_PRE_WORKDIR
 
 conf_template moloch.inp
