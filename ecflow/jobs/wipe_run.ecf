@@ -8,7 +8,7 @@ if [ "$STOP_ON_FAIL" != "Y" ]; then
     tobecompleted=${ECF_NAME%%/wipe/wipe_run}/run
     sleep 10
     $ecflow_client --kill $tobecompleted
-    sleep 10
+    sleep 90 # increased to allow wipe_member to complete, improve
     $ecflow_client --force=complete recursive $tobecompleted
 fi
 
