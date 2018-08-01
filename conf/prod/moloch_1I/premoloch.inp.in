@@ -7,7 +7,7 @@
  ALON0= -3.8, ALAT0= -8.5, B0= 0.5,
  SLT= -10.E-2, 30.E-2, 60.E-2, 100.E-2, 440.E-2, -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1., -1.,
  INST_START=1, INST_STOP=49,
- NLEV_ATM_INP_MAX=200, NLEV_SOIL_INP_MAX=10
+ NLEV_ATM_INP_MAX=100, NLEV_SOIL_INP_MAX=10
 &END
 
 ! ------  MODEL GRID PARAMETERS ------
