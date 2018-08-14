@@ -26,8 +26,8 @@ dl_ftp() {
 # assuming we now the policy and do not retry
 # please optimize
     if [ -n "$dlfilelist" ]; then
-#	sleep 10
-#	ncftpget $ncftpauth . $filelist || true
+	sleep 180
+	ncftpget $ncftpauth . $filelist || true
 	dlfilelist=""
 	shopt -s nullglob
 	for file in ????_$1.bz2; do
