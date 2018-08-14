@@ -5,8 +5,8 @@ log() {
 }
 
 import_one() {
-    log "start importing $1"
-    eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
+    log "start importing $1 `stat -c %s $1`"
+    time eatmydata arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
     log "done importing $1"
     rm -f $1
 }
