@@ -22,7 +22,6 @@
       itype_synd=2,
     lsso=.false.,
     lsoil=.true.,
-      lmulti_layer=.true.,
       itype_evsl=2,
       itype_trvg=2,
       itype_root=2,
@@ -33,7 +32,8 @@
       itype_conv=3,
       lcape=.false.,
       lconf_avg=.false.,
-      itype_vdif=-2,
+      itype_vdif=-1,
       itype_albedo=3,
+      cwimax_ml=0.0005,
  /END
 

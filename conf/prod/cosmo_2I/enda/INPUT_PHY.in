@@ -22,7 +22,6 @@
       itype_synd=2,
     lsso=.false.,
     lsoil=.true.,
-      lmulti_layer=.true.,
       itype_evsl=2,
       itype_trvg=2,
       itype_root=2,

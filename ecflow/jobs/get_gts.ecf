@@ -9,6 +9,7 @@
 . $NWPCONFBINDIR/arki_tools.sh
 # end of setup
 
+set -x
 safe_rm_rf $BUFR_WORKDIR
 mkdir -p $BUFR_WORKDIR
 cd $BUFR_WORKDIR
