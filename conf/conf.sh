@@ -25,6 +25,7 @@ case "$HOSTNAME" in
     ;;
   r????????? ) # Cineca HPC marconi
 # General
+    CINECA_SCRATCH=/marconi_meteo/lami
     WORKDIR=$CINECA_SCRATCH/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
     GRIB_API_EDZW=$WORK/grib_api_edzw

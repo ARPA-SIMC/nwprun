@@ -5,6 +5,9 @@ import datetime
 import ecflow
 from nwprun import *
 
+# dirty trick to move suites from scratch to meteo
+os.environ["CINECA_SCRATCH"] = "/marconi_meteo/lami"
+
 common_extra_env = {
     "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoenda -A smr_prod",
     "NO_FAIL": "FALSE",
