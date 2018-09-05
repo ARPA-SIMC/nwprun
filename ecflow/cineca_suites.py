@@ -2,8 +2,19 @@
 
 import os,sys
 import datetime
+import optparse
 import ecflow
 from nwprun import *
+
+parser = optparse.OptionParser(usage="%prog [OPTIONS]")
+parser.add_option("--yes", help="work in non-interactive mode and answer yes to all questions (it will overwrite files and replace scripts on server)",
+                  action="store_true")
+parser.add_option("--delta", help="comma-separated list of delta time in days to go back, for each suite",
+                  default="0,0,0")
+
+opts, args = parser.parse_args()
+interactive = not opts.yes
+delta = [int(i) for i in opts.delta.split(',')]
 
 # dirty trick to move suites from scratch to meteo
 os.environ["CINECA_SCRATCH"] = "/marconi_meteo/lami"
@@ -28,14 +39,14 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
-                    ntries=1,
+                    ntries=2,
                     extra_env=extra_env)
 
 enda = ModelSuite("cosmo_2I_enda")
 basicenv.add_to(enda.suite)
 day = enda.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD", 
-                      int(datetime.datetime.now().strftime("%Y%m%d")),
+                      int((datetime.datetime.now()-datetime.timedelta(days=delta[0])).strftime("%Y%m%d")),
                       20201228))
 
 hdep = None # first repetition has no dependency
@@ -52,8 +63,8 @@ for h in range(0, 24, 3):
     hdep = famname # dependency for next repetition
 
 enda.check()
-enda.write()
-enda.replace()
+enda.write(interactive=interactive)
+enda.replace(interactive=interactive)
 
 # Suite fcruc
 extra_env = common_extra_env.copy()
@@ -66,14 +77,14 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
-                    ntries=1,
+                    ntries=2,
                     extra_env=extra_env)
 
 fcruc = ModelSuite("cosmo_2I_fcruc")
 basicenv.add_to(fcruc.suite)
 day = fcruc.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD", 
-                      int(datetime.datetime.now().strftime("%Y%m%d")),
+                      int((datetime.datetime.now()-datetime.timedelta(days=delta[1])).strftime("%Y%m%d")),
                       20201228))
 
 hdep = None # first repetition has no dependency
@@ -89,8 +100,8 @@ for h in range(0, 24, 3):
     hdep = famname # dependency for next repetition
 
 fcruc.check()
-fcruc.write()
-fcruc.replace()
+fcruc.write(interactive=interactive)
+fcruc.replace(interactive=interactive)
 
 # Suite fcens
 extra_env = common_extra_env.copy()
@@ -105,14 +116,14 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
-                    ntries=1,
+                    ntries=2,
                     extra_env=extra_env)
 
 fcens = ModelSuite("cosmo_2I_fcens")
 basicenv.add_to(fcens.suite)
 day = fcens.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD", 
-                      int((datetime.datetime.now()-datetime.timedelta(days=1)).strftime("%Y%m%d")),
+                      int((datetime.datetime.now()-datetime.timedelta(days=delta[2])).strftime("%Y%m%d")),
                       20201228))
 
 hdep = None # first repetition has no dependency
@@ -129,6 +140,6 @@ for h in range(21, 24, 3): # h=21
     hdep = famname # dependency for next repetition
 
 fcens.check()
-fcens.write()
-fcens.replace()
+fcens.write(interactive=interactive)
+fcens.replace(interactive=interactive)
 
