@@ -25,6 +25,7 @@ if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
     if [ "$TIME" = "00" ]; then
         arki_dailycleanup $ARKI_CONF 6 12
     fi
+    arkilocal_drop_from_cache
 fi
 
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
@@ -38,6 +39,7 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
         if [ "$TIME" = "00" ]; then
             arki_dailycleanup $ARKI_CONF 6 12
         fi
+	arkilocal_drop_from_cache
     fi
 done
 unset LD_PRELOAD
