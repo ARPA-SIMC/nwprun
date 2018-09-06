@@ -11,7 +11,7 @@ set -x
 if [ -n "$NWPWAITSOLAR_RUN" ]; then
     unset NWPWAITELAPS
     export NWPWAITSOLAR=$NWPWAITSOLAR_RUN
-    unset NWPWAIT # do not wait, just test
+    unset NWPWAITWAIT # do not wait, just test
     nwpwait_setup
     if ! nwpwait_wait; then
         $ecflow_client --event=checked
