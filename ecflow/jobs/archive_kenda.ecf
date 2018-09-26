@@ -16,7 +16,6 @@ if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
 fi
 
 # then archive locally, including daily cleaning
-export LD_PRELOAD=$WORK/srcgnu/install/lib/libeatmydata.so
 
 if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
     arkilocal_setup
@@ -42,7 +41,6 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
 	arkilocal_drop_from_cache
     fi
 done
-unset LD_PRELOAD
 
 if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
 if [ "$TIME" = "21" ]; then
