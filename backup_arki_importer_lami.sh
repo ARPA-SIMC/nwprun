@@ -5,7 +5,7 @@
 import_one() {
 
     case $1 in
-	*/PROD/galileo/*)
+	*/PROD/meucci/*)
 	    case $1 in
 		*/lm5/*c) # dati constanti
 		    log "start importing PROD/lm5/c $1"
@@ -44,7 +44,7 @@ import_one() {
 		    ;;
 	    esac
 	    ;;
-	*/galileo/*)
+	*/meucci/*)
 	    ;;
 	*)
 	    return 1
