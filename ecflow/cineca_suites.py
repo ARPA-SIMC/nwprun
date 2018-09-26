@@ -16,11 +16,8 @@ opts, args = parser.parse_args()
 interactive = not opts.yes
 delta = [int(i) for i in opts.delta.split(',')]
 
-# dirty trick to move suites from scratch to meteo
-os.environ["CINECA_SCRATCH"] = "/marconi_meteo/lami"
-
 common_extra_env = {
-    "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoenda -A smr_prod",
+    "EXTRA_SCHED": "--partition=gll_meteo_prod --qos=gll_qos_meteoarpae -A smr_prod",
     "NO_FAIL": "FALSE",
     "TASK_PER_CORE": "1",
     "HPCENV": "marconi",
@@ -32,11 +29,11 @@ common_extra_env = {
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/enda",
-    "NNODES_MODEL": 2,
+    "NNODES_MODEL": 3,
     "NNODES_ENDA": 4
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],
-                    worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
+                    worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=2,
@@ -70,11 +67,11 @@ enda.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/fcruc",
-    "NNODES_MODEL": 8,
+    "NNODES_MODEL": 12,
     "NNODES_ENDA": 4
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],
-                    worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
+                    worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=2,
@@ -109,11 +106,11 @@ extra_env.update({
     "NWPCONF": "prod/cosmo_2I/fcens",
     "NNODES_MODEL": 6,
     "NNODES_ENDA": 4,
-    "EXTRA_SCHED": "--partition=bdw_meteo_prod --qos=bdw_qos_meteoeps -A smr_prod",
+    "EXTRA_SCHED": "--partition=gll_meteo_prod --qos=gll_qos_meteoarpae -A smr_prod",
     "ECF_TIMEOUT": "14400"
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],
-                    worktree=os.path.join(os.environ["CINECA_SCRATCH"], "ecflow"),
+                    worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
                     client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
                     ntries=2,

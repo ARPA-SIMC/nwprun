@@ -19,14 +19,13 @@ case "$HOSTNAME" in
     ;;
   node??? ) # Cineca HPC galileo
 # General
-    WORKDIR=$CINECA_SCRATCH/$NWPCONF
+    WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
     GRIB_API_EDZW=$WORK/grib_api_edzw
     ;;
   r????????? ) # Cineca HPC marconi
 # General
-    CINECA_SCRATCH=/marconi_meteo/lami
-    WORKDIR=$CINECA_SCRATCH/$NWPCONF
+    WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
     GRIB_API_EDZW=$WORK/grib_api_edzw
     ;;
