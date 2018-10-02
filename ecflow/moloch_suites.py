@@ -11,7 +11,7 @@ common_extra_env = {
     "TASK_PER_CORE": "1",
     "HPCENV": "maialinux",
     "ECF_TIMEOUT": "7200",
-    "ECF_DENIED": "1"
+    "ECF_DENIED": ""
 }
 
 # suite moloch_1i_fcast

@@ -22,7 +22,7 @@ common_extra_env = {
     "TASK_PER_CORE": "1",
     "HPCENV": "marconi",
     "ECF_TIMEOUT": "7200",
-    "ECF_DENIED": "1"
+    "ECF_DENIED": ""
 }
 
 # Suite enda

@@ -10,7 +10,9 @@ common_extra_env = {
     "EXTRA_SCHED": "",
     "NO_FAIL": "FALSE",
     "TASK_PER_CORE": "1",
-    "HPCENV": "maialinux"
+    "HPCENV": "maialinux",
+    "ECF_TIMEOUT": "7200",
+    "ECF_DENIED": ""
 }
 
 # suite cosmo_5i_assim

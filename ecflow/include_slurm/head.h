@@ -46,7 +46,7 @@ ERROR() {
     $ecflow_client --abort=trap # Notify ecFlow that something went wrong, using 'trap' as the reason
     fi
     trap - EXIT ERR             # Remove the trap
-    exit 1                      # End the script
+    exit 0                      # End the script, was exit 1, set to 0 to avoid double failure of interactive jobs
 }
  
 CLEANEXIT() {
@@ -54,7 +54,7 @@ CLEANEXIT() {
     wait                      # wait for background process to stop
     $ecflow_client --complete # Notify ecFlow of a normal end
     trap - EXIT               # Remove all traps
-    exit 0                    # End the shell
+    exit 0                    # End the script
 }
  
 # Trap any calls to exit and errors caught by the -e flag
