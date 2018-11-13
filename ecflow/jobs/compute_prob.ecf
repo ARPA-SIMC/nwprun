@@ -17,7 +17,7 @@ cd $FXTR_WORKDIR
 set -a ma
 lma=
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
-    if [ -f "$WORKDIR/cosmo.$n/data/lfff01000000" ]; then
+    if [ -f "$WORKDIR/cosmo.$n/data/lfff02030000" ]; then
         ma[$n]=Y
         lma=$n
     else
