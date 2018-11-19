@@ -8,7 +8,7 @@
   itype_w_so_rel=1, itype_t_cl=0,
   llake=.TRUE., llake_coldstart=.TRUE., lforest=.TRUE.,
   lmulti_layer_in=.TRUE., l_smi=.TRUE.,
-  itype_aerosol=2, itype_ndvi=1, itype_albedo = 1,
+  itype_aerosol=1, itype_ndvi=1, itype_albedo = 1,
   linitial=.TRUE., lboundaries=.TRUE.,
   ltime_proc=.FALSE., ltime_mean=.TRUE.,
   lroutine=.FALSE., yinput_model='@PARENTMODEL@',
