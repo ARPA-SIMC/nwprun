@@ -14,7 +14,7 @@ MODEL_NLEV=45
 # preprocessing (interpolation)
 MODEL_PRE_WORKDIR=$WORKDIR/int2lm
 MODEL_PRE_DATADIR=$WORKDIR/int2lm/data
-MODEL_PRE_BIN=$HOME/srcgnu/int2lm_170406_2.04a/tstint2lm
+MODEL_PRE_BIN=$HOME/srcgnu/int2lm_180226_2.05/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
