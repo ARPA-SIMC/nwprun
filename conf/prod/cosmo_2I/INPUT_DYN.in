@@ -4,6 +4,7 @@
   epsass=0.15,
   lhordiff=.true.,
    itype_hdiff=2,
+   l_diff_Smag=.true.,
    hd_corr_trcr_bd=0.0,
    hd_corr_t_bd=0.75,
    hd_corr_u_bd=0.75,
