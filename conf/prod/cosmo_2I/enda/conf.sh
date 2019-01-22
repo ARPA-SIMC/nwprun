@@ -1,4 +1,4 @@
-MODEL_BIN=$WORK/srcintel/cosmo_170323_5.04e/lmparbin_all
+MODEL_BIN=$WORK/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
