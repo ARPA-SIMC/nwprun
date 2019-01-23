@@ -99,7 +99,7 @@ class Model:
         trig = "./preproc == complete"
         if self.wait_obs: trig+= " && ../../get_obs == complete"
         fam.add_trigger(trig)
-        fam.add_variable("WALL_TIME", "03:00:00")
+        fam.add_variable("WALL_TIME", "05:00:00")
         fam.add_task(self.modelname).add_event("started")
         if self.postproc:
             if self.postproctype == "async":

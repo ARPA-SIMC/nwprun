@@ -49,7 +49,7 @@ SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoeps"
 OMPRES="-l select=1:ncpus=32:mpiprocs=32:mem=110gb -l place=pack:shared -q meteoeps"
 MODEL_WALLTIME=04:00:00
 DELAY=3
-NWPWAITELAPS=14400
+NWPWAITELAPS=18000
 NWPWAITSOLAR=36000
 NWPWAITSOLAR_RUN=5400
 NWPWAITWAIT=30
