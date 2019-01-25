@@ -15,8 +15,26 @@ if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
     putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.det
 fi
 
-# then archive locally, including daily cleaning
+# then archive locally for other suites
+if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
+if [ "$TIME" = "21" ]; then
+# transfer to marconi for ensemble forecast, use rsync to create
+# temporary file during copy
+    mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
+    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA
+# for galileo do remote copy:
+#    ext=${LETKF_DATADIR#$WORKDIR}
+#    remdir=/marconi_scratch/usera07smr/a07smr03/$NWPCONF/$ext
+#    host=login.marconi.cineca.it
+#    ssh $host mkdir -p $remdir || true
+#    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $host:$remdir || true
+else
+    mkdir -p $WORKDIR/archive
+    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA
+fi
+fi
 
+# finally archive locally, for next suite cycle, including daily cleaning
 if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
     arkilocal_setup
     arkilocal_create
@@ -41,21 +59,3 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
 	arkilocal_drop_from_cache
     fi
 done
-
-if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
-if [ "$TIME" = "21" ]; then
-# transfer to marconi for ensemble forecast, use rsync to create
-# temporary file during copy
-    mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
-    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA
-# for galileo do remote copy:
-#    ext=${LETKF_DATADIR#$WORKDIR}
-#    remdir=/marconi_scratch/usera07smr/a07smr03/$NWPCONF/$ext
-#    host=login.marconi.cineca.it
-#    ssh $host mkdir -p $remdir || true
-#    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $host:$remdir || true
-else
-    mkdir -p $WORKDIR/archive
-    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA
-fi
-fi
