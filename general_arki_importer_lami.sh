@@ -58,7 +58,12 @@ import_one() {
 # per ora usiamo lo stesso dataset
 	    sdate=${sfn#*l?ff????0000_}
 	    sfile=${sfn%_*}
-	    import_signal_imported cnmc_cosmo_eps $sdate $sfile
+	    ds=${sfn%%_*}
+	    if [ "$ds" = "fcmed" ]; then
+		import_signal_imported cnmc_cosmo_eps_fcmed $sdate $sfile
+	    else
+		import_signal_imported cnmc_cosmo_eps $sdate $sfile
+	    fi
 	    log "done importing $1"
 	    ;;
 	./save/*)
