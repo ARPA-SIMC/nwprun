@@ -61,6 +61,7 @@ import_one() {
 	    ds=${sfn%%_*}
 	    if [ "$ds" = "fcmed" ]; then
 		import_signal_imported cnmc_cosmo_eps_fcmed $sdate $sfile
+		cp $1 /gpfs_arkimet/archive/cnmc_cosmo_eps_fcmed
 	    else
 		import_signal_imported cnmc_cosmo_eps $sdate $sfile
 	    fi
