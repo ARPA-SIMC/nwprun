@@ -23,8 +23,8 @@ import_one() {
 	    log "start importing cosmo_2I_fcruc $1"
 	    import_cosmo_fileinfo $1
 	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
-	    mkdir -p $dir_discarica/cosmo_2I_fcruc
-	    arki-query --data "$query_discarica" $1 >> $dir_discarica/cosmo_2I_fcruc/verifica.grib
+#	    mkdir -p $dir_discarica/cosmo_2I_fcruc
+#	    arki-query --data "$query_discarica" $1 >> $dir_discarica/cosmo_2I_fcruc/verifica.grib
 	    import_signal_imported cosmo_2I_fcruc $sdate $sfile
 	    log "done importing $1"
 	    ;;
