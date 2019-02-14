@@ -84,7 +84,7 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
     fi
 done
 
-# no observations available at all, tell next job to skip letfk and
+# no observations available at all, tell next job to skip letkf and
 # use det analysis, no foffi are linked, no namelist created
 if [ "$do" != Y -a -z "$lmo" ]; then
     touch $LETKF_WORKDIR/letkf_skip

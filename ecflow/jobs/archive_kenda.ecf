@@ -32,6 +32,12 @@ else
     mkdir -p $WORKDIR/archive
     rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA
 fi
+if [ "$TIME" = "00" ]; then # clean data at least one month old
+    for mm in 2 3 4; do
+        MM=`date --date="${DATE} $mm month ago" +%Y%m`
+        rm -f $MODEL_ARCHIVE_OUTPUT_ANA/laf${MM}????0000.???
+    done
+fi
 fi
 
 # finally archive locally, for next suite cycle, including daily cleaning
