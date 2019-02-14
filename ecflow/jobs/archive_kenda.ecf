@@ -34,7 +34,7 @@ else
 fi
 if [ "$TIME" = "00" ]; then # clean data at least one month old
     for mm in 2 3 4; do
-        MM=`date --date="${DATE} $mm month ago" +%Y%m`
+        MM=`date --date="${DATE} $mm month ago" +%%Y%%m`
         rm -f $MODEL_ARCHIVE_OUTPUT_ANA/laf${MM}????0000.???
     done
 fi
