@@ -64,6 +64,7 @@ class GetObs:
     def add_to(self, node):
         fam = node.add_family("get_obs") # experimental is it complete if empty?
         if self.gts or self.lhn:
+#            SchedEnv("sh").add_to(fam) # interactive because net access required for galileo
 #            fam = node.add_family("get_obs")
             if self.gts: fam.add_task("get_gts")
             if self.lhn: fam.add_task("get_radarlhn")
@@ -160,7 +161,7 @@ class EndaAnalysis:
         fam.add_trigger("./eps_members == complete")
         fam.add_task("prepare_kenda")
         task = fam.add_task("kenda").add_trigger("./prepare_kenda == complete")
-        task.add_variable("WALL_TIME", "00:20:00")
+        task.add_variable("WALL_TIME", "01:20:00")
         fam.add_task("archive_kenda").add_trigger("./kenda == complete")
 
 class ContinuousAnalysis:
