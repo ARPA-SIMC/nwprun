@@ -52,6 +52,10 @@ arkiana_archive $MODEL_PRE_DATADIR/laf${DATES}${TIMES}_parent
 arkiana_retrieve $MODEL_PRE_DATADIR/laf${DATES}${TIMES}_parent \
     $MODEL_PRE_DATADIR/laf${DATES}${TIMES}
 
+if [ "$MODEL_COPYICBC" = "Y" ]; then
+    rm -f $MODEL_PRE_DATADIR/lbff00000000
+    ln -s laf${DATES}${TIMES} $MODEL_PRE_DATADIR/lbff00000000
+fi
 echo "$MODEL_CLIM_PARENT:$MODEL_SLOW_ASSIM:$MODEL_FAST_ASSIM"
 
 if [ "$MODEL_CLIM_PARENT" = N ]; then
