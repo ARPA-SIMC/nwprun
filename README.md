@@ -23,7 +23,10 @@ Nwprun includes:
  * some python suite generators, using the indicated module for
    generating specifical suite definitions
  * a set of configuration trees for a number of NWP suites using the
-   nwpconf framework.
+   nwpconf framework
+ * a set of shell script to be run as cron jobs for performing
+   ancillary operations related to operational NWP, mainly access to
+   input data.
 
 The practical configuration files and python suite generators included
 in the package are used in the Italian LAMI modelling suites both on
