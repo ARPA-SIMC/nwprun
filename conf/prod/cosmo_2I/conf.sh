@@ -24,13 +24,13 @@ MODEL_NLEV=65
 # preprocessing (interpolation)
 MODEL_PRE_WORKDIR=$WORKDIR/int2lm
 MODEL_PRE_DATADIR=$WORKDIR/int2lm/data
-MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a/tstint2lm
+MODEL_PRE_BIN=$WORKDIR_BASE/srcintel/int2lm_170406_2.04a/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
 #MODEL_BIN=$WORK/srcintel/cosmo_170323_5.04e/lmparbin_all
-MODEL_BIN=$WORK/srcintel/cosmo_180802_5.05_1/lmparbin_all
-MODEL_STATIC=$WORK/data/cosmo
+MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1/lmparbin_all
+MODEL_STATIC=$WORKDIR_BASE/data/cosmo
 MODEL_PUBLISH_CONF=Y
 
 # configuration of assimilation

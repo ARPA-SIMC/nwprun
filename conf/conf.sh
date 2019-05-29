@@ -1,7 +1,7 @@
 # local configuration
 [ -f "$HOME/.nwpconf" ] && source $HOME/.nwpconf
 
-case "$HOSTNAME" in
+case "$HPC_SYSTEM" in
   *.metarpa | maial* | nodo* ) # Arpae
 # General
     WORKDIR=$WORK/$NWPCONF
@@ -17,13 +17,19 @@ case "$HOSTNAME" in
     WORKDIR=$HOME/$NWPCONF
     LOGDIR=$HOME/log
     ;;
-  node??? ) # Cineca HPC galileo
+  galileo ) # Cineca HPC galileo
 # General
     WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
     GRIB_API_EDZW=$WORK/grib_api_edzw
     ;;
-  r????????? ) # Cineca HPC marconi
+  meucci ) # Cineca HPC meucci
+# General
+    WORKDIR=$WORKDIR_BASE/$NWPCONF
+    LOGDIR=$CINECA_SCRATCH/log
+    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
+    ;;
+  marconi ) # Cineca HPC marconi
 # General
     WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log

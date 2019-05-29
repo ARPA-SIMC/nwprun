@@ -1,6 +1,6 @@
-MODEL_BIN=$WORK/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
-MODEL_PRE_BIN=$WORK/srcintel/int2lm_170406_2.04a/tstint2lm
-FXTR_HOME=$WORK/srcintel/fieldExtra-12.6.0/
+MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
+MODEL_PRE_BIN=$WORKDIR_BASE/srcintel/int2lm_170406_2.04a/tstint2lm
+FXTR_HOME=$WORKDIR_BASE/srcintel/fieldExtra-12.6.0/
 FXTR_BIN=$FXTR_HOME/src/fieldextra_intel_opt_omp
 FXTR_WORKDIR=$WORKDIR/fxtr
 FXTR_DATADIR=$FXTR_WORKDIR/data
