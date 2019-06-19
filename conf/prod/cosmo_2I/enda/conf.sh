@@ -71,6 +71,7 @@ else # deterministic run or analysis
     ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_assim
 fi
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive
+MODEL_ARCHIVE_OUTPUT_ANA_REMOTE=meucci:/meucci_arpae/lami/prod/cosmo_2I/enda/archive
 # letkf analysis
 LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data

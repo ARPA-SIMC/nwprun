@@ -23,11 +23,13 @@ if [ "$TIME" = "21" ]; then
     mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
     rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA
 # for galileo do remote copy:
+    if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
 #    ext=${LETKF_DATADIR#$WORKDIR}
 #    remdir=/marconi_scratch/usera07smr/a07smr03/$NWPCONF/$ext
 #    host=login.marconi.cineca.it
 #    ssh $host mkdir -p $remdir || true
-#    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $host:$remdir || true
+        rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
+    fi
 else
     mkdir -p $WORKDIR/archive
     rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA
