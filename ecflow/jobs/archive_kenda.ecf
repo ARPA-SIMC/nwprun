@@ -33,6 +33,9 @@ if [ "$TIME" = "21" ]; then
 else
     mkdir -p $WORKDIR/archive
     rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA
+    if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
+        rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
+    fi
 fi
 if [ "$TIME" = "00" ]; then # clean data at least one month old
     for mm in 2 3 4; do
