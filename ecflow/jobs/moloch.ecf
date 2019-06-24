@@ -15,4 +15,4 @@ cd $MODEL_PRE_WORKDIR
 conf_template moloch.inp
 # not needed
 $ecflow_client --event=started # trigger start of postproc
-parcomp_mpirun $MODEL_BIN
+parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN

@@ -23,7 +23,7 @@ if [ "$MODEL_PUBLISH_CONF" = "Y" -a -z "$ENS_MEMB" ]; then
 fi
 
 rm -f YU*
-parcomp_mpirun $MODEL_PRE_BIN
+parcomp_mpirun $EXTRA_MPIRUN $MODEL_PRE_BIN
 
 # rename the analysis for further repeatable postprocessing
 mv -f $MODEL_PRE_DATADIR/laf${DATES}${TIMES} $MODEL_PRE_DATADIR/laf${DATES}${TIMES}_parent

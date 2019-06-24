@@ -28,6 +28,7 @@ case "$HPC_SYSTEM" in
     WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
     GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
+    EXTRA_MPIRUN="-genv I_MPI_FABRICS=shm:tcp -iface ens6"
     ;;
   marconi ) # Cineca HPC marconi
 # General

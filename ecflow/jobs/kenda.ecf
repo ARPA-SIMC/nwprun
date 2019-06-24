@@ -11,7 +11,7 @@ export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.11.0/samples
 cd $LETKF_WORKDIR
 
 if [ ! -f "$LETKF_WORKDIR/letkf_skip" ]; then
-    parcomp_mpirun $LETKF_BIN
+    parcomp_mpirun $EXTRA_MPIRUN $LETKF_BIN
 else
 # if there are no observations make a fake analysis
 # make a physical copy of the link targets to help the successive
