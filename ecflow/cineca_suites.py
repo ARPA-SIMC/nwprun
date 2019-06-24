@@ -17,10 +17,9 @@ interactive = not opts.yes
 delta = [int(i) for i in opts.delta.split(',')]
 
 common_extra_env = {
-    "EXTRA_SCHED": "--partition=gll_meteo_prod --qos=gll_qos_meteoarpae -A smr_prod",
     "NO_FAIL": "FALSE",
     "TASK_PER_CORE": "1",
-    "HPCENV": "marconi",
+    "HPCENV": os.environ["HPC_SYSTEM"],
     "ECF_TIMEOUT": "7200",
     "ECF_DENIED": ""
 }
@@ -106,7 +105,6 @@ extra_env.update({
     "NWPCONF": "prod/cosmo_2I/fcens",
     "NNODES_MODEL": 6,
     "NNODES_ENDA": 4,
-    "EXTRA_SCHED": "--partition=gll_meteo_prod --qos=gll_qos_meteoarpae -A smr_prod",
     "ECF_TIMEOUT": "14400"
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],

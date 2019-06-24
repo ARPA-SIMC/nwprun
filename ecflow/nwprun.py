@@ -44,11 +44,11 @@ class SchedEnv:
     def add_to(self, node):
         if self.sched is not None:
             if self.sched == "pbs":
-                node.add_variable("ECF_JOB_CMD", "qsub %EXTRA_SCHED% %ECF_JOB%")
+                node.add_variable("ECF_JOB_CMD", "qsub %EXTRA_SCHED:% %ECF_JOB%")
                 node.add_variable("ECF_KILL_CMD", "qdel %ECF_RID%")
                 node.add_variable("ECF_STATUS_CMD", "qstat %ECF_RID%")
             elif self.sched == "slurm":
-                node.add_variable("ECF_JOB_CMD", "(date -u '+%%Y%%m%%d%%H%%M'; sbatch %EXTRA_SCHED% %ECF_JOB%) >>%ECF_HOME%/sbatch.log 2>&1")
+                node.add_variable("ECF_JOB_CMD", "(date -u '+%%Y%%m%%d%%H%%M'; sbatch %EXTRA_SCHED:% %ECF_JOB%) >>%ECF_HOME%/sbatch.log 2>&1")
                 node.add_variable("ECF_KILL_CMD", "scancel %ECF_RID%")
                 node.add_variable("ECF_STATUS_CMD", "squeue -j %ECF_RID%")
             elif self.sched == "sh":
