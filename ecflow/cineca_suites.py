@@ -28,7 +28,7 @@ common_extra_env = {
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/enda",
-    "NNODES_MODEL": 3,
+    "NNODES_MODEL": 2,
     "NNODES_ENDA": 4
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],
@@ -52,7 +52,7 @@ for h in range(0, 24, 3):
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
     WaitAndRun(dep=hdep, runlist=[
         GetObs(gts=True, lhn=True),
-        EpsMembers(membrange="0-20", postprocrange="0", wait_obs=True),
+        EpsMembers(membrange="0-40", postprocrange="0", wait_obs=True),
         EndaAnalysis()
     ]
     ).add_to(hour)
