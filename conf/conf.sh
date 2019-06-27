@@ -21,7 +21,7 @@ case "$HPC_SYSTEM" in
 # General
     WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
-    GRIB_API_EDZW=$WORK/grib_api_edzw
+    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
     ;;
   meucci ) # Cineca HPC meucci
 # General
@@ -34,7 +34,7 @@ case "$HPC_SYSTEM" in
 # General
     WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$CINECA_SCRATCH/log
-    GRIB_API_EDZW=$WORK/grib_api_edzw
+    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
     ;;
 esac
 

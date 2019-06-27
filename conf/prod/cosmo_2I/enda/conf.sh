@@ -1,4 +1,4 @@
-MODEL_BIN=$WORK/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
+MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
@@ -75,7 +75,7 @@ MODEL_ARCHIVE_OUTPUT_ANA_REMOTE=login.meucci.cineca.it:/meucci_arpae/lami/prod/c
 # letkf analysis
 LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data
-LETKF_BIN=$WORK/srcintel/dace_code/build/LINUX64.intel-mpi/bin/var3d
+LETKF_BIN=$WORKDIR_BASE/srcintel/dace_code/build/LINUX64.intel-mpi/bin/var3d
 
 # scheduler resources
 PARRES="-l select=2:ncpus=32:mpiprocs=32:mem=100gb -q meteoenda"

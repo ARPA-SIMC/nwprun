@@ -1,4 +1,4 @@
-MODEL_BIN=$WORK/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
+MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
 PARENTMODEL=COSMO
 PARENTMODEL_ARKI_DS=o_lm5_ope_forecast
 PARENTMODEL_FREQINI=12
