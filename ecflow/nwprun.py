@@ -1,5 +1,10 @@
 import ecflow
 import os
+# python 2/3 compatibility (in python2 raw_input)
+try:
+    input = raw_input
+except NameError:
+    pass
 
 # from https://www.google.com/url?q=https://rosettacode.org/wiki/Range_expansion%23Python&sa=D&ust=1517307153586000&usg=AFQjCNHTzzU1Kk2XfryWWIoWwKTWNWItiw
 def rangeexpand(txt):
@@ -23,7 +28,7 @@ def expr_or(expr, orexpr):
 
 
 def ask_confirm(msg=""):
-    ans = raw_input(msg+" (y/n)? ")
+    ans = input(msg+" (y/n)? ")
     return ans.startswith("y")
 
 
