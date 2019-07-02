@@ -40,7 +40,7 @@ MODEL_PRE_BIN=$HOME/srcgnu/int2lm_180226_2.05/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
-MODEL_BIN=$HOME/srcgnu/cosmo_180802_5.05_1_dp/lmparbin_all
+MODEL_BIN=$HOME/srcgnu/cosmo_180802_5.05_1_dp_openmpi3/lmparbin_all
 MODEL_STATIC=$HOME/data/cosmo
 
 # configuration of assimilation

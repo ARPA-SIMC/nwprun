@@ -10,6 +10,15 @@
 export GRIB_DEFINITION_PATH=$GRIB_API_EDZW/1.16.0/definitions.cnmc:$GRIB_API_EDZW/1.16.0/definitions
 export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.16.0/samples
 
+set -x
+
+case "%SUITE%" in
+    *cosmo_5I*)
+        . /etc/profile.d/modules.sh
+        module switch mpi/openmpi-x86_64 mpi/openmpi3-x86_64
+        ;;
+esac
+
 # moved in merge_analysis
 #safe_rm_rf $MODEL_DATADIR
 #mkdir -p $MODEL_WORKDIR $MODEL_DATADIR
