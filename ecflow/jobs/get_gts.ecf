@@ -13,6 +13,14 @@ set -x
 safe_rm_rf $BUFR_WORKDIR
 mkdir -p $BUFR_WORKDIR
 cd $BUFR_WORKDIR
+
+case "%SUITE%" in
+    *cosmo_28N*)
+        . $HOME/smnd_profile
+        ;;
+esac
+
+
 if import_signal_wait cnmc_bufr $DATE$TIME "*"; then
     cosmo_getarki_obsncdf
 else
