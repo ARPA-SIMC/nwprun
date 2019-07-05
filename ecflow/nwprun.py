@@ -42,6 +42,36 @@ def daily_cron(step):
     cron.set_time_series(time_series)
     return cron
 
+# Merge the requested configuration with the library default.
+class ModelConfig:
+    def __init__(self, conf={}):
+        self.conf = {"runlist": [],
+                     "membrange": "0", "nofail": False, "modelname": "cosmo",
+                     "gts": True, "lhn": True, "preprocname": None,
+                     "postprocrange": None, "postproctype": "async", 
+                     "timer": None, "cronfreq": 10,
+                     "starttime": None}
+        self.conf.update(conf) # update default with user data
+        # special treatment for some fields
+        self.conf['membrange'] = rangeexpand(self.conf['membrange'])
+        if self.conf['postprocrange'] is None:
+            self.conf['postprocrange'] = self.conf['membrange']
+        else:
+            self.conf['postprocrange'] = rangeexpand(self.conf['postprocrange'])
+        if self.conf['modelname'] == "cosmo":
+            self.conf['postprocname'] = "postproc"
+        else:
+            self.conf['postprocname'] = "postproc_"+self.conf['modelname']
+        if self.conf['preprocname'] is None:
+            if self.conf['modelname'] == "cosmo":
+                self.conf['preprocname'] = "int2lm"
+            else:
+                self.conf['preprocname'] = "pre"+self.conf['modelname']
+
+    def getconf(self):
+        return self.conf
+
+# Add a specific scheduling environment (sh, slurm or pbs) to a node.
 class SchedEnv:
     def __init__(self, sched="sh"):
         self.sched = sched
@@ -61,95 +91,91 @@ class SchedEnv:
                 node.add_variable("ECF_KILL_CMD", "kill -15 %ECF_RID%")
                 node.add_variable("ECF_STATUS_CMD", "ps --sid %ECF_RID% -f")
 
+# Add an observation data access family to a suite. To be called by
+# WaitAndRun.
 class GetObs:
-    def __init__(self, gts=True, lhn=True):
-        self.gts = gts
-        self.lhn = lhn
+    def __init__(self, conf={}):
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
         fam = node.add_family("get_obs") # experimental is it complete if empty?
-        if self.gts or self.lhn:
+        if self.conf['gts'] or self.conf['lhn']:
 #            SchedEnv("sh").add_to(fam) # interactive because net access required for galileo
 #            fam = node.add_family("get_obs")
-            if self.gts: fam.add_task("get_gts")
-            if self.lhn: fam.add_task("get_radarlhn")
+            if self.conf['gts']: fam.add_task("get_gts")
+            if self.conf['lhn']: fam.add_task("get_radarlhn")
 
+# Add a model preprocessing family to a node, to be called by EpsMembers.
 class Preproc:
-    def __init__(self, modelname="cosmo"):
-        if modelname == "cosmo":
-            self.modelname = "int2lm"
-        else:
-            self.modelname = "pre" + modelname
+    def __init__(self, conf={}):
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
         fam = node.add_family("preproc")
         fam.add_trigger("./check_memb:required == 2")
         task = fam.add_task("get_parent")
         SchedEnv("sh").add_to(task) # interactive because net access required for galileo
-        task = fam.add_task(self.modelname).add_trigger("./get_parent == complete")
+        task = fam.add_task(self.conf['preprocname']).add_trigger("./get_parent == complete")
         task.add_variable("WALL_TIME", "01:00:00")
-        if self.modelname == "int2lm":
-            fam.add_task("merge_analysis").add_trigger("./"+self.modelname+" == complete")
+        if self.conf['preprocname'] == "int2lm":
+            fam.add_task("merge_analysis").add_trigger("./"+self.conf['preprocname']+" == complete")
 
+# Add a model run and postprocessing family to a node, to be called by
+# EpsMembers.
 class Model:
-    def __init__(self, postproc=True, postproctype="async", modelname="cosmo", wait_obs=True):
-        self.postproc = postproc
-        self.modelname = modelname
-        if self.modelname == "cosmo": self.postprocname = "postproc"
-        else: self.postprocname = "postproc_"+self.modelname
-        self.wait_obs = wait_obs
-        self.postproctype = postproctype
+    def __init__(self, conf={}):
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
         fam = node.add_family("model")
         trig = "./preproc == complete"
-        if self.wait_obs: trig+= " && ../../get_obs == complete"
+        if GetObs in self.conf['runlist']: trig+= " && ../../get_obs == complete"
         fam.add_trigger(trig)
         fam.add_variable("WALL_TIME", "05:00:00")
-        fam.add_task(self.modelname).add_event("started")
-        if self.postproc:
-            if self.postproctype == "async":
-                fam.add_task(self.postprocname).add_trigger("./"+self.modelname+":started == set")
+        fam.add_task(self.conf['modelname']).add_event("started")
+        if self.conf['postproc']:
+            if self.conf['postproctype'] == "async":
+                     fam.add_task(self.conf['postprocname']).add_trigger("./"+self.conf['modelname']+":started == set")
             else:
-                fam.add_task(self.postprocname).add_trigger("./"+self.modelname+" == complete")
+                fam.add_task(self.conf['postprocname']).add_trigger("./"+self.conf['modelname']+" == complete")
 
+# Add a set of ensemble model runs to a suite, including boundary and
+# initial data access, data preprocessing and model run. Suitable also
+# for deterministic runs, just by requesting one member. To be called
+# by WaitAndRun.
 class EpsMembers:
-    def __init__(self, membrange="0", nofail=False, modelname="cosmo", postprocrange=None, postproctype="async", wait_obs=True, timer=None):
-        self.membrange = rangeexpand(membrange)
-        self.nofail = nofail
-        self.modelname = modelname
-        if postprocrange is None: self.postprocrange = self.membrange
-        else: self.postprocrange = rangeexpand(postprocrange)
-        self.postproctype = postproctype
-        self.wait_obs = wait_obs
-        self.timer = timer
+    def __init__(self, conf={}):
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
         ensfam = node.add_family("eps_members")
-        for eps_memb in self.membrange:
+        for eps_memb in self.conf['membrange']:
             if eps_memb == 0:
                 fname = "deterministic" # deterministic
             else:
                 fname = "eps_member_"+str(eps_memb)
+            self.conf['postproc'] = (eps_memb in self.conf['postprocrange'])
             fam = ensfam.add_family(fname)
             fam.add_complete(fname+"/check_memb:required == 1")
             fam.add_variable("ECF_ENS_MEMB", str(eps_memb))
-            if self.nofail:
+            if self.conf['nofail']:
                 fam.add_variable("NO_FAIL", "TRUE") # do not fail in case of error
             task = fam.add_task("check_memb").add_meter("required", 0, 2)
             SchedEnv(sched="sh").add_to(task)
-            Preproc(modelname=self.modelname).add_to(fam)
-            Model(postproc=(eps_memb in self.postprocrange),
-                  postproctype=self.postproctype,
-                  modelname=self.modelname, wait_obs=self.wait_obs).add_to(fam)
+            Preproc(self.conf).add_to(fam)
+            Model(self.conf).add_to(fam)
 
             wipe = fam.add_family("wipe")
             SchedEnv(sched="sh").add_to(wipe)
             timerdep = ""
-            if self.timer is not None:
+            if self.conf['timer'] is not None:
                 task = wipe.add_task("wipe_timer")
                 task.add_complete("./wipe_member == complete")
-                task.add_time(self.timer)
+                task.add_time(self.conf['timer'])
                 task.add_variable("ECF_DUMMY_TASK","Y")
                 timerdep = " || ./wipe_timer == complete"
 
@@ -157,8 +183,11 @@ class EpsMembers:
             task.add_complete("../model == complete")
             task.add_trigger("../model == aborted || ../preproc == aborted || ../check_memb == aborted"+timerdep)
 
+# Add an ensemble data assimilation family to a suite, to be run
+# collectively after the ensemble model run, tailored for kenda. To be
+# called by WaitAndRun.
 class EndaAnalysis:
-    def __init__(self):
+    def __init__(self, conf={}):
         pass
 
     def add_to(self, node):
@@ -169,8 +198,11 @@ class EndaAnalysis:
         task.add_variable("WALL_TIME", "01:20:00")
         fam.add_task("archive_kenda").add_trigger("./kenda == complete")
 
+# Add a continuous analysis step to a suite, to be run after model
+# run, it has a simpler structure than enda family. To be called by
+# WaitAndRun.
 class ContinuousAnalysis:
-    def __init__(self):
+    def __init__(self, conf={}):
         pass
 
     def add_to(self, node):
@@ -178,8 +210,11 @@ class ContinuousAnalysis:
         fam.add_trigger("./eps_members == complete")
         fam.add_task("archive_analysis")
 
+# Add an eps postproc family to a suite, tipically for computation of
+# collective probabilities after the ensemble run. To be called by
+# WaitAndRun.
 class EpsPostproc:
-    def __init__(self):
+    def __init__(self, conf={}):
         pass
 
     def add_to(self, node):
@@ -187,33 +222,33 @@ class EpsPostproc:
         fam.add_trigger("./eps_members == complete")
         fam.add_task("compute_prob")
 
-# add a wipe family containing a single task wipe; wipe should set run
+# Add a wipe family containing a single task wipe; wipe should set run
 # family to complete, possibly with more fine-grain control on tasks,
-# and exiting thus resubmitting the suite for next run
+# and exiting thus resubmitting the suite for next run. To be called
+# by WaitAndRun.
 class WipeRun:
-    def __init__(self, runlist=[], timer=None):
-        self.runlist = runlist
-        self.timer = timer
+    def __init__(self, conf={}):
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
         timerdep = ""
-        if self.timer is not None:
+        if self.conf['timer'] is not None:
             task = wipe.add_task("wipe_timer")
             task.add_complete("./wipe_run == complete")
-            task.add_time(self.timer)
+            task.add_time(self.conf['timer'])
             task.add_variable("ECF_DUMMY_TASK","Y")
             timerdep = "./wipe_timer == complete"
 
         trig = ""
-        for fam in self.runlist:
-            if isinstance(fam, GetObs):
-                trig = expr_or(trig, "../run/get_obs == aborted")
-            elif isinstance(fam, EndaAnalysis):
-                trig = expr_or(trig, "../run/enda_analysis == aborted")
-            elif isinstance(fam, ContinuousAnalysis):
-                trig = expr_or(trig, "../run/continuous_analysis == aborted")
-            elif isinstance(fam, EpsPostproc):
-                trig = expr_or(trig, "../run/eps_postproc == aborted")
+        if GetObs in self.conf['runlist']:
+            trig = expr_or(trig, "../run/get_obs == aborted")
+        if EndaAnalysis in self.conf['runlist']:
+            trig = expr_or(trig, "../run/enda_analysis == aborted")
+        if ContinuousAnalysis in self.conf['runlist']:
+            trig = expr_or(trig, "../run/continuous_analysis == aborted")
+        if EpsPostproc in self.conf['runlist']:
+            trig = expr_or(trig, "../run/eps_postproc == aborted")
 
         fulldep = expr_or(trig, timerdep)
         if fulldep != "":
@@ -223,6 +258,8 @@ class WipeRun:
             task.add_complete("../run == complete")
             task.add_trigger(fulldep) # || ../check_run == aborted")
 
+# Add basic environment (suite definition variables) to a suite node,
+# usually to root node.
 class BasicEnv():
     def __init__(self, srctree=None, worktree=None, sched=None, client_wrap="", ntries=1, extra_env=None):
         self.srctree = srctree
@@ -249,16 +286,16 @@ class BasicEnv():
             for var in self.extra_env:
                 node.add_variable(var, self.extra_env[var])
 
+# Add a complete wait and run family to a suite, to be called directly
+# by the user, to be added somewhere near the root of the suite.
 class WaitAndRun:
-    def __init__(self, dep=None, time=None, runlist=None, timer=None, cronfreq=10):
+    def __init__(self, dep=None, conf={}):
         self.dep = dep
-        self.time = time
-        self.runlist = runlist
-        self.timer = timer
-        self.cronfreq = cronfreq
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
-        if self.time is None:
+        if self.conf['starttime'] is None:
             fam = node.add_family("check_run")
             SchedEnv("sh").add_to(fam)
 
@@ -270,24 +307,28 @@ class WaitAndRun:
             # second task
             task = fam.add_task("check_run")
             task.add_complete("can_run:ready")
-            task.add_cron(daily_cron(self.cronfreq))
+            task.add_cron(daily_cron(self.conf['cronfreq']))
             if self.dep is not None:
                 task.add_trigger("../../"+self.dep+" == complete")
             task.add_event("checked")
 
         fam = node.add_family("run")
-        if self.dep is not None and self.time is not None:
+        if self.dep is not None and self.conf['starttime'] is not None:
             fam.add_trigger("../"+self.dep+" == complete")
-        if self.time is not None:
-            fam.add_time(self.time) # replace with today, to test
+        if self.conf['starttime'] is not None:
+            fam.add_time(self.conf['starttime']) # replace with today, to test
         else:
             fam.add_trigger("check_run == complete")
 
-        if self.runlist is not None:
-            for run in self.runlist:
-                run.add_to(fam)
-        WipeRun(runlist=self.runlist, timer=self.timer).add_to(node)
+        # instantiate with general configuration and add all
+        # components of runlist
+        if self.conf['runlist'] is not None:
+            for run in self.conf['runlist']:
+                run(self.conf).add_to(fam)
+        WipeRun(self.conf).add_to(node)
 
+# Create a model suite to be filled through WaitAndRun class, then
+# check it and load it on the server.
 class ModelSuite():
     def __init__(self, name):
         self.name = name
@@ -323,7 +364,7 @@ class ModelSuite():
                     return
         self.defs.save_as_defs(name)
         print("Suite saved in "+name)
-        
+
 
     def replace(self, interactive=True):
         if not self.checked:

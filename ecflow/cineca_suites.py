@@ -38,6 +38,9 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=2,
                     extra_env=extra_env)
 
+conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0-40",
+                    "postprocrange": "0",
+                    "runlist": [GetObs, EpsMembers, EndaAnalysis]}).getconf()
 enda = ModelSuite("cosmo_2I_enda")
 basicenv.add_to(enda.suite)
 day = enda.suite.add_family("day").add_repeat(
@@ -50,12 +53,7 @@ for h in range(0, 24, 3):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        GetObs(gts=True, lhn=True),
-        EpsMembers(membrange="0-40", postprocrange="0", wait_obs=True),
-        EndaAnalysis()
-    ]
-    ).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 enda.check()
@@ -76,6 +74,9 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=2,
                     extra_env=extra_env)
 
+conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
+                    "postprocrange": "0",
+                    "runlist": [GetObs, EpsMembers]}).getconf()
 fcruc = ModelSuite("cosmo_2I_fcruc")
 basicenv.add_to(fcruc.suite)
 day = fcruc.suite.add_family("day").add_repeat(
@@ -88,11 +89,7 @@ for h in range(0, 24, 3):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        GetObs(gts=True, lhn=True),
-        EpsMembers(membrange="0", postprocrange="0", wait_obs=True)
-    ]
-    ).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 fcruc.check()
@@ -114,6 +111,9 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=2,
                     extra_env=extra_env)
 
+conf = ModelConfig({"gts": True, "lhn": True, "membrange": "1-20",
+                    "postprocrange": "1-20",
+                    "runlist": [GetObs, EpsMembers, EpsPostproc]}).getconf()
 fcens = ModelSuite("cosmo_2I_fcens")
 basicenv.add_to(fcens.suite)
 day = fcens.suite.add_family("day").add_repeat(
@@ -126,12 +126,7 @@ for h in range(21, 24, 3): # h=21
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        GetObs(gts=True, lhn=True),
-        EpsMembers(membrange="1-20", postprocrange="1-20", wait_obs=True),
-        EpsPostproc()
-    ]
-    ).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 fcens.check()
