@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os,sys
 import datetime
@@ -28,6 +28,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=1,
                     extra_env=extra_env)
 
+conf = ModelConfig({"membrange": "0", "postprocrange": "0", "postproctype": "sync",
+                    "modelname": "moloch", "runlist": [EpsMembers]}).getconf()
 moloch_1i_fcast = ModelSuite("moloch_1i_fcast")
 basicenv.add_to(moloch_1i_fcast.suite)
 day = moloch_1i_fcast.suite.add_family("day").add_repeat(
@@ -40,10 +42,7 @@ for h in range(0, 24, 12):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        EpsMembers(membrange="0", modelname="moloch", postprocrange="0", postproctype="sync", wait_obs=False)
-    ]
-    ).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 moloch_1i_fcast.check()

@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os,sys
 import datetime
@@ -27,6 +27,9 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=1,
                     extra_env=extra_env)
 
+conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
+                    "postprocrange": "0",
+                    "runlist": [GetObs, EpsMembers, ContinuousAnalysis]}).getconf()
 cosmo_5i_assim = ModelSuite("cosmo_5I_assim")
 basicenv.add_to(cosmo_5i_assim.suite)
 day = cosmo_5i_assim.suite.add_family("day").add_repeat(
@@ -39,12 +42,7 @@ for h in range(0, 24, 12):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        GetObs(gts=True, lhn=True),
-        EpsMembers(membrange="0", postprocrange="0", wait_obs=True),
-        ContinuousAnalysis()
-    ]
-    ).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 cosmo_5i_assim.check()
@@ -63,6 +61,9 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=1,
                     extra_env=extra_env)
 
+conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
+                    "postprocrange": "0",
+                    "runlist": [GetObs, EpsMembers]}).getconf()
 cosmo_5i_fcast = ModelSuite("cosmo_5I_fcast")
 basicenv.add_to(cosmo_5i_fcast.suite)
 day = cosmo_5i_fcast.suite.add_family("day").add_repeat(
@@ -75,11 +76,7 @@ for h in range(0, 24, 12):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        GetObs(gts=True, lhn=True),
-        EpsMembers(membrange="0", postprocrange="0", wait_obs=True)
-    ]
-    ).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 cosmo_5i_fcast.check()
@@ -98,6 +95,9 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=1,
                     extra_env=extra_env)
 
+conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
+                    "postprocrange": "0",
+                    "runlist": [GetObs, EpsMembers, ContinuousAnalysis]}).getconf()
 cosmo_28n_assim = ModelSuite("cosmo_28N_assim")
 basicenv.add_to(cosmo_28n_assim.suite)
 day = cosmo_28n_assim.suite.add_family("day").add_repeat(
@@ -110,12 +110,7 @@ for h in range(0, 24, 3):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        GetObs(gts=True, lhn=True),
-        EpsMembers(membrange="0", postprocrange="0", wait_obs=True),
-        ContinuousAnalysis()
-    ]
-    ).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 cosmo_28n_assim.check()
@@ -134,6 +129,9 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=1,
                     extra_env=extra_env)
 
+conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
+                    "postprocrange": "0",
+                    "runlist": [GetObs, EpsMembers]}).getconf()
 cosmo_28n_fcruc = ModelSuite("cosmo_28N_fcruc")
 basicenv.add_to(cosmo_28n_fcruc.suite)
 day = cosmo_28n_fcruc.suite.add_family("day").add_repeat(
@@ -146,11 +144,7 @@ for h in range(0, 24, 3):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        GetObs(gts=True, lhn=True),
-        EpsMembers(membrange="0", postprocrange="0", wait_obs=True)
-    ]
-    ).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 cosmo_28n_fcruc.check()
@@ -169,6 +163,9 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=1,
                     extra_env=extra_env)
 
+conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
+                    "postprocrange": "0", "postproctype": "sync", "cronfreq": 1,
+                    "runlist": [EpsMembers, ContinuousAnalysis]}).getconf()
 cosmo_28n_reassim_era = ModelSuite("cosmo_28N_reassim_era")
 basicenv.add_to(cosmo_28n_reassim_era.suite)
 day = cosmo_28n_reassim_era.suite.add_family("day").add_repeat(
@@ -179,10 +176,7 @@ for h in range(0, 24, 12):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, runlist=[
-        EpsMembers(membrange="0", postprocrange="0", postproctype="sync", wait_obs=False),
-        ContinuousAnalysis()
-    ], cronfreq=1).add_to(hour)
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
 cosmo_28n_reassim_era.check()
