@@ -1,4 +1,5 @@
 %include <sched_heavy.h>
+%include <%HPCENV%/smnd.h>
 %include <%HPCENV%/modules.h>
 %include <head.h>
 
