@@ -1,4 +1,5 @@
 %include <sched_postproc.h>
+%include <%HPCENV%/smnd.h>
 %include <head.h>
 
 # source other optional modules

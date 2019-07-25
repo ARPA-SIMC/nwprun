@@ -1,0 +1,1 @@
+. ~/smnd_profile
