@@ -35,7 +35,7 @@ if [ -n "$MODEL_ARCHIVE_OUTPUT_EXTRA" ]; then
     for file in $MODEL_DATADIR/extra1/*; do
         if [ -f "$file" ]; then
 	    filename=${file##*/}
-	    cp -l $file $MODEL_ARCHIVE_OUTPUT_EXTRA/$DATE$TIME.$filename
+	    cp -fl $file $MODEL_ARCHIVE_OUTPUT_EXTRA/$DATE$TIME.$filename
 	fi
     done
 fi
