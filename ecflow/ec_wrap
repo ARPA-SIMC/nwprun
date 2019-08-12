@@ -4,9 +4,9 @@ case "$HPC_SYSTEM" in
     galileo ) # Cineca HPC galileo
 # for galileo remove /gpfs/work from LD_LIBRAR_PATH, move installation
 # from $WORK to /gpfs/meteo and replace $WORK with $WORKDIR_BASE
-	export LD_LIBRARY_PATH=/gpfs/work/smr_prod/srcgnu/install/lib:/cineca/prod/opt/libraries/qt/5.9/gnu--6.1.0/lib:/cineca/prod/opt/compilers/gnu/6.1.0/none/lib64
-	export PATH=/gpfs/work/smr_prod/srcgnu/install/bin:/cineca/prod/opt/libraries/qt/5.9/gnu--6.1.0/bin:/cineca/prod/opt/compilers/gnu/6.1.0/none/bin:/cineca/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/galileo/home/usera07smr/a07smr03/.local/bin:/galileo/home/usera07smr/a07smr03/bin
-	export PYTHONPATH=/gpfs/work/smr_prod/srcgnu/install/lib/python2.7/site-packages
+	export LD_LIBRARY_PATH=/cineca/prod/opt/libraries/qt/5.9/gnu--6.1.0/lib:/cineca/prod/opt/compilers/gnu/6.1.0/none/lib64
+	export PATH=$WORKDIR_BASE/srcgnu/install/bin:/cineca/prod/opt/libraries/qt/5.9/gnu--6.1.0/bin:/cineca/prod/opt/compilers/gnu/6.1.0/none/bin:/cineca/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/pbs/bin:/galileo/home/usera07smr/a07smr03/.local/bin:/galileo/home/usera07smr/a07smr03/bin
+	export PYTHONPATH=$WORKDIR_BASE/srcgnu/install/lib/python2.7/site-packages
 	;;
 
 meucci ) # Cineca HPC meucci
