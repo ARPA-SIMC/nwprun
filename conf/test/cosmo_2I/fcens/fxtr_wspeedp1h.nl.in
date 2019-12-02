@@ -1,0 +1,64 @@
+
+&RunSpecification
+ strict_nl_parsing    = .true.
+ n_ompthread_total  = 1
+ verbosity          = "high"
+ diagnostic_length  = 110
+ strict_usage = .false.
+/
+
+&GlobalResource
+ dictionary           = "@FXTR_HOME@/resources/dictionary_cosmo.txt",
+ grib_definition_path = "@FXTR_HOME@/resources/grib_api_definitions_cosmo", "@FXTR_HOME@/resources/grib_api_definitions_vendor"
+ grib2_sample         = "@FXTR_HOME@/resources/grib_api_samples/COSMO_GRIB2_default.tmpl"
+/
+
+&GlobalSettings
+ default_dictionary   = "cosmo"
+ location_to_gridpoint= "n9"
+ default_model_name   = "cosmo_it-eps"
+ originating_center   = "roma"
+/
+
+&ModelSpecification
+ model_name         = "cosmo_it-eps"
+ precip_all         = "RAIN_GSP", "SNOW_GSP"
+ precip_snow        = "SNOW_GSP"
+ precip_rain        = "RAIN_GSP"
+ earth_axis_large   = 6371229.
+ earth_axis_small   = 6371229.
+/
+
+!---------------------------------------------------------------------------------------
+! Define input and output characteristics:
+! Note that the algorithm used to compute probability fields requires that all ensemble 
+! members are considered in the eps-loop, i.e., epsstop must be equal to the total 
+! number of ensemble members.
+! Generation of prob maps with TOTPREC over 12 hours ABOVE some thresolds
+! Pay attention to tlag
+! Since one output file is written per time step and 6 hour sums of precipitation in 
+! form of snow have to be computed, tlag=-6 must be specified to make all required member 
+! input files accessible at one output time.
+!---------------------------------------------------------------------------------------
+&Process
+  in_file="@FXTR_WORKDIR@/input.<mmm>/lfff<DDHH>0000"
+  epsstart=1, epsstop=@ENS_TOTAL_MEMB@, epsincr=1
+  tstart=0, tstop=@MODEL_STOP@, tincr=1, out_tstart = 1, out_tincr=1
+  out_file="@FXTR_DATADIR@/wspeedp01h_@DATE@@TIME@<DDHH>.grib"
+  out_type="GRIB2", out_mode_weighted_member=.FALSE., out_type_packing= 'simple,10',
+  in_dictionary="cosmo", tmp1_dictionary="cosmo", out_dictionary="cosmo"
+  out_type_alternate_code=.true.
+/
+
+&Process in_field="U_10M", scale = 1., set_auxiliary_metainfo='generatingProcessIdentifier=201' /
+&Process in_field="V_10M", scale = 1., set_auxiliary_metainfo='generatingProcessIdentifier=201' /
+
+&Process tmp1_field="FF_10M", toper="id" /
+
+&Process out_field="FF_10M", product_category='eps_probability', prob_tlow=11.3 /
+&Process out_field="FF_10M", product_category='eps_probability', prob_tlow=14.4 /
+&Process out_field="FF_10M", product_category='eps_probability', prob_tlow=17.49 /
+&Process out_field="FF_10M", product_category='eps_probability', prob_tlow=20.5 /
+&Process out_field="FF_10M", product_category='eps_probability', prob_tlow=24.7 /
+&Process out_field="FF_10M", product_category='eps_probability', prob_tlow=28.8 /
+
