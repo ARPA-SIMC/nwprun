@@ -134,6 +134,7 @@ fcens.write(interactive=interactive)
 fcens.replace(interactive=interactive)
 
 # repeat fcens for generating a recover suite
+conf.update({"startmethod": "manual"})
 fcens = ModelSuite("cosmo_2I_fcens_recover")
 basicenv.add_to(fcens.suite)
 day = fcens.suite.add_family("day").add_repeat(

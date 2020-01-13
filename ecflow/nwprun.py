@@ -50,7 +50,7 @@ class ModelConfig:
                      "gts": True, "lhn": True, "preprocname": None,
                      "postprocrange": None, "postproctype": "async", 
                      "timer": None, "cronfreq": 10,
-                     "starttime": None}
+                     "startmethod": "check_run"}
         self.conf.update(conf) # update default with user data
         # special treatment for some fields
         self.conf['membrange'] = rangeexpand(self.conf['membrange'])
@@ -295,7 +295,7 @@ class WaitAndRun:
         self.conf.update(conf)
 
     def add_to(self, node):
-        if self.conf['starttime'] is None:
+        if self.conf['startmethod'] == "check_run":
             fam = node.add_family("check_run")
             SchedEnv("sh").add_to(fam)
 
@@ -312,13 +312,27 @@ class WaitAndRun:
                 task.add_trigger("../../"+self.dep+" == complete")
             task.add_event("checked")
 
-        fam = node.add_family("run")
-        if self.dep is not None and self.conf['starttime'] is not None:
-            fam.add_trigger("../"+self.dep+" == complete")
-        if self.conf['starttime'] is not None:
-            fam.add_time(self.conf['starttime']) # replace with today, to test
-        else:
+            fam = node.add_family("run")
             fam.add_trigger("check_run == complete")
+
+        elif self.conf['startmethod'] == "continuous":
+            fam = node.add_family("run")
+            if self.dep is not None:
+                fam.add_trigger("../"+self.dep+" == complete")
+
+        elif self.conf['startmethod'] == "manual":
+            task = node.add_task("continue")
+            task.add_variable("ECF_DUMMY_TASK","Y")
+            fam = node.add_family("run")
+            if self.dep is not None:
+                fam.add_trigger("../"+self.dep+" == complete")
+            fam.add_trigger("./continue == complete")
+
+        elif self.conf['startmethod'] == "starttime":
+            fam = node.add_family("run")
+            if self.dep is not None:
+                fam.add_trigger("../"+self.dep+" == complete")
+            fam.add_time(self.conf['starttime']) # replace with today, to test
 
         # instantiate with general configuration and add all
         # components of runlist
