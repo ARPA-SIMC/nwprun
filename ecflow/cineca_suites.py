@@ -133,3 +133,23 @@ fcens.check()
 fcens.write(interactive=interactive)
 fcens.replace(interactive=interactive)
 
+# repeat fcens for generating a recover suite
+fcens = ModelSuite("cosmo_2I_fcens_recover")
+basicenv.add_to(fcens.suite)
+day = fcens.suite.add_family("day").add_repeat(
+    ecflow.RepeatDate("YMD", 
+                      int((datetime.datetime.now()-datetime.timedelta(days=365)).strftime("%Y%m%d")),
+                      20201228))
+
+hdep = None # first repetition has no dependency
+for h in range(21, 24, 3): # h=21
+    famname = "hour_" + ("%02d" % h)
+    hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
+    #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
+    hdep = famname # dependency for next repetition
+
+fcens.check()
+fcens.write(interactive=interactive)
+fcens.replace(interactive=interactive)
+
