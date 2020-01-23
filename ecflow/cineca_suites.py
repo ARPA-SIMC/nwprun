@@ -28,7 +28,7 @@ common_extra_env = {
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/enda",
-    "NNODES_MODEL": 2,
+    "NNODES_MODEL": 3,
     "NNODES_ENDA": 4
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],
@@ -40,7 +40,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
 
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0-40",
                     "postprocrange": "0",
-                    "runlist": [GetObs, EpsMembers, EndaAnalysis]}).getconf()
+                    "runlist": [GetObs, EpsMembers, EndaAnalysis],
+                    "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
 enda = ModelSuite("cosmo_2I_enda")
 basicenv.add_to(enda.suite)
 day = enda.suite.add_family("day").add_repeat(
@@ -64,7 +65,7 @@ enda.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/fcruc",
-    "NNODES_MODEL": 12,
+    "NNODES_MODEL": 16,
     "NNODES_ENDA": 4
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],
@@ -76,7 +77,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
 
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
-                    "runlist": [GetObs, EpsMembers]}).getconf()
+                    "runlist": [GetObs, EpsMembers],
+                    "preproc_wt":"00:30:00", "model_wt": "01:00:00"}).getconf()
 fcruc = ModelSuite("cosmo_2I_fcruc")
 basicenv.add_to(fcruc.suite)
 day = fcruc.suite.add_family("day").add_repeat(

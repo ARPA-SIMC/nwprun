@@ -50,6 +50,8 @@ class ModelConfig:
                      "gts": True, "lhn": True, "preprocname": None,
                      "postprocrange": None, "postproctype": "async", 
                      "timer": None, "cronfreq": 10,
+                     "wait_wt": "04:10:00", "preproc_wt": "01:00:00",
+                     "model_wt": "05:00:00", "analysis_wt": "01:20:00",
                      "startmethod": "check_run"}
         self.conf.update(conf) # update default with user data
         # special treatment for some fields
@@ -118,7 +120,7 @@ class Preproc:
         task = fam.add_task("get_parent")
         SchedEnv("sh").add_to(task) # interactive because net access required for galileo
         task = fam.add_task(self.conf['preprocname']).add_trigger("./get_parent == complete")
-        task.add_variable("WALL_TIME", "01:00:00")
+        task.add_variable("WALL_TIME", self.conf["preproc_wt"])
         if self.conf['preprocname'] == "int2lm":
             fam.add_task("merge_analysis").add_trigger("./"+self.conf['preprocname']+" == complete")
 
@@ -134,12 +136,13 @@ class Model:
         trig = "./preproc == complete"
         if GetObs in self.conf['runlist']: trig+= " && ../../get_obs == complete"
         fam.add_trigger(trig)
-        fam.add_variable("WALL_TIME", "05:00:00")
+        fam.add_variable("WALL_TIME", self.conf["model_wt"])
         fam.add_task(self.conf['modelname']).add_event("started")
         if self.conf['postproc']:
             if self.conf['postproctype'] == "async":
                      fam.add_task(self.conf['postprocname']).add_trigger("./"+self.conf['modelname']+":started == set")
             else:
+# in this case WALL_TIME should be adapted (reduced)
                 fam.add_task(self.conf['postprocname']).add_trigger("./"+self.conf['modelname']+" == complete")
 
 # Add a set of ensemble model runs to a suite, including boundary and
@@ -188,14 +191,15 @@ class EpsMembers:
 # called by WaitAndRun.
 class EndaAnalysis:
     def __init__(self, conf={}):
-        pass
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
         fam = node.add_family("enda_analysis")
         fam.add_trigger("./eps_members == complete")
         fam.add_task("prepare_kenda")
         task = fam.add_task("kenda").add_trigger("./prepare_kenda == complete")
-        task.add_variable("WALL_TIME", "01:20:00")
+        task.add_variable("WALL_TIME", self.conf["analysis_wt"])
         fam.add_task("archive_kenda").add_trigger("./kenda == complete")
 
 # Add a continuous analysis step to a suite, to be run after model
@@ -203,7 +207,8 @@ class EndaAnalysis:
 # WaitAndRun.
 class ContinuousAnalysis:
     def __init__(self, conf={}):
-        pass
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
         fam = node.add_family("continuous_analysis")
@@ -215,7 +220,8 @@ class ContinuousAnalysis:
 # WaitAndRun.
 class EpsPostproc:
     def __init__(self, conf={}):
-        pass
+        self.conf = {}
+        self.conf.update(conf)
 
     def add_to(self, node):
         fam = node.add_family("eps_postproc")
