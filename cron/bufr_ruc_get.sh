@@ -45,6 +45,7 @@ dl_ftp() {
 
 }
 
+set -x
 unset LANG
 basedir=$OPE
 # setup common to user scripts
