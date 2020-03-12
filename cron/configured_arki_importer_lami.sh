@@ -9,39 +9,63 @@
 
 import_configured() {
 
-    cd $2
+    cd $1
     . ./start.sh
     if [ -n "$format" ]; then
 	format="$format:"
     fi
-    log "importing $format$1"
-#    time arki-scan --dispatch=$ARKI_CONF $format$1 > /dev/null
+    log "importing $format$2"
+#    time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null
     if [ -n "$signalfile" -a -n "$signal" ]; then
-	import_signal_imported "$signal" $reftime ${1##*/}
+	import_signal_imported "$signal" $reftime $2
     fi
-    rm -f $1
+    rm -f $2
+}
+
+import_configured_end() {
+
+    cd $1
+    . ./start.sh
     # if upload finished, check if the folder is empty and erase
-    if [ -f "end.sh" ]; then
-	if ! ls | grep -v '\.sh$'>/dev/null; then
-	    if [ -n "$signal" ]; then
-		import_signal_imported "$signal" $reftime
-	    fi
-	    cd ..
-	    safe_rm_rf $2
+    # at this stage i am authorised to remove rubbish
+    rm -f .??*
+    rm -f *.tmp
+    if ! ls | grep -v '\.sh$'>/dev/null; then
+	if [ -n "$signal" ]; then
+	    import_signal_imported "$signal" $reftime
 	fi
+	rm -f *.sh
+	cd -
+	rmdir $1 || true # better leaving rubbish than failing
+	log "done importing folder $1"
     fi
 
 }
 
 import_one() {
 
-    updir=${1%/*}
-    if [ -f "$updir/start.sh" ]; then # new way
-	log "import new way $1"
-	(import_configured $1 $updir)
-    else # old way
-
     case $1 in
+	./configured/*)
+	    upfile=${1##*/}
+	    updir=${1%/*}
+	    case $upfile in
+		start.sh)
+		    return 1 # 1 = nothing done
+		    ;;
+		end.sh)
+		    (import_configured_end $updir)
+		    return 1 # 1 = nothing done
+		    ;;
+		*)
+		    log "start importing configured $1"
+# important! (..) is needed in order to use a subshell for not
+# polluting the environment
+		    (import_configured $updir $upfile)
+		    log "done importing $1"
+		    return
+		    ;;
+	    esac
+	    ;;
 	./generic/*)
 	    log "start importing generic $1"
 	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
@@ -113,7 +137,6 @@ import_one() {
 	    ;;
     esac
     rm -f $1
-    fi
 }
 
 
@@ -151,4 +174,4 @@ lastcleanup=`date -u '+%Y%m%d'`
 dir_discarica=/gpfs_arkimet/archive
 query_discarica='level:GRIB1,105 or GRIB1,102 or GRIB1,1; product:GRIB1,,2,11 or GRIB1,,2,17 or GRIB1,,2,85 or GRIB1,,2,33 or GRIB1,,2,34 or GRIB1,,2,61 or GRIB1,,2,1 or GRIB1,,2,2'
 
-import_loop_configured
+import_loop
