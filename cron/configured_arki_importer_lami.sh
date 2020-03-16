@@ -15,7 +15,7 @@ import_configured() {
 	format="$format:"
     fi
     log "importing $format$2"
-#    time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null
+    time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null
     if [ -n "$signalfile" -a -n "$signal" ]; then
 	import_signal_imported "$signal" $reftime $2
     fi
@@ -45,7 +45,7 @@ import_configured_end() {
 import_one() {
 
     case $1 in
-	./configured/*)
+	./generic/configured/*)
 	    upfile=${1##*/}
 	    updir=${1%/*}
 	    case $upfile in
