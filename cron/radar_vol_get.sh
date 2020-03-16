@@ -18,38 +18,9 @@ dl_ftp() {
     for radstat in $RADAR_STATIONS; do
 	filepath="${FTPDIR}/${radstat}/$NAME_FILE_FTP"
 	ncftpget $ncftpauth . $filepath  || continue
-	mv $NAME_FILE_FTP ${radstat}_${YYYY}${MM}${DD}${hh}${mm}.hdf
-	import_signal_imported radar_vol $DATE$TIME $radstat
+	mv $NAME_FILE_FTP ${radstat}.hdf #_${YYYY}${MM}${DD}${hh}${mm}.hdf
+	putarki_configured_archive $1 ${radstat}.hdf
     done
-
-    # Put on arkimet
-#   waitfor="$waitfor `putarki_archive_and_wait odim $dlfilelist`"
-
-## check whether anything has been downloaded
-#    dlfilelist=""
-#    shopt -s nullglob
-#    for file in ????_$1.bz2; do
-#	dlfilelist="$dlfilelist $file"
-#    done
-#    shopt -u nullglob
-#
-## something found, wait and retry (we don't know the file-creation policy)
-## assuming we now the policy and do not retry
-## please optimize
-#    if [ -n "$dlfilelist" ]; then
-#	sleep 180
-#	ncftpget $ncftpauth . $filelist || true
-#	dlfilelist=""
-#	shopt -s nullglob
-#	for file in ????_$1.bz2; do
-#	    bunzip2 -c $file > ${file%.bz2}.bufr
-#	    dlfilelist="$dlfilelist ${file%.bz2}.bufr"
-#	done
-#	shopt -u nullglob
-## decommentare per archiviare
-##	waitfor="$waitfor `putarki_archive_and_wait odim $dlfilelist`"
-#	return 0
-#    fi
 
     return 1
 }
@@ -57,6 +28,11 @@ dl_ftp() {
 increment_datetime() {
     DATE=`date --date="$DATE $TIME $RADAR_VOL_STEP seconds" '+%Y%m%d'`
     TIME=`date --date="$DATE $TIME $RADAR_VOL_STEP seconds" '+%H%M'`
+}
+
+final_cleanup() {
+    trap - EXIT
+    exit
 }
 
 set -x
@@ -102,32 +78,31 @@ else
     else 	# increment datetime
 	increment_datetime
     fi
+
+# setup kill traps (to be moved in a common code)
+    mustexit=
+    mustreload=
+    trap '{ mustexit=Y; }' 15 20 2
+    trap '{ mustreload=Y; }' 1
+    trap '{ final_cleanup; }' EXIT
+
+
     while true; do
-#	# wait before querying the server
-#	NWPWAITSOLAR_SAVE=$NWPWAITSOLAR
-#	NWPWAITSOLAR=$NWPWAITSOLAR_RUN
 	nwpwait_setup
 	while nwpwait_wait; do
-		:	
+# it's time for a break
+	    [ -n "$mustexit" ] && exit 1 || true
+            [ -n "$mustreload" ] && exec "$0" "$@" || true
 	done
-#	# wait until data ready
-#	NWPWAITSOLAR=$NWPWAITSOLAR_SAVE
-#	nwpwait_setup
-#	while nwpwait_wait; do
-#	    if dl_ftp $DATE $TIME; then
-#		import_signal_imported radar_vol $DATE$TIME
-#		break
-#	    fi
-#	done
 
-	dl_ftp $DATE $TIME  || true
+	dirname=radar_vol_$DATE$TIME.$$
+	putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=odim" "signal=radar_vol" "signalfile=Y"
+	dl_ftp $dirname || true
 
-	import_signal_imported radar_vol $DATE$TIME
+	putarki_configured_end $dirname
 
 	save_state radar_vol_get.state DATE TIME
 	increment_datetime
-	
-#	exit 1
 
     done
 fi
