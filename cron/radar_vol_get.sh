@@ -20,6 +20,7 @@ dl_ftp() {
 	ncftpget $ncftpauth . $filepath  || continue
 	mv $NAME_FILE_FTP ${radstat}.hdf #_${YYYY}${MM}${DD}${hh}${mm}.hdf
 	putarki_configured_archive $1 ${radstat}.hdf
+	rm -f ${radstat}.hdf
     done
 
     return 1
@@ -60,7 +61,7 @@ exec >>$LOGDIR/`basename $0`.log 2>&1
 
 set -x
 
-safe_rm_rf $RADAR_VOL_WORKDIR	
+#safe_rm_rf $RADAR_VOL_WORKDIR	
 mkdir -p $RADAR_VOL_WORKDIR
 cd $RADAR_VOL_WORKDIR
 
