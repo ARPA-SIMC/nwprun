@@ -14,7 +14,7 @@ case "$HPC_SYSTEM" in
     ;;
   lami* ) # Cineca cloud
 # General
-    WORKDIR=$HOME/$NWPCONF
+    WORKDIR=/arkimet/arkimet/$NWPCONF
     LOGDIR=$HOME/log
     ;;
   galileo ) # Cineca HPC galileo
