@@ -49,17 +49,11 @@ dl_ftp() {
 
 }
 
-increment_datetime() {
-    DATE=`date --date="$DATE $TIME $COSMO_AM_EPS_STEP seconds" '+%Y%m%d'`
-    TIME=`date --date="$DATE $TIME $COSMO_AM_EPS_STEP seconds" '+%H%M'`
-}
-
 final_cleanup() {
     trap - EXIT
     exit
 }
 
-set -x
 unset LANG
 basedir=$OPE
 # setup common to user scripts
@@ -68,6 +62,7 @@ export NWPCONFDIR=$basedir/conf
 export NWPCONFBINDIR=$basedir/libexec/nwpconf
 export NWPCONF=prod/COSMO_AM_EPS
 
+set -x
 set -e
 # source the main library module
 . $NWPCONFBINDIR/nwpconf.sh
@@ -79,29 +74,27 @@ set -e
 
 nonunique_exit
 
-# redirect all to logfile
-exec >>$LOGDIR/`basename $0`.log 2>&1
-
-set -x
-
-safe_rm_rf $COSMO_AM_EPS_WORKDIR
-mkdir -p $COSMO_AM_EPS_WORKDIR
-cd $COSMO_AM_EPS_WORKDIR
-
 # improve
 ncftpauth="-f $basedir/.auth/meteoam_cineca.cfg"
 
-if [ -n "$1" ]; then
-    dl_ftp $1 $2
-else
+if [ -n "$1" ]; then # interactive run
+    DATETIME=$1
+    DATE=${DATETIME:0:8}
+    TIME=${DATETIME:8:2}
+else # automatic run
+    # redirect all to logfile
+    exec >>$LOGDIR/`basename $0`.log 2>&1
+
     restore_state cosmo_am_eps_get.state || touch $NWPCONFDIR/$NWPCONF/cosmo_am_eps_get.state
-    if [ -z "$DATE" -o -z "$TIME" ]; then 	# set minimum datetime
-	mindate=`date -u --date '1 day ago' '+%Y%m%d 12'`
-	DATE=`date --date="$mindate" '+%Y%m%d'`
-	TIME=`date --date="$mindate" '+%H'`
-    else 	# increment datetime
-	increment_datetime
+
+    if [ -z "$DATETIME" ]; then # set minimum datetime
+	DATETIME=`date -u --date '1 day ago' '+%Y%m%d12'`
+    else # increment datetime
+	DATETIME=`datetime_add $DATETIME $COSMO_AM_EPS_STEP`
     fi
+    DATE=${DATETIME:0:8}
+    TIME=${DATETIME:8:2}
+
 # wait before querying the server
     NWPWAITSOLAR_SAVE=$NWPWAITSOLAR
     NWPWAITSOLAR=$NWPWAITSOLAR_RUN
@@ -113,33 +106,40 @@ else
 # wait until reasonable
     NWPWAITSOLAR=$NWPWAITSOLAR_SAVE
     NWPWAITWAIT=$NWPWAITWAIT_SAVE
+fi
 
-    dirname=cosmo_am_eps_fc_$DATE$TIME.$$
-    putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=cosmo_am_eps_fcast"
-    nwpwait_setup
+safe_rm_rf $COSMO_AM_EPS_WORKDIR
+mkdir -p $COSMO_AM_EPS_WORKDIR
+cd $COSMO_AM_EPS_WORKDIR
 
-    # Create array of files to be downloaded
-    file_list=()
-    for hh in `seq $FIRST_BC_HH $FREQ_BC_HH $LAST_BC_HH`; do
-    	# Determine forecast hour FH (2 digits) and forecast day of EPS files
-	FH=`expr $hh % 24`	|| true
-    	FD=$((hh/24))		|| true
-        if [ ${FH} -lt 10 ] ; then  FH=0$FH ; fi
+dirname=cosmo_am_eps_fc_$DATETIME.$$
+putarki_configured_setup $dirname "reftime=$DATETIME" "format=grib" "signal=cosmo_am_eps_fcast"
+nwpwait_setup
 
-	# Loop over members EM and add file names to file_list
-	for EM in `seq 1 $TOT_ENS_MEMB`; do 
-           if [ ${EM} -lt 10 ] ; then  EM=0$EM ; fi
-	   file_list=("${file_list[@]}" "lfff0${FD}${FH}0000_${EM}_$DATE${TIME:0:2}.grb.gz")
-	done
-    done 
+# Create array of files to be downloaded
+file_list=()
+for hh in `seq $FIRST_BC_HH $FREQ_BC_HH $LAST_BC_HH`; do
+    # Determine forecast hour FH (2 digits) and forecast day of EPS files
+    FH=`expr $hh % 24`	|| true
+    FD=$((hh/24))		|| true
+    if [ ${FH} -lt 10 ] ; then  FH=0$FH ; fi
 
-# trovare una maniera per non cominciare dal wait nel loop
-    while nwpwait_wait; do
-	dl_ftp $dirname && break
+    # Loop over members EM and add file names to file_list
+    for EM in `seq 1 $TOT_ENS_MEMB`; do 
+        if [ ${EM} -lt 10 ] ; then  EM=0$EM ; fi
+	file_list=("${file_list[@]}" "lfff0${FD}${FH}0000_${EM}_$DATETIME.grb.gz")
     done
+done 
 
-    putarki_configured_end $dirname
+while true; do
+    dl_ftp $dirname && break
+    nwpwait_wait || break
+done
 
-    save_state cosmo_am_eps_get.state DATE TIME
+putarki_configured_end $dirname
 
+if [ -n "$1" ]; then # interactive run
+    :
+else # automatic run
+    save_state cosmo_am_eps_get.state DATETIME
 fi
