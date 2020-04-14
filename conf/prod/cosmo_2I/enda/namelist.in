@@ -216,6 +216,7 @@ t%use       = 7
    par_fc_det = ''! 'SMA_ANA'
    write_grid  = T
    fof_prefix = 'fof' ! prefix of feedback files
+   read_seq = F
 /
 !============
 ! Model error
