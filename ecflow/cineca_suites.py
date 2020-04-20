@@ -75,7 +75,7 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
+conf = ModelConfig({"gts": False, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "runlist": [GetObs, EpsMembers],
                     "preproc_wt":"00:30:00", "model_wt": "01:00:00"}).getconf()
@@ -113,7 +113,7 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": True, "lhn": True, "membrange": "1-20",
+conf = ModelConfig({"gts": False, "lhn": True, "membrange": "1-20",
                     "postprocrange": "1-20",
                     "runlist": [GetObs, EpsMembers, EpsPostproc]}).getconf()
 fcens = ModelSuite("cosmo_2I_fcens")

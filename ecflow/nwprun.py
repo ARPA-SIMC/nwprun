@@ -47,7 +47,8 @@ class ModelConfig:
     def __init__(self, conf={}):
         self.conf = {"runlist": [],
                      "membrange": "0", "nofail": False, "modelname": "cosmo",
-                     "gts": True, "lhn": True, "preprocname": None,
+                     "gts": True, "lhn": True, "radarvol": False,
+                     "preprocname": None,
                      "postprocrange": None, "postproctype": "async", 
                      "timer": None, "cronfreq": 10,
                      "wait_wt": "04:10:00", "preproc_wt": "01:00:00",
