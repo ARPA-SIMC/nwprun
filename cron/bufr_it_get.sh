@@ -25,7 +25,7 @@ dl_ftp() {
 # something found, wait and retry (we don't know the file-creation policy)
 # please optimize
     if [ -n "$dlfilelist" ]; then
-#	sleep 180
+	sleep 180
 	ncftpget $ncftpauth . $filelist || true
 	shopt -s nullglob
 	for file in ????_$DATETIME.bz2; do
