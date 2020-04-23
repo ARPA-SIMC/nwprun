@@ -102,7 +102,7 @@ fcruc.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/fcens",
-    "NNODES_MODEL": 6,
+    "NNODES_MODEL": 7,
     "NNODES_ENDA": 4,
     "ECF_TIMEOUT": "14400"
 })
