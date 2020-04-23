@@ -100,7 +100,8 @@ import_one() {
 # ./comet/lfff00060000_2017050506.tar.bz2
 # ./comet/lbff00060000_2017050506.tar.bz2
 # ./comet/fc_lfff02000000_2017050418.tar.bz2
-	    log "start importing comet $1"
+	    log "skip importing comet $1"
+	    return
 	    tmpdir=`mktemp -d $ARKI_IMPROOT/tmptar.XXXXXXXXXX`
 	    tar --transform='s?.*/??g' -C $tmpdir -xvf $1
 	    for file in $tmpdir/*; do
