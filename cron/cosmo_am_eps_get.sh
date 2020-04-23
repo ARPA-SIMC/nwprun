@@ -113,7 +113,7 @@ mkdir -p $COSMO_AM_EPS_WORKDIR
 cd $COSMO_AM_EPS_WORKDIR
 
 dirname=cosmo_am_eps_fc_$DATETIME.$$
-putarki_configured_setup $dirname "reftime=$DATETIME" "format=grib" "signal=cosmo_am_eps_fcast"
+putarki_configured_setup $dirname "reftime=$DATETIME" "format=grib" "signal=cosmo_am_eps"
 nwpwait_setup
 
 # Create array of files to be downloaded
