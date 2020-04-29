@@ -19,14 +19,22 @@ case "%SUITE%" in
         cp -p laf?????????? $ARCHIVE/%SUITE%
         ;;
     cosmo_2I_fcens*)
-        putarki_model_output $(($MODEL_STOP + 1)) -w
+        if [ "$ARKI_SCAN_METHOD" = "configured_importer" ]; then
+            putarki_configured_model_output $(($MODEL_STOP + 1))
+        else 
+            putarki_model_output $(($MODEL_STOP + 1)) -w
+        fi
 # copy to archive
         subdir=cosmo_2I_fcens/$DATE$TIME.`printf %%03d $ENS_MEMB`
         mkdir -p $CINECA_ARCHIVE_POST/$subdir
         cp -a lfff* $CINECA_ARCHIVE_POST/$subdir
         ;;
     *)
-        putarki_model_output $(($MODEL_STOP + 1)) -w
+        if [ "$ARKI_SCAN_METHOD" = "configured_importer" ]; then
+            putarki_configured_model_output $(($MODEL_STOP + 1))
+        else 
+            putarki_model_output $(($MODEL_STOP + 1)) -w
+        fi
         ;;
 esac
 
@@ -47,5 +55,7 @@ fi
 # done here for forecast and in putarki.sh for analysis
 # improve, may also consider -z "$ENS_MEMB"
 if [ -n "$MODEL_SIGNAL" -a "$MODEL_BACK" -eq 0 ]; then
-    import_signal_imported $MODEL_SIGNAL $DATE$TIME
+    if [ "$ARKI_SCAN_METHOD" != "configured_importer" ]; then # temporary
+        import_signal_imported $MODEL_SIGNAL $DATE$TIME
+    fi
 fi
