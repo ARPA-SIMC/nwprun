@@ -70,11 +70,9 @@ else # deterministic run or analysis
 # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki
 # setup for remote import
-ARKI_SCAN_METHOD=configured_importer
-# move to generic conf
-ARKI_IMPDIR=/meucci_arpae/lami/import
-MODEL_SIGNAL=cosmo_2I_assim
-#    ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_assim
+    ARKI_SCAN_METHOD=configured_importer
+    ARKI_IMPDIR=$WORKDIR_BASE/import_sync
+    MODEL_SIGNAL=cosmo_2I_assim
 fi
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive
 MODEL_ARCHIVE_OUTPUT_ANA_REMOTE=$CINECA_ARCHIVE_REMOTE:$CINECA_ARCHIVE_REMOTE_ANA
