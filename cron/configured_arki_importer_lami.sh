@@ -14,7 +14,7 @@ import_configured() {
     if [ -n "$format" ]; then
 	format="$format:"
     fi
-    log "importing $format$2"
+    log "importing configured $format$2"
     time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null
     if [ -n "$signalfile" -a -n "$signal" ]; then
 	import_signal_imported "$signal" $reftime $2
@@ -37,7 +37,7 @@ import_configured_end() {
 	rm -f *.sh
 	cd -
 	rmdir $1 || true # better leaving rubbish than failing
-	log "done importing folder $1"
+	log "completed importing configured folder $1"
     fi
 
 }
@@ -101,7 +101,7 @@ import_one() {
 # ./comet/lbff00060000_2017050506.tar.bz2
 # ./comet/fc_lfff02000000_2017050418.tar.bz2
 	    log "skip importing comet $1"
-	    return
+	    return 1
 	    tmpdir=`mktemp -d $ARKI_IMPROOT/tmptar.XXXXXXXXXX`
 	    tar --transform='s?.*/??g' -C $tmpdir -xvf $1
 	    for file in $tmpdir/*; do
@@ -146,7 +146,7 @@ periodic_check() {
     local now
     now=`date -u '+%Y%m%d'`
     if [ "$now" != "$lastcleanup" ]; then
-	log "daily cleanup"
+	log "Performing daily cleanup"
 	arki_dailycleanup $ARKI_CONF
 #	arki-check --fix --repack --config=$ARKI_CONF
 	import_signal_dailycleanup 20 || true

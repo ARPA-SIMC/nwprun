@@ -18,6 +18,7 @@ import_cosmo_fileinfo()
 
 make_itr()
 {
+    log "start make_itr $1"
     # --ilon=6.1 --ilat=36. --flon=21. --flat=47.2 \
     # --ilon=3.6 --ilat=33.8 --flon=23.5 --flat=49. \
     # area itr (~"lama")
@@ -28,11 +29,12 @@ make_itr()
 #    rm -f ${1}_itr
 # file is not removed in order to be used with the vertical profiles,
 # find a better way
+    log "end make_itr"
 }
 
 make_medl()
 {
-
+    log "start make_medl $1"
     time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=index \
 	--ix=1 --iy=4 --fx=1083 --fy=559 ${1} - | \
 	vg6d_transform --trans-mode=s \
@@ -40,11 +42,13 @@ make_medl()
 	- ${1}_medl
     time arki-scan --dispatch=$ARKI_CONF grib:${1}_medl > /dev/null
     rm -f ${1}_medl
+    log "end make_medl"
 }
 
 make_prof()
 {
-    # equivalente (quasi, bisogna escludere qi) con grib_copy
+     log "start make_prof $1"
+# equivalente (quasi, bisogna escludere qi) con grib_copy
 #    grib_copy -w indicatorOfParameter=40,indicatorOfTypeOfLevel=109 $1 ${1}_109
 #    grib_copy -w indicatorOfParameter=1/33/34/11/17/51,indicatorOfTypeOfLevel=110 $1 ${1}_110
 
@@ -74,9 +78,11 @@ make_prof()
 	- ${1}.bufr
     time arki-scan --dispatch=$ARKI_CONF bufr:${1}.bufr > /dev/null
     rm -f ${1}_109 ${1}_110 ${1}_109_110 ${1}_destag ${1}.bufr
+    log "end make_prof"
 }
 
 create_static() {
+    log "start create_static $1"
     ds=$1
     origin=
     if [ -n "$2" ]; then
@@ -89,6 +95,7 @@ create_static() {
     if [ -s "$staticdir/tmp.grib" ]; then # got some data
 	if [ -s "$staticdir/last.grib" ]; then # have already some data
 	    if ! grib_compare -b yearOfCentury,month,day,hour,centuryOfReferenceTimeOfData $staticdir/tmp.grib $staticdir/last.grib; then # data have changed
+		log "create_static, data has changed"
 		mv $staticdir/last.grib $staticdir/`date -u '+%Y%m%d'`.grib
 		mv $staticdir/last_110.grib $staticdir/`date -u '+%Y%m%d'`_110.grib
 		mv $staticdir/tmp.grib $staticdir/last.grib
@@ -107,6 +114,7 @@ create_static() {
 		$staticdir/last.grib $staticdir/last_110.grib
 	fi
     fi
+    log "end create_static"
 }
 
 final_cleanup() {
@@ -120,7 +128,7 @@ import_loop() {
 
     # redirect all to logfile
     exec >>$LOGDIR/`basename $0`.log 2>&1
-    set -x
+#    set -x
 
     # security check
     [ -n "$ARKI_IMPROOT" ] || exit 1
@@ -139,6 +147,8 @@ import_loop() {
 	donenothing=Y
 	# tried with find -regex '.*/[^.][^/].*((?!tmp).)*$' or
 	# '.*/[^.][^/].*\(?!tmp\).$' unsuccessfully
+	# for sorting by creation time
+	# find .  -printf "%T+\t%p\n" | sort | cut -f 2
 	for file in `find . -type f -name '[^.]*'|grep -v '\.tmp$'`; do
 	    # do homework before classwork
 	    [ -n "$mustexit" ] && exit 1 || true
