@@ -146,7 +146,7 @@ periodic_check() {
     local now
     now=`date -u '+%Y%m%d'`
     if [ "$now" != "$lastcleanup" ]; then
-	log "Performing daily cleanup"
+	log "performing daily cleanup"
 	arki_dailycleanup $ARKI_CONF
 #	arki-check --fix --repack --config=$ARKI_CONF
 	import_signal_dailycleanup 20 || true

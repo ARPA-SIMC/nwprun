@@ -139,8 +139,8 @@ import_loop() {
 
     mustexit=
     mustreload=
-    trap '{ mustexit=Y; }' 15 20 2
-    trap '{ mustreload=Y; }' 1
+    trap '{ log "exit signal received"; mustexit=Y; }' 15 20 2
+    trap '{ log "reload signal received"; mustreload=Y; }' 1
     trap '{ final_cleanup; }' EXIT
 
     while true; do
@@ -151,17 +151,17 @@ import_loop() {
 	# find .  -printf "%T+\t%p\n" | sort | cut -f 2
 	for file in `find . -type f -name '[^.]*'|grep -v '\.tmp$'`; do
 	    # do homework before classwork
-	    [ -n "$mustexit" ] && exit 1 || true
-	    [ -n "$mustreload" ] && exec "$0" "$@" || true
+	    [ -n "$mustexit" ] && { log "exiting on signal"; exit 1; } || true
+	    [ -n "$mustreload" ] && { log "reloading on signal"; exec "$0" "$@"; } || true
 	    import_one $file && donenothing= || true
 	done
 	# if something has been done do not cool down
 	if [ -n "$donenothing" ]; then
 	    # do homework before going to sleep
-	    [ -n "$mustexit" ] && exit 1 || true
-	    [ -n "$mustreload" ] && exec "$0" "$@" || true
+	    [ -n "$mustexit" ] && { log "exiting on signal"; exit 1; } || true
+	    [ -n "$mustreload" ] && { log "reloading on signal"; exec "$0" "$@"; } || true
 	    sleep $tmout
-	    log "Performing check"
+	    log "performing check"
 	    periodic_check
 	fi
     done
