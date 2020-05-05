@@ -53,6 +53,7 @@
   ylmext_cat='@MODEL_STATIC@',
   yinext_lfn='ep_cnmc_cosmo_eps.g1',
   yinext_cat='@MODEL_STATIC@',
+  yin_hhl='cosmo_am_enda_hhl.g2',
   yin_cat='@PARENTMODEL_DATADIR@',
   ylm_cat='@MODEL_PRE_DATADIR@',
   ymode_read='r  '

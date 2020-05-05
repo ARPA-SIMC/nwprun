@@ -29,6 +29,7 @@ if [ -n "$ENS_MEMB" ]; then
 	    ;;
     esac
     PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
+#    PARENTMODEL_ARKI_DS=$ARKI_URL/cosmo_am_enda
     PARENTMODEL_SIGNAL=cosmo_am_enda
     PARENTMODEL_FREQINI=3
     PARENTMODEL_FREQANA=3
@@ -37,6 +38,7 @@ if [ -n "$ENS_MEMB" ]; then
 # input data
     PARENTMODEL_DATADIR=$WORKDIR/input.$ENS_MEMB/data
     MODEL_ARKI_PARAM="proddef:GRIB:nn=$ENS_MEMB;origin:GRIB1,80"
+#    MODEL_ARKI_PARAM="proddef:GRIB:pf=$ENS_MEMB;origin:GRIB2,80"
 # preprocessing (interpolation)
     MODEL_PRE_WORKDIR=$WORKDIR/int2lm.$ENS_MEMB
     MODEL_PRE_DATADIR=$WORKDIR/int2lm.$ENS_MEMB/data
@@ -68,7 +70,11 @@ else # deterministic run or analysis
 # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki
 # setup for remote import
-    ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_assim
+ARKI_SCAN_METHOD=configured_importer
+# move to generic conf
+ARKI_IMPDIR=/meucci_arpae/lami/import
+MODEL_SIGNAL=cosmo_2I_assim
+#    ARKI_IMPDIR=~arki-imp/arki-imp/cosmo_2I_assim
 fi
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive
 MODEL_ARCHIVE_OUTPUT_ANA_REMOTE=$CINECA_ARCHIVE_REMOTE:$CINECA_ARCHIVE_REMOTE_ANA
