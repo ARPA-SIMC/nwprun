@@ -76,7 +76,7 @@ ARKI_SCAN_METHOD=configured_arki_importer
 ARKI_IMPSSH=arki-imp@lami.hpc.cineca.it:/arkimet/arki-imp/generic
 #ARKI_IMPSSH=arki-imp@lami.hpc.cineca.it:~arki-imp/test
 #ARKI_IMPSSH=arki-imp@131.175.199.95:/arkimet/arki-imp/generic
-ARKI_IMPDIR=/meucci_arpae/lami/import
+ARKI_IMPDIR=$WORKDIR_BASE/import_sync
 
 nonunique_exit
 set -x
