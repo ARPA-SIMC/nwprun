@@ -71,31 +71,6 @@ import_one() {
 	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
 	    log "done importing $1"
 	    ;;
-	./cosmo_2I_assim/*)
-	    log "start importing cosmo_2I_assim $1"
-	    import_cosmo_fileinfo $1
-	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
-	    if [ "$sfile" != "lfff00000000c" ]; then # do no signal constant
-		import_signal_imported cosmo_2I_assim $sdate $sfile
-	    fi
-	    log "done importing $1"
-	    ;;
-	./cosmo_2I_fcruc/*)
-	    log "start importing cosmo_2I_fcruc $1"
-	    import_cosmo_fileinfo $1
-	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
-#	    mkdir -p $dir_discarica/cosmo_2I_fcruc
-#	    arki-query --data "$query_discarica" $1 >> $dir_discarica/cosmo_2I_fcruc/verifica.grib
-	    import_signal_imported cosmo_2I_fcruc $sdate $sfile
-	    log "done importing $1"
-	    ;;
-	./cosmo_2I_fcens/*)
-	    log "start importing cosmo_2I_fcens $1"
-	    import_cosmo_fileinfo $1
-	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null
-	    import_signal_imported cosmo_2I_fcens $sdate $sfile
-	    log "done importing $1"
-	    ;;
 	./comet/*)
 # ./comet/lfff00060000_2017050506.tar.bz2
 # ./comet/lbff00060000_2017050506.tar.bz2
@@ -129,10 +104,10 @@ import_one() {
 	    fi
 	    log "done importing $1"
 	    ;;
-	./save/*)
-#	./*) # save-everything mode
-	    cp -p $1 ~/save/
-	    ;;
+#	./save/*)
+##	./*) # save-everything mode
+#	    cp -p $1 ~/save/
+#	    ;;
 	*)
 	    return 1
 	    ;;
@@ -170,9 +145,8 @@ set -e
 # end of setup
 
 ARKI_CONF=$ARKI_CONF.main
+# replace with nwpwait
 tmout=30
 lastcleanup=`date -u '+%Y%m%d'`
-dir_discarica=/gpfs_arkimet/archive
-query_discarica='level:GRIB1,105 or GRIB1,102 or GRIB1,1; product:GRIB1,,2,11 or GRIB1,,2,17 or GRIB1,,2,85 or GRIB1,,2,33 or GRIB1,,2,34 or GRIB1,,2,61 or GRIB1,,2,1 or GRIB1,,2,2'
 
 import_loop

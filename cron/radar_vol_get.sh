@@ -17,7 +17,7 @@ dl_ftp() {
     # Download radar volume for each radar in "RADAR_STATIONS" at $DATE$TIME
     for radstat in $RADAR_STATIONS; do
 	filepath="${FTPDIR}/${radstat}/$NAME_FILE_FTP"
-	ncftpget $ncftpauth . $filepath  || continue
+	ncftpget -V $ncftpauth . $filepath  || continue
 	mv $NAME_FILE_FTP ${radstat}.hdf #_${YYYY}${MM}${DD}${hh}${mm}.hdf
 	putarki_configured_archive $1 ${radstat}.hdf
 	rm -f ${radstat}.hdf

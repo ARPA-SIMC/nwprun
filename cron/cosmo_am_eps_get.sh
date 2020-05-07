@@ -16,7 +16,7 @@ dl_ftp() {
 	    # Download file 
 	    fname="${file_list[ind]}"
 	    filepath="${FTPDIR}/${fname}"
-            ncftpget $ncftpauth . $filepath  || continue
+            ncftpget -V $ncftpauth . $filepath  || continue
 
 	    # If the downloaded file is not empty, it is unzipped and its index
  	    # in "file_list" is saved to be deleted later. Reverse order in 

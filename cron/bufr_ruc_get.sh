@@ -12,7 +12,7 @@ dl_ftp() {
 	filelist="$filelist ${FTPDIR}${obstype}_${1}.bz2"
     done
 
-    ncftpget $ncftpauth . $filelist || true
+    ncftpget -V $ncftpauth . $filelist || true
 
 # check whether anything has been downloaded
     dlfilelist=""
@@ -27,7 +27,7 @@ dl_ftp() {
 # please optimize
     if [ -n "$dlfilelist" ]; then
 	sleep 180
-	ncftpget $ncftpauth . $filelist || true
+	ncftpget -V $ncftpauth . $filelist || true
 	dlfilelist=""
 	shopt -s nullglob
 	for file in ????_$1.bz2; do

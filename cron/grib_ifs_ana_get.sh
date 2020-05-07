@@ -7,7 +7,7 @@ dl_ftp() {
     filelist="${ftpdir}JGS${reftime}${reftime}1"
     localfilelist="JGS${reftime}${reftime}1"
 
-    if ncftpget $ncftpauth . $filelist; then
+    if ncftpget -V $ncftpauth . $filelist; then
 
 # something downloaded, archive
 	waitfor="$waitfor `putarki_archive_and_wait grib $localfilelist`"
