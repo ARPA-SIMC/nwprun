@@ -28,8 +28,8 @@ if [ -n "$ENS_MEMB" ]; then
 	    MODEL_DELTABD=6
 	    ;;
     esac
-    PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
-#    PARENTMODEL_ARKI_DS=$ARKI_URL/cosmo_am_enda
+#    PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
+    PARENTMODEL_ARKI_DS=$ARKI_DIR/cosmo_am_enda
     PARENTMODEL_SIGNAL=cosmo_am_enda
     PARENTMODEL_FREQINI=3
     PARENTMODEL_FREQANA=3
@@ -37,8 +37,7 @@ if [ -n "$ENS_MEMB" ]; then
     PARENTMODEL_QRQS=.FALSE.
 # input data
     PARENTMODEL_DATADIR=$WORKDIR/input.$ENS_MEMB/data
-    MODEL_ARKI_PARAM="proddef:GRIB:nn=$ENS_MEMB;origin:GRIB1,80"
-#    MODEL_ARKI_PARAM="proddef:GRIB:pf=$ENS_MEMB;origin:GRIB2,80"
+    MODEL_ARKI_PARAM="proddef:GRIB:pf=$ENS_MEMB;origin:GRIB2,80"
 # preprocessing (interpolation)
     MODEL_PRE_WORKDIR=$WORKDIR/int2lm.$ENS_MEMB
     MODEL_PRE_DATADIR=$WORKDIR/int2lm.$ENS_MEMB/data
