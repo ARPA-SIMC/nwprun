@@ -15,6 +15,7 @@ safe_rm_rf $BUFR_WORKDIR
 mkdir -p $BUFR_WORKDIR
 cd $BUFR_WORKDIR
 
+set_import_signal_method $BUFR_ARKI_DS
 if import_signal_wait cnmc_bufr $DATE$TIME "*"; then
     cosmo_getarki_obsncdf
 else

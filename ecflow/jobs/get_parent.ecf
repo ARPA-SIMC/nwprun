@@ -45,6 +45,8 @@ signal_loop() {
 }
 
 
+set_import_signal_method $PARENTMODEL_ARKI_DS
+
 case "%SUITE%" in
     *reassim*)
         . $NWPCONFBINDIR/cosmo_model.sh
