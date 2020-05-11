@@ -29,9 +29,10 @@ dl_ftp() {
                     nmemb=${file##*l?ff????0000_}
                     nmemb=${nmemb%%_*.grb}
 		    # grib_set -s 'subCentre=98,setLocalDefinition=28,localDefinitionNumber=28,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=1,numberOfForecastsInEnsemble=20,baseDateEPS=20161130,baseTimeEPS=00,numberOfRepresentativeMember=0,numberOfMembersInCluster=20,totalInitialConditions=20' input.raw cleps.out
-                    grib_set -s "subCentre=98,setLocalDefinition=1,localDefinitionNumber=1,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=$nmemb,numberOfForecastsInEnsemble=40" $file $file.ls.grib
-		    putarki_configured_archive $1 $file.ls.grib
-		    rm -f $file $file.ls.grib
+                    # grib_set -s "subCentre=98,setLocalDefinition=1,localDefinitionNumber=1,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=$nmemb,numberOfForecastsInEnsemble=40" $file $file.ls.grib
+		    # grib_set -s "typeOfProcessedData=5,productDefinitionTemplateNumber=1,typeOfGeneratingProcess=4,typeOfEnsembleForecast=192,perturbationNumber=$nmemb,numberOfForecastsInEnsemble=40" $file $file.ls.grib
+		    putarki_configured_archive $1 $file
+		    rm -f $file
 		done
 		safe_rm_rf $tmpdir
 		delete=($ind "${delete[@]}")
@@ -122,7 +123,7 @@ safe_rm_rf $COSMO_AM_ENDA_WORKDIR
 mkdir -p $COSMO_AM_ENDA_WORKDIR
 cd $COSMO_AM_ENDA_WORKDIR
 
-dirname=cosmo_am_enda_fc_$DATETIME.$$
+dirname=cosmo_am_enda_$DATETIME.$$
 putarki_configured_setup $dirname "reftime=$DATETIME" "format=grib" "signal=cosmo_am_enda"
 nwpwait_setup
 
