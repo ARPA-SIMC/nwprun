@@ -36,10 +36,9 @@ if [ -n "$ARKI_DIR" ]; then
 	nwpwait_setup
 
     	while true; do
-            [ -f "$ana" ] && break || true
-            nwpwait_wait || exit 1
+            [ -f "$ana" ] && { putarki_archive grib $ana; break; } || true
+            nwpwait_wait || break # go on in case of missing analysis
         done
-        putarki_archive grib $ana
     fi
 else
     # analysis is retrieved through arkimet
