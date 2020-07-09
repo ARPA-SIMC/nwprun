@@ -22,7 +22,23 @@ mkdir -p $MODEL_DATADIR/extra3
 cd $MODEL_WORKDIR
 
 touch blklsttmp
+
+# Handle radar volumes
+if [[ "%RADVOL%" == "Y" ]]; then
+    # Namelist for EMVORADO 
+    conf_template INPUT_RADARSIM
+
+    # Directory for Mie look-up tables
+    mkdir -p $WORKDIR/lookup_Mie_write
+
+    # Activate EMVORADO in INPUT_ORG
+    export ACT_EMVORADO=.TRUE.
+else
+    export ACT_EMVORADO=.FALSE.
+fi
+
 conf_template INPUT_ORG INPUT_DYN INPUT_PHY INPUT_ASS INPUT_DIA INPUT_INI
+
 if [ -n "$ENS_TOTAL_MEMB" -a -n "$ENS_MEMB" ]; then
     conf_template INPUT_EPS
 fi

@@ -61,6 +61,45 @@ enda.check()
 enda.write(interactive=interactive)
 enda.replace(interactive=interactive)
 
+
+# Suite enda_radvol
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/cosmo_2I/enda_radvol",
+    "NNODES_MODEL": 4,
+    "NNODES_ENDA": 8
+})
+basicenv = BasicEnv(srctree=os.environ["OPE"],
+                    worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
+                    sched="slurm",
+                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    ntries=2,
+                    extra_env=extra_env)
+
+conf = ModelConfig({"gts": True, "lhn": False, "radarvol": True, "membrange": "0-40",
+                    "postprocrange": "0",
+                    "runlist": [GetObs, EpsMembers, EndaAnalysis],
+                    "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
+enda_radvol = ModelSuite("cosmo_2I_enda_radvol")
+basicenv.add_to(enda_radvol.suite)
+day = enda_radvol.suite.add_family("day").add_repeat(
+    ecflow.RepeatDate("YMD",
+                      int((datetime.datetime.now()-datetime.timedelta(days=delta[0])).strftime("%Y%m%d")),
+                      20201228))
+
+hdep = None # first repetition has no dependency
+for h in range(0, 24, 1):
+    famname = "hour_" + ("%02d" % h)
+    hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
+    #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
+    hdep = famname # dependency for next repetition
+
+enda_radvol.check()
+enda_radvol.write(interactive=interactive)
+enda_radvol.replace(interactive=interactive)
+
+
 # Suite fcruc
 extra_env = common_extra_env.copy()
 extra_env.update({

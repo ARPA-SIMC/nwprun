@@ -21,6 +21,7 @@ PARENTMODEL_QRQS=.FALSE.
 
 # definitions for the model run
 MODEL_NLEV=65
+TIME_STEP=18
 # preprocessing (interpolation)
 MODEL_PRE_WORKDIR=$WORKDIR/int2lm
 MODEL_PRE_DATADIR=$WORKDIR/int2lm/data
@@ -34,6 +35,7 @@ MODEL_PUBLISH_CONF=Y
 
 # configuration of assimilation
 #MODEL_BCANA=Y
+TCONBOX=$(($TIME_STEP*4))
 MODEL_SOIL_PARENT=N
 MODEL_SNOW_PARENT=N
 MODEL_LAKE=Y

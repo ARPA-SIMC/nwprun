@@ -1,4 +1,5 @@
 %include <sched_wait.h>
+echo $SMND_PROFILE
 %include <%HPCENV%/smnd.h>
 %include <head.h>
 
@@ -11,14 +12,14 @@
 # end of setup
 
 set -x
-safe_rm_rf $BUFR_WORKDIR
-mkdir -p $BUFR_WORKDIR
-cd $BUFR_WORKDIR
+safe_rm_rf $HDF5_WORKDIR
+mkdir -p $HDF5_WORKDIR
+cd $HDF5_WORKDIR
 
-set_import_signal_method $BUFR_ARKI_DS_CONV
-if import_signal_wait cnmc_bufr $DATE$TIME "*"; then
-    cosmo_getarki_obsncdf
-else
-    touch noobs
-    touch blklsttmp
-fi
+getarki_radar_vol
+
+# Save list of downloaded file for diagnostics
+FS_DATE=$WORKDIR/archive/${DATE}${TIME}
+mkdir -p $WORKDIR/archive
+mkdir -p $FS_DATE
+ls . > $FS_DATE/lista_radar || true

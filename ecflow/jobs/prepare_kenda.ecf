@@ -3,6 +3,7 @@
 #SBATCH --mail-user=simc-catene-meteo@arpae.it
 %include <head.h>
 
+
 # source other optional modules
 # dirty trick
 MODEL_BACK=$MODEL_STOP
@@ -17,52 +18,110 @@ mkdir -p $LETKF_WORKDIR/input
 cd $LETKF_WORKDIR
 rm -f $LETKF_WORKDIR/letkf_skip
 
-# evaluate availability
-# deterministic
-da=
-do=
+
+# ---------------------------------------------------------------------------
+# evaluate availability: deterministic
+# ---------------------------------------------------------------------------
+#set -x
+# first guess
+da=N
 if [ -f "$WORKDIR/cosmo/data/laf$DATE$TIME" ]; then
     da=Y
 fi
-if [ -f "$WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc" ]; then
-    do=Y
-fi
-echo "Deterministic analysis: $da"
-echo "Deterministic foffo: $do"
 
-# ensemble members
+# fof for conventional observations
+do_conv=N
+if [ -f "$WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc" ]; then
+    do_conv=Y
+fi
+
+# fof for radar observations: "do_rad" is 'Y' if there are files matching
+# "pattern_fofrad" and all of these files are regular and non-empty
+pattern_fofrad="$WORKDIR/cosmo/data/fof_radar_id*${DATES}${TIMES}0000.nc"
+if [[ $(ls -A $pattern_fofrad) ]]; then   # ls returns anything?
+    for fof_file in $pattern_fofrad; do
+        if ([[ ! -f $fof_file ]] || [[ ! -s $fof_file ]]); then
+            do_rad=N
+            break
+        fi
+    done
+    do_rad=Y
+    n_fofrad_det=`ls $pattern_fofrad |wc -l`
+else
+    do_rad=N
+fi
+
+echo "Deterministic analysis: $da"
+echo "Deterministic foffo conventional: $do_conv"
+echo "Deterministic foffo radar: $do_rad"
+if [ "$do_rad" == "Y" ]; then
+    echo "Deterministic number of foffo radar: $n_fofrad_det "
+fi
+
+
+# ---------------------------------------------------------------------------
+# evaluate availability:ensemble members 
+# ---------------------------------------------------------------------------
 set -a ma
 lma=
-set -a mo
-lmo=
+set -a mo_conv
+lmo_conv=
+set -a mo_rad
+set -a n_fofrad_ens
+lmo_rad=
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    # First guess
     if [ -f "$WORKDIR/cosmo.$n/data/laf$DATE$TIME" ]; then
-	ma[$n]=Y
-	lma=$n
+    	ma[$n]=Y
+	    lma=$n
     else
-	ma[$n]=N
+	    ma[$n]=N
     fi
 
+    # fof for conventional observations
     if [ -f "$WORKDIR/cosmo.$n/data/fof_${DATES}${TIMES}0000.nc" ]; then
-	mo[$n]=Y
-	lmo=$n
+        mo_conv[$n]=Y
+        lmo_conv=$n
     else
-	mo[$n]=N
+        mo_conv[$n]=N
+    fi
+
+    # fof for radar observations: "do_rad" is 'Y' if there are files matching
+    # "pattern_fofrad" and all of these files are regular and non-empty
+    pattern_fofrad="$WORKDIR/cosmo.$n/data/fof_radar_id*${DATES}${TIMES}0000.nc"
+    if [[ $(ls -A $pattern_fofrad) ]]; then   # ls returns anything?
+        for fof_file in $pattern_fofrad; do
+            if ([[ ! -f $fof_file ]] || [[ ! -s $fof_file ]]); then
+                mo_rad[$n]=N
+                break
+            fi
+        done
+        mo_rad[$n]=Y
+        lmo_rad=$n
+        n_fofrad_ens[$n]=`ls $pattern_fofrad |wc -l`
+    else
+        mo_rad[$n]=N
     fi
 done
+
 # hopefully we have "$lma" = "$lmo" -o -z "$lmo"
 echo "Ensemble member analyses: ${ma[*]}"
 echo "Last available analysis: $lma"
-echo "Ensemble member foffi: ${mo[*]}"
-echo "Last available foffo: $lmo"
+echo "Ensemble member foffi conventional: ${mo_conv[*]}"
+echo "Ensemble member foffi radar: ${mo_rad[*]}"
+echo "Ensemble member number of foffi radar: ${n_fofrad_ens[*]}"
+echo "Last available foffo conventional: $lmo_conv"
+echo "Last available foffo radar: $lmo_rad"
 
-# no analyses available at all, we are in canvas breeches (Bassini),
-# abort
+
+# ---------------------------------------------------------------------------
+# replace analysis
+# ---------------------------------------------------------------------------
+# no analyses available at all, we are in canvas breeches (Bassini), abort
 if [ "$da" != Y -a -z "$lma" ]; then
     exit 1
 fi
 
-# replace analysis
 # deterministic
 if [ "$da" = Y ]; then
     ln -s $WORKDIR/cosmo/data/laf$DATE$TIME \
@@ -71,6 +130,7 @@ else
     ln -s $WORKDIR/cosmo.$lma/data/laf$DATE$TIME \
 	$LETKF_WORKDIR/input/laf${DATE}${TIME}0000
 fi
+
 # ensemble members
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
     n3=`printf "%%03d" $n`
@@ -86,36 +146,123 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
     fi
 done
 
+
+# ---------------------------------------------------------------------------
+# replace foffi
+# ---------------------------------------------------------------------------
+# Are conventional observations available?
+if ([[ "$do_conv" == Y ]] || [[ -n "$lmo_conv" ]]); then
+    conv_obs=Y
+else
+    conv_obs=N
+fi
+echo "Assimilazione osservazioni convenzionali: $conv_obs"
+
+# Ara radar observations available?
+if ([[ "$do_rad" == Y ]] || [[ -n "$lmo_rad" ]]); then
+    rad_obs=Y
+else
+    rad_obs=N
+fi
+echo "Assimilazione osservazioni radar: $rad_obs"
+
 # no observations available at all, tell next job to skip letkf and
 # use det analysis, no foffi are linked, no namelist created
-if [ "$do" != Y -a -z "$lmo" ]; then
+if ([[ "$conv_obs" == N ]] && [[ "$rad_obs" == N ]]); then
     touch $LETKF_WORKDIR/letkf_skip
     exit 0
 fi
 
-# replace foffi
-# deterministic
-if [ "$do" = Y ]; then
+# If there are fof of radar observations, save their prefix to be added to 
+# namelist variable "fof_prefix"
+if [[ "$do_rad" == Y ]]; then 
+    FOF_RAD=$(for fofr in ${WORKDIR}/cosmo/data/fof_radar_id*; \
+                    do if [ -f $fofr ]; then \
+                        dumf=$(basename $fofr)
+                        echo -n \'${dumf:0:19}\' \ ; fi; done)
+elif ([[ "$do_rad" == N ]] && [[ -n "$lmo_rad" ]]); then
+    FOF_RAD=$(for fofr in ${WORKDIR}/cosmo.$lmo_rad/data/fof_radar_id*; \
+                    do if [ -f $fofr ]; then \
+                        dumf=$(basename $fofr)
+                        echo -n \'${dumf:0:19}\' \ ; fi; done)
+fi
+
+# Define namelist variable "fof_prefix"
+if ([[ "$conv_obs" == Y ]] && [[ "$rad_obs" == Y ]]); then
+    export FOF_PRE=`echo \'fof\' $FOF_RAD`
+elif ([[ "$conv_obs" == Y ]] && [[ "$rad_obs" == N ]]); then
+    export FOF_PRE="fof"
+elif ([[ "$conv_obs" == N ]] && [[ "$rad_obs" == Y ]]); then
+    export FOF_PRE=$FOF_RAD
+fi
+
+# deterministic: conventional observations
+if [ "$do_conv" = Y ]; then
     ln -s $WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc \
 	$LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000.nc
-else
-    ln -s $WORKDIR/cosmo.$lmo/data/fof_${DATES}${TIMES}0000.nc \
+elif ([[ "$do_conv" != Y ]] && [[ -n "$lmo_conv" ]]); then
+    ln -s $WORKDIR/cosmo.$lmo_conv/data/fof_${DATES}${TIMES}0000.nc \
 	$LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000.nc
 fi
+
+# deterministic: radar observations
+if [ "$do_rad" = Y ]; then
+    for fofr in $WORKDIR/cosmo/data/fof_radar_id*; do
+        ID=${fofr##*/}
+        ln -fs ${WORKDIR}/cosmo/data/${ID} \
+            ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000.nc
+    done
+elif ([[ "$do_rad" == N ]] && [[ -n "$lmo_rad" ]]); then
+    for fofr in $WORKDIR/cosmo.$lmo_rad/data/fof_radar_id*; do
+        ID=${fofr##*/}
+        ln -fs ${WORKDIR}/cosmo.$lmo_rad/data/${ID} \
+            ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000.nc
+    done
+fi
+
+
 # ensemble members
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
     n3=`printf "%%03d" $n`
-    if [ "${mo[$n]}" = Y ]; then
-	ln -s $WORKDIR/cosmo.$n/data/fof_${DATES}${TIMES}0000.nc \
-	    $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
-    elif [ -n "$lmo" ]; then # use another member
-	ln -s $WORKDIR/cosmo.$lmo/data/fof_${DATES}${TIMES}0000.nc \
-	    $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
-    else # use det
-	ln -s $WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc \
-	    $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
+
+    # conventional observations
+    if [ "$conv_obs" = Y ]; then
+        if [ "${mo_conv[$n]}" = Y ]; then
+        	ln -s $WORKDIR/cosmo.$n/data/fof_${DATES}${TIMES}0000.nc \
+        	    $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
+        elif [ -n "$lmo_conv" ]; then # use another member
+    	    ln -s $WORKDIR/cosmo.$lmo_conv/data/fof_${DATES}${TIMES}0000.nc \
+    	        $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
+        else
+    	    ln -s $WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc \
+    	        $LETKF_WORKDIR/input/fof_${DATES}${TIMES}0000_ens$n3.nc
+        fi
+    fi
+
+    # radar observations
+    if [ "$rad_obs" = Y ]; then
+        if [ "${mo_rad[$n]}" = Y ]; then
+            for fofr in $WORKDIR/cosmo.$n/data/fof_radar_id*; do
+                ID=${fofr##*/}
+                ln -fs ${WORKDIR}/cosmo.$n/data/${ID} \
+                    ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
+            done
+        elif [ -n "$lmo_rad" ]; then # use another member
+            for fofr in $WORKDIR/cosmo.$lmo_rad/data/fof_radar_id*; do
+                ID=${fofr##*/}
+                ln -fs ${WORKDIR}/cosmo.$lmo_rad/data/${ID} \
+                    ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
+            done
+        else
+            for fofr in $WORKDIR/cosmo/data/fof_radar_id*; do
+                ID=${fofr##*/}
+                ln -fs ${WORKDIR}/cosmo/data/${ID} \
+                    ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
+            done
+        fi
     fi
 done
 
-# prepare kenda namelist
+# prepare kenda namelist and remove old files
 conf_template namelist
+rm ekf* || true

@@ -9,12 +9,13 @@
    &REPORT check='NO_OBS'     use='dismiss'  / ! dismiss reports without observations
    &REPORT excl_bnd = 0.67 height_t = 300.   / ! exclude: 0.67 degree lateral, above 300 hPa
    &REPORT type='RADAR' use='active'        / ! use radar data passive only
+   &REPORT type='RADAR' check='OBS_ERR' use='passive' /     ! obs passine negli ekf
 
    !===========================
    ! RADAR observation operator
    !===========================
    &RADAR_OBS
-    use_refl   =  4  ! (11=active) 4=notused, 7=passive radar reflectivity usage flag
+    use_refl   =  11  ! (11=active) 4=notused, 7=passive radar reflectivity usage flag
     use_radvel =  4  ! (11=active) 4=notused radial velocity    usage flag
    ! iprintout  =  0   ! (0=no) steering of printout
    ! split_rprt =  F   ! (T)    create separate record for each radar observation
@@ -28,11 +29,11 @@
    ! RULES for obs
    !================
    &RULES
-!%fl%comment     = 'specific parameters for RADAR'
-!%fl%type        = 1024           ! modtype RADAR
-!%fl%uv%v_loc    = 0.3
-!%fl%uv%h_loc    = 16.0
-!!  uv%ekf_pass = 1
+    comment     = 'specific parameters for RADAR'
+    type        = 1024           ! modtype RADAR
+    o%v_loc    = 0.3
+    o%h_loc    = 16.0
+    o%sgm_fg(1)= 50 !999
 comment     = 'specific parameters for SYNOP'
 type        = 1           ! modtype SYNOP
 q%use       = 7
@@ -44,6 +45,7 @@ t%use       = 7
    !=============================
    &fof_input
    ps_obs_error   = -0.5   !factor to ps obs error (6.0)
+   refl_obs_error = 10
    percent_fg_check = -1.0 ! percentage of fg check hits required for rejection
 /
    !===========================
@@ -195,23 +197,23 @@ t%use       = 7
    alpha = 0.1 !weight of new adaptive computed rho (0.33)
 !  r_factor = 1.0 !factor R is multplied with in adap rho comp.
    det_run = 1 !compute deterministic analysis 
-   adap_loc  = T
+   adap_loc  = F
    nobs_gp   = 100.0
    lh_min    = 50.0
    lh_max    = 100.0
    lv_surf   = 0.075 !0.3
    lv_top    = 0.5   !0.3
    apply_rho = 2
-   apply_rtpp = T
-   apply_rtps = F
+   apply_rtpp = F
+   apply_rtps = T
    rtpp_alpha = 0.75
    adj_wso    = .5 .5 .5 .5 .5 .5 .5 .5
    par_diagn = ''
    par_trans = '+ qr + qs + qg' ! variables to explicitly update (opposites in par_fce)
    par_read  = 'pp t u v w q qcl qci qr qs qg h_ice t_ice'
    par_write = '+ qr + qs + qg' ! '- pp + pf'   ! no SST/SNOW
-   par_fc_en = '+ h_ice + t_ice + freshsnw + rho_snow' ! should be same as par_read (all SST/SNOW variables) + h_snow - pp + pf
-   par_fce   = 'qv_s freshsnw for_e for_d rho_snow tsurf t_snow t_so w_so w_i w_snow h_ice + t_ice T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK ALB_DIF' ! +h_snow ALB_DIF
+   par_fc_en = '+ h_ice + t_ice + freshsnw + rho_snow + qr + qs + qg' ! should be same as par_read (all SST/SNOW variables) + h_snow - pp + pf
+   par_fce   = 'qv_s freshsnw for_e for_d rho_snow tsurf t_snow t_so w_so w_i w_snow h_ice + t_ice T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK ALB_DIF - qr - qs - qg' ! +h_snow ALB_DIF
    par_fcm   = '- qv_s - freshsnw - for_e - for_d - rho_snow - tsurf - t_snow - t_so - w_so - w_i - w_snow'
    par_fc_det = ''! 'SMA_ANA'
    write_grid  = T

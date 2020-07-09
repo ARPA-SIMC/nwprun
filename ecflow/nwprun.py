@@ -103,11 +103,12 @@ class GetObs:
 
     def add_to(self, node):
         fam = node.add_family("get_obs") # experimental is it complete if empty?
-        if self.conf['gts'] or self.conf['lhn']:
+        if self.conf['gts'] or self.conf['lhn'] or self.conf['radarvol']:
 #            SchedEnv("sh").add_to(fam) # interactive because net access required for galileo
 #            fam = node.add_family("get_obs")
             if self.conf['gts']: fam.add_task("get_gts")
             if self.conf['lhn']: fam.add_task("get_radarlhn")
+            if self.conf['radarvol']: fam.add_task("get_radarvol")
 
 # Add a model preprocessing family to a node, to be called by EpsMembers.
 class Preproc:
@@ -264,6 +265,12 @@ class WipeRun:
             task = wipe.add_task("wipe_run")
             task.add_complete("../run == complete")
             task.add_trigger(fulldep) # || ../check_run == aborted")
+
+        # Add variable to recognize the use of radar volumes
+        if self.conf["radarvol"]:
+            node.add_variable("RADVOL", "Y")
+        else:
+            node.add_variable("RADVOL", "N")
 
 # Add basic environment (suite definition variables) to a suite node,
 # usually to root node.

@@ -5,7 +5,7 @@
   dlon=0.02, dlat=0.02,
  /END
  &RUNCTL
-  dt=18.0,
+  dt=@TIME_STEP@,
   hstart=0, hstop=@MODEL_STOP@,
   ydate_ini='@DATES@@TIMES@',
   itype_timing = 1,
@@ -20,6 +20,7 @@
   ltime_barrier=.FALSE.,
   ncomm_type=2,
   luse_rttov=.FALSE.,
+  luse_radarfwo=@ACT_EMVORADO@,
   lartif_data=.FALSE.,
   leps=@ENS_MODE@,
   idbg_level=2,

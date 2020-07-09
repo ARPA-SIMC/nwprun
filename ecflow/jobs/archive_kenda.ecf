@@ -76,3 +76,9 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
 	arkilocal_drop_from_cache
     fi
 done
+
+# Save ekf files for diagnostics
+FS_DATE=$WORKDIR/archive/${DATE}${TIME}
+mkdir -p $WORKDIR/archive
+mkdir -p $FS_DATE
+cp $LETKF_WORKDIR/ekf* $FS_DATE/  || true
