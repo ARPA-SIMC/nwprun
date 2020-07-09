@@ -86,51 +86,61 @@ output_setup() {
     # tolto .$$ da $dirname per semplificare il download
     dirname=${MODEL_SIGNAL}_$DATE$TIME
     check_dir $dirname
-    if [ "$MODEL_SIGNAL" = "cosmo_5M" ]; then
-	putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
+    putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
+
+    case $MODEL_SIGNAL in
+	cosmo_5M*)
 #	dirname_itr=${MODEL_SIGNAL}_itr_$DATE$TIME.$$
 #	putarki_configured_setup $dirname_itr "reftime=$DATE$TIME" "format=grib" "signal=${MODEL_SIGNAL}_itr"
-	dirname_vprof=${MODEL_SIGNAL}_vprof_$DATE$TIME
-	check_dir $dirname_vprof
-	putarki_configured_setup $dirname_vprof "reftime=$DATE$TIME" "format=bufr" "signal=${MODEL_SIGNAL}_vprof"
+	    dirname_vprof=${MODEL_SIGNAL}_vprof_$DATE$TIME
+	    check_dir $dirname_vprof
+	    putarki_configured_setup $dirname_vprof "reftime=$DATE$TIME" "format=bufr" "signal=${MODEL_SIGNAL}_vprof"
 #	dirname_medl=${MODEL_SIGNAL}_medl_$DATE$TIME.$$
 #	putarki_configured_setup $dirname_medl "reftime=$DATE$TIME" "format=grib" "signal=${MODEL_SIGNAL}_medl"
-    else
-	putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
-    fi
+	    ;;
+#	*)
+#	    :
+#	    ;;
+    esac
 }
 
 
 output_process() {
 
-    if [ "$MODEL_SIGNAL" = "cosmo_5M" ]; then
-	putarki_configured_archive $dirname $1
-	cd $LAMI_CINECA_WORKDIR
-	make_itr $OLDPWD/$1 ${1}_itr
-        putarki_configured_archive $dirname $LAMI_CINECA_WORKDIR/${1}_itr
+    putarki_configured_archive $dirname $1
+    case $MODEL_SIGNAL in
+	cosmo_5M*)
+	    cd $LAMI_CINECA_WORKDIR
+	    make_itr $OLDPWD/$1 ${1}_itr
+            putarki_configured_archive $dirname $LAMI_CINECA_WORKDIR/${1}_itr
 #	make_prof ${1}_itr ${1}_vprof
 #        putarki_configured_archive $dirname_vprof $LAMI_CINECA_WORKDIR/${1}_vprof
-	make_medl $OLDPWD/$1 $LAMI_CINECA_WORKDIR/${1}_medl
-        putarki_configured_archive $dirname $LAMI_CINECA_WORKDIR/${1}_medl
+	    make_medl $OLDPWD/$1 $LAMI_CINECA_WORKDIR/${1}_medl
+            putarki_configured_archive $dirname $LAMI_CINECA_WORKDIR/${1}_medl
 # consider also e.g. ../dataoutput_med/$1
-	cd -
-    else
-	putarki_configured_archive $dirname $1
-    fi
+	    cd -
+	    ;;
+#	*)
+#	    :
+#	    ;;
+    esac
 
 }
 
 
 output_end() {
 
-    if [ "$MODEL_SIGNAL" = "cosmo_5M" ]; then
-	putarki_configured_end $dirname
+    putarki_configured_end $dirname
+    case $MODEL_SIGNAL in
+	cosmo_5M*)
 #        putarki_configured_end $dirname_itr
-        putarki_configured_end $dirname_vprof
+            putarki_configured_end $dirname_vprof
 #        putarki_configured_end $dirname_medl
-    else
-	putarki_configured_end $dirname
-    fi
+	    ;;
+#	*)
+#	    :
+#	    ;;
+    esac
 
 }
 
@@ -212,9 +222,6 @@ lami_cineca_get() {
 
     # reset for testing
     set -x
-    mkdir -p $LAMI_CINECA_WORKDIR
-
-
     exec >>$LOGDIR/`basename $0`.log 2>&1
 
     restore_state lami_cineca_get.state || touch $NWPCONFDIR/$NWPCONF/lami_cineca_get.state
@@ -238,7 +245,13 @@ lami_cineca_get() {
     CINECA_SUITEDIR=`eval echo $CINECA_SUITEDIR`
     CINECA_GRIBOUTDIR=`eval echo $CINECA_GRIBOUTDIR`
     # check datetime of available run    
+    if [ ! -f "$CINECA_SUITEDIR/INPUT_ORG" ]; then # transition state
+	exit 0
+    fi
     curdate=`grep 'ydate_ini *=' $CINECA_SUITEDIR/INPUT_ORG|sed -e "s/^.*'\([0-9]*\)'.*$/\1/g"`
+
+    mkdir -p $LAMI_CINECA_WORKDIR
+
     if [ "$curdate" -eq "$DATES$TIMES" ]; then
 	putarki_configured_model_output_cineca $(($MODEL_STOP + 1))
 	save_state lami_cineca_get.state DATETIME
