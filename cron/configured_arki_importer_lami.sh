@@ -45,7 +45,7 @@ import_configured_end() {
 import_one() {
 
     case $1 in
-	./generic/configured/*)
+	./configured/*)
 	    upfile=${1##*/}
 	    updir=${1%/*}
 	    case $upfile in

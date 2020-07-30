@@ -34,7 +34,7 @@ dl_ftp() {
 		    putarki_configured_archive $1 $file
 # dirty trick for syncing to galileo
 		    if [ "$HPC_SYSTEM" = "meucci" ]; then
-			rsync -a $file login09.galileo.cineca.it:/gpfs/meteo/lami/import/generic/configured/$dirname || true
+			rsync -a $file login09.galileo.cineca.it:/gpfs/meteo/lami/import/configured/$dirname:$DATE$TIME:$ENS_MEMB:.$$ || true
 		    fi		    
 		    rm -f $file
 		done
