@@ -68,9 +68,10 @@ else # deterministic run or analysis
     esac
 # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki
-# setup for remote import
+# setup for remote import and download
     ARKI_SCAN_METHOD=configured_importer
     ARKI_IMPDIR=$WORKDIR_BASE/import_sync
+    ARKI_DLDIR=$WORKDIR_BASE/download
     MODEL_SIGNAL=cosmo_2I_assim
 fi
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive

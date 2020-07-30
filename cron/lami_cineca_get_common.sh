@@ -83,17 +83,16 @@ check_dir() {
 
 output_setup() {
 
-    # tolto .$$ da $dirname per semplificare il download
-    dirname=${MODEL_SIGNAL}_$DATE$TIME
-    check_dir $dirname
+    dirname=${MODEL_SIGNAL}
+#    check_dir $dirname
     putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
 
     case $MODEL_SIGNAL in
 	cosmo_5M*)
 #	dirname_itr=${MODEL_SIGNAL}_itr_$DATE$TIME.$$
 #	putarki_configured_setup $dirname_itr "reftime=$DATE$TIME" "format=grib" "signal=${MODEL_SIGNAL}_itr"
-	    dirname_vprof=${MODEL_SIGNAL}_vprof_$DATE$TIME
-	    check_dir $dirname_vprof
+	    dirname_vprof=${MODEL_SIGNAL}_vprof
+#	    check_dir $dirname_vprof
 	    putarki_configured_setup $dirname_vprof "reftime=$DATE$TIME" "format=bufr" "signal=${MODEL_SIGNAL}_vprof"
 #	dirname_medl=${MODEL_SIGNAL}_medl_$DATE$TIME.$$
 #	putarki_configured_setup $dirname_medl "reftime=$DATE$TIME" "format=grib" "signal=${MODEL_SIGNAL}_medl"
@@ -160,8 +159,6 @@ putarki_configured_model_output_cineca() {
     NWPWAITSOLAR=
     nwpwait_setup
     output_setup
-#    dirname=${MODEL_SIGNAL}_$DATE$TIME.$$
-#    putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
 
     while true; do
 # this is done here in case the directory is removed and recreated

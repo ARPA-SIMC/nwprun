@@ -15,7 +15,7 @@ set -x
 if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
 #    putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.det
 # change signal here
-    dirname=${MODEL_SIGNAL}_$DATE$TIME.$$
+    dirname=${MODEL_SIGNAL}_kenda
     putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
     putarki_configured_archive $dirname $LETKF_DATADIR/laf${DATE}${TIME}0000.det
     putarki_configured_end $dirname
