@@ -127,11 +127,11 @@ safe_rm_rf $COSMO_AM_ENDA_WORKDIR
 mkdir -p $COSMO_AM_ENDA_WORKDIR
 cd $COSMO_AM_ENDA_WORKDIR
 
-dirname=cosmo_am_enda_$DATETIME.$$
+dirname=cosmo_am_enda
 putarki_configured_setup $dirname "reftime=$DATETIME" "format=grib" "signal=cosmo_am_enda"
-# dirty trick for syncing to galileo
+# dirty trick for syncing to galileo, improve :$DATE$TIME:$ENS_MEMB:.$$!!!
 if [ "$HPC_SYSTEM" = "meucci" ]; then
-    rsync -a $ARKI_IMPDIR/configured/$dirname login09.galileo.cineca.it:/gpfs/meteo/lami/import/generic/configured || true
+    rsync -a $ARKI_IMPDIR/configured/$dirname:$DATE$TIME:$ENS_MEMB:.$$ login09.galileo.cineca.it:/gpfs/meteo/lami/import/configured || true
 fi
 nwpwait_setup
 
@@ -146,7 +146,7 @@ done
 putarki_configured_end $dirname
 # dirty trick for syncing to galileo
 if [ "$HPC_SYSTEM" = "meucci" ]; then
-    rsync -a $ARKI_IMPDIR/configured/$dirname/end.sh login09.galileo.cineca.it:/gpfs/meteo/lami/import/generic/configured/$dirname || true
+    rsync -a $ARKI_IMPDIR/configured/$dirname:$DATE$TIME:$ENS_MEMB:.$$/end.sh login09.galileo.cineca.it:/gpfs/meteo/lami/import/configured/$dirname:$DATE$TIME:$ENS_MEMB:.$$ || true
 fi
 
 if [ -n "$1" ]; then # interactive run

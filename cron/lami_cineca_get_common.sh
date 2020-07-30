@@ -221,6 +221,8 @@ lami_cineca_get() {
     set -x
     exec >>$LOGDIR/`basename $0`.log 2>&1
 
+    # temporary to avoid double archiving, improve
+    unset ARKI_IMPDIR
     restore_state lami_cineca_get.state || touch $NWPCONFDIR/$NWPCONF/lami_cineca_get.state
 
     if [ -z "$DATETIME" ]; then # set minimum datetime

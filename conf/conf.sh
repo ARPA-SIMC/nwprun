@@ -47,9 +47,4 @@ BUFR_ARKI_DS_CONV="$ARKI_URL/cnmc_buoy $ARKI_URL/cnmc_pilot $ARKI_URL/cnmc_ship1
 BUFR_ARKI_DS_NOCONV="$ARKI_URL/cnmc_amdar146"
 FREQ_FILE_BUFR=3
 
-# ensemble prediction moved to nwpconf/cosmo_model
-#ENS_MODE=.FALSE.
-#if [ -n "$ENS_TOTAL_MEMB" -a -n "$ENS_MEMB" ]; then
-#    ENS_MODE=.TRUE.
-#fi
 

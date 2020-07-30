@@ -112,7 +112,7 @@ safe_rm_rf $COSMO_AM_EPS_WORKDIR
 mkdir -p $COSMO_AM_EPS_WORKDIR
 cd $COSMO_AM_EPS_WORKDIR
 
-dirname=cosmo_am_eps_fc_$DATETIME.$$
+dirname=cosmo_am_eps_fc
 putarki_configured_setup $dirname "reftime=$DATETIME" "format=grib" "signal=cosmo_am_eps"
 nwpwait_setup
 
