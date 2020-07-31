@@ -73,12 +73,15 @@ set -e
 
 # move these to ~/.nwpconf !!!
 ARKI_SCAN_METHOD=configured_arki_importer
-ARKI_IMPSSH=arki-imp@lami.hpc.cineca.it:/arkimet/arki-imp/generic
+ARKI_IMPSSH=arki-imp@lami.hpc.cineca.it:/arkimet/arki-imp
 #ARKI_IMPSSH=arki-imp@lami.hpc.cineca.it:~arki-imp/test
 #ARKI_IMPSSH=arki-imp@131.175.199.95:/arkimet/arki-imp/generic
 ARKI_IMPDIR=$WORKDIR_BASE/import_sync
 
 nonunique_exit
+# redirect all to logfile
+exec >>$LOGDIR/`basename $0`.log 2>&1
+
 set -x
 
 # security check
