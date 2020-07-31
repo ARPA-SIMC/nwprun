@@ -95,7 +95,7 @@ safe_rm_rf $BUFR_IT_WORKDIR
 mkdir -p $BUFR_IT_WORKDIR
 cd $BUFR_IT_WORKDIR
 
-dirname=bufr_it_$DATETIME.$$
+dirname=bufr_it
 # change signal name to bufr_it
 putarki_configured_setup $dirname "reftime=$DATETIME" "format=bufr" "signal=cnmc_bufr"
 nwpwait_setup

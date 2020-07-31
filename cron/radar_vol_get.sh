@@ -96,7 +96,7 @@ else
             [ -n "$mustreload" ] && exec "$0" "$@" || true
 	done
 
-	dirname=radar_vol_$DATE$TIME.$$
+	dirname=radar_vol
 	putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=odim" "signal=radar_vol" "signalfile=Y"
 	dl_ftp $dirname || true
 
