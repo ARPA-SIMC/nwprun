@@ -1,11 +1,10 @@
-BUFR_WORKDIR=$WORKDIR/bufr
 BUFR_IT_WORKDIR=$WORKDIR/bufr_it
-case "$HOSTNAME" in
+case "$HPC_SYSTEM" in
   *.metarpa | maial* ) # Arpae
 	FTPDIR="BUFR/"
 	OBSTYPES="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNN SYNO TEMP"
     ;;
-  lami* ) # Cineca cloud
+  lami* | galileo | meucci ) # Cineca cloud
 	FTPDIR=""
 	OBSTYPES="AIRC AMDA AMDN B002 B004 OCEA PILO SHIP SYNN SYNO TEMP"
     ;;
