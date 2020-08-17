@@ -22,6 +22,16 @@ make_itr()
     log "end make_itr"
 }
 
+make_nit()
+{
+    log "start make_nit $1"
+    # area nit, nord Italia dal cosmo 2I con conservazione dello staggering
+    time vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=coord \
+        --ilon=5.61 --ilat=42.52 --flon=18. --flat=48.01 \
+        $1 $2
+    log "end make_nit"
+}
+
 make_medl()
 {
     log "start make_medl $1"
@@ -117,6 +127,12 @@ output_process() {
 	    make_medl $OLDPWD/$1 $LAMI_CINECA_WORKDIR/${1}_medl
             putarki_configured_archive $dirname $LAMI_CINECA_WORKDIR/${1}_medl
 # consider also e.g. ../dataoutput_med/$1
+	    cd -
+	    ;;
+	cosmo_2I*)
+	    cd $LAMI_CINECA_WORKDIR
+	    make_nit $OLDPWD/$1 ${1}_nit
+            putarki_configured_archive $dirname $LAMI_CINECA_WORKDIR/${1}_nit
 	    cd -
 	    ;;
 #	*)
