@@ -15,6 +15,12 @@ set -e
 . $NWPCONFBINDIR/putarki.sh
 # end of setup
 
+nonunique_exit
+
+# redirect all to logfile
+exec >>$LOGDIR/`basename $0`.log 2>&1
+set -x
+
 # clean import_sync
 ARKI_IMPDIR=$WORKDIR_BASE/import_sync
 unset ARKI_DLDIR
