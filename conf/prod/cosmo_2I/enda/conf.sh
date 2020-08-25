@@ -12,6 +12,10 @@ MODEL_FREQINI=3
 ENS_TOTAL_MEMB=36
 ENS_DET_MEMB=Y
 
+# warning ARKI_DIR is redefined later for other purposes, find a better way!
+BUFR_ARKI_DS_CONV=$ARKI_DIR/bufr_it_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_DIR/bufr_it_noconv
+
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then
     case $TIME in
@@ -28,6 +32,7 @@ if [ -n "$ENS_MEMB" ]; then
 	    MODEL_DELTABD=6
 	    ;;
     esac
+# warning ARKI_DIR is redefined later for other purposes, find a better way!
 #    PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
     PARENTMODEL_ARKI_DS=$ARKI_DIR/cosmo_am_enda
     PARENTMODEL_SIGNAL=cosmo_am_enda

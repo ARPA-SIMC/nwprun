@@ -271,8 +271,7 @@ lami_cineca_get() {
 	putarki_configured_model_output_cineca $(($MODEL_STOP + 1))
 	save_state lami_cineca_get.state DATETIME
     elif [ "$curdate" -gt "$DATES$TIMES" ]; then
-	# requested date is no more available, switch to next run
-	DATETIME=`datetime_add $DATETIME $MODEL_FREQINI`
+	# requested date is no more available, consider it done
 	save_state lami_cineca_get.state DATETIME
     fi
     
