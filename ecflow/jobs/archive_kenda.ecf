@@ -8,39 +8,40 @@
 . $NWPCONFBINDIR/putarki.sh
 . $NWPCONFBINDIR/arkilocal.sh
 . $NWPCONFBINDIR/arki_tools.sh
+. $NWPCONFBINDIR/lami_postproc.sh
 # end of setup
 
 set -x
 # archive first on remote server
-if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
-#    putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.det
+detfile=$LETKF_DATADIR/laf${DATE}${TIME}0000.det
+if [ -f "$detfile" ]; then
 # change signal here
     dirname=${MODEL_SIGNAL}_kenda
     putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
-    putarki_configured_archive $dirname $LETKF_DATADIR/laf${DATE}${TIME}0000.det
+    putarki_configured_archive $dirname $detfile grib
+    for ppc in ${POSTPROC_LIST[*]}; do
+	ext=${ppc##*_}
+	$ppc $detfile ${detfile}_${ext}
+	putarki_configured_archive $dirname ${detfile}_${ext} $POSTPROC_FORMAT
+	rm -f ${detfile}_${ext}
+    done
     putarki_configured_end $dirname
 fi
 
 # then archive locally for other suites
 if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
 if [ "$TIME" = "21" ]; then
-# transfer to marconi for ensemble forecast, use rsync to create
-# temporary file during copy
     mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
     rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA
 # for galileo do remote copy:
     if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
-#    ext=${LETKF_DATADIR#$WORKDIR}
-#    remdir=/marconi_scratch/usera07smr/a07smr03/$NWPCONF/$ext
-#    host=login.marconi.cineca.it
-#    ssh $host mkdir -p $remdir || true
         rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
     fi
 else
-    mkdir -p $WORKDIR/archive
-    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA
+    mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
+    rsync -pt $detfile $MODEL_ARCHIVE_OUTPUT_ANA
     if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
-        rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.det $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
+        rsync -pt $detfile $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
     fi
 fi
 if [ "$TIME" = "00" ]; then # clean data at least one month old
@@ -52,10 +53,10 @@ fi
 fi
 
 # finally archive locally, for next suite cycle, including daily cleaning
-if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.det" ]; then
+if [ -f "$detfile" ]; then
     arkilocal_setup
     arkilocal_create
-    time putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.det
+    time putarki_archive grib $detfile
     if [ "$TIME" = "00" ]; then
         arki_dailycleanup $ARKI_CONF 6 12
     fi
