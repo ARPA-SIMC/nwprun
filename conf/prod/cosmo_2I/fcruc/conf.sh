@@ -34,7 +34,8 @@ esac
 ENS_TOTAL_MEMB=0
 # setup for remote import
 ARKI_SCAN_METHOD=configured_importer
-ARKI_IMPDIR=$WORKDIR_BASE/import_sync
+unset ARKI_IMPDIR
+ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
 MODEL_SIGNAL=cosmo_2I_fcruc
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki

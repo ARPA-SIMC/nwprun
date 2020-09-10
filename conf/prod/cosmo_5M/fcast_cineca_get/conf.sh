@@ -2,6 +2,7 @@ MODEL_SIGNAL=cosmo_5M
 ARKI_DLDIR=$WORKDIR_BASE/download
 # modificare
 LAMI_CINECA_WORKDIR=$WORKDIR_BASE/download/work/$MODEL_SIGNAL
+POSTPROC_LIST=(lami_make_itr lami_make_medl) # lami_make_vprof
 
 # $TIME deve essere protetto perche' non e' ancora noto, lo sviluppo con eval
 if [ "$HPC_SYSTEM" = "galileo" ]; then

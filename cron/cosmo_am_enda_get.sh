@@ -28,14 +28,7 @@ dl_ftp() {
 		for file in $tmpdir/*; do
                     nmemb=${file##*l?ff????0000_}
                     nmemb=${nmemb%%_*.grb}
-		    # grib_set -s 'subCentre=98,setLocalDefinition=28,localDefinitionNumber=28,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=1,numberOfForecastsInEnsemble=20,baseDateEPS=20161130,baseTimeEPS=00,numberOfRepresentativeMember=0,numberOfMembersInCluster=20,totalInitialConditions=20' input.raw cleps.out
-                    # grib_set -s "subCentre=98,setLocalDefinition=1,localDefinitionNumber=1,marsClass=co,marsType=pf,marsStream=enfo,experimentVersionNumber=0001,perturbationNumber=$nmemb,numberOfForecastsInEnsemble=40" $file $file.ls.grib
-		    # grib_set -s "typeOfProcessedData=5,productDefinitionTemplateNumber=1,typeOfGeneratingProcess=4,typeOfEnsembleForecast=192,perturbationNumber=$nmemb,numberOfForecastsInEnsemble=40" $file $file.ls.grib
 		    putarki_configured_archive $1 $file
-# dirty trick for syncing to galileo
-		    if [ "$HPC_SYSTEM" = "meucci" ]; then
-			rsync -a $file login09.galileo.cineca.it:/gpfs/meteo/lami/import/configured/$dirname:$DATE$TIME:$ENS_MEMB:.$$ || true
-		    fi		    
 		    rm -f $file
 		done
 		safe_rm_rf $tmpdir
@@ -129,10 +122,6 @@ cd $COSMO_AM_ENDA_WORKDIR
 
 dirname=cosmo_am_enda
 putarki_configured_setup $dirname "reftime=$DATETIME" "format=grib" "signal=cosmo_am_enda"
-# dirty trick for syncing to galileo, improve :$DATE$TIME:$ENS_MEMB:.$$!!!
-if [ "$HPC_SYSTEM" = "meucci" ]; then
-    rsync -a $ARKI_IMPDIR/configured/$dirname:$DATE$TIME:$ENS_MEMB:.$$ login09.galileo.cineca.it:/gpfs/meteo/lami/import/configured || true
-fi
 nwpwait_setup
 
 # Create array of files to be downloaded
@@ -144,10 +133,6 @@ while true; do
 done
 
 putarki_configured_end $dirname
-# dirty trick for syncing to galileo
-if [ "$HPC_SYSTEM" = "meucci" ]; then
-    rsync -a $ARKI_IMPDIR/configured/$dirname:$DATE$TIME:$ENS_MEMB:.$$/end.sh login09.galileo.cineca.it:/gpfs/meteo/lami/import/configured/$dirname:$DATE$TIME:$ENS_MEMB:.$$ || true
-fi
 
 if [ -n "$1" ]; then # interactive run
     :
