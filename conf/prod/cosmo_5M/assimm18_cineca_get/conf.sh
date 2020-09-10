@@ -2,13 +2,14 @@ MODEL_SIGNAL=cosmo_5M_assimm18
 ARKI_DLDIR=$WORKDIR_BASE/download
 # modificare
 LAMI_CINECA_WORKDIR=$WORKDIR_BASE/download/work/$MODEL_SIGNAL
+POSTPROC_LIST=(lami_make_itr lami_make_medl) # lami_make_vprof
 
 # $TIME deve essere protetto perche' non e' ancora noto, lo sviluppo con eval
 if [ "$HPC_SYSTEM" = "galileo" ]; then
   CINECA_SUITEDIR='/gpfs/meteo/LM_WorkDir/galileo/lm/PROD/work/$TIME/lm5/ope/analysis_m18h'
   CINECA_GRIBOUTDIR='$CINECA_SUITEDIR/dataoutput'
 else
-  CINECA_SUITEDIR='/meucci_meteo/LM_WorkDir/galileo/lm/PROD/work/$TIME/lm5/ope/analysis_m18h'
+  CINECA_SUITEDIR='/meucci_meteo/LM_WorkDir/meucci/lm/PROD/work/$TIME/lm5/ope/analysis_m18h'
   CINECA_GRIBOUTDIR='$CINECA_SUITEDIR/dataoutput'
 fi
 

@@ -9,7 +9,7 @@ if [ "$HPC_SYSTEM" = "galileo" ]; then
   CINECA_SUITEDIR='/gpfs/meteo/LM_WorkDir/galileo/lm/PROD/work/$TIME/lm5/ope/forecast'
   CINECA_GRIBOUTDIR='$CINECA_SUITEDIR/dataoutput'
 else
-  CINECA_SUITEDIR='/meucci_meteo/LM_WorkDir/galileo/lm/PROD/work/$TIME/lm5/ope/forecast'
+  CINECA_SUITEDIR='/meucci_meteo/LM_WorkDir/meucci/lm/PROD/work/$TIME/lm5/ope/forecast'
   CINECA_GRIBOUTDIR='$CINECA_SUITEDIR/dataoutput'
 fi
 
