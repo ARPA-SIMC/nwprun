@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. ./lami_cineca_get_common.sh
+. ./cineca_get_common.sh
 
 unset LANG
 basedir=$OPE
