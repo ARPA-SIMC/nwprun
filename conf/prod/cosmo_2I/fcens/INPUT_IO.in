@@ -34,8 +34,10 @@
   lana_qi    = .TRUE.,
   llb_qi     = .TRUE.,
 ! should be ~MODEL_FAST_ASSIM
-  lana_qr_qs = @PARENTMODEL_QRQS@,
+  lana_qr_qs = @COSMO_FAST_NML@,
   llb_qr_qs = @PARENTMODEL_QRQS@,
+  lana_qg = @COSMO_FAST_NML@,
+  llb_qg = .FALSE.
  /END
   lbd_frame=.TRUE.,
  &GRIBOUT
