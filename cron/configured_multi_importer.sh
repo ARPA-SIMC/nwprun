@@ -108,7 +108,22 @@ import_one() {
 		    # sync only after start
 		    if [ -f "$updir/started.sh" ]; then
 			log "start syncing configured $1"
-			(safe_source $syncconf; cd $syncdir; if [[ ! "$syncsubdir/$upfile" == $exclude ]]; then rsync -ptR --chmod=ug=rwX --remove-source-files ./$syncsubdir/$upfile $sync_dest; else rm -f $syncsubdir/$upfile; fi)
+			(
+			    safe_source $syncconf
+			    cd $syncdir
+			    excluded=
+			    for excl in ${exclude[*]}; do
+				# next condition performs pattern matching
+				if [[ "$syncsubdir/$upfile" == $excl ]]; then
+				    excluded=Y
+				fi
+			    done
+			    if [ -z "$excluded" ]; then
+				rsync -ptR --chmod=ug=rwX --remove-source-files ./$syncsubdir/$upfile $sync_dest
+			    else
+				rm -f $syncsubdir/$upfile
+			    fi
+			)
 			log "done syncing $1"
 		    elif [ ! -f "$updir/start.sh" ]; then
 			# erroneous situation, avoid repeating suddendly
