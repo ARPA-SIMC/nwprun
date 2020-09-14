@@ -22,7 +22,7 @@ if [ -f "$detfile" ]; then
     for ppc in ${POSTPROC_LIST[*]}; do
 	ext=${ppc##*_}
 	$ppc $detfile ${detfile}_${ext}
-	putarki_configured_archive $dirname ${detfile}_${ext} $POSTPROC_FORMAT
+	[ -s "${detfile}_${ext}" ] && putarki_configured_archive $dirname ${detfile}_${ext} $POSTPROC_FORMAT
 	rm -f ${detfile}_${ext}
     done
     putarki_configured_end $dirname

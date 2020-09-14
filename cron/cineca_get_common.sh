@@ -46,7 +46,7 @@ putarki_configured_model_output_cineca() {
 		    for ppc in ${POSTPROC_LIST[*]}; do
 			ext=${ppc##*_}
 			$ppc $gfile $LAMI_CINECA_WORKDIR/${gfile}_${ext}
-			putarki_configured_archive $dirname $LAMI_CINECA_WORKDIR/${gfile}_${ext} $POSTPROC_FORMAT
+			[ -s "$LAMI_CINECA_WORKDIR/${gfile}_${ext}" ] && putarki_configured_archive $dirname $LAMI_CINECA_WORKDIR/${gfile}_${ext} $POSTPROC_FORMAT
 			rm -f $LAMI_CINECA_WORKDIR/${gfile}_${ext}
 		    done
                 done
