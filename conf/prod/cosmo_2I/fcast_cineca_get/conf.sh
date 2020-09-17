@@ -1,5 +1,8 @@
 MODEL_SIGNAL=cosmo_2I
 ARKI_DLDIR=$WORKDIR_BASE/download
+if [ "$HPC_SYSTEM" = "galileo" ]; then
+    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
+fi
 # modificare
 LAMI_CINECA_WORKDIR=$WORKDIR_BASE/download/work/$MODEL_SIGNAL
 POSTPROC_LIST=(lami_make_nit)
