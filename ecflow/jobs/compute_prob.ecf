@@ -67,7 +67,11 @@ done
 
 dirname=${MODEL_SIGNAL}_prob_$DATE$TIME.$$
 putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
-putarki_configured_archive $dirname $FXTR_DATADIR/*.grib
+for file in $FXTR_DATADIR/*.grib; do
+    if [ -f "$file" ]; then
+        putarki_configured_archive $dirname $file
+    fi
+done
 putarki_configured_end $dirname
 
 # copy to archive
