@@ -16,7 +16,7 @@ import_configured() {
 	format="$format:"
     fi
     log "importing configured $format$2"
-    time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null
+    time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
     if [ -n "$signalfile" -a -n "$signal" ]; then
 	import_signal_imported "$signal" $reftime $2
     fi
