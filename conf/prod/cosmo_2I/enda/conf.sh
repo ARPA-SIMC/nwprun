@@ -79,7 +79,7 @@ else # deterministic run or analysis
     ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
     ARKI_DLDIR=$WORKDIR_BASE/download
     POSTPROC_LIST=(lami_make_nit)
-    MODEL_SIGNAL=cosmo_2I_assim
+    MODEL_SIGNAL=cosmo_2I_assim_kenda
 fi
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive
 MODEL_ARCHIVE_OUTPUT_ANA_REMOTE=$CINECA_ARCHIVE_REMOTE:$CINECA_ARCHIVE_REMOTE_ANA
