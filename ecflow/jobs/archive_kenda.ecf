@@ -16,7 +16,8 @@ set -x
 detfile=$LETKF_DATADIR/laf${DATE}${TIME}0000.det
 if [ -f "$detfile" ]; then
 # change signal here
-    dirname=${MODEL_SIGNAL}_kenda
+    MODEL_SIGNAL=${MODEL_SIGNAL}_kenda
+    dirname=$MODEL_SIGNAL
     putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
     putarki_configured_archive $dirname $detfile grib
     for ppc in ${POSTPROC_LIST[*]}; do
