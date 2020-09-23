@@ -137,6 +137,7 @@ import_one() {
 	    log "start importing generic $1"
 	    # improve error checking
 	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null || true
+	    rm -f $1
 	    log "done importing $1"
 	    ;;
 	*)
