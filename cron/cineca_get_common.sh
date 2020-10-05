@@ -110,10 +110,11 @@ lami_cineca_get() {
     # reinit the nwptime module in order to compute DATES and TIMES
     # based on new DATE and TIME
     nwptime_init
-    # almost useless
-    #    unset NWPWAITWAIT
-    #    nwpwait_setup
-    #    nwpwait_wait && exit 0 # too early, try next time
+    # init wait module
+    NWPWAITSOLAR_SAVE=$NWPWAITSOLAR
+    NWPWAITSOLAR=$NWPWAITSOLAR_RUN
+    nwpwait_setup
+    nwpwait_check && exit 0 || true # too early, try next time
 
     # dirty trick since $TIME is not known until now
     CINECA_SUITEDIR=`eval echo $CINECA_SUITEDIR`
@@ -132,6 +133,12 @@ lami_cineca_get() {
     elif [ "$curdate" -gt "$DATES$TIMES" ]; then
 	# requested date is no more available, consider it done
 	save_state lami_cineca_get.state DATETIME
+    else # -lt
+	NWPWAITSOLAR=$NWPWAITSOLAR_SAVE
+	nwpwait_setup
+	if ! nwpwait_check; then # if too late declare it done
+	    save_state lami_cineca_get.state DATETIME
+	fi
     fi
     
     safe_rm_rf $LAMI_CINECA_WORKDIR
