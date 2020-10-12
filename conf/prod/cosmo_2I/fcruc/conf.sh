@@ -36,6 +36,7 @@ ENS_TOTAL_MEMB=0
 ARKI_SCAN_METHOD=configured_importer
 unset ARKI_IMPDIR
 ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
+ARKI_DLDIR=$WORKDIR_BASE/download
 MODEL_SIGNAL=cosmo_2I_fcruc
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki
