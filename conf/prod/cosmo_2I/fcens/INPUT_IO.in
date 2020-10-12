@@ -48,7 +48,7 @@
   luvmasspoint=.FALSE.,
   yvarml='PS      ','PMSL    ','RAIN_GSP','SNOW_GSP','TOT_PREC',
          'U_10M   ','V_10M   ','T_2M    ','TD_2M   ',
-         'CLCT    ','CAPE_ML ','SI      ',
+         'CLCT    ','CAPE_ML ','SI      ','VMAX_10M'
   yvarpl='T       ','FI      ','QV      '
   yvarzl=' ',
   yvarsl=' ',
