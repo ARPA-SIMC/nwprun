@@ -58,6 +58,8 @@ for delta in 01 03 24; do
 done
 conf_template fxtr_wspeedp1h.nl
 $FXTR_BIN fxtr_wspeedp1h.nl
+conf_template fxtr_wmaxp1h.nl
+$FXTR_BIN fxtr_wmaxp1h.nl
 
 # correct grib table number for old grib_api versions
 for file in $FXTR_DATADIR/*.grib; do
