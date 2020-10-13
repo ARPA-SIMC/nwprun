@@ -19,14 +19,12 @@ nonunique_exit
 
 # redirect all to logfile
 exec >>$LOGDIR/`basename $0`.log 2>&1
-set -x
+#set -x
 
-# clean import_sync
-ARKI_IMPDIR=$WORKDIR_BASE/import_sync
-unset ARKI_DLDIR
+# clean import
 putarki_configured_dailycleanup 5
 
-# clean import and download
-ARKI_IMPDIR=$WORKDIR_BASE/import
+# clean import_sync and download
+ARKI_IMPDIR=$WORKDIR_BASE/import_sync
 ARKI_DLDIR=$WORKDIR_BASE/download
 putarki_configured_dailycleanup 5
