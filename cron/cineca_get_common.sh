@@ -13,7 +13,6 @@ check_dir() {
 putarki_configured_model_output_cineca() {
 
 # initialisations
-#    local workdir=$PWD
     local nrfiles=$1
     local rfile
     declare -A statuslist
@@ -23,7 +22,6 @@ putarki_configured_model_output_cineca() {
     else
         NWPWAITWAIT=$PUTARKI_WAITSTART
     fi
-    NWPWAITSOLAR=
     nwpwait_setup
     # check MODEL_SIGNAL?
     dirname=${MODEL_SIGNAL}
@@ -67,7 +65,8 @@ putarki_configured_model_output_cineca() {
                 return
             fi
 # check end of time and wait if necessary (i.e. if not using inotify)
-            nwpwait_wait
+# if time expires return without error in order to go ahead
+            nwpwait_wait || return
         fi
     done
 
@@ -127,6 +126,7 @@ lami_cineca_get() {
 
     mkdir -p $LAMI_CINECA_WORKDIR
 
+    NWPWAITSOLAR=$NWPWAITSOLAR_SAVE
     if [ "$curdate" -eq "$DATES$TIMES" ]; then
 	putarki_configured_model_output_cineca $(($MODEL_STOP + 1))
 	save_state lami_cineca_get.state DATETIME
@@ -134,7 +134,6 @@ lami_cineca_get() {
 	# requested date is no more available, consider it done
 	save_state lami_cineca_get.state DATETIME
     else # -lt
-	NWPWAITSOLAR=$NWPWAITSOLAR_SAVE
 	nwpwait_setup
 	if ! nwpwait_check; then # if too late declare it done
 	    save_state lami_cineca_get.state DATETIME
