@@ -1,6 +1,6 @@
 MODEL_SIGNAL=cosmo_5M
 ARKI_DLDIR=$WORKDIR_BASE/download
-if [ "$HPC_SYSTEM" = "galileo" ]; then
+if [ -n "$CINECA_MAIN_SYSTEM" ]; then
     ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
 fi
 # modificare
