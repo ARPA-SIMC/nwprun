@@ -66,7 +66,7 @@ putarki_configured_model_output_cineca() {
             fi
 # check end of time and wait if necessary (i.e. if not using inotify)
 # if time expires return without error in order to go ahead
-            nwpwait_wait || return
+            nwpwait_wait || return 0
         fi
     done
 
