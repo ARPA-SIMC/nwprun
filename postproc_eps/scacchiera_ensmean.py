@@ -10,7 +10,7 @@ from mpl_toolkits.axes_grid1 import make_axes_locatable
 from datetime import datetime,timedelta
 
 
-def estrai_campi_su_macroaree(fname,valore,sub_type): #,sf,sv):
+def estrai_campi_su_macroaree(fname,valore,sub_type,aree): #,sf,sv):
     prodotto=os.path.basename(fname).split('.',1)[0]    
 
     csvname="%s_%s_%s.csv"%(sub_type,valore,prodotto)
@@ -19,9 +19,9 @@ def estrai_campi_su_macroaree(fname,valore,sub_type): #,sf,sv):
         "%s campo.grib"%(fname)
     subprocess.call(grib_copy.split(),shell=False)
     
-    vg6d_getpoint="vg6d_getpoint --coord-file=/usr/local/share/libsim/macroaree_er.shp " \
+    vg6d_getpoint="vg6d_getpoint --coord-file=%s " \
         "--coord-format=shp --trans-type=polyinter --sub-type=%s " \
-        "--output-format=native campo.grib pre.v7d"%sub_type
+        "--output-format=native campo.grib pre.v7d"%(aree,sub_type)
     subprocess.call(vg6d_getpoint.split(),shell=False)
                 
     v7d_trans="v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
@@ -91,9 +91,20 @@ def heatmap(data, row_labels, col_labels, gf_cbar=False, ax=None,
 # Creazione dei file contenenti i campi medi e massimi sulle macroaree
 # dell'Emilia-Romagna da plottare in formato di scacchiera
 #------------------------------------------------------------------------
-path_in='/autofs/scratch-rad/vpoli/FCST_PROB/fxtr/data'
 
-fold_out='tmp'
+if len(sys.argv) > 1:
+    aree=sys.argv[1]
+else:
+    aree='/usr/local/share/libsim/macroaree_er.shp'
+if len(sys.argv) > 2:
+    path_in=sys.argv[2]
+else:
+    path_in='/autofs/scratch-rad/vpoli/FCST_PROB/fxtr/data'
+if len(sys.argv) > 3:
+    fold_out=sys.argv[3]
+else:
+    fold_out='tmp'
+
 # Creo la directory "fold_out" se non esiste
 if not os.path.exists("%s"%fold_out):
     os.makedirs("%s"%fold_out)
@@ -122,7 +133,7 @@ for subtype in ['average','max']:
         # Estrazione campi sulle macroaree usando le soglie opportune
         for fname in filelist:
             #print(fname)
-            csvname=estrai_campi_su_macroaree(fname,valore,subtype) 
+            csvname=estrai_campi_su_macroaree(fname,valore,subtype,aree)
 
 # Lettura dei csv prodotti per la generazione delle scacchiere                
 for j in cumulate:

@@ -66,9 +66,20 @@ def heatmap(data, row_labels, col_labels, gf_cbar=False, ax=None,
 # Creazione dei file contenenti i campi medi e massimi sulle macroaree
 # dell'Emilia-Romagna da plottare in formato di scacchiera
 #------------------------------------------------------------------------
-path_in='/autofs/scratch-rad/vpoli/FCST_PROB/gpfs/meteo/lami/prod/cosmo_2I/fcens'
 
-fold_out='tmp'
+if len(sys.argv) > 1:
+    aree=sys.argv[1]
+else:
+    aree='/usr/local/share/libsim/macroaree_er.shp'
+if len(sys.argv) > 2:
+    path_in=sys.argv[2]
+else:
+    path_in='/autofs/scratch-rad/vpoli/FCST_PROB/gpfs/meteo/lami/prod/cosmo_2I/fcens'
+if len(sys.argv) > 3:
+    fold_out=sys.argv[3]
+else:
+    fold_out='tmp'
+
 # Creo la directory "fold_out" se non esiste
 if not os.path.exists("%s"%fold_out):
     os.makedirs("%s"%fold_out)
@@ -82,10 +93,12 @@ units='[%]'
 val=[]
 
 for i in range(1,21): 
-    dir_in="%s/cosmo.%s/data"%(path_in,str(i))
-    for f in os.listdir(dir_in):
+    dir_in="%s/cosmo.%s/data/lfff????0000"%(path_in,str(i))
+#    for f in os.listdir(dir_in):
+    for f in glob.glob(dir_in):
         # Estraggo i campi di TP
-        grib_copy="grib_copy -w shortName=tp %s tp_%s.grib"%(os.path.join(dir_in,f),f)
+#        grib_copy="grib_copy -w shortName=tp %s tp_%s.grib"%(os.path.join(dir_in,f),f)
+        grib_copy="grib_copy -w shortName=tp %s tp_%s.grib"%(f,os.path.basename(f))
         subprocess.call(grib_copy.split(),shell=False)
     # Unisco i file e calcolo le cumulate
     os.system("cat tp_*.grib > tp.grib")
@@ -99,9 +112,9 @@ for i in range(1,21):
     os.system(grib_cum)
     subprocess.call(["rm","tp.grib"])
     
-    vg6d_getpoint="vg6d_getpoint --coord-file=/usr/local/share/libsim/macroaree_er.shp " \
+    vg6d_getpoint="vg6d_getpoint --coord-file=%s " \
         "--coord-format=shp --trans-type=polyinter --sub-type=%s " \
-        "--output-format=native tp3h_membro%s.grib pre.v7d"%(sub_type,str(i))
+        "--output-format=native tp3h_membro%s.grib pre.v7d"%(aree,sub_type,str(i))
     subprocess.call(vg6d_getpoint.split(),shell=False)
 
     csvname="tp3h_membro%s.csv"%str(i)

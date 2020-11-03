@@ -18,7 +18,7 @@ def soglia(sf,sv):
         thresh=sv*int('1'.ljust(abs(sf),'0'))*10
     return(thresh)
 
-def estrai_campi_su_macroaree(fname,valore,sub_type,sf,sv,percent):
+def estrai_campi_su_macroaree(fname,valore,sub_type,sf,sv,percent,aree):
     prodotto=os.path.basename(fname).split('.',1)[0]    
     if sf>0:
         thresh=sv/(int('1'.ljust(abs(sf),'0'))*10)
@@ -32,14 +32,9 @@ def estrai_campi_su_macroaree(fname,valore,sub_type,sf,sv,percent):
         "%s campo.grib"%(sf,sv,fname)
     subprocess.call(grib_copy.split(),shell=False)
 
-    if sub_type=='percentile':
-        vg6d_getpoint="vg6d_getpoint --coord-file=/usr/local/share/libsim/macroaree_er.shp " \
-            "--coord-format=shp --trans-type=polyinter --sub-type=%s " \
-            "--percentile=%s --output-format=native campo.grib pre.v7d"%(sub_type,percent)
-    else:
-        vg6d_getpoint="vg6d_getpoint --coord-file=/usr/local/share/libsim/macroaree_er.shp " \
-            "--coord-format=shp --trans-type=polyinter --sub-type=%s " \
-            "--output-format=native campo.grib pre.v7d"%sub_type
+    vg6d_getpoint="vg6d_getpoint --coord-file=%s " \
+        "--coord-format=shp --trans-type=polyinter --sub-type=%s " \
+        "--percentile=%d --output-format=native campo.grib pre.v7d"%(aree,sub_type,percent)
     subprocess.call(vg6d_getpoint.split(),shell=False)
                 
     v7d_trans="v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
@@ -109,9 +104,20 @@ def heatmap(data, row_labels, col_labels, gf_cbar=False, ax=None,
 # Creazione dei file contenenti i campi medi e massimi sulle macroaree
 # dell'Emilia-Romagna da plottare in formato di scacchiera
 #------------------------------------------------------------------------
-path_in='/autofs/scratch-rad/vpoli/FCST_PROB/fxtr/data'
 
-fold_out='tmp' 
+if len(sys.argv) > 1:
+    aree=sys.argv[1]
+else:
+    aree='/usr/local/share/libsim/macroaree_er.shp'
+if len(sys.argv) > 2:
+    path_in=sys.argv[2]
+else:
+    path_in='/autofs/scratch-rad/vpoli/FCST_PROB/fxtr/data'
+if len(sys.argv) > 3:
+    fold_out=sys.argv[3]
+else:
+    fold_out='tmp'
+
 # Creo la directory "fold_out" se non esiste
 if not os.path.exists("%s"%fold_out):
     os.makedirs("%s"%fold_out)
@@ -157,7 +163,7 @@ for subtype in ['average','max','percentile']:
         for fname in filelist:
 #            print(fname)
             for i in range(len(sf[n])):
-                csvname=estrai_campi_su_macroaree(fname,valore,subtype,sf[n][i],sv[n][i],percent) 
+                csvname=estrai_campi_su_macroaree(fname,valore,subtype,sf[n][i],sv[n][i],percent,aree) 
 
 
 # Lettura dei csv prodotti per la generazione delle scacchiere                
