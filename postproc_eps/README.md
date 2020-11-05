@@ -17,9 +17,12 @@ procedure is:
 ```
 module load singularity # to be done once
 singularity exec -B /gpfs/meteo /gpfs/meteo/lami/nwprun.sif \
-  /gpfs/meteo/lami/nwprun/postproc_eps/scacchiera_prob.py [arg1 [arg2...]]
+  /gpfs/meteo/lami/nwprun/postproc_eps/scacchiera_prob.py \
+  macroaree_er.shp /gpfs/meteo/lami/prod/cosmo_2I/fcens/fxtr/data \
+  /gpfs/meteo/lami/prod/cosmo_2I/fcens/scacchiera
 ```
 
 the argument `-B /gpfs/meteo` is required for the `/gpfs/meteo`
-filesystem to be available when running hte container, otherwise only
-`$HOME` will be available. Other filesystems can be added in this way.
+filesystem to be available when running the container, otherwise only
+`$HOME` will be available. Other filesystems can be added in the same
+way.
