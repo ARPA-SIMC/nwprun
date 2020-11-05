@@ -80,4 +80,27 @@ putarki_configured_end $dirname
 subdir=cosmo_2I_fcens/$DATE$TIME
 mkdir -p $CINECA_ARCHIVE_POST/$subdir
 cp -a $FXTR_DATADIR/*.grib $CINECA_ARCHIVE_POST/$subdir
- 
+
+# remove when we will be sure
+set +e
+# run simc tools for eps potprocessing
+module load singularity
+
+POSTPROC_EPS_WORKDIR=$WORKDIR/postproc_eps
+safe_rm_rf $POSTPROC_EPS_WORKDIR
+mkdir -p $POSTPROC_EPS_WORKDIR
+cd $POSTPROC_EPS_WORKDIR
+
+# this can be run simultaneously with fieldextra
+$SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
+ $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
+ $WORKDIR .
+
+# these require the probabilities computed by fieldextra
+$SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
+ $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
+ $FXTR_DATADIR .
+
+$SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
+ $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
+ $FXTR_DATADIR .
