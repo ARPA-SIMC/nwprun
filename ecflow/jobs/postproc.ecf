@@ -2,6 +2,9 @@
 %include <%HPCENV%/smnd.h>
 %include <head.h>
 
+module load singularity || true
+export LOG4C_PRIORITY=debug
+export LOG4C_APPENDER=stderr
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
 . $NWPCONFBINDIR/cosmo_model.sh
