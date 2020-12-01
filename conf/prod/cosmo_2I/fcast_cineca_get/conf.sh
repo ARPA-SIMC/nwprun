@@ -5,7 +5,9 @@ if [ -n "$CINECA_MAIN_SYSTEM" ]; then
 fi
 # modificare
 LAMI_CINECA_WORKDIR=$WORKDIR_BASE/download/work/$MODEL_SIGNAL
-POSTPROC_LIST=(lami_make_nit)
+POSTPROC_LIST=(lami_make_nit lami_make_vprof)
+VPROF_NETWORK=cosmo_2I_vprof
+
 
 # $TIME deve essere protetto perche' non e' ancora noto, lo sviluppo con eval
 if [ "$HPC_SYSTEM" = "galileo" ]; then
