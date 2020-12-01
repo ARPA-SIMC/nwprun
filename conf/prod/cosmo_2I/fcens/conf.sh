@@ -40,7 +40,9 @@ MODEL_WORKDIR=$WORKDIR/cosmo.$ENS_MEMB
 MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 # setup for remote import
 ARKI_SCAN_METHOD=configured_importer
-ARKI_IMPDIR=$WORKDIR_BASE/import_sync
+unset ARKI_IMPDIR
+#ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
+ARKI_DLDIR=$WORKDIR_BASE/download
 MODEL_SIGNAL=cosmo_2I_fcens
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
