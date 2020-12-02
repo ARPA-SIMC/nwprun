@@ -107,7 +107,7 @@ class GetObs:
 #            SchedEnv("sh").add_to(fam) # interactive because net access required for galileo
 #            fam = node.add_family("get_obs")
             if self.conf['gts']: fam.add_task("get_gts")
-            if self.conf['lhn']: fam.add_task("get_radarlhn")
+            if self.conf['lhn']: fam.add_task("get_radarlhn").add_variable("NO_FAIL", "TRUE")
             if self.conf['radarvol']: fam.add_task("get_radarvol")
 
 # Add a model preprocessing family to a node, to be called by EpsMembers.
