@@ -2,7 +2,7 @@ MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
 #MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_debug/lmparbin_all
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
-MODEL_LHN=.FALSE.
+MODEL_LHN=.TRUE.
 MODEL_NH_NUDG=3
 MODEL_NH_LHN=3
 MODEL_BACK=1
@@ -11,6 +11,11 @@ MODEL_BCANA=N
 MODEL_FREQINI=3
 ENS_TOTAL_MEMB=36
 ENS_DET_MEMB=Y
+
+# warning ARKI_DIR is redefined later for other purposes, find a better way!
+BUFR_ARKI_DS_CONV=$ARKI_DIR/bufr_it_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_DIR/bufr_it_noconv
+BUFR_ARKI_DS_RADARVOL=$ARKI_DIR/radar_vol
 
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then
@@ -98,9 +103,12 @@ else # deterministic run or analysis
     esac
 # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki
-# setup for remote import
+# setup for remote import and download
     ARKI_SCAN_METHOD=configured_importer
-    ARKI_IMPDIR=$WORKDIR_BASE/import_sync
+    unset ARKI_IMPDIR
+    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
+    ARKI_DLDIR=$WORKDIR_BASE/download
+    POSTPROC_LIST=(lami_make_nit)
     MODEL_SIGNAL=cosmo_2I_assim
 fi
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive

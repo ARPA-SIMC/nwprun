@@ -76,7 +76,7 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": True, "lhn": False, "radarvol": True, "membrange": "0-40",
+conf = ModelConfig({"gts": True, "lhn": True, "radarvol": True, "membrange": "0-40",
                     "postprocrange": "0",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis],
                     "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
