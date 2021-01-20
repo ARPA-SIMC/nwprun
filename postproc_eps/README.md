@@ -1,4 +1,4 @@
-## Eps potprocessing ##
+## Eps postprocessing ##
 
 This directory contains scripts and other files for postprocessing
 of Ensemble Prediction results.
