@@ -1,6 +1,6 @@
 At CINECA the LAMI suites can be found in the directory:
-$OPE
-which corresponds to /marconi_work/smr_prod/nwprun.
+`$WORKDIR_BASE/nwprun`
+which corresponds to `/meucci_arpae/lami/nwprun`.
 
 In the ecflow directory the jobs and the .def of the suites are available.
 

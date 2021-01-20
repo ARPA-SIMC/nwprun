@@ -5,7 +5,9 @@ of Ensemble Prediction results.
 
 The python scripts have some dependencies and can be run in the
 Singularity container [Singularity.nwprun](../Singularity.nwprun)
-defined in this project and soon available on Singularity hub.
+defined in this project and available on Singularity hub.
+
+[![https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg](https://www.singularity-hub.org/static/img/hosted-singularity--hub-%23e32929.svg)](https://singularity-hub.org/collections/5107)
 
 ### Running in Cineca ###
 
