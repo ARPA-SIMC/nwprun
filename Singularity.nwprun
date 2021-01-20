@@ -19,3 +19,7 @@ Include: yum
     dnf install -y wreport bufr2netcdf dballe arkimet libsim
 # other useful packages
     dnf install -y ncview
+# save some space
+    dnf clean all
+    # rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
+
