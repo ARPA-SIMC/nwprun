@@ -71,7 +71,7 @@ ncftpauth="-f $basedir/.auth/radar_vol_get.cfg"
 if [ -n "$1" ]; then
     dl_ftp $1 $2
 else
-    restore_state radar_vol_get.state	|| touch $NWPCONFDIR/$NWPCONF/radar_vol_get.state
+    restore_state radar_vol_get.state || touch $NWPCONFDIR/$NWPCONF/radar_vol_get.state
     if [ -z "$DATE" -o -z "$TIME" ]; then 	# set minimum datetime
 	mindate=`date -u --date '1 day ago' '+%Y%m%d 1200'`
 	DATE=`date --date="$mindate" '+%Y%m%d'`

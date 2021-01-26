@@ -72,16 +72,17 @@ set -e
 . $NWPCONFBINDIR/nwpwait.sh
 # end of setup
 
-nonunique_exit
 
 # improve
 ncftpauth="-f $basedir/.auth/meteoam_cineca.cfg"
 
 if [ -n "$1" ]; then # interactive run
+    COSMO_AM_EPS_WORKDIR=${COSMO_AM_EPS_WORKDIR}_interactive
     DATETIME=$1
     DATE=${DATETIME:0:8}
     TIME=${DATETIME:8:2}
 else # automatic run
+    nonunique_exit
     # redirect all to logfile
     exec >>$LOGDIR/`basename $0`.log 2>&1
 
