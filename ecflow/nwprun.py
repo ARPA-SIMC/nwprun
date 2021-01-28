@@ -42,6 +42,13 @@ def daily_cron(step):
     cron.set_time_series(time_series)
     return cron
 
+
+def cron_set_time(time):
+    cron = ecflow.Cron()
+    cron.set_time_series(time)
+    return cron
+
+
 # Merge the requested configuration with the library default.
 class ModelConfig:
     def __init__(self, conf={}):
@@ -53,7 +60,8 @@ class ModelConfig:
                      "timer": None, "cronfreq": 10,
                      "wait_wt": "04:10:00", "preproc_wt": "01:00:00",
                      "model_wt": "05:00:00", "analysis_wt": "01:20:00",
-                     "startmethod": "check_run"}
+                     "startmethod": "check_run",
+                     "starttime": "00:00"}
         self.conf.update(conf) # update default with user data
         # special treatment for some fields
         self.conf['membrange'] = rangeexpand(self.conf['membrange'])
@@ -230,6 +238,16 @@ class EpsPostproc:
         fam.add_trigger("./eps_members == complete")
         fam.add_task("compute_prob")
 
+# Add family for the diagnostic of KENDA
+class EndaDiagnostics:
+    def __init__(self, conf={}):
+        self.conf = {}
+        self.conf.update(conf)
+
+    def add_to(self, node):
+        fam = node.add_family("enda_diagnostics")
+        fam.add_task("diagnostic_ekf")
+
 # Add a wipe family containing a single task wipe; wipe should set run
 # family to complete, possibly with more fine-grain control on tasks,
 # and exiting thus resubmitting the suite for next run. To be called
@@ -257,6 +275,8 @@ class WipeRun:
             trig = expr_or(trig, "../run/continuous_analysis == aborted")
         if EpsPostproc in self.conf['runlist']:
             trig = expr_or(trig, "../run/eps_postproc == aborted")
+        if EndaDiagnostics in self.conf['runlist']:
+            trig = expr_or(trig, "../run/enda_diagnostics == aborted")
 
         fulldep = expr_or(trig, timerdep)
         if fulldep != "":
@@ -342,11 +362,17 @@ class WaitAndRun:
                 fam.add_trigger("../"+self.dep+" == complete")
             fam.add_trigger("./continue == complete")
 
-        elif self.conf['startmethod'] == "starttime":
+        elif self.conf['startmethod'] == "starttime_time":
             fam = node.add_family("run")
             if self.dep is not None:
                 fam.add_trigger("../"+self.dep+" == complete")
-            fam.add_time(self.conf['starttime']) # replace with today, to test
+            fam.add_time(self.conf['starttime'])                    # UTC time
+
+        elif self.conf['startmethod'] == "starttime_cron":
+            fam = node.add_family("run")
+            if self.dep is not None:
+                fam.add_trigger("../"+self.dep+" == complete")
+            fam.add_cron(cron_set_time(self.conf['starttime']))     # UTC time
 
         # instantiate with general configuration and add all
         # components of runlist
