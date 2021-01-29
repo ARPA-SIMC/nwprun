@@ -1,0 +1,48 @@
+%include <sched_heavy.h>
+%include <%HPCENV%/smnd.h>
+%include <%HPCENV%/modules.h>
+module load python/3.6.4
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/parcomp.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+
+set -x
+
+mkdir -p $WORKDIR
+cd $WORKDIR
+
+# Copy dictionary files for observations and checks
+cp $NWPCONFDIR/$NWPCONF/dictionary_checks.csv .
+cp $NWPCONFDIR/$NWPCONF/dictionary_variables.csv .
+cp $NWPCONFDIR/$NWPCONF/mail.txt .
+
+# Activate virtual environment for python3 modules
+source $WORKDIR_BASE/env_python3/bin/activate
+
+# Read ekf data
+python3 %BASEDIR%/ecflow/script_python3/read_ekf.py --folder $LETKF_ARCHIVE --report $REPORT
+
+# Retrieve last data analyzed by 'read_ekf.py' and plot data
+last_date=$(head -n 1 'last_date.txt')
+python3 %BASEDIR%/ecflow/script_python3/plot_ekf.py --report $REPORT --lencyc $LEN_CYCLE \
+                                                    --last_date $last_date
+
+# Deactivate virtual environment
+deactivate
+
+# Send email
+if [ ${#EMAIL_ADDRESS[@]} -ne 0 ]; then
+    rep_arr=($REPORT)
+    att_files="-a last24h.png -a last30d.png -a last365d.png"
+    for rep in "${rep_arr[@]}"; do
+        att_files+=" -a last30d_${rep}.png       -a last365d_${rep}.png"
+        att_files+=" -a last30d_${rep}_check.png -a last365d_${rep}_check.png"
+    done
+    today=`date "+%%d/%%m/%%Y"`
+    title=`echo 'KENDA diagnostics -' "$today"`
+    echo "$(cat mail.txt)" | mailx $att_files -s "$title" -S sendwait ${EMAIL_ADDRESS[@]}
+fi
