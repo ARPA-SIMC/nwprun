@@ -209,7 +209,7 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     extra_env=extra_env)
 
 conf = ModelConfig({"runlist": [EndaDiagnostics], "startmethod": "starttime_cron",
-                    "starttime": "16:26"}).getconf()
+                    "starttime": "06:30"}).getconf()
 enda_dia = ModelSuite("cosmo_2I_enda_dia")
 basicenv.add_to(enda_dia.suite)
 WaitAndRun(dep=None, conf=conf).add_to(enda_dia.suite)
