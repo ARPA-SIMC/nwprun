@@ -199,7 +199,7 @@ fcens.replace(interactive=interactive)
 # Suite enda_dia
 extra_env = common_extra_env.copy()
 extra_env.update({
-    "NWPCONF": "test/cosmo_2I/enda_dia",
+    "NWPCONF": "prod/cosmo_2I/enda_dia",
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -209,7 +209,7 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
                     extra_env=extra_env)
 
 conf = ModelConfig({"runlist": [EndaDiagnostics], "startmethod": "starttime_cron",
-                    "starttime": "05:00"}).getconf()
+                    "starttime": "16:26"}).getconf()
 enda_dia = ModelSuite("cosmo_2I_enda_dia")
 basicenv.add_to(enda_dia.suite)
 WaitAndRun(dep=None, conf=conf).add_to(enda_dia.suite)

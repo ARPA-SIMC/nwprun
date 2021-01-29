@@ -1,7 +1,7 @@
 %include <sched_heavy.h>
 %include <%HPCENV%/smnd.h>
 %include <%HPCENV%/modules.h>
-module load python/3.6.4
+module load python
 %include <head.h>
 
 # source other optional modules

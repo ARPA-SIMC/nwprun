@@ -347,9 +347,8 @@ for rep in report:
         save_on_csv(fname_rej, head_chk, list_save)
 
 
-# Save last date that should be plotted (the penultimate analyzed folder is considered
-# instead of the last one# because it may not yet contain the ekf files)
-dt_last = enda_cycle_dt[-2]
+# Save last date that should be plotted
+dt_last = enda_cycle_dt[-1]
 with open('last_date.txt', mode='w') as datefile:
     datefile.write(dt_last)
 
