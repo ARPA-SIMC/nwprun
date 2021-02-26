@@ -117,7 +117,7 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
 conf = ModelConfig({"gts": False, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "runlist": [GetObs, EpsMembers],
-                    "preproc_wt":"00:30:00", "model_wt": "01:00:00"}).getconf()
+                    "preproc_wt":"00:30:00", "model_wt": "02:00:00"}).getconf()
 fcruc = ModelSuite("cosmo_2I_fcruc")
 basicenv.add_to(fcruc.suite)
 day = fcruc.suite.add_family("day").add_repeat(
