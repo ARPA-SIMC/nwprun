@@ -140,15 +140,18 @@ for i in range(len(sf)):
 # Definisco la soglia per il calcolo del percentile
 percent=90
 
-# Calcolo dei campi di media e massimo sulle macroaree
-for subtype in ['average','max','percentile']:
+# Calcolo dei campi di media, massimo e 90esimo percentile sulle macroaree
+# 16/02/2021 - Limitiamo il calcolo al max delle probabilità
+#for subtype in ['average','max','percentile']:
+for subtype in ['max']:
     for j in cumulate:
         # Lista dei file per scadenza 
         search="%s/%s*.grib"%(path_in,j)
         lista=glob.glob(search)
 
         if j=='tpp01h':
-            filelist=sorted(lista)[3:27]
+#            filelist=sorted(lista)[3:27]
+            filelist=sorted(lista)[3:len(lista)]
         elif j=='tpp03h':
             filelist=sorted(lista)[1:len(lista)]
         elif j=='tpp24h':
@@ -251,6 +254,7 @@ for subtype in ['average','max','percentile']:
         
         # Definisco date/time del run per il nome del file in output
         inizio=datetime.strptime(run.iloc[0][0],'%Y-%m-%d %H:%M:%S')-timedelta(seconds=lead.iloc[0][0])
+        fine=datetime.strptime(run.iloc[0][-1],'%Y-%m-%d %H:%M:%S')
         
         # Definisco le etichette di superamento soglia
         y=[]
@@ -269,7 +273,9 @@ for subtype in ['average','max','percentile']:
                                     '#8856a7','#810f7c'])
         norm=colors.BoundaryNorm(bounds,cmap.N)
 
-        if j!='tpp24h':
+        # Per cumulate su 3h un unico pannello.
+        # Ogni macroarea è un subplot. 
+        if j=='tpp03h':
             fig,ax=plt.subplots(len(macro),figsize=(14,20)) 
             # Scacchiera separata per macroarea
             for i in range(len(macro)):
@@ -284,6 +290,36 @@ for subtype in ['average','max','percentile']:
 
                 ax[i].set_title('Macroarea '+macro[i])
                 fig.tight_layout(pad=1.8)
+        # Per cumulate su 1h due pannelli affiancati (uno per giorno).
+        # Ogni macroarea è un subplot.
+        elif j=='tpp01h':
+            fig,ax=plt.subplots(figsize=(18,20),nrows=len(macro),ncols=2)
+            # Scacchiera separata per macroarea
+            for i in range(len(macro)):
+                a=pd.DataFrame(alldata.iloc[i].to_list(),index=alldata.iloc[i].index)
+                # Divido il dataframe in 2 per tenere le due giornate separate
+                a1=a.iloc[:,:int(a.shape[1]/2)]
+                a2=a.iloc[:,int(a.shape[1]/2):]
+
+                # Pannello giorno 1
+                im,cbar=heatmap(a1,y,x[:len(x)//2],ax=ax[i,0],cmap=cmap,norm=norm,cbarlabel=units)
+                ax[i,0].set_xticks(np.arange(-0.5,len(x)/2+0.5,1))
+                ax[i,0].set_xticklabels(orafcst[:len(orafcst)//2+1])                
+                ax[i,0].set_yticklabels(y)
+                ax[i,0].grid(which="major",color="w",axis='x',linestyle='-',linewidth=2)
+                ax[i,0].set_title('Macroarea '+macro[i])
+                #fig.tight_layout(pad=1.8)
+                
+                # Pannello giorno 2
+                im,cbar=heatmap(a2,y,x[len(x)//2:],ax=ax[i,1],cmap=cmap,norm=norm,cbarlabel=units)
+                ax[i,1].set_xticks(np.arange(-0.5,len(x)/2+0.5,1))
+                ax[i,1].set_xticklabels(orafcst[len(orafcst)//2:])
+                ax[i,1].set_yticklabels(y)
+                ax[i,1].grid(which="major",color="w",axis='x',linestyle='-',linewidth=2)
+
+                ax[i,1].set_title('Macroarea '+macro[i])
+                fig.tight_layout(pad=1.8)
+        # Per cumulate su 24h due pannelli affiancati (uno per giorno).
         else:
             fig,ax=plt.subplots(figsize=(14,6),nrows=1,ncols=2)
 
@@ -291,18 +327,19 @@ for subtype in ['average','max','percentile']:
             a1=[]
             for i in range(len(thresh[n])):
                 dum=pd.DataFrame(alldata[i].to_list(),index=alldata[i].index)
+                
                 a0.append(dum[0])
                 a1.append(dum[1])
             
             im,cbar=heatmap(pd.concat(a0,axis=1),macro,y,ax=ax[0],
                             cmap=cmap,norm=norm,aspect='auto',
                             cbarlabel=units)
-            ax[0].set_title(orafcst[0])
+            ax[0].set_title(datetime.strptime(orafcst[0],'%d/%m/%Y %H:%M').strftime('%d/%m/%Y'))
             
             im,cbar=heatmap(pd.concat(a1,axis=1),macro,y,ax=ax[1],
                             cmap=cmap,norm=norm,aspect='auto',
                             cbarlabel=units)
-            ax[1].set_title(orafcst[1])
+            ax[1].set_title(datetime.strptime(orafcst[1],'%d/%m/%Y %H:%M').strftime('%d/%m/%Y'))
 
         # Titolo della figura    
         if subtype=='average':
@@ -319,8 +356,13 @@ for subtype in ['average','max','percentile']:
             fileout="%s/%s%s_%s_%s_%s.png"%(fold_out,subtype,str(percent),
                                           valore,j,inizio.strftime('%Y%m%d%H'))
         else:
-            fileout="%s/%s_%s_%s_%s.png"%(fold_out,subtype,valore,j,
-                                          inizio.strftime('%Y%m%d%H'))
+#            fileout="%s/%s_%s_%s_%s.png"%(fold_out,subtype,valore,j,
+#                                          inizio.strftime('%Y%m%d%H'))
+            # Creo il nome di output secondo la tassonomia di infomet.
+            # I campi "periodo di cumulazione" e "scadenza" vengono
+            # calcolati in automatico.  
+            fileout="%s/MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_%s_%s_%s_%s_%s_scacchiera.png"%(fold_out,inizio.strftime('%Y%m%d%H'),fine.strftime('%Y%m%d%H'),f"{int((x[-1]-x[-2])/3600):03d}",f"{int((x[-1]-x[0]+cum.iloc[0][0])/3600):03d}",subtype)
+
         fig.savefig(fileout,bbox_inches='tight')
         plt.close()
 

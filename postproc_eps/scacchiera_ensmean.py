@@ -110,7 +110,7 @@ if not os.path.exists("%s"%fold_out):
     os.makedirs("%s"%fold_out)
     
 
-cumulate=['tpp01h','tpp03h','tpp24h']
+cumulate=['tpp01h','tpp03h']
 valore='ensmean'
 units='[mm]'
 
@@ -122,7 +122,8 @@ for subtype in ['average','max']:
         lista=glob.glob(search)
 
         if j=='tpp01h':
-            filelist=sorted(lista)[3:27]
+#            filelist=sorted(lista)[3:27]
+            filelist=sorted(lista)[3:len(lista)]
         elif j=='tpp03h':
             filelist=sorted(lista)[1:len(lista)]
         elif j=='tpp24h':
@@ -135,7 +136,21 @@ for subtype in ['average','max']:
             #print(fname)
             csvname=estrai_campi_su_macroaree(fname,valore,subtype,aree)
 
-# Lettura dei csv prodotti per la generazione delle scacchiere                
+# Lettura dei csv prodotti per la generazione delle scacchiere.
+# Per gestire il secondo giorno per tpp01h ed ottenere due figure
+# differenti, devo dividere i dati in 2 parti: divido in 2 la
+# lista dei file e rinomino il campo delle cumulate (da tpp01h a
+# tpp01hday2); contestualmente l'aggiungo all'array cumulate
+# perchè venga analizzato e plottato.
+for subtype in ['average','max']:
+    search="%s_%s_tpp01h_*.csv"%(subtype,valore)
+    lista=sorted(glob.glob(search))
+    day2=lista[len(lista)//2:]
+    for i in day2: 
+        os.rename(i,i.replace('tpp01h', 'tpp01hday2'))
+
+cumulate.append('tpp01hday2')
+
 for j in cumulate:
     # Preparo le figure
     n=0
@@ -206,8 +221,9 @@ for j in cumulate:
             orafcst.insert(0,orazero.strftime('%H'))
         #print(orafcst)
 
-        # Definisco date/time del run per il nome del file in output
+        # Definisco date/time del run (emissione/validità) per il nome del file in output
         inizio=datetime.strptime(run[0],'%Y-%m-%d %H:%M:%S')-timedelta(seconds=x[0])
+        fine=datetime.strptime(run[-1],'%Y-%m-%d %H:%M:%S')
         
         bounds=[1,2,5,10,20,30,50,70,100,150,200,300,500]
         cmap=colors.ListedColormap(['#f0f0f0','#d0d1e6','#a6bddb',
@@ -238,7 +254,10 @@ for j in cumulate:
 
     fig.suptitle("Corsa di COSMO-2I-EPS del %s\n" \
                  %(inizio.strftime('%d/%m/%Y %H:%M')),y=1.02)
-    fileout="%s/%s_%s_%s.png"%(fold_out,valore,j,inizio.strftime('%Y%m%d%H'))
+    # Creo il nome di output secondo la tassonomia di infomet.
+    # I campi "periodo di cumulazione" e "scadenza" vengono
+    # calcolati in automatico.  
+    fileout="%s/MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_%s_%s_%s_%s_scacchiera.png"%(fold_out,inizio.strftime('%Y%m%d%H'),fine.strftime('%Y%m%d%H'),f"{int((x[-1]-x[-2])/3600):03d}",f"{int((x[-1]-x[0]+dt[0])/3600):03d}")
     fig.savefig(fileout,bbox_inches='tight')
     plt.close()
 

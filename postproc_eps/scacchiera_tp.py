@@ -88,7 +88,7 @@ if not os.path.exists("%s"%fold_out):
 # sulle macroaree 
 sub_type='average'
 
-thresh=[10,20,30,50,70]
+thresh=[1,2,5,10,20]
 units='[%]'
 val=[]
 
@@ -170,6 +170,7 @@ else:
 
 # Definisco date/time del run per il nome del file in output
 inizio=datetime.strptime(ore[0],'%Y-%m-%d %H:%M:%S')-timedelta(hours=3)
+fine=datetime.strptime(ore[-1],'%Y-%m-%d %H:%M:%S')
 
 # Definisco le macroaree 
 macro=['A','B','C','D','E','F','G','H']
@@ -188,7 +189,7 @@ for i in range(len(macro)):
     area=dati[dati['B01192']==(i+1)]
     #print(area)
     a=area[area.columns[-(len(thresh)):]]*100
-    print(a[1:])
+    #print(a[1:])
     
     im,cbar=heatmap(a[1:].T,y,ore[1:],ax=ax[i],cmap=cmap,norm=norm,cbarlabel=units)
     ax[i].set_xticks(np.arange(-0.5,len(ore[1:])+0.5,1))
@@ -208,7 +209,11 @@ fig.suptitle("Corsa di COSMO-2I-EPS del %s\n" \
              %(inizio.strftime('%d/%m/%Y %H:%M'),tipo),
              y=1.02)    
 
-fileout="%s/prob_%s_tot3hprec_%s.png"%(fold_out,sub_type,inizio.strftime('%Y%m%d%H'))
+#fileout="%s/prob_%s_tot3hprec_%s.png"%(fold_out,sub_type,inizio.strftime('%Y%m%d%H'))
+# Creo il nome di output secondo la tassonomia di infomet.
+# I campi "periodo di cumulazione" e "scadenza" sono fissati.
+fileout="%s/MTG_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_%s_%s_003_048_scacchiera.png"%(fold_out,inizio.strftime('%Y%m%d%H'),fine.strftime('%Y%m%d%H'))
+
 fig.savefig(fileout,bbox_inches='tight')
 plt.close()
 
