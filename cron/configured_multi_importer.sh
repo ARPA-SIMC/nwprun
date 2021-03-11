@@ -15,6 +15,9 @@ import_configured() {
     if [ -n "$format" ]; then
 	format="$format:"
     fi
+    if [ -n "$configext" ]; then
+        ARKI_CONF=${ARKI_CONF%.*}.$configext
+    fi
     log "importing configured $format$2"
     time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
     if [ -n "$signalfile" -a -n "$signal" ]; then

@@ -1,5 +1,5 @@
 #!/bin/bash
-# script for downloading the new bufr provided by COMET (CNMCA)
+# script for downloading the new bufr provided by COMET (CNMCA) since 2021
 
 log() {
     echo `date -u --rfc-3339=seconds` "|$$|$@"
@@ -11,7 +11,7 @@ dl_ftp() {
     rm -f $file
     ncftpget -V $ncftpauth . $file || true
     if [ -f "$file" ]; then
-#	putarki_configured_archive $1 $file
+	putarki_configured_archive $1 $file
 	return 0
     fi
     return 1
@@ -77,7 +77,7 @@ mkdir -p $GTS_BUFR_WORKDIR
 cd $GTS_BUFR_WORKDIR
 
 dirname=gts_bufr
-#putarki_configured_setup $dirname "reftime=$DATETIME" "format=bufr" "signal=gts_bufr"
+putarki_configured_setup $dirname "reftime=$DATETIME" "format=bufr" "signal=gts_bufr" "configext=test"
 nwpwait_setup
 
 while true; do
@@ -85,7 +85,7 @@ while true; do
     nwpwait_wait || break
 done
 
-#putarki_configured_end $dirname
+putarki_configured_end $dirname
 
 if [ -n "$1" ]; then # interactive run
     :
