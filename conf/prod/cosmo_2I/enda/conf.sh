@@ -12,8 +12,8 @@ ENS_TOTAL_MEMB=36
 ENS_DET_MEMB=Y
 
 # warning ARKI_DIR is redefined later for other purposes, find a better way!
-BUFR_ARKI_DS_CONV=$ARKI_DIR/bufr_it_conv
-BUFR_ARKI_DS_NOCONV=$ARKI_DIR/bufr_it_noconv
+BUFR_ARKI_DS_CONV=$ARKI_DIR/gts_bufr_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_DIR/gts_bufr_noconv
 
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then

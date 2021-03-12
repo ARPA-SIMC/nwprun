@@ -16,7 +16,7 @@ mkdir -p $BUFR_WORKDIR
 cd $BUFR_WORKDIR
 
 set_import_signal_method $BUFR_ARKI_DS_CONV
-if import_signal_wait cnmc_bufr $DATE$TIME "*"; then
+if import_signal_wait gts_bufr $DATE$TIME "*"; then
     cosmo_getarki_obsncdf
 else
     touch noobs
