@@ -22,45 +22,53 @@ rm -f $LETKF_WORKDIR/letkf_skip
 # ---------------------------------------------------------------------------
 # evaluate availability: deterministic
 # ---------------------------------------------------------------------------
-#set -x
-# first guess
-da=N
-if [ -f "$WORKDIR/cosmo/data/laf$DATE$TIME" ]; then
+# Check first guess. If it exists and it is non-empty, look for fof files; 
+# otherwise set that fof files are missing because they are certainly
+# missing, empty or corrupt.
+if [ -s "$WORKDIR/cosmo/data/laf$DATE$TIME" ]; then
+    # First guess exists
     da=Y
-fi
 
-# fof for conventional observations
-do_conv=N
-if [ -f "$WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc" ]; then
-    do_conv=Y
-fi
+    # Check fof for conventional observations
+    do_conv=N
+    if [ -s "$WORKDIR/cosmo/data/fof_${DATES}${TIMES}0000.nc" ]; then
+        do_conv=Y
+    fi
 
-# fof for radar observations: "do_rad" is 'Y' if there are files matching
-# "pattern_fofrad" and all of these files are regular and non-empty
-pattern_fofrad="$WORKDIR/cosmo/data/fof_radar_id*${DATES}${TIMES}0000.nc"
-if [[ $(ls -A $pattern_fofrad) ]]; then   # ls returns anything?
-    for fof_file in $pattern_fofrad; do
-        if ([[ ! -f $fof_file ]] || [[ ! -s $fof_file ]]); then
-            do_rad=N
-            break
-        fi
-    done
-    do_rad=Y
-    n_fofrad_det=`ls $pattern_fofrad |wc -l`
+    # Check fof for radar observations: "do_rad" is 'Y' if there are files
+    # matching "pattern_fofrad" and all of these files are non-empty.
+    pattern_fofrad="$WORKDIR/cosmo/data/fof_radar_id*${DATES}${TIMES}0000.nc"
+    if [[ $(ls -A $pattern_fofrad) ]]; then   # ls returns anything?
+        for fof_file in $pattern_fofrad; do
+            if [ ! -s $fof_file ]; then
+                do_rad=N
+                break
+            fi
+        done
+        do_rad=Y
+        n_fofrad_det=`ls $pattern_fofrad |wc -l`
+    else
+        do_rad=N
+    fi
+
+# First guess does not exist, so fof files are missing, empty or corrupt
 else
+    da=N
+    do_conv=N
     do_rad=N
 fi
 
-echo "Deterministic analysis: $da"
-echo "Deterministic foffo conventional: $do_conv"
-echo "Deterministic foffo radar: $do_rad"
+echo "Deterministic analysis:                $da"
+echo "Deterministic foffo conventional:      $do_conv"
+echo "Deterministic foffo radar:             $do_rad"
 if [ "$do_rad" == "Y" ]; then
-    echo "Deterministic number of foffo radar: $n_fofrad_det "
+    echo "Deterministic number of foffo radar:   $n_fofrad_det "
 fi
+echo ''
 
 
 # ---------------------------------------------------------------------------
-# evaluate availability:ensemble members 
+# evaluate availability: ensemble members 
 # ---------------------------------------------------------------------------
 set -a ma
 lma=
@@ -70,48 +78,59 @@ set -a mo_rad
 set -a n_fofrad_ens
 lmo_rad=
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
-    # First guess
-    if [ -f "$WORKDIR/cosmo.$n/data/laf$DATE$TIME" ]; then
-    	ma[$n]=Y
-	    lma=$n
-    else
-	    ma[$n]=N
-    fi
+    if [ -s "$WORKDIR/cosmo.$n/data/laf$DATE$TIME" ]; then
+        # First guess exists
+        ma[$n]=Y
+        lma=$n
 
-    # fof for conventional observations
-    if [ -f "$WORKDIR/cosmo.$n/data/fof_${DATES}${TIMES}0000.nc" ]; then
-        mo_conv[$n]=Y
-        lmo_conv=$n
-    else
-        mo_conv[$n]=N
-    fi
+        # Check fof for conventional observations
+        if [ -s "$WORKDIR/cosmo.$n/data/fof_${DATES}${TIMES}0000.nc" ]; then
+            mo_conv[$n]=Y
+            lmo_conv=$n
+        else
+            mo_conv[$n]=N
+        fi
 
-    # fof for radar observations: "do_rad" is 'Y' if there are files matching
-    # "pattern_fofrad" and all of these files are regular and non-empty
-    pattern_fofrad="$WORKDIR/cosmo.$n/data/fof_radar_id*${DATES}${TIMES}0000.nc"
-    if [[ $(ls -A $pattern_fofrad) ]]; then   # ls returns anything?
-        for fof_file in $pattern_fofrad; do
-            if ([[ ! -f $fof_file ]] || [[ ! -s $fof_file ]]); then
-                mo_rad[$n]=N
-                break
+        # Check fof for radar observations: "do_rad" is 'Y' if there are 
+        # files matching "pattern_fofrad" and all of these files are 
+        # non-empty.
+        pattern_fofrad="$WORKDIR/cosmo.$n/data/fof_radar_id*${DATES}${TIMES}0000.nc"
+        if [[ $(ls -A $pattern_fofrad) ]]; then   # ls returns anything?
+            for fof_file in $pattern_fofrad; do
+                if [ ! -s $fof_file ]; then
+                    echo $fof_file "is an empty file"
+                    mo_rad[$n]=N
+                    break
+                fi
+            done
+            if [ "${mo_rad[$n]}" = N ]; then
+                n_fofrad_ens[$n]='-'
+            else
+                mo_rad[$n]=Y
+                lmo_rad=$n
+                n_fofrad_ens[$n]=`ls $pattern_fofrad |wc -l`
             fi
-        done
-        mo_rad[$n]=Y
-        lmo_rad=$n
-        n_fofrad_ens[$n]=`ls $pattern_fofrad |wc -l`
+        else
+            mo_rad[$n]=N
+        fi
+
+    # First guess does not exist, so fof files are missing, empty or corrupt
     else
+        ma[$n]=N
+        mo_conv[$n]=N
         mo_rad[$n]=N
     fi
 done
 
 # hopefully we have "$lma" = "$lmo" -o -z "$lmo"
-echo "Ensemble member analyses: ${ma[*]}"
-echo "Last available analysis: $lma"
-echo "Ensemble member foffi conventional: ${mo_conv[*]}"
-echo "Ensemble member foffi radar: ${mo_rad[*]}"
+echo "Ensemble member analyses:              ${ma[*]}"
+echo "Last available analysis:               $lma"
+echo "Ensemble member foffi conventional:    ${mo_conv[*]}"
+echo "Ensemble member foffi radar:           ${mo_rad[*]}"
 echo "Ensemble member number of foffi radar: ${n_fofrad_ens[*]}"
-echo "Last available foffo conventional: $lmo_conv"
-echo "Last available foffo radar: $lmo_rad"
+echo "Last available foffo conventional:     $lmo_conv"
+echo "Last available foffo radar:            $lmo_rad"
+echo ''
 
 
 # ---------------------------------------------------------------------------
@@ -156,7 +175,7 @@ if ([[ "$do_conv" == Y ]] || [[ -n "$lmo_conv" ]]); then
 else
     conv_obs=N
 fi
-echo "Assimilazione osservazioni convenzionali: $conv_obs"
+echo "Assimilation of conventional observations: $conv_obs"
 
 # Ara radar observations available?
 if ([[ "$do_rad" == Y ]] || [[ -n "$lmo_rad" ]]); then
@@ -164,7 +183,7 @@ if ([[ "$do_rad" == Y ]] || [[ -n "$lmo_rad" ]]); then
 else
     rad_obs=N
 fi
-echo "Assimilazione osservazioni radar: $rad_obs"
+echo "Assimilation of radar observations:        $rad_obs"
 
 # no observations available at all, tell next job to skip letkf and
 # use det analysis, no foffi are linked, no namelist created
