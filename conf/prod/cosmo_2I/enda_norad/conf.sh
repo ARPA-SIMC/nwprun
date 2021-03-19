@@ -1,21 +1,19 @@
-MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
-#MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_debug/lmparbin_all
+MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp_emvorado/radarbin_nud
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
 MODEL_NH_NUDG=3
 MODEL_NH_LHN=3
-MODEL_BACK=1
-MODEL_STOP=1
+MODEL_BACK=3
+MODEL_STOP=3
 MODEL_BCANA=N
 MODEL_FREQINI=3
 ENS_TOTAL_MEMB=36
 ENS_DET_MEMB=Y
 
 # warning ARKI_DIR is redefined later for other purposes, find a better way!
-BUFR_ARKI_DS_CONV=$ARKI_DIR/bufr_it_conv
-BUFR_ARKI_DS_NOCONV=$ARKI_DIR/bufr_it_noconv
-BUFR_ARKI_DS_RADARVOL=$ARKI_DIR/radar_vol
+BUFR_ARKI_DS_CONV=$ARKI_DIR/gts_bufr_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_DIR/gts_bufr_noconv
 
 # redefine directories for perturbed members
 if [ -n "$ENS_MEMB" ]; then
@@ -32,13 +30,8 @@ if [ -n "$ENS_MEMB" ]; then
 	09 | 21)
 	    MODEL_DELTABD=6
 	    ;;
-    01 | 04 | 07 | 10 | 13 | 16 | 19 | 22)
-        MODEL_DELTABD=4
-        ;;
-    02 | 05 | 08 | 11 | 14 | 17 | 20 | 23)
-        MODEL_DELTABD=5
-        ;;
     esac
+# warning ARKI_DIR is redefined later for other purposes, find a better way!
 #    PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
     PARENTMODEL_ARKI_DS=$ARKI_DIR/cosmo_am_enda
     PARENTMODEL_SIGNAL=cosmo_am_enda
@@ -67,39 +60,15 @@ else # deterministic run or analysis
 	00 | 12)
 	    MODEL_DELTABD=12
 	    ;;
-    01 | 13)
-        MODEL_DELTABD=1
-        ;;
-    02 | 14)
-        MODEL_DELTABD=2
-        ;;
-    03 | 15)
-        MODEL_DELTABD=3
-        ;;
-    04 | 16)
-        MODEL_DELTABD=4
-        ;;
-    05 | 17)
-        MODEL_DELTABD=5
-        ;;
-    06 | 18)
-        MODEL_DELTABD=6
-        ;;
-    07 | 19)
-        MODEL_DELTABD=7
-        ;;
-    08 | 20)
-        MODEL_DELTABD=8
-        ;;
-    09 | 21)
-        MODEL_DELTABD=9
-        ;;
-    10 | 22)
-        MODEL_DELTABD=10
-        ;;
-    11 | 23)
-        MODEL_DELTABD=11
-        ;;
+	03 | 15)
+	    MODEL_DELTABD=3
+	    ;;
+	06 | 18)
+	    MODEL_DELTABD=6
+	    ;;
+	09 | 21)
+	    MODEL_DELTABD=9
+	    ;;
     esac
 # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki
@@ -117,10 +86,6 @@ MODEL_ARCHIVE_OUTPUT_ANA_REMOTE=$CINECA_ARCHIVE_REMOTE:$CINECA_ARCHIVE_REMOTE_AN
 LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data
 LETKF_BIN=$WORKDIR_BASE/srcintel/dace_code/build/LINUX64.intel-mpi/bin/var3d
-
-# Radar volumes assimilation
-HDF5_WORKDIR=$WORKDIR/radar_vol
-RADLIST="16101 16102 16103 16105 16106 16107 16112 16144 16199 16998 16999"
 
 # scheduler resources
 PARRES="-l select=2:ncpus=32:mpiprocs=32:mem=100gb -q meteoenda"

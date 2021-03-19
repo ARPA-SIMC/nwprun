@@ -16,7 +16,7 @@
   lbdana=.FALSE.,
   ydirini='@MODEL_PRE_DATADIR@',
   lchkini=.TRUE.,
-  hincbound=@PARENTMODEL_FREQ@,
+  hincbound=@BC_FREQ@,
   ydirbd='@MODEL_PRE_DATADIR@',
   lchkbd =.TRUE.,
   lan_t_so0  = @COSMO_SLOW_NML@,

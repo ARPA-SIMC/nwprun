@@ -27,7 +27,7 @@ common_extra_env = {
 # Suite enda
 extra_env = common_extra_env.copy()
 extra_env.update({
-    "NWPCONF": "prod/cosmo_2I/enda",
+    "NWPCONF": "prod/cosmo_2I/enda_norad",
     "NNODES_MODEL": 3,
     "NNODES_ENDA": 4
 })
@@ -42,9 +42,9 @@ conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0-40",
                     "postprocrange": "0",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis],
                     "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
-enda = ModelSuite("cosmo_2I_enda")
-basicenv.add_to(enda.suite)
-day = enda.suite.add_family("day").add_repeat(
+enda_norad = ModelSuite("cosmo_2I_enda_norad")
+basicenv.add_to(enda_norad.suite)
+day = enda_norad.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD", 
                       int((datetime.datetime.now()-datetime.timedelta(days=delta[0])).strftime("%Y%m%d")),
                       20301228))
@@ -57,16 +57,16 @@ for h in range(0, 24, 3):
     WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
-enda.check()
-enda.write(interactive=interactive)
-enda.replace(interactive=interactive)
+enda_norad.check()
+enda_norad.write(interactive=interactive)
+enda_norad.replace(interactive=interactive)
 
 
 # Suite enda_radvol
 extra_env = common_extra_env.copy()
 extra_env.update({
-    "NWPCONF": "prod/cosmo_2I/enda_radvol",
-    "NNODES_MODEL": 4,
+    "NWPCONF": "prod/cosmo_2I/enda",
+    "NNODES_MODEL": 3,
     "NNODES_ENDA": 8
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],
@@ -80,9 +80,9 @@ conf = ModelConfig({"gts": True, "lhn": True, "radarvol": True, "membrange": "0-
                     "postprocrange": "0",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis],
                     "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
-enda_radvol = ModelSuite("cosmo_2I_enda_radvol")
-basicenv.add_to(enda_radvol.suite)
-day = enda_radvol.suite.add_family("day").add_repeat(
+enda = ModelSuite("cosmo_2I_enda")
+basicenv.add_to(enda.suite)
+day = enda.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",
                       int((datetime.datetime.now()-datetime.timedelta(days=delta[0])).strftime("%Y%m%d")),
                       20301228))
@@ -95,9 +95,9 @@ for h in range(0, 24, 1):
     WaitAndRun(dep=hdep, conf=conf).add_to(hour)
     hdep = famname # dependency for next repetition
 
-enda_radvol.check()
-enda_radvol.write(interactive=interactive)
-enda_radvol.replace(interactive=interactive)
+enda.check()
+enda.write(interactive=interactive)
+enda.replace(interactive=interactive)
 
 
 # Suite fcruc

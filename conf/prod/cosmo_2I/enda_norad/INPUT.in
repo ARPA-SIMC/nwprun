@@ -1,6 +1,6 @@
  &CONTRL
   ydate_ini='@DATES@@TIMES@', ydate_bd='@DATES@@TIMES@',
-  hstart=0, hstop=@MODEL_STOP@, hincbound=@BC_FREQ@,
+  hstart=0, hstop=@MODEL_STOP@, hincbound=@PARENTMODEL_FREQ@,
   nincwait=0, nmaxwait=0,
   nprocx=@NPX@, nprocy=@NPY@, luvcor=.TRUE., lprog_qi=.TRUE., lprog_qr_qs=@PARENTMODEL_QRQS@,
   lvertwind_ini=.TRUE., lvertwind_bd=.TRUE., lforest=.TRUE.,
