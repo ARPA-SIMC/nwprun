@@ -50,3 +50,14 @@ rm -f YU*
 # not needed
 $ecflow_client --event=started # trigger start of postproc
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN
+
+# Save YU* files for diagnostic
+n3=`printf "%%03d" $ENS_MEMB`
+if [ "$n3" -eq "000" ]; then
+    FS_DATE=$WORKDIR/archive/${DATE}${TIME}
+    mkdir -p $WORKDIR/archive
+    mkdir -p $FS_DATE
+    cp YUCHKDAT YULHN    YUOBSDR YUPRINT  YUQUCTL $FS_DATE/  || true
+    cp YUREJCT  YUSPECIF YUSTATS YUTIMING YUVERIF $FS_DATE/  || true
+fi
+
