@@ -10,11 +10,12 @@ export GRIB_DEFINITION_PATH=$GRIB_API_EDZW/1.11.0/definitions.cnmc:$GRIB_API_EDZ
 export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.11.0/samples
 
 cd $LETKF_WORKDIR
-
+KENDA_CRASH=N
 if [ ! -f "$LETKF_WORKDIR/letkf_skip" ]; then
-    parcomp_mpirun $EXTRA_MPIRUN_LETKF $LETKF_BIN
-else
-# if there are no observations make a fake analysis
+    parcomp_mpirun $EXTRA_MPIRUN_LETKF $LETKF_BIN || KENDA_CRASH=Y
+fi
+if [ -f "$LETKF_WORKDIR/letkf_skip" -o "$KENDA_CRASH" = "Y" ]; then
+# if there are no observations or the analysis crashed make a fake analysis
 # make a physical copy of the link targets to help the successive
 # archiving process
     cp $LETKF_WORKDIR/input/laf${DATE}${TIME}0000 \
