@@ -1,4 +1,4 @@
-MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp_emvorado/radarbin_nud
+MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp_emvorado/radarbin_fpe0_nud
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
