@@ -129,11 +129,9 @@ nwpwait_setup
 file_list=(lfff00000000_$DATETIME.tar.bz2 lfff00030000_$DATETIME.tar.bz2 lfff00060000_$DATETIME.tar.bz2)
 
 while true; do
-    dl_ftp $dirname && break
+    dl_ftp $dirname && { putarki_configured_end $dirname; break; }
     nwpwait_wait || break
 done
-
-putarki_configured_end $dirname
 
 if [ -n "$1" ]; then # interactive run
     :

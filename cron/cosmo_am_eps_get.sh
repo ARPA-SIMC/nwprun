@@ -133,11 +133,9 @@ for hh in `seq $FIRST_BC_HH $FREQ_BC_HH $LAST_BC_HH`; do
 done 
 
 while true; do
-    dl_ftp $dirname && break
+    dl_ftp $dirname && { putarki_configured_end $dirname; break; }
     nwpwait_wait || break
 done
-
-putarki_configured_end $dirname
 
 if [ -n "$1" ]; then # interactive run
     :
