@@ -2,6 +2,7 @@
 # encoding: utf-8
 
 import os, sys, pygrib, numpy as np
+import glob
 import pandas as pd
 import cartopy, cartopy.crs as ccrs, cartopy.feature as cfeature
 import matplotlib, matplotlib.pyplot as plt
@@ -151,9 +152,9 @@ shpext_prov=(gt_prov[0],gt_prov[0]+ds_prov.RasterXSize*gt_prov[1],
 
 # ------------------------------------------------------------------------------
 # Ciclo sui file presenti nella directory
-for entry in os.listdir(path_in):
-    if os.path.isfile(os.path.join(path_in,entry)) and entry.endswith('.grib') and (entry.startswith('tpp') or entry.startswith('vmax')):
-        fname=os.path.join(path_in,entry)
+for fname in glob.glob(path_in):
+    base = os.path.basename(fname)
+    if os.path.isfile(fname) and base.endswith('.grib') and (base.startswith('tpp') or base.startswith('vmax')):
 
         print("Lettura file:", fname)
         grbs=pygrib.open(fname)
