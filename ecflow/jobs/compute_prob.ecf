@@ -10,9 +10,46 @@
 . $NWPCONFBINDIR/arki_tools.sh
 
 set -x
+
+# for fieldextra
 safe_rm_rf $FXTR_WORKDIR
 mkdir -p $FXTR_WORKDIR $FXTR_DATADIR
-cd $FXTR_WORKDIR
+# for scacchiera & c.
+POSTPROC_EPS_WORKDIR=$WORKDIR/postproc_eps
+safe_rm_rf $POSTPROC_EPS_WORKDIR
+mkdir -p $POSTPROC_EPS_WORKDIR
+module load singularity
+
+# this can be run simultaneously with fieldextra
+scacchiera_tp() {
+  cd $POSTPROC_EPS_WORKDIR
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
+   $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
+   $WORKDIR .
+}
+
+# these require the probabilities computed by fieldextra
+scacchiera_ensmean() {
+  cd $POSTPROC_EPS_WORKDIR
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
+   $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
+   $FXTR_DATADIR .
+}
+
+scacchiera_prob() {
+  cd $POSTPROC_EPS_WORKDIR
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
+   $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
+   $FXTR_DATADIR .
+}
+
+mappe_eps() {
+  cd $POSTPROC_EPS_WORKDIR
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/mappe_eps.py \
+     $WORKDIR_BASE/nwprun/postproc_eps/Regioni_latlon.tif \
+     $WORKDIR_BASE/nwprun/postproc_eps/ProvinceER_latlon.tif \
+     "$FXTR_DATADIR/*_?????????????${1}.grib" . 
+}
 
 # evaluate availability
 # ensemble members
@@ -29,8 +66,7 @@ done
 echo "Ensemble member forecasts: ${ma[*]}"
 echo "Last available forecast: $lma"
 
-# no analyses available at all, we are in canvas breeches (Bassini),
-# abort
+# no analyses available at all, abort
 if [ -z "$lma" ]; then
     exit 1
 fi
@@ -38,19 +74,23 @@ fi
 # link or replace forecasts
 # ensemble members
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
-    # rm -r input.$n3 # senza la barra
+    # rm -r $FXTR_WORKDIR/input.$n3 # senza la barra
     n3=`printf "%%03d" $n`
     if [ "${ma[$n]}" = Y ]; then
         ln -s $WORKDIR/cosmo.$n/data \
             $FXTR_WORKDIR/input.$n3
     elif [ -n "$lma" ]; then # use another member
         for file in $WORKDIR/cosmo.$lma/data/lfff????????; do
-            mkdir -p input.$n3
-            $SIMC_TOOLS grib_set -s perturbationNumber=$n $file input.$n3/${file##*/}
+            mkdir -p $FXTR_WORKDIR/input.$n3
+            $SIMC_TOOLS grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
         done
     fi
 done
 
+# launch scacchiera_tp in parallel with fieldextra
+scacchiera_tp &
+
+cd $FXTR_WORKDIR
 # prepare fxtr namelist
 for delta in 01 03 24; do
     conf_template fxtr_tpp${delta}h.nl
@@ -67,7 +107,7 @@ for file in $FXTR_DATADIR/*.grib; do
     mv $file.tmp $file
 done
 
-dirname=${MODEL_SIGNAL}_prob_$DATE$TIME.$$
+dirname=${MODEL_SIGNAL}_prob_$DATE$TIME
 putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
 for file in $FXTR_DATADIR/*.grib; do
     if [ -f "$file" ]; then
@@ -81,26 +121,16 @@ subdir=cosmo_2I_fcens/$DATE$TIME
 mkdir -p $CINECA_ARCHIVE_POST/$subdir
 cp -a $FXTR_DATADIR/*.grib $CINECA_ARCHIVE_POST/$subdir
 
-# remove when we will be sure
-set +e
-# run simc tools for eps potprocessing
-module load singularity
+# wait for scacchiera_tp
+wait
 
-POSTPROC_EPS_WORKDIR=$WORKDIR/postproc_eps
-safe_rm_rf $POSTPROC_EPS_WORKDIR
-mkdir -p $POSTPROC_EPS_WORKDIR
-cd $POSTPROC_EPS_WORKDIR
+# these cannot be parallelised because they use the same temporary files
+scacchiera_ensmean
+scacchiera_prob
+# wait
 
-# this can be run simultaneously with fieldextra
-$SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
- $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
- $WORKDIR .
-
-# these require the probabilities computed by fieldextra
-$SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
- $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
- $FXTR_DATADIR .
-
-$SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
- $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
- $FXTR_DATADIR .
+# poor man parallelization
+for n in `seq 0 9`; do
+    mappe_eps $n &
+done
+wait
