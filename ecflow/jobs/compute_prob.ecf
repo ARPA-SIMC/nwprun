@@ -20,12 +20,36 @@ safe_rm_rf $POSTPROC_EPS_WORKDIR
 mkdir -p $POSTPROC_EPS_WORKDIR
 module load singularity
 
+ftp_mkdir() {
+:
+}
+
+ftp_cp_one() {
+:
+}
+
+ftp_cp_all() {
+    argc=$#
+    argv=("$@")
+
+    remdir=${argv[$((argc-1))]}
+    for ((j=0; j<argc-1; j++)); do
+	ftp_cp_one ${argv[$j]} $remdir
+    done
+}
+
+
 # this can be run simultaneously with fieldextra
 scacchiera_tp() {
   cd $POSTPROC_EPS_WORKDIR
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
    $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
    $WORKDIR .
+
+  remdir=scacchiera/${DATE}${TIME}/superamento_soglie
+  ftp_mkdir $remdir
+  ftp_cp_all MTG_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_scacchiera.png $remdir
+  
 }
 
 # these require the probabilities computed by fieldextra
@@ -34,6 +58,15 @@ scacchiera_ensmean() {
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
    $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
    $FXTR_DATADIR .
+
+  remdir=scacchiera/${DATE}${TIME}/ensmean/1H
+  ftp_mkdir $remdir
+  ftp_cp_all MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_scacchiera.png $remdir
+
+  remdir=scacchiera/${DATE}${TIME}/ensmean/3H
+  ftp_mkdir $remdir
+  ftp_cp_all MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_scacchiera.png $remdir
+  
 }
 
 scacchiera_prob() {
@@ -41,6 +74,19 @@ scacchiera_prob() {
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
    $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
    $FXTR_DATADIR .
+
+  remdir=scacchiera/${DATE}${TIME}/maxprob/1H
+  ftp_mkdir $remdir
+  ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_max_scacchiera.png $remdir
+  
+  remdir=scacchiera/${DATE}${TIME}/maxprob/3H
+  ftp_mkdir $remdir
+  ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_max_scacchiera.png $remdir
+
+  remdir=scacchiera/${DATE}${TIME}/maxprob/24H
+  ftp_mkdir $remdir
+  ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_max_scacchiera.png $remdir
+
 }
 
 mappe_eps() {
