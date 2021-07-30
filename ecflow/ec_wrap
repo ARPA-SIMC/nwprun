@@ -14,6 +14,10 @@ meucci ) # Cineca HPC meucci
 	export PATH=$WORKDIR_BASE/srcgnu/install/bin:/cineca/prod/opt/libraries/qt/5.9/gnu--6.1.0/bin:/meucci/prod/build/spack/opt/spack/linux-centos7-x86_64/gcc-4.8.5/gcc-6.1.0-6s544hqxrrbq5nefhnmrravkntz25z34/bin:/cineca/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/opt/ibutils/bin:/meucci/home/usera07smr/a07smr03/.local/bin:/meucci/home/usera07smr/a07smr03/bin
 	export PYTHONPATH=$WORKDIR_BASE/srcgnu/install/lib/python2.7/site-packages
 	;;
+g100 ) # Cineca HPC Galileo 100
+	export PATH=$WORKDIR_BASE/srcgnu/install/bin:$PATH
+	export PYTHONPATH=$WORKDIR_BASE/srcgnu/install/lib/python3.6/site-packages
+	;;
 esac
 
 
