@@ -77,7 +77,8 @@ mkdir -p $GTS_BUFR_WORKDIR
 cd $GTS_BUFR_WORKDIR
 
 dirname=gts_bufr
-putarki_configured_setup $dirname "reftime=$DATETIME" "format=bufr" "signal=gts_bufr" "configext=test"
+putarki_configured_setup $dirname "reftime=$DATETIME" "format=bufr" "signal=gts_bufr"
+# "configext=test"
 nwpwait_setup
 
 while true; do
