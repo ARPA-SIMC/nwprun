@@ -18,7 +18,6 @@ mkdir -p $FXTR_WORKDIR $FXTR_DATADIR
 POSTPROC_EPS_WORKDIR=$WORKDIR/postproc_eps
 safe_rm_rf $POSTPROC_EPS_WORKDIR
 mkdir -p $POSTPROC_EPS_WORKDIR
-module load singularity
 
 ftp_mkdir() {
 :
@@ -128,7 +127,9 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
     elif [ -n "$lma" ]; then # use another member
         for file in $WORKDIR/cosmo.$lma/data/lfff????????; do
             mkdir -p $FXTR_WORKDIR/input.$n3
-            $SIMC_TOOLS grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
+# ripristinare $SIMC_TOOLS per uniformita` se e` il caso
+            grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
+#            $SIMC_TOOLS grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
         done
     fi
 done
@@ -149,7 +150,9 @@ $FXTR_BIN fxtr_wmaxp1h.nl
 
 # correct grib table number for old grib_api versions
 for file in $FXTR_DATADIR/*.grib; do
-    $SIMC_TOOLS grib_set -s tablesVersion=11 $file $file.tmp
+# ripristinare $SIMC_TOOLS per uniformita` se e` il caso
+    grib_set -s tablesVersion=11 $file $file.tmp
+#    $SIMC_TOOLS grib_set -s tablesVersion=11 $file $file.tmp
     mv $file.tmp $file
 done
 
