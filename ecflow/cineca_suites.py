@@ -1,4 +1,15 @@
-#!/usr/bin/python
+#!/bin/bash
+'''':
+for interpreter in python python3
+do
+    which $interpreter >/dev/null 2>&1 && exec $interpreter "$0" "$@"
+done
+echo "$0: No python could be found" >&2
+exit 1
+# '''
+# temporary hack for running python(2) on meucci and python3 on g100
+# https://stackoverflow.com/questions/63360890/how-to-write-a-shebang-line-that-will-call-either-either-python3-or-python2-whic
+# remove ASAP
 
 import os,sys
 import datetime
