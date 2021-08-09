@@ -1,4 +1,3 @@
-RADAR_VOL_WORKDIR=$WORKDIR/radar_vol
 FTPDIR="RAW"
 RADAR_STATIONS="ARMIDDA BRIC CAPOCACCIA CAPOFIUME CROCIONE FIUMICINO GATTATICO GRANDE ILMONTE LAURO LINATE MACAION MIDIA PETTINASCURA RASU SAGITTARIA SERANO SETTEPANI ZOUFPLAN"
 
@@ -7,13 +6,14 @@ RADAR_STATIONS="ARMIDDA BRIC CAPOCACCIA CAPOFIUME CROCIONE FIUMICINO GATTATICO G
 #NWPWAITELAPS=1800
 # quanti secondi aspetto dopo il tempo nominale per cominciare a
 # cercare un certo dato
-NWPWAITSOLAR_RUN=600
+NWPWAITSOLAR_RUN=1200
 # quanti secondi aspetto dopo il tempo nominale per rinunciare a
 # cercare un certo dato e passare al successivo
-NWPWAITSOLAR=1800
+NWPWAITSOLAR=2400
 # durata di ogni ciclo di attesa
 NWPWAITWAIT=30
 # intervallo di disponibilita` dei dati in s
-RADAR_VOL_STEP=600
-
+PROC_STEP=600
+# resta constantemente attivo
+DAEMON=Y
 
