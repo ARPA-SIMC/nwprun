@@ -9,11 +9,11 @@ get_init() {
 }
 
 get_setup() {
-    echo putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=bufr" "signal=gts_bufr"
+    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=bufr" "signal=gts_bufr"
 }
 
 get_cleanup() {
-    echo putarki_configured_end $PROCNAME
+    putarki_configured_end $PROCNAME
 }
 
 get_one() {
@@ -21,7 +21,7 @@ get_one() {
     rm -f $file
     ncftpget -V -f $WORKDIR_BASE/nwprun/.auth/bufr_ruc_get.cfg . $file || true
     if [ -f "$file" ]; then
-	echo putarki_configured_archive $PROCNAME $file
+	putarki_configured_archive $PROCNAME $file
 	return 0
     fi
     return 1
