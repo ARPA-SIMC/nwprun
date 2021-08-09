@@ -93,7 +93,7 @@ main_loop() {
 		check_run || exit 0
 	    fi
 	    trap_check
-	    
+
 	    nwpwait_setup
 	    get_setup
 	    while true; do
