@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source common get_ procedures
-. get_common.sh
+. `dirname $0`/get_common.sh
 
 # define custom functions
 get_init() {
@@ -28,4 +28,4 @@ get_one() {
 }
 
 # enter main loop
-main_loop
+main_loop "$@"

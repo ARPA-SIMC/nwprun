@@ -63,52 +63,54 @@ main_loop() {
     PROC_WORKDIR=$WORKDIR
     # improve
     if [ -n "$1" ]; then # interactive run
-	PROC_WORKDIR=${PROC_WORKDIR}_interactive
+#	PROC_WORKDIR=${PROC_WORKDIR}_interactive
 	DATETIME=$1
 	DATE=${DATETIME:0:8}
 	TIME=${DATETIME:8:4}
+	get_setup
+	get_one && get_cleanup
     else # automatic run
 	nonunique_exit
 	# redirect all to logfile
 	exec >>$LOGDIR/`basename $0`.log 2>&1
-
-# setup kill traps
+	# setup kill traps
 	trap_setup
 
-    fi
+	safe_rm_rf $PROC_WORKDIR
+	mkdir -p $PROC_WORKDIR
+	cd $PROC_WORKDIR
 
-    safe_rm_rf $PROC_WORKDIR
-    mkdir -p $PROC_WORKDIR
-    cd $PROC_WORKDIR
 
-    while true; do
-	restore_state $PROCNAME.state || touch $NWPCONFDIR/$NWPCONF/$PROCNAME.state
-	increment_datetime
-
-	# exit or wait if too early, depending on daemon mode
-	if [ "$DAEMON" = Y ]; then
-	    wait_run
-	    trap_check
-	else
-	    check_run || exit 0
-	fi
 	
-	nwpwait_setup
-	get_setup
 	while true; do
-	    res=0
-            get_one || res=$?
-	    if [ "$res" = 0 ]; then # improve $res management
-		get_cleanup # correct here?
-		break
-	    fi
-            if nwpwait_wait; then
-		trap_check
+	    restore_state $PROCNAME.state || touch $NWPCONFDIR/$NWPCONF/$PROCNAME.state
+	    increment_datetime
+
+	    # exit or wait if too early, depending on daemon mode
+	    if [ "$DAEMON" = Y ]; then
+		wait_run
 	    else
-		break
-            fi
+		check_run || exit 0
+	    fi
+	    trap_check
+	    
+	    nwpwait_setup
+	    get_setup
+	    while true; do
+		res=0
+		get_one || res=$?
+		if [ "$res" = 0 ]; then # improve $res management
+		    get_cleanup # correct here?
+		    break
+		fi
+		if nwpwait_wait; then
+		    trap_check
+		else
+		    break
+		fi
+	    done
+	    #    get_cleanup
+	    save_state $PROCNAME.state DATE TIME
 	done
-	#    get_cleanup
-	save_state $PROCNAME.state DATE TIME
-    done
+    fi
 }
