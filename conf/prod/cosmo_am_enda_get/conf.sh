@@ -1,9 +1,5 @@
 FTPDIR=bceps
 
-COSMO_AM_ENDA_WORKDIR=$WORKDIR/cosmo_am_enda
-COSMO_AM_ENDA_G2_WORKDIR=$WORKDIR/cosmo_am_enda_g2
-#ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_galileo
-
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
 #NWPWAITELAPS=1800
@@ -18,5 +14,5 @@ NWPWAITSOLAR=57600
 # durata di ogni ciclo di attesa
 NWPWAITWAIT=60
 # intervallo di disponibilita` dei dati in h
-COSMO_AM_ENDA_STEP=3
+PROC_STEP=10800
 
