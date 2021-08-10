@@ -61,12 +61,11 @@ main_loop() {
     # end of setup
 
     PROC_WORKDIR=$WORKDIR
-    # improve
     if [ -n "$1" ]; then # interactive run
-#	PROC_WORKDIR=${PROC_WORKDIR}_interactive
 	DATETIME=$1
 	DATE=${DATETIME:0:8}
 	TIME=${DATETIME:8:4}
+
 	get_setup
 	get_one && get_cleanup
     else # automatic run
@@ -75,12 +74,9 @@ main_loop() {
 	exec >>$LOGDIR/`basename $0`.log 2>&1
 	# setup kill traps
 	trap_setup
-
 	safe_rm_rf $PROC_WORKDIR
 	mkdir -p $PROC_WORKDIR
 	cd $PROC_WORKDIR
-
-
 	
 	while true; do
 	    restore_state $PROCNAME.state || touch $NWPCONFDIR/$NWPCONF/$PROCNAME.state

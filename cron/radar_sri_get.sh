@@ -5,7 +5,6 @@
 
 # define custom functions
 get_init() {
-    module load singularity
     export PROCNAME=radar_sri_get
 }
 
