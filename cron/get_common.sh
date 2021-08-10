@@ -20,16 +20,22 @@ trap_setup() {
     # setup kill, exit and reload traps
     mustexit=
     mustreload=
-    trap '{ mustexit=Y; }' 15 20 2
-    trap '{ mustreload=Y; }' 1
+    trap '{ mustexit=Y; log "exit requested, exiting as soon as possible" }' 15 20 2
+    trap '{ mustreload=Y; log "reload requested, reloading as soon as possible" }' 1
     trap '{ final_cleanup; }' EXIT
 }
 
 
 trap_check() {
     # check if traps have to be called
-    [ -n "$mustexit" ] && exit 1 || true
-    [ -n "$mustreload" ] && exec "$0" "$@" || true
+    if [ -n "$mustexit" ]; then
+       log "exiting on request"
+       exit 1
+    fi
+    if [ -n "$mustreload" ]; then
+       log "reloading on request"
+       exec "$0" "$@"
+    fi
 }
 
 
@@ -50,7 +56,7 @@ main_loop() {
     export NWPCONFBINDIR=$basedir/libexec/nwpconf
     export NWPCONF=prod/$PROCNAME
 
-    set -x
+#    set -x
     set -e
     # source the main library module
     . $NWPCONFBINDIR/nwpconf.sh
@@ -90,6 +96,7 @@ main_loop() {
 	    fi
 	    trap_check
 
+	    log "starting download and archiving for $DATE$TIME"
 	    nwpwait_setup
 	    get_setup
 	    while true; do
@@ -97,12 +104,13 @@ main_loop() {
 		get_one || res=$?
 		if [ "$res" = 0 ]; then # improve $res management
 		    get_cleanup # correct here?
+		    log "download and archiving for $DATE$TIME finished successfully"
 		    break
 		fi
 		if nwpwait_wait; then
 		    trap_check
 		else
-		    break
+		    log "download and archiving for $DATE$TIME did not finish successfully"		    break
 		fi
 	    done
 	    #    get_cleanup

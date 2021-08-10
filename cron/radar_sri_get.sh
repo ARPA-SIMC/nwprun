@@ -20,12 +20,14 @@ get_cleanup() {
 get_one() {
     unixdate=`date -u --date="$DATE $TIME" +%s000`
     rm -f sri.tif srill.grib srillmd.grib sriinter.grib
-    wget -O sri.tif \
+    log "starting download of SRI data for $DATE$TIME"
+    wget -O sri.tif --progress=dot:giga \
 	 --header='Content-Type: application/json' \
 	 --post-data='{"productType": "SRI", "productDate": '$unixdate'}' \
 	 $SRI_URL
 
     if [ -f "sri.tif" ]; then
+	log "SRI data for $DATE$TIME successfully downloaded"
 
 	$SIMC_TOOLS vg6d_transform --output-format=grib_api \
 		    --trans-type=metamorphosis --sub-type=settoinvalid \
@@ -41,6 +43,8 @@ get_one() {
 		    srillmd.grib sriinter.grib
 
 	putarki_configured_archive $PROCNAME sriinter.grib
+	log "SRI data for $DATE$TIME successfully processed and sent to archive"
+	rm -f srill.grib srillmd.grib sriinter.grib
 	return 0
     fi
 }

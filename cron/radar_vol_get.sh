@@ -29,11 +29,13 @@ get_one() {
     # Download radar volume for each radar in "RADAR_STATIONS" at $DATE$TIME
     for radstat in $RADAR_STATIONS; do
 	filepath="${FTPDIR}/${radstat}/$name_file_ftp"
+	log "starting download of $filepath"
 	ncftpget -V -f $WORKDIR_BASE/nwprun/.auth/dpc.cfg . $filepath || continue
 	if [ -f "$name_file_ftp" ]; then
-	    mv $name_file_ftp ${radstat}.hdf
-	    putarki_configured_archive $PROCNAME ${radstat}.hdf
-	    rm -f ${radstat}.hdf
+	    mv $name_file_ftp $radstat.hdf
+	    putarki_configured_archive $PROCNAME $radstat.hdf
+	    log "file $radstat.hdf successfully downloaded and sent to archive"
+	    rm -f $radstat.hdf
 	    donesomething=Y
 	fi
     done
