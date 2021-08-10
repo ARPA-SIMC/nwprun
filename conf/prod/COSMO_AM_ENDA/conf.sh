@@ -2,7 +2,7 @@ FTPDIR=bceps
 
 COSMO_AM_ENDA_WORKDIR=$WORKDIR/cosmo_am_enda
 COSMO_AM_ENDA_G2_WORKDIR=$WORKDIR/cosmo_am_enda_g2
-ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_galileo
+#ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_galileo
 
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
