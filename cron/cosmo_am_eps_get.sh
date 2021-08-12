@@ -48,7 +48,7 @@ get_one() {
  	    # in "file_list" is saved to be deleted later. Reverse order in 
 	    # "delete" array must be kept!
 	    if [ -s $fname ]; then 
-		gunzip $fname > ${fname%.gz} # keep original file
+		gunzip -c $fname > ${fname%.gz} # keep original file
 		log "file $fname successfully downloaded and unpacked"
 		putarki_configured_archive $PROCNAME ${fname%.gz}
 		rm -f ${fname%.gz}
