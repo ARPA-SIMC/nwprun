@@ -20,8 +20,8 @@ trap_setup() {
     # setup kill, exit and reload traps
     mustexit=
     mustreload=
-    trap '{ mustexit=Y; log "exit requested, exiting as soon as possible" }' 15 20 2
-    trap '{ mustreload=Y; log "reload requested, reloading as soon as possible" }' 1
+    trap '{ mustexit=Y; log "exit requested, exiting as soon as possible"; }' 15 20 2
+    trap '{ mustreload=Y; log "reload requested, reloading as soon as possible"; }' 1
     trap '{ final_cleanup; }' EXIT
 }
 
@@ -110,7 +110,8 @@ main_loop() {
 		if nwpwait_wait; then
 		    trap_check
 		else
-		    log "download and archiving for $DATE$TIME did not finish successfully"		    break
+		    log "download and archiving for $DATE$TIME did not finish successfully"
+		    break
 		fi
 	    done
 	    #    get_cleanup

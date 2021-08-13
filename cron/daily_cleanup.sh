@@ -35,6 +35,7 @@ import_signal_dailycleanup 40
 log "rotating log files"
 if which logrotate >/dev/null 2>&1; then
     if [ -f "$LOGDIR/logrotate.conf" ]; then
+        log "really rotating log files"
 	logrotate --state $LOGDIR/logrotate.status $LOGDIR/logrotate.conf
     fi
 fi
