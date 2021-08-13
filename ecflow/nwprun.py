@@ -241,6 +241,7 @@ class EpsPostproc:
         fam = node.add_family("eps_postproc")
         fam.add_trigger("./eps_members == complete")
         fam.add_task("compute_prob")
+        fam.add_task("upload_prob").add_trigger("./compute_prob == complete")
 
 # Add family for the diagnostic of KENDA
 class EndaDiagnostics:

@@ -32,9 +32,23 @@ def estrai_campi_su_macroaree(fname,valore,sub_type,sf,sv,percent,aree):
         "%s campo.grib"%(sf,sv,fname)
     subprocess.call(grib_copy.split(),shell=False)
 
+# per velocizzare la procedura, aree puo' ossere un file grib
+# generato una-tantum ad hoc a partire da un singolo grib di esempio e
+# dallo shapefile desiderato con il comando:
+# vg6d_transform --trans-type=maskgen --sub-type=poly
+#  --coord-format=shp --coord-file=aree.shp
+#  esempio.grib aree.grib
+    if aree.endswith(("grib","grib1","grib2","grb","grb1","grb2")):
+        c_format = "grib_api"
+        trans_type = "maskinter"
+    else:
+        c_format = "shp"
+        trans_type = "polyinter"
+
     vg6d_getpoint="vg6d_getpoint --coord-file=%s " \
-        "--coord-format=shp --trans-type=polyinter --sub-type=%s " \
-        "--percentile=%d --output-format=native campo.grib pre.v7d"%(aree,sub_type,percent)
+        "--coord-format=%s --trans-type=%s --sub-type=%s " \
+        "--percentile=%d --output-format=native campo.grib pre.v7d" % \
+        (aree,c_format,trans_type,sub_type,percent)
     subprocess.call(vg6d_getpoint.split(),shell=False)
                 
     v7d_trans="v7d_transform --input-format=native --output-format=csv --csv-header=0 " \

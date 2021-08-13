@@ -1,6 +1,5 @@
 %include <sched_heavy.h>
-%include <%HPCENV%/smnd.h>
-%include <%HPCENV%/modules.h>
+#include <%HPCENV%/smnd.h>
 %include <head.h>
 
 # source other optional modules
@@ -15,86 +14,11 @@ set -x
 safe_rm_rf $FXTR_WORKDIR
 mkdir -p $FXTR_WORKDIR $FXTR_DATADIR
 # for scacchiera & c.
-POSTPROC_EPS_WORKDIR=$WORKDIR/postproc_eps
-safe_rm_rf $POSTPROC_EPS_WORKDIR
-mkdir -p $POSTPROC_EPS_WORKDIR
+safe_rm_rf $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
+mkdir -p $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
 
-ftp_mkdir() {
-:
-}
-
-ftp_cp_one() {
-:
-}
-
-ftp_cp_all() {
-    argc=$#
-    argv=("$@")
-
-    remdir=${argv[$((argc-1))]}
-    for ((j=0; j<argc-1; j++)); do
-	ftp_cp_one ${argv[$j]} $remdir
-    done
-}
-
-
-# this can be run simultaneously with fieldextra
-scacchiera_tp() {
-  cd $POSTPROC_EPS_WORKDIR
-  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
-   $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
-   $WORKDIR .
-
-  remdir=scacchiera/${DATE}${TIME}/superamento_soglie
-  ftp_mkdir $remdir
-  ftp_cp_all MTG_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_scacchiera.png $remdir
-  
-}
-
-# these require the probabilities computed by fieldextra
-scacchiera_ensmean() {
-  cd $POSTPROC_EPS_WORKDIR
-  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
-   $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
-   $FXTR_DATADIR .
-
-  remdir=scacchiera/${DATE}${TIME}/ensmean/1H
-  ftp_mkdir $remdir
-  ftp_cp_all MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_scacchiera.png $remdir
-
-  remdir=scacchiera/${DATE}${TIME}/ensmean/3H
-  ftp_mkdir $remdir
-  ftp_cp_all MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_scacchiera.png $remdir
-  
-}
-
-scacchiera_prob() {
-  cd $POSTPROC_EPS_WORKDIR
-  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
-   $WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp \
-   $FXTR_DATADIR .
-
-  remdir=scacchiera/${DATE}${TIME}/maxprob/1H
-  ftp_mkdir $remdir
-  ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_max_scacchiera.png $remdir
-  
-  remdir=scacchiera/${DATE}${TIME}/maxprob/3H
-  ftp_mkdir $remdir
-  ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_max_scacchiera.png $remdir
-
-  remdir=scacchiera/${DATE}${TIME}/maxprob/24H
-  ftp_mkdir $remdir
-  ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_max_scacchiera.png $remdir
-
-}
-
-mappe_eps() {
-  cd $POSTPROC_EPS_WORKDIR
-  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/mappe_eps.py \
-     $WORKDIR_BASE/nwprun/postproc_eps/Regioni_latlon.tif \
-     $WORKDIR_BASE/nwprun/postproc_eps/ProvinceER_latlon.tif \
-     "$FXTR_DATADIR/*_?????????????${1}.grib" . 
-}
+fix_ensemble_members() {
+. ~/smnd_profile
 
 # evaluate availability
 # ensemble members
@@ -111,7 +35,7 @@ done
 echo "Ensemble member forecasts: ${ma[*]}"
 echo "Last available forecast: $lma"
 
-# no analyses available at all, abort
+# no forecasts available at all, abort
 if [ -z "$lma" ]; then
     exit 1
 fi
@@ -133,9 +57,12 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
         done
     fi
 done
+}
 
-# launch scacchiera_tp in parallel with fieldextra
-scacchiera_tp &
+fxtr_compute_prob() {
+%include <%HPCENV%/modules.h>
+. ~/smnd_profile
+export OMP_NUMTHREADS=16
 
 cd $FXTR_WORKDIR
 # prepare fxtr namelist
@@ -170,16 +97,70 @@ subdir=cosmo_2I_fcens/$DATE$TIME
 mkdir -p $CINECA_ARCHIVE_POST/$subdir
 cp -a $FXTR_DATADIR/*.grib $CINECA_ARCHIVE_POST/$subdir
 
-# wait for scacchiera_tp
-wait
+}
+
+# this can be run simultaneously with fieldextra
+scacchiera_tp() {
+  module load singularity
+  mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_tp
+  cd $POSTPROC_EPS_WORKDIR/scacchiera_tp
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
+   $AREE_ER \
+   $WORKDIR $POSTPROC_EPS_DATADIR
+}
+
+# these require the probabilities computed by fieldextra
+scacchiera_ensmean() {
+  module load singularity
+  mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_ensmean
+  cd $POSTPROC_EPS_WORKDIR/scacchiera_ensmean
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
+   $AREE_ER \
+   $FXTR_DATADIR $POSTPROC_EPS_DATADIR
+}
+
+scacchiera_prob() {
+  module load singularity
+  mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_prob
+  cd $POSTPROC_EPS_WORKDIR/scacchiera_prob
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
+   $AREE_ER \
+   $FXTR_DATADIR $POSTPROC_EPS_DATADIR
+}
+
+mappe_eps() {
+  module load singularity
+  cd $POSTPROC_EPS_WORKDIR
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/mappe_eps.py \
+     $WORKDIR_BASE/nwprun/postproc_eps/Regioni_latlon.tif \
+     $WORKDIR_BASE/nwprun/postproc_eps/ProvinceER_latlon.tif \
+     "$FXTR_DATADIR/*_?????????????${1}.grib" $POSTPROC_EPS_DATADIR
+}
+
+# get aree file
+AREE_ER=`conf_getfile aree_er.grib` || AREE_ER=$WORKDIR_BASE/nwprun/postproc_eps/macroaree_er.shp
+# all functions launched within () so that they use a separate environment
+# due to module incompatibility
+date -u
+(fix_ensemble_members)
+# launch scacchiera_tp in parallel with fieldextra
+date -u
+(fxtr_compute_prob) &
+fxtr_pid=$!
+(scacchiera_tp) &
+
+# wait for fieldextra
+wait $fxtr_pid
+date -u
 
 # these cannot be parallelised because they use the same temporary files
-scacchiera_ensmean
-scacchiera_prob
-# wait
+(scacchiera_ensmean) &
+(scacchiera_prob) &
 
 # poor man parallelization
 for n in `seq 0 9`; do
-    mappe_eps $n &
+    (mappe_eps $n) &
 done
+date -u
 wait
+date -u

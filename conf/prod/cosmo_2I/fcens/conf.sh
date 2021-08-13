@@ -4,6 +4,8 @@ FXTR_HOME=$WORKDIR_BASE/srcintel/fieldExtra-12.6.0/
 FXTR_BIN=$FXTR_HOME/src/fieldextra_intel_opt_omp
 FXTR_WORKDIR=$WORKDIR/fxtr
 FXTR_DATADIR=$FXTR_WORKDIR/data
+POSTPROC_EPS_WORKDIR=$WORKDIR/postproc_eps
+POSTPROC_EPS_DATADIR=$POSTPROC_EPS_WORKDIR/data
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
@@ -47,6 +49,10 @@ MODEL_SIGNAL=cosmo_2I_fcens
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
 MODEL_ARCHIVE_ANA=$WORKDIR/../enda/archive
+
+# data for infomet upload
+INFOMET_UP_URL=ftp://ftpsimc.arpae.it/
+INFOMET_UP_BASEDIR=PREVISIONI/AREA_LIMITATA/COSMO_ENS
 
 # scheduler resources
 PARRES="-l select=8:ncpus=32:mpiprocs=32:mem=118gb -q meteoeps"

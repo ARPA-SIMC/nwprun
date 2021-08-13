@@ -111,10 +111,24 @@ for i in range(1,21):
         "tp.grib tp3h_membro%s.grib"%str(i)
     os.system(grib_cum)
     subprocess.call(["rm","tp.grib"])
-    
+
+# per velocizzare la procedura, aree puo' ossere un file grib
+# generato una-tantum ad hoc a partire da un singolo grib di esempio e
+# dallo shapefile desiderato con il comando:
+# vg6d_transform --trans-type=maskgen --sub-type=poly
+#  --coord-format=shp --coord-file=aree.shp
+#  esempio.grib aree.grib
+    if aree.endswith(("grib","grib1","grib2","grb","grb1","grb2")):
+        c_format = "grib_api"
+        trans_type = "maskinter"
+    else:
+        c_format = "shp"
+        trans_type = "polyinter"
+
     vg6d_getpoint="vg6d_getpoint --coord-file=%s " \
-        "--coord-format=shp --trans-type=polyinter --sub-type=%s " \
-        "--output-format=native tp3h_membro%s.grib pre.v7d"%(aree,sub_type,str(i))
+        "--coord-format=%s --trans-type=%s --sub-type=%s " \
+        "--output-format=native tp3h_membro%s.grib pre.v7d" % \
+        (aree,c_format,trans_type,sub_type,str(i))
     subprocess.call(vg6d_getpoint.split(),shell=False)
 
     csvname="tp3h_membro%s.csv"%str(i)

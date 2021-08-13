@@ -1,0 +1,77 @@
+%include <sched_wait.h>
+%include <head.h>
+
+# source other optional modules
+#. $NWPCONFBINDIR/parcomp.sh
+#. $NWPCONFBINDIR/nwpwait.sh
+#. $NWPCONFBINDIR/putarki.sh
+#. $NWPCONFBINDIR/arki_tools.sh
+
+set -x
+
+ftp_mkdir() {
+    fulldir=$1
+    rest=$fulldir
+    startdir=
+    while [ -n "$rest" ]; do
+        dir=${rest%%%%/*}
+        rest=${rest#$dir}
+        rest=${rest#/}
+        if [ -n "$dir" ]; then
+	    startdir=$startdir/$dir
+	    LD_LIBRARY_PATH= curl \
+			   --ssl \
+			   --netrc-file $WORKDIR_BASE/nwprun/.auth/infomet.netrc \
+			   -Q "MKD ${INFOMET_UP_BASEDIR}${startdir}" \
+			   $INFOMET_UP_URL || true
+        fi
+    done
+}
+
+ftp_cp_one() {
+    LD_LIBRARY_PATH= curl \
+		   --ftp-ssl-control \
+		   --netrc-file $WORKDIR_BASE/nwprun/.auth/infomet.netrc \
+		   -T "$1" \
+		   $INFOMET_UP_URL/$INFOMET_UP_BASEDIR/$2/
+}
+
+ftp_cp_all() {
+    argc=$#
+    argv=("$@")
+
+    remdir=${argv[$((argc-1))]}
+    for ((j=0; j<argc-1; j++)); do
+	ftp_cp_one ${argv[$j]} $remdir
+    done
+}
+
+cd $POSTPROC_EPS_DATADIR
+
+# scacchiera_tp
+remdir=scacchiera/${DATE}${TIME}/superamento_soglie
+ftp_mkdir $remdir
+ftp_cp_all MTG_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_scacchiera.png $remdir
+
+# scacchiera_ensmean
+remdir=scacchiera/${DATE}${TIME}/ensmean/1H
+ftp_mkdir $remdir
+ftp_cp_all MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_scacchiera.png $remdir
+
+remdir=scacchiera/${DATE}${TIME}/ensmean/3H
+ftp_mkdir $remdir
+ftp_cp_all MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_scacchiera.png $remdir
+  
+# scacchiera_prob
+remdir=scacchiera/${DATE}${TIME}/maxprob/1H
+ftp_mkdir $remdir
+ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_max_scacchiera.png $remdir
+  
+remdir=scacchiera/${DATE}${TIME}/maxprob/3H
+ftp_mkdir $remdir
+ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_max_scacchiera.png $remdir
+
+remdir=scacchiera/${DATE}${TIME}/maxprob/24H
+ftp_mkdir $remdir
+ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_max_scacchiera.png $remdir
+
