@@ -83,7 +83,7 @@ for file in $FXTR_DATADIR/*.grib; do
     mv $file.tmp $file
 done
 
-dirname=${MODEL_SIGNAL}_prob_$DATE$TIME
+dirname=${MODEL_SIGNAL}_prob
 putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
 for file in $FXTR_DATADIR/*.grib; do
     if [ -f "$file" ]; then
