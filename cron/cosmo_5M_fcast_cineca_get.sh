@@ -1,13 +1,13 @@
 #!/bin/bash
 
-. ./cineca_get_common.sh
+# source common get_ procedures
+. `dirname $0`/cineca_get_common.sh
 
-unset LANG
-basedir=$OPE
-# setup common to user scripts
-# basic variables
-export NWPCONFDIR=$basedir/conf
-export NWPCONFBINDIR=$basedir/libexec/nwpconf
-export NWPCONF=prod/cosmo_5M/fcast_cineca_get
+get_init() {
+    export PROCNAME=fcast_cineca_get
+    export EXTRA_CONF=cosmo_5M/
+}
 
-lami_cineca_get
+# enter main loop
+main_loop "$@"
+

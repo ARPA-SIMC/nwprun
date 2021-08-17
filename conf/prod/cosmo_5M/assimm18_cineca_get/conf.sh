@@ -8,13 +8,7 @@ LAMI_CINECA_WORKDIR=$WORKDIR_BASE/download/work/$MODEL_SIGNAL
 POSTPROC_LIST=(lami_make_itr lami_make_medl lami_make_vprof)
 
 # $TIME deve essere protetto perche' non e' ancora noto, lo sviluppo con eval
-if [ "$HPC_SYSTEM" = "galileo" ]; then
-  CINECA_SUITEDIR='/gpfs/meteo/LM_WorkDir/galileo/lm/PROD/work/$TIME/lm5/ope/analysis_m18h'
-  CINECA_GRIBOUTDIR='$CINECA_SUITEDIR/dataoutput'
-else
-  CINECA_SUITEDIR='/meucci_meteo/LM_WorkDir/meucci/lm/PROD/work/$TIME/lm5/ope/analysis_m18h'
-  CINECA_GRIBOUTDIR='$CINECA_SUITEDIR/dataoutput'
-fi
+CINECA_SUITEDIR_TMPL=$CINECA_RUN/'${TIME:0:2}/lm5/ope/analysis_m18h'
 
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo

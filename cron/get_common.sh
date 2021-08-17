@@ -54,7 +54,7 @@ main_loop() {
     # basic variables
     export NWPCONFDIR=$basedir/conf
     export NWPCONFBINDIR=$basedir/libexec/nwpconf
-    export NWPCONF=prod/$PROCNAME
+    export NWPCONF=prod/$EXTRA_CONF$PROCNAME
 
 #    set -x
     set -e
@@ -64,6 +64,7 @@ main_loop() {
     . $NWPCONFBINDIR/putarki.sh
     . $NWPCONFBINDIR/arki_tools.sh
     . $NWPCONFBINDIR/nwpwait.sh
+    get_post || true
     # end of setup
 
     PROC_WORKDIR=$WORKDIR
@@ -105,6 +106,9 @@ main_loop() {
 		if [ "$res" = 0 ]; then # improve $res management
 		    get_cleanup # correct here?
 		    log "download and archiving for $DATE$TIME finished successfully"
+		    break
+		elif [ "$res" = 2 ]; then
+		    log "data for $DATE$TIME not available, but later data available, continuing"
 		    break
 		fi
 		if nwpwait_wait; then

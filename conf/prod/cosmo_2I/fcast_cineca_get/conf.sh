@@ -10,13 +10,7 @@ VPROF_NETWORK=cosmo_2I_vprof
 
 
 # $TIME deve essere protetto perche' non e' ancora noto, lo sviluppo con eval
-if [ "$HPC_SYSTEM" = "galileo" ]; then
-  CINECA_SUITEDIR='/gpfs/meteo/LM_WorkDir/galileo/lm/PROD/work/$TIME/lm2.2/ope/forecast'
-  CINECA_GRIBOUTDIR='$CINECA_SUITEDIR/dataoutput'
-else
-  CINECA_SUITEDIR='/meucci_meteo/LM_WorkDir/meucci/lm/PROD/work/$TIME/lm2.2/ope/forecast'
-  CINECA_GRIBOUTDIR='$CINECA_SUITEDIR/dataoutput'
-fi
+CINECA_SUITEDIR_TMPL=$CINECA_RUN/'${TIME:0:2}/lm2.2/ope/forecast'
 
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
