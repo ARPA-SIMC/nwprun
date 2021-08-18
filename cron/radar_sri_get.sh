@@ -21,9 +21,8 @@ get_one() {
     unixdate=`date -u --date="$DATE $TIME" +%s000`
     rm -f sri.tif srill.grib srillmd.grib sriinter.grib
     log "starting download of SRI data for $DATE$TIME"
-    wget -O sri.tif --progress=dot:giga \
-	 --header='Content-Type: application/json' \
-	 --post-data='{"productType": "SRI", "productDate": '$unixdate'}' \
+    curl -o sri.tif --silent --header 'Content-Type: application/json' \
+	 --data '{"productType": "SRI", "productDate": '$unixdate'}' \
 	 $SRI_URL
 
     if [ -f "sri.tif" ]; then
