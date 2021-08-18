@@ -49,29 +49,89 @@ ftp_cp_all() {
 cd $POSTPROC_EPS_DATADIR
 
 # scacchiera_tp
-remdir=scacchiera/${DATE}${TIME}/superamento_soglie
+remdir=scacchiera/superamento_soglie/${DATE}
 ftp_mkdir $remdir
 ftp_cp_all MTG_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_scacchiera.png $remdir
 
 # scacchiera_ensmean
-remdir=scacchiera/${DATE}${TIME}/ensmean/1H
+remdir=scacchiera/ensmean/1H/${DATE}
 ftp_mkdir $remdir
 ftp_cp_all MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_scacchiera.png $remdir
 
-remdir=scacchiera/${DATE}${TIME}/ensmean/3H
+remdir=scacchiera/ensmean/3H/${DATE}
 ftp_mkdir $remdir
 ftp_cp_all MTG_FC_LENS_PR_0_TPEM_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_scacchiera.png $remdir
   
 # scacchiera_prob
-remdir=scacchiera/${DATE}${TIME}/maxprob/1H
+remdir=scacchiera/maxprob/1H/${DATE}
 ftp_mkdir $remdir
 ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_max_scacchiera.png $remdir
   
-remdir=scacchiera/${DATE}${TIME}/maxprob/3H
+remdir=scacchiera/maxprob/3H/${DATE}
 ftp_mkdir $remdir
 ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_max_scacchiera.png $remdir
 
-remdir=scacchiera/${DATE}${TIME}/maxprob/24H
+remdir=scacchiera/maxprob/24H/${DATE}
 ftp_mkdir $remdir
 ftp_cp_all MTG_FC_LENS_PR_0_TPPR_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_max_scacchiera.png $remdir
 
+remdir=precipitazione/italia/probabilita/1H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_italia.png $remdir
+
+remdir=precipitazione/italia/probabilita/3H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_prob_italia.png $remdir
+
+remdir=precipitazione/italia/probabilita/24H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_prob_italia.png $remdir
+
+remdir=precipitazione/italia/meanmax/1H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_italia.png $remdir
+
+remdir=precipitazione/italia/meanmax/3H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_meanmax_italia.png $remdir
+
+remdir=precipitazione/emro/probabilita/1H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_emro.png $remdir
+
+remdir=precipitazione/emro/probabilita/3H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_prob_emro.png $remdir
+
+remdir=precipitazione/emro/probabilita/24H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_prob_emro.png $remdir
+
+remdir=precipitazione/emro/meanmax/1H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_emro.png $remdir
+
+remdir=precipitazione/emro/meanmax/3H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_meanmax_emro.png $remdir
+
+remdir=precipitazione/emro/meanmax/24H/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_meanmax_emro.png $remdir
+
+# vmax maps
+remdir=vmax10m/italia/probabilita/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_italia.png $remdir
+
+remdir=vmax10m/italia/meanmax/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_italia.png $remdir
+
+remdir=vmax10m/emro/probabilita/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_emro.png $remdir
+
+remdir=vmax10m/emro/meanmax/${DATE}
+ftp_mkdir $remdir
+ftp_cp_all MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_emro.png $remdir
