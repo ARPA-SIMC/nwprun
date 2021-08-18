@@ -33,6 +33,7 @@ import_signal_dailycleanup 40
 # arki_dailycleanup ???
 
 log "rotating log files"
+PATH=$PATH:/usr/sbin:/sbin
 if which logrotate >/dev/null 2>&1; then
     if [ -f "$LOGDIR/logrotate.conf" ]; then
         log "really rotating log files"

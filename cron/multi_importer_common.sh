@@ -46,7 +46,7 @@ import_loop() {
 
     # redirect all to logfile
     exec >>$LOGDIR/`basename $0`.log 2>&1
-    set -x
+    # set -x
 
     # security check
     [ -n "$ARKI_IMPROOT" ] || exit 1

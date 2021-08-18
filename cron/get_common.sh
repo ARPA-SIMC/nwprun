@@ -44,6 +44,11 @@ final_cleanup() {
     exit
 }
 
+# optional function, define a default one
+get_post() {
+    :
+}
+
 
 main_loop() {
     get_init
@@ -64,7 +69,7 @@ main_loop() {
     . $NWPCONFBINDIR/putarki.sh
     . $NWPCONFBINDIR/arki_tools.sh
     . $NWPCONFBINDIR/nwpwait.sh
-    get_post || true
+    get_post
     # end of setup
 
     PROC_WORKDIR=$WORKDIR
