@@ -15,6 +15,8 @@
   lfdbk_output=.true.,
   lreadmeta_from_netcdf=.true.,
   lequal_azi_alldatasets=.true.,
+  dom=1,
+  icountry=3,
   itype_supobing=1,
 
       supob_nrb = 3, ! threshold for number of radar bins used for superobbing
@@ -29,8 +31,6 @@
       supob_azi_maxsector_vr = 40.0,
       supob_vrw = 10.0, !(m/s) threshold for stddev of radial wind values within a superobed bi
 !      supob_rfl = 1e15, !(mm^6/m^3) threshold for stddev of reflectivity values within a superobed bin
-      ! in case of superobing, do ASCII output of superob'd datasets, e.g., for control purposes:
-      lvoldata_output_supob = .FALSE.,
       ! flag for qc control of obs data
       lqc_flag = .false.,
       ! flag for dealiasing of obs radial wind data

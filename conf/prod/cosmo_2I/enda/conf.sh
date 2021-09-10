@@ -1,4 +1,4 @@
-MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp_emvorado/radarbin_nud
+MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_5.08/radarbin_nud
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
@@ -39,7 +39,6 @@ if [ -n "$ENS_MEMB" ]; then
         MODEL_DELTABD=5
         ;;
     esac
-#    PARENTMODEL_ARKI_DS=$ARKI_URL/cnmc_cosmo_eps
     PARENTMODEL_ARKI_DS=$ARKI_DIR/cosmo_am_enda
     PARENTMODEL_SIGNAL=cosmo_am_enda
     PARENTMODEL_FREQINI=3
@@ -116,9 +115,10 @@ MODEL_ARCHIVE_OUTPUT_ANA_REMOTE=$CINECA_ARCHIVE_REMOTE:$CINECA_ARCHIVE_REMOTE_AN
 # letkf analysis
 LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data
-LETKF_BIN=$WORKDIR_BASE/srcintel/dace_code/build/LINUX64.intel-mpi/bin/var3d
+LETKF_BIN=$WORKDIR_BASE/srcintel/dace_code_2.06/build/LINUX64.intel-mpi/bin/var3d
 
 # Radar volumes assimilation
+ACT_EMVORADO=.TRUE.
 HDF5_WORKDIR=$WORKDIR/radar_vol
 RADLIST="16101 16102 16103 16105 16106 16107 16112 16144 16199 16998 16999"
 
