@@ -24,15 +24,17 @@ cd $MODEL_WORKDIR
 touch blklsttmp
 
 # Handle radar volumes
-if [[ "%RADVOL%" == "Y" ]]; then
+if [ "%RADVOL%" == "Y" ] && ls $HDF5_WORKDIR/* >/dev/null 2>&1; then
     # Namelist for EMVORADO 
     conf_template INPUT_RADARSIM
 
     # Directory for Mie look-up tables
     mkdir -p $WORKDIR/lookup_Mie_write
 
-    # Activate EMVORADO in INPUT_ORG
-    export ACT_EMVORADO=.TRUE.
+    # Activate EMVORADO in INPUT_ORG if unset
+    if [ -z "$ACT_EMVORADO" ]; then
+        export ACT_EMVORADO=.TRUE.
+    fi
 else
     export ACT_EMVORADO=.FALSE.
 fi
