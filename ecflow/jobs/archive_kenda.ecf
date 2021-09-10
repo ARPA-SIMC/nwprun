@@ -12,76 +12,91 @@ module load singularity || true
 . $NWPCONFBINDIR/lami_postproc.sh
 # end of setup
 
-set -x
-# archive first on remote server
-detfile=$LETKF_DATADIR/laf${DATE}${TIME}0000.det
-if [ -f "$detfile" ]; then
+
+archive_putarki() {
+    if [ -f "$detfile" ]; then
 # change signal here
-    MODEL_SIGNAL=${MODEL_SIGNAL}_kenda
-    dirname=$MODEL_SIGNAL
-    putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
-    putarki_configured_archive $dirname $detfile grib
-    for ppc in ${POSTPROC_LIST[*]}; do
-	ext=${ppc##*_}
-	$ppc $detfile ${detfile}_${ext}
-	[ -s "${detfile}_${ext}" ] && putarki_configured_archive $dirname ${detfile}_${ext} $POSTPROC_FORMAT
-	rm -f ${detfile}_${ext}
-    done
-    putarki_configured_end $dirname
-fi
-
-# then archive locally for other suites
-if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
-if [ "$TIME" = "21" ]; then
-    mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
-    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA
-# for galileo do remote copy:
-    if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
-        rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
+	MODEL_SIGNAL=${MODEL_SIGNAL}_kenda
+	dirname=$MODEL_SIGNAL
+	putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
+	putarki_configured_archive $dirname $detfile grib
+	for ppc in ${POSTPROC_LIST[*]}; do
+	    ext=${ppc##*_}
+	    $ppc $detfile ${detfile}_${ext}
+	    [ -s "${detfile}_${ext}" ] && putarki_configured_archive $dirname ${detfile}_${ext} $POSTPROC_FORMAT
+	    rm -f ${detfile}_${ext}
+	done
+	putarki_configured_end $dirname
     fi
-else
-    mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
-    rsync -pt $detfile $MODEL_ARCHIVE_OUTPUT_ANA
-    if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
-        rsync -pt $detfile $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
-    fi
-fi
-if [ "$TIME" = "00" ]; then # clean data at least one month old
-    for mm in 2 3 4; do
-        MM=`date --date="${DATE} $mm month ago" +%%Y%%m`
-        rm -f $MODEL_ARCHIVE_OUTPUT_ANA/laf${MM}????0000.???
-    done
-fi
-fi
+}
 
-# finally archive locally, for next suite cycle, including daily cleaning
-if [ -f "$detfile" ]; then
-    arkilocal_setup
-    arkilocal_create
-    time putarki_archive grib $detfile
-    if [ "$TIME" = "00" ]; then
-        arki_dailycleanup $ARKI_CONF 6 12
-    fi
-    arkilocal_drop_from_cache
-fi
 
-for n in `seq 1 $ENS_TOTAL_MEMB`; do
-    n3=`printf "%%03d" $n`
-# override conf.sh
-    ARKI_DIR=$WORKDIR/arki.$n
-    if [ -f "$LETKF_DATADIR/laf${DATE}${TIME}0000.$n3" ]; then
+archive_suite() {
+    if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
+	if [ "$TIME" = "21" ]; then # all members for fcens
+	    # local copy
+	    mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
+	    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA
+	    # remote copy if required
+	    if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
+		rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
+	    fi
+	else # same as above but only deterministic
+	    mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA
+	    rsync -pt $detfile $MODEL_ARCHIVE_OUTPUT_ANA
+	    if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
+		rsync -pt $detfile $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
+	    fi
+	fi
+	if [ "$TIME" = "00" ]; then # clean data at least one month old
+	    for mm in 2 3 4; do
+		MM=`date --date="${DATE} $mm month ago" +%%Y%%m`
+		rm -f $MODEL_ARCHIVE_OUTPUT_ANA/laf${MM}????0000.???
+	    done
+	fi
+    fi
+}
+
+
+archive_arki() {
+    # override conf.sh if required
+    if [ -n "$2" ]; then
+	ARKI_DIR=$2
+    fi
+    if [ -f "$1" ]; then
         arkilocal_setup
         arkilocal_create
-        time putarki_archive grib $LETKF_DATADIR/laf${DATE}${TIME}0000.$n3
+        time putarki_archive grib $1
         if [ "$TIME" = "00" ]; then
             arki_dailycleanup $ARKI_CONF 6 12
         fi
 	arkilocal_drop_from_cache
     fi
+}
+
+
+set -x
+export detfile=$LETKF_DATADIR/laf${DATE}${TIME}0000.det
+
+# archive on import/sync/download tree (+postproc)
+archive_putarki &
+
+# archive on suite tree (local and remote) for other suites
+archive_suite &
+
+# archive locally, for next suite cycle, including daily cleaning
+archive_arki $detfile &
+# put a barrier here to avoid challenging Zeus
+wait
+# members in parallel
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    n3=`printf "%%03d" $n`
+    archive_arki $LETKF_DATADIR/laf${DATE}${TIME}0000.$n3 $WORKDIR/arki.$n
 done
+wait
 
 # Save ekf files for diagnostics
 FS_DATE=$WORKDIR/archive/${DATE}${TIME}
 mkdir -p $WORKDIR/archive
 mkdir -p $FS_DATE
-cp $LETKF_WORKDIR/ekf* $FS_DATE/  || true
+cp $LETKF_WORKDIR/ekf* $FS_DATE || true
