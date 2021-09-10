@@ -17,4 +17,5 @@ NWPWAITSOLAR=50400
 NWPWAITWAIT=60
 # intervallo di disponibilita` dei dati in s
 PROC_STEP=43200
+#PROC_STEP=86400
 
