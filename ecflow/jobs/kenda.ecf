@@ -15,7 +15,11 @@ export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.16.0/samples
 cd $LETKF_WORKDIR
 KENDA_CRASH=N
 if [ ! -f "$LETKF_WORKDIR/letkf_skip" ]; then
-    parcomp_mpirun $EXTRA_MPIRUN_LETKF $LETKF_BIN || KENDA_CRASH=Y
+    if [ "$ECF_TRYNO" != "%ECF_TRIES%" ]; then # forgive crash only at last try
+        parcomp_mpirun $EXTRA_MPIRUN_LETKF $LETKF_BIN
+    else
+        parcomp_mpirun $EXTRA_MPIRUN_LETKF $LETKF_BIN || KENDA_CRASH=Y
+    fi
 fi
 if [ -f "$LETKF_WORKDIR/letkf_skip" -o "$KENDA_CRASH" = "Y" ]; then
 # if there are no observations or the analysis crashed make a fake analysis
