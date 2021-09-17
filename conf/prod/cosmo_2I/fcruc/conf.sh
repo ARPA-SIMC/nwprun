@@ -1,4 +1,4 @@
-MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
+MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_5.08/radarbin_nud
 PARENTMODEL=COSMO
 PARENTMODEL_ARKI_DS=o_lm5_ope_forecast
 PARENTMODEL_FREQINI=12
@@ -44,13 +44,8 @@ MODEL_SIGNAL=cosmo_2I_fcruc
 ARKI_DIR=$WORKDIR/arki
 MODEL_ARCHIVE_ANA=$WORKDIR/../enda/archive
 
-# scheduler resources
-PARRES="-l select=6:ncpus=32:mpiprocs=32:mem=118gb -q meteoenda"
-SERRES="-l select=1:ncpus=1:mpiprocs=1:mem=2gb -l place=pack:shared -q meteoenda"
-MODEL_WALLTIME=00:55:00
-DELAY=2
+# suite timing
 NWPWAITELAPS=10800
 NWPWAITSOLAR=7200
-NWPWAITSOLAR_RUN=5400
+NWPWAITSOLAR_RUN=3000
 NWPWAITWAIT=30
-OPERATIONS=OM
