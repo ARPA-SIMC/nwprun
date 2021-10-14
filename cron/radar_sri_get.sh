@@ -10,7 +10,7 @@ get_init() {
 
 get_setup() {
     TEMPLATE=`conf_getfile $TEMPLATE_NAME`
-    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=cosmo_2I_radar"
+    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=${TEMPLATE_NAME%.grib}"
 }
 
 get_cleanup() {
@@ -35,7 +35,7 @@ get_one() {
 		    grib_api:$TEMPLATE:srill.grib
 
 	# WMO standard: parameterCategory=1,parameterNumber=52 (mm/s), we must use DWD local table
-	$SIMC_TOOLS grib_set -s centre=80,generatingProcessIdentifier=10,dataDate=$DATE,dataTime=$TIME,discipline=0,parameterCategory=15,parameterNumber=195 \
+	$SIMC_TOOLS grib_set -s dataDate=$DATE,dataTime=$TIME \
 		    srill.grib srillmd.grib
 
 	$SIMC_TOOLS vg6d_transform --trans-type=boxinter --sub-type=average \

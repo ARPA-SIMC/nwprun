@@ -1,5 +1,6 @@
-SRI_URL=https://radar.protezionecivile.it/wide-api/wide/product/downloadProduct
-TEMPLATE_NAME=cosmo_2I_radar.grib
+#SRI_URL=https://radar.protezionecivile.it/wide-api/wide/product/downloadProduct
+SRI_URL=https://radar-api.protezionecivile.it/wide/product/downloadProduct
+TEMPLATE_NAME=cosmo_5I_radar.grib
 
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
