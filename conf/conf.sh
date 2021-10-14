@@ -5,11 +5,11 @@ case "$HPC_SYSTEM" in
   *.metarpa | maial* | nodo* ) # Arpae
 # General
     WORKDIR=$WORK/$NWPCONF
-    LOGDIR=$HOME/log
+    LOGDIR=$WORK/log
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
 # Radar
-    RADAR_MOSAICODIR=$HOME/prelhn/Composito
-    RADAR_LHNDIR=$HOME/prelhn/bufr2grib-RUC
+    RADAR_MOSAICODIR=$HOME/radarsri2grib
+    RADAR_LHNDIR=$HOME/radarsri2grib
     RADAR_DT=10
     ;;
   lami* ) # Cineca cloud
