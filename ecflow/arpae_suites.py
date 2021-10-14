@@ -20,7 +20,7 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_5I/assim"
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
@@ -34,8 +34,8 @@ cosmo_5i_assim = ModelSuite("cosmo_5I_assim")
 basicenv.add_to(cosmo_5i_assim.suite)
 day = cosmo_5i_assim.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",
-                      int((datetime.datetime.now()-datetime.timedelta(days=1)).strftime("%Y%m%d")),
-                      20201228))
+                      int((datetime.datetime.now()-datetime.timedelta(days=4)).strftime("%Y%m%d")),
+                      20301228))
 
 hdep = None # first repetition has no dependency
 for h in range(0, 24, 12):
@@ -54,7 +54,7 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_5I/fcast"
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
@@ -68,8 +68,8 @@ cosmo_5i_fcast = ModelSuite("cosmo_5I_fcast")
 basicenv.add_to(cosmo_5i_fcast.suite)
 day = cosmo_5i_fcast.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",
-                      int((datetime.datetime.now()-datetime.timedelta(days=1)).strftime("%Y%m%d")),
-                      20201228))
+                      int((datetime.datetime.now()-datetime.timedelta(days=4)).strftime("%Y%m%d")),
+                      20301228))
 
 hdep = None # first repetition has no dependency
 for h in range(0, 24, 12):
@@ -88,7 +88,7 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_28N/assim"
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
@@ -103,7 +103,7 @@ basicenv.add_to(cosmo_28n_assim.suite)
 day = cosmo_28n_assim.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",
                       int(datetime.datetime.now().strftime("%Y%m%d")),
-                      20201228))
+                      20301228))
 
 hdep = None # first repetition has no dependency
 for h in range(0, 24, 3):
@@ -122,7 +122,7 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_28N/fcruc"
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
@@ -137,7 +137,7 @@ basicenv.add_to(cosmo_28n_fcruc.suite)
 day = cosmo_28n_fcruc.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",
                       int(datetime.datetime.now().strftime("%Y%m%d")),
-                      20201228))
+                      20301228))
 
 hdep = None # first repetition has no dependency
 for h in range(0, 24, 3):
@@ -156,7 +156,7 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_28N/reassim_era"
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
