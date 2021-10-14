@@ -1,6 +1,6 @@
 case "$HPC_SYSTEM" in
   *.metarpa | maial* ) # Arpae
-	FTPDIR="BUFR/"
+	FTPDIR=""
     ;;
   lami* | galileo | meucci | g100 ) # Cineca cloud
 	FTPDIR=""
