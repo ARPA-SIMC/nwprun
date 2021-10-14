@@ -165,7 +165,7 @@ periodic_check() {
 }
 
 unset LANG
-basedir=$OPE
+basedir=$WORKDIR_BASE/nwprun
 # setup common to user scripts
 # basic variables
 export NWPCONFDIR=$basedir/conf
