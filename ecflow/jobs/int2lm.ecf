@@ -20,8 +20,10 @@ cd $MODEL_PRE_WORKDIR
 conf_template INPUT
 # special treatment for ICON, link static file in data dir
 # required for having the hhl file in the same dir
-rm -f $PARENTMODEL_DATADIR/$PARENTMODEL_STATICFILE
-ln -s $PARENTMODEL_STATIC/$PARENTMODEL_STATICFILE $PARENTMODEL_DATADIR
+if [ -n "$PARENTMODEL_STATIC" -a -n "$PARENTMODEL_STATICFILE" ]; then
+    rm -f $PARENTMODEL_DATADIR/$PARENTMODEL_STATICFILE
+    ln -s $PARENTMODEL_STATIC/$PARENTMODEL_STATICFILE $PARENTMODEL_DATADIR
+fi
 # publish just one set of namelists
 if [ "$MODEL_PUBLISH_CONF" = "Y" -a -z "$ENS_MEMB" ]; then
     (rsync -t INPUT "$MODEL_CONF_ARCHIVE" || true) &
