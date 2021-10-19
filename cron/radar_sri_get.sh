@@ -35,7 +35,7 @@ get_one() {
 		    grib_api:$TEMPLATE:srill.grib
 
 	# WMO standard: parameterCategory=1,parameterNumber=52 (mm/s), we must use DWD local table
-	$SIMC_TOOLS grib_set -s dataDate=$DATE,dataTime=$TIME \
+	$SIMC_TOOLS grib_set -s dataDate=$DATE,dataTime=$TIME,discipline=0,parameterCategory=15,parameterNumber=195 \
 		    srill.grib srillmd.grib
 
 	$SIMC_TOOLS vg6d_transform --trans-type=boxinter --sub-type=average \
