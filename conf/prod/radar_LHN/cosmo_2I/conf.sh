@@ -1,4 +1,6 @@
-# reconfigure arkimet for remote archiving at Cineca
-ARKI_SCAN_METHOD=remote_arki_importer
-ARKI_IMPDIR=~arki-imp/arki-imp/generic
-
+# setup for remote import
+unset ARKI_IMPDIR
+ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_g100
+unset ARKI_DLDIR
+MODEL_SIGNAL=cosmo_2I_radar
+RADAR_LHN_GP=10

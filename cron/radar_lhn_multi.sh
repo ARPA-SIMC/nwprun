@@ -1,7 +1,7 @@
 #!/bin/bash
 
 unset LANG
-basedir=$OPE
+basedir=$WORKDIR_BASE/nwprun
 # setup common to user scripts
 # basic variables
 export NWPCONFDIR=$basedir/conf
@@ -28,7 +28,7 @@ safe_rm_rf $WORKDIR
 mkdir -p $WORKDIR
 cd $WORKDIR
 
-restore_state radar_lhn_get.state
+restore_state radar_lhn_get.state || touch $NWPCONFDIR/$NWPCONF/radar_lhn_get.state
 # initial date from end of previous run or yesterday at 12
 mindate=`date -u --date '1 day ago' '+%Y%m%d1200'`
 [ -n "$lastdate" -a "$lastdate" -gt "$mindate" ] || lastdate=$mindate
