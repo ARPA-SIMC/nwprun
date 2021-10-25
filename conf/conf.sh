@@ -6,6 +6,8 @@ case "$HPC_SYSTEM" in
 # General
     WORKDIR=$WORK/$NWPCONF
     LOGDIR=$WORK/log
+    IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
+    LOGSIM_SIGNAL_SYNC=Y
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
 # Radar
     RADAR_MOSAICODIR=$HOME/radarsri2grib
@@ -35,6 +37,7 @@ case "$HPC_SYSTEM" in
 # General
     WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$WORKDIR_BASE/log
+    IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
     GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
     ;;
   marconi ) # Cineca HPC marconi
