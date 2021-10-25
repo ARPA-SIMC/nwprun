@@ -1,5 +1,5 @@
 # RADAR for LHN
-ARKI_LHN_DS=$ARKI_URL/cosmo_5I_radar
+ARKI_LHN_DS=$ARKI_DIR/cosmo_5I_radar
 RADAR_LHN_GP=10
 MODEL_LHN=.TRUE.
 MODEL_LHN_WORKDIR=$WORKDIR/lhn
@@ -8,6 +8,9 @@ MODEL_LHN_DT=10
 # observations for nudging
 BUFR_WORKDIR=$WORKDIR/bufr
 MODEL_NUDG=.TRUE.
+# warning ARKI_DIR is redefined later for other purposes, find a better way!
+BUFR_ARKI_DS_CONV=$ARKI_DIR/gts_bufr_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_DIR/gts_bufr_noconv
 
 # _GP=10(radarobs),11(an),12(fc)
 # definitions for parent model
