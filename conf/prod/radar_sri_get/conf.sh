@@ -1,6 +1,15 @@
+# better way?
+case "$HPC_SYSTEM" in
+  *.metarpa | maial* | nodo* ) # Arpae
+    TEMPLATE_NAME=cosmo_5I_radar.grib
+    ;;
+  g100 ) # Cineca HPC galileo 100
+    TEMPLATE_NAME=cosmo_2I_radar.grib
+    ;;
+esac
+
 #SRI_URL=https://radar.protezionecivile.it/wide-api/wide/product/downloadProduct
 SRI_URL=https://radar-api.protezionecivile.it/wide/product/downloadProduct
-TEMPLATE_NAME=cosmo_5I_radar.grib
 
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
