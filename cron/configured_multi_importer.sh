@@ -95,10 +95,19 @@ import_one() {
 		    if [ -f "$updir/started.sh" ]; then # is this necessary?
 			rm -f $updir/.??* $updir/*.tmp
 			if ! ls $updir | grep -v '\.sh$'>/dev/null; then
-			    (safe_source $syncconf; cd $syncdir; rsync -ptR --chmod=ug=rwX ./$syncsubdir/$upfile $sync_dest)
+			    (
+				safe_source $syncconf
+				cd $syncdir
+				rsync -ptR --chmod=ug=rwX ./$syncsubdir/$upfile $sync_dest
+				if [ -n "$LOGSIM_SIGNAL_SYNC" ]; then
+				    LOGSIM_PROCESS=$signal
+				    simc_send_logevent ''
+				    log "sending simc log event $LOGSIM_PROCESS"
+				fi
+			    )
 			    rm -f $updir/*.sh
 			    rmdir $updir || true # better leaving rubbish than failing
-			    log "done importing folder $updir"
+			    log "done syncing $updir"
 			fi
 		    fi
 		    return 1 # 1 = nothing done
@@ -177,6 +186,11 @@ set -e
 . $NWPCONFBINDIR/nwpconf.sh
 # source other optional modules
 . $NWPCONFBINDIR/arki_tools.sh
+# better condition?
+if [ -n "$LOGSIM_SIGNAL_SYNC" ]; then
+    . $NWPCONFBINDIR/simc_site.sh
+fi
+
 # end of setup
 
 ARKI_CONF=$ARKI_CONF.main
