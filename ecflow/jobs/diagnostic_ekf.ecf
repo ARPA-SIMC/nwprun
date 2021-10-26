@@ -1,5 +1,4 @@
 %include <sched_wait.h>
-#SBATCH --nodelist=login04
 %include <%HPCENV%/smnd.h>
 %include <%HPCENV%/modules.h>
 module load python
