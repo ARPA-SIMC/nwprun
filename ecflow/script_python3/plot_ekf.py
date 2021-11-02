@@ -398,6 +398,11 @@ for o_type in report:
     lst24h_pas  = pas_obs[(datetime  >= dt_24hbf) & (datetime <= dt_last)]
     lst24h_rej  = rej_obs[(datetime  >= dt_24hbf) & (datetime <= dt_last)]
 
+    # If no observation is available in the last 24 hours, a fake array consisting of
+    # zeros is created, in order to avoid problems when computing 'maxval'
+    if len(lst24h_tot) == 0:
+        lst24h_tot = np.zeros(lencyc)
+
     # Select last 365 days and 30 days of data, summing over days
     lst30d_tot, lst365d_tot = select_daydata(datetime, tot_obs, 'state')
     lst30d_act, lst365d_act = select_daydata(datetime, act_obs, 'state')
@@ -413,7 +418,7 @@ for o_type in report:
     stack_barplot(ax_24h[0,ind], lst24h_dt, lst24h_data, cols_st, width=0.025*lencyc)
 
     # Number of observations: Set title, labels and ticks
-    maxval = 1.1*np.amax(lst24h_tot)
+    maxval = 1.1*np.amax(lst24h_tot) + 1
     if ind == 0: 
         axis_labels_ticks(ax_24h[0,ind], dt_24hbf, dt_last, 0, maxval, title=o_type, 
                           ylabel='Number of observations')
