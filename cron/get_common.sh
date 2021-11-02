@@ -10,8 +10,8 @@ increment_datetime() {
         DATE=`date -u --date '1 day ago' '+%Y%m%d'`
         TIME=1200
     else
-        DATE=`date --date="$DATE $TIME $PROC_STEP seconds" '+%Y%m%d'`
-        TIME=`date --date="$DATE $TIME $PROC_STEP seconds" '+%H%M'`
+        DATE=`date -u --date="$DATE $TIME $PROC_STEP seconds" '+%Y%m%d'`
+        TIME=`date -u --date="$DATE $TIME $PROC_STEP seconds" '+%H%M'`
     fi
 }
 
