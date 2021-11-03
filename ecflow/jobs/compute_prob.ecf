@@ -20,16 +20,19 @@ mkdir -p $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
 fix_ensemble_members() {
 . ~/smnd_profile
 
-# evaluate availability
+# evaluate availability and reference time
 # ensemble members
 set -a ma
 lma=
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    ma[$n]=N
     if [ -f "$WORKDIR/cosmo.$n/data/lfff02030000" ]; then
-        ma[$n]=Y
-        lma=$n
-    else
-        ma[$n]=N
+        gdate=`grib_get -w count=1 -p dataDate:s $WORKDIR/cosmo.$n/data/lfff02030000`
+        gtime=`grib_get -w count=1 -p dataTime:s $WORKDIR/cosmo.$n/data/lfff02030000`
+        if [ "$gdate" = "$DATE" -a "$gtime" = "${TIME}00" ]; then
+            ma[$n]=Y
+            lma=$n
+        fi
     fi
 done
 echo "Ensemble member forecasts: ${ma[*]}"
