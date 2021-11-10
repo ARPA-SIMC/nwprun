@@ -99,8 +99,11 @@ import_one() {
 				safe_source $syncconf
 				cd $syncdir
 				rsync -ptR --chmod=ug=rwX ./$syncsubdir/$upfile $sync_dest
-				if [ -n "$LOGSIM_SIGNAL_SYNC" ]; then
+				if [ -n "$LOGSIM_SIGNAL_SYNC" -a -f "./$syncsubdir/start.sh" ]; then
+                                    safe_source ./$syncsubdir/start.sh
 				    LOGSIM_PROCESS=$signal
+                                    DATE=${reftime:0:8}
+                                    TIME=${reftime:8:2}
 				    simc_send_logevent ''
 				    log "sending simc log event $LOGSIM_PROCESS"
 				fi
