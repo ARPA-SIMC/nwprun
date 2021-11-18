@@ -9,6 +9,7 @@
 . $NWPCONFBINDIR/getarki.sh
 # end of setup
 
+set -x
 safe_rm_rf $MODEL_LHN_WORKDIR
 mkdir -p $MODEL_LHN_WORKDIR
 cd $MODEL_LHN_WORKDIR

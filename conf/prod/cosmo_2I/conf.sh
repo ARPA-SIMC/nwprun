@@ -1,7 +1,5 @@
 # RADAR for LHN
-ARKI_LHN_DS=$ARKI_URL/cosmo_2I_radar
-# problems with the lami arkimet server
-#ARKI_LHN_DS=$ARKI_DIR/cosmo_2I_radar
+ARKI_LHN_DS=$ARKI_DIR/cosmo_2I_radar
 #RADAR_LHN_GP=10
 MODEL_LHN=.FALSE.
 MODEL_LHN_WORKDIR=$WORKDIR/lhn
