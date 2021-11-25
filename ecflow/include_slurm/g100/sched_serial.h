@@ -1,3 +1,3 @@
 #SBATCH --partition=g100_meteo_ser
-#SBATCH --mem=8G
+#SBATCH --mem=7.5G
 #SBATCH --nodelist=login04
