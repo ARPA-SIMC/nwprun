@@ -58,6 +58,15 @@ archive_suite() {
 }
 
 
+archive_perm() {
+    if [ -n "$CINECA_ARCHIVE_POST" ]; then
+        subdir=%SUITE%/$DATE$TIME
+	mkdir -p $CINECA_ARCHIVE_POST/$subdir
+	rsync -pt $detfile $CINECA_ARCHIVE_POST/$subdir
+    fi
+}
+
+
 archive_arki() {
     # override conf.sh if required
     if [ -n "$2" ]; then
@@ -83,6 +92,9 @@ archive_putarki &
 
 # archive on suite tree (local and remote) for other suites
 archive_suite &
+
+# archive permanently locally under the arkimet dir
+archive_perm &
 
 # archive locally, for next suite cycle, including daily cleaning
 archive_arki $detfile &
