@@ -30,7 +30,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "runlist": [GetObs, EpsMembers, ContinuousAnalysis]}).getconf()
-cosmo_5i_assim = ModelSuite("cosmo_5I_assim_ng")
+cosmo_5i_assim = ModelSuite("cosmo_5I_assim")
 basicenv.add_to(cosmo_5i_assim.suite)
 day = cosmo_5i_assim.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",
@@ -64,7 +64,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "runlist": [GetObs, EpsMembers]}).getconf()
-cosmo_5i_fcast = ModelSuite("cosmo_5I_fcast_ng")
+cosmo_5i_fcast = ModelSuite("cosmo_5I_fcast")
 basicenv.add_to(cosmo_5i_fcast.suite)
 day = cosmo_5i_fcast.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",

@@ -33,18 +33,6 @@ case "%SUITE%" in
         mkdir -p $CINECA_ARCHIVE_POST/$subdir
         cp -a lfff* $CINECA_ARCHIVE_POST/$subdir
         ;;
-    cosmo_5I_*_ng) # temporary
-        if [ "$ARKI_SCAN_METHOD" = "configured_importer" ]; then
-            putarki_configured_model_output $(($MODEL_STOP + 1))
-        else 
-            putarki_model_output $(($MODEL_STOP + 1)) -w
-        fi
-#	for file in laf?????????? lfff*; do
-#            if [ -f "$file" ]; then
-#                rsync -pt $file /fs/work/arkimet/inbound/%SUITE%_$DATE$TIME$file.grib
-#            fi
-#        done
-        ;;
     *)
         if [ "$ARKI_SCAN_METHOD" = "configured_importer" ]; then
             putarki_configured_model_output $(($MODEL_STOP + 1))
