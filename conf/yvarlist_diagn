@@ -10,7 +10,7 @@
          'HZEROCL ','CLCT_MOD','CLDEPTH ','TDIV_HUM',
          'TWATER  ','TQV     ','AEVAP_S ',
          'CAPE_ML ','CIN_ML  ',
-         'ASWDIR_S','ASWDIFD_S','ATHD_S  ',
+         'ASWDIR_S','ASWDIFD_S','ATHD_S  ','LPI    ',
 ! servono senza il ml soil?
 !        'T_CL    ','W_CL    ',
 ! vedere organize_data.f90
