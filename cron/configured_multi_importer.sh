@@ -49,10 +49,13 @@ import_configured_end() {
 import_one() {
 
     case $1 in
-	./configured/*)
+	./configured/*/*)
 	    [ -f "$1" ] || return 1 # was in _sync, needed?
 	    upfile=${1##*/}
 	    updir=${1%/*}
+	    impdir=${updir%/*}
+	    impconf=$impdir/conf.sh
+	    impsubdir=${updir##*/}
 	    case $upfile in
 		start.sh)
 #		    (import_configured_start $updir)
@@ -66,7 +69,23 @@ import_one() {
 		    log "start importing configured $1"
 # important! (..) is needed in order to use a subshell for not
 # polluting the environment
-		    (import_configured $updir $upfile)
+		    (
+			[ -f $impconf ] && safe_source $impconf
+			cd $impdir
+			excluded=
+			for excl in ${exclude[*]}; do
+			    # next condition performs pattern matching
+			    if [[ "$impsubdir/$upfile" == $excl ]]; then
+				excluded=Y
+			    fi
+			done
+			if [ -z "$excluded" ]; then
+			    import_configured $impsubdir $upfile
+			else
+			    log "$1 not requested, skipping"
+			    rm -f $impsubdir/$upfile
+			fi
+		    )
 		    log "done importing $1"
 		    return
 		    ;;
