@@ -1,6 +1,4 @@
 %include <sched_postproc.h>
-#SBATCH --mail-type=FAIL
-#SBATCH --mail-user=simc-catene-meteo@arpae.it
 %include <%HPCENV%/smnd.h>
 %include <head.h>
 

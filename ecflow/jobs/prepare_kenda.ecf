@@ -1,6 +1,4 @@
 %include <sched_light.h>
-#SBATCH --mail-type=FAIL
-#SBATCH --mail-user=simc-catene-meteo@arpae.it
 %include <head.h>
 
 
