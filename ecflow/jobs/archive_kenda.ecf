@@ -2,7 +2,7 @@
 %include <%HPCENV%/smnd.h>
 %include <head.h>
 
-module load singularity || true
+# module load singularity || true
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
 . $NWPCONFBINDIR/cosmo_model.sh

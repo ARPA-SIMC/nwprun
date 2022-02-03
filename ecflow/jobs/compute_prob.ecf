@@ -104,7 +104,7 @@ cp -a $FXTR_DATADIR/*.grib $CINECA_ARCHIVE_POST/$subdir
 
 # this can be run simultaneously with fieldextra
 scacchiera_tp() {
-  module load singularity
+#  module load singularity
   mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_tp
   cd $POSTPROC_EPS_WORKDIR/scacchiera_tp
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
@@ -114,7 +114,7 @@ scacchiera_tp() {
 
 # these require the probabilities computed by fieldextra
 scacchiera_ensmean() {
-  module load singularity
+#  module load singularity
   mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_ensmean
   cd $POSTPROC_EPS_WORKDIR/scacchiera_ensmean
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
@@ -123,7 +123,7 @@ scacchiera_ensmean() {
 }
 
 scacchiera_prob() {
-  module load singularity
+#  module load singularity
   mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_prob
   cd $POSTPROC_EPS_WORKDIR/scacchiera_prob
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
@@ -132,7 +132,7 @@ scacchiera_prob() {
 }
 
 mappe_eps() {
-  module load singularity
+#  module load singularity
   cd $POSTPROC_EPS_WORKDIR
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/mappe_eps.py \
      $WORKDIR_BASE/nwprun/postproc_eps/Regioni_latlon.tif \

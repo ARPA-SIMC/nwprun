@@ -4,7 +4,7 @@
 %include <%HPCENV%/smnd.h>
 %include <head.h>
 
-which singularity >/dev/null 2>&1 || module load singularity || true
+# which singularity >/dev/null 2>&1 || module load singularity || true
 export LOG4C_PRIORITY=debug
 export LOG4C_APPENDER=stderr
 # source other optional modules
