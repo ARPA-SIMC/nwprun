@@ -36,6 +36,9 @@ case "$HPC_SYSTEM" in
   g100 ) # Cineca HPC galileo 100
 # General
     WORKDIR=$WORKDIR_BASE/$NWPCONF
+    if [ -n "$WORKDIR_RELOC" ]; then
+	    WORKDIR=$WORKDIR_RELOC/$NWPCONF
+    fi
     LOGDIR=$WORKDIR_BASE/log
     IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
     GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
