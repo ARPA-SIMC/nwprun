@@ -4,4 +4,4 @@ module load intel
 module load intelmpi
 module load mkl
 export LD_LIBRARY_PATH=$WORKDIR_BASE/srcintel/install/lib:$LD_LIBRARY_PATH
-unset I_MPI_PMI_LIBRARY
+#unset I_MPI_PMI_LIBRARY

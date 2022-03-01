@@ -11,7 +11,6 @@
 export GRIB_DEFINITION_PATH=$GRIB_API_EDZW/1.16.0/definitions.cnmc:$GRIB_API_EDZW/1.16.0/definitions
 export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.16.0/samples
 
-
 cd $LETKF_WORKDIR
 KENDA_CRASH=N
 if [ ! -f "$LETKF_WORKDIR/letkf_skip" ]; then

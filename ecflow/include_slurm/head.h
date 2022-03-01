@@ -65,6 +65,8 @@ trap '{ CLEANEXIT ; }' EXIT
 trap '{ echo "Exiting with error"; ERROR ; }' ERR
 trap '{ echo "Killed by a signal"; ERROR ; }' 1 2 3 4 5 6 7 8 10 12 13 15
 
+# diagnostics
+env|grep SLURM || true
 # optional nwpconf setup, NWPCONF comes from the suite def
 export NWPCONF=%NWPCONF:%
 if [ -n "$NWPCONF" ]; then
