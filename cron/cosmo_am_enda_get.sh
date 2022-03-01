@@ -24,50 +24,50 @@ get_one() {
     # have been downloaded (i.e. "file_list" became an empty array), 
     # otherwise it returns 1.
     while true; do
-	delete=()
-	for ind in "${!file_list[@]}"; do
-	    # Download file 
-	    fname="${file_list[ind]}"
-	    filepath="${FTPDIR}/${fname}"
-	    log "starting download of $filepath"
+        delete=()
+        for ind in "${!file_list[@]}"; do
+            # Download file
+            fname="${file_list[ind]}"
+            filepath="${FTPDIR}/${fname}"
+            log "starting download of $filepath"
             ncftpget -V -f $WORKDIR_BASE/nwprun/.auth/meteoam_cineca.cfg . $filepath  || continue
 
-	    # If the downloaded file is not empty, it is unzipped and its index
- 	    # in "file_list" is saved to be deleted later. Reverse order in 
-	    # "delete" array must be kept!
-	    if [ -s $fname ]; then 
-		tmpdir=`mktemp -d $PWD/tmptar.XXXXXXXXXX`
-		tar --transform='s?.*/??g' -C $tmpdir -xvf $fname
-		log "file $fname successfully downloaded and unpacked"
-		for file in $tmpdir/*; do
+            # If the downloaded file is not empty, it is unzipped and its index
+            # in "file_list" is saved to be deleted later. Reverse order in
+            # "delete" array must be kept!
+            if [ -s $fname ]; then
+                tmpdir=`mktemp -d $PWD/tmptar.XXXXXXXXXX`
+                tar --transform='s?.*/??g' -C $tmpdir -xvf $fname
+                log "file $fname successfully downloaded and unpacked"
+                for file in $tmpdir/*; do
                     nmemb=${file##*l?ff????0000_}
                     nmemb=${nmemb%%_*.grb}
-		    putarki_configured_archive $PROCNAME $file
-		    log "file $file successfully sent to archive"
-		    rm -f $file
-		done
-		safe_rm_rf $tmpdir
-		delete=($ind "${delete[@]}")
-	    fi
-	done
+                    putarki_configured_archive $PROCNAME $file
+                    log "file $file successfully sent to archive"
+                    rm -f $file
+                done
+                safe_rm_rf $tmpdir
+                delete=($ind "${delete[@]}")
+            fi
+        done
 
-	# if nothing has been done exit, otherwise make suddendly a
-	# new trial in case something appeared in the meantime
-    	if [ ${#delete[@]} -eq 0 ]; then
+        # if nothing has been done exit, otherwise make suddendly a
+        # new trial in case something appeared in the meantime
+        if [ ${#delete[@]} -eq 0 ]; then
             break
-    	fi
+        fi
 
-	# Remove downloaded files from the "file_list"
-	for del in ${delete[@]}; do
- 	    file_list=( "${file_list[@]:0:$del}"  "${file_list[@]:$del+1}")
-	done
-	unset delete
+        # Remove downloaded files from the "file_list"
+        for del in ${delete[@]}; do
+            file_list=( "${file_list[@]:0:$del}"  "${file_list[@]:$del+1}")
+        done
+        unset delete
     done
 
     if [ ${#file_list[@]} -eq 0 ]; then
-	return 0
+        return 0
     else
-	return 1
+        return 1
     fi
 }
 
