@@ -34,7 +34,7 @@ esac
 ENS_TOTAL_MEMB=0
 # setup for remote import
 ARKI_SCAN_METHOD=configured_importer
-unset ARKI_IMPDIR
+#unset ARKI_IMPDIR
 ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
 ARKI_DLDIR=$WORKDIR_BASE/download
 POSTPROC_LIST=(lami_make_arkiruc lami_make_vprof)
