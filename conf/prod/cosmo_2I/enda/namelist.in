@@ -16,7 +16,7 @@
    !===========================
    &RADAR_OBS
     use_refl   =  11  ! (11=active) 4=notused, 7=passive radar reflectivity usage flag
-    use_radvel =  4  ! (11=active) 4=notused radial velocity    usage flag
+    use_radvel =  11  ! (11=active) 4=notused radial velocity    usage flag
    ! iprintout  =  0   ! (0=no) steering of printout
    ! split_rprt =  F   ! (T)    create separate record for each radar observation
    ! join_rprt  =  F   ! (T)    join separate records before statistics output
@@ -31,6 +31,8 @@
    &RULES
     comment    = 'specific parameters for RADAR'
     obstype    = 13           ! modtype RADAR
+    uv%v_loc   = 0.3
+    uv%h_loc   = 16.0
     o%v_loc    = 0.3
     o%h_loc    = 16.0
     o%sgm_fg(1)= 50 !999
@@ -101,6 +103,11 @@
         err= 0.09 0.13 0.12 0.13 0.13
              0.14 0.14,0.14 0.14 0.14
              0.14,0.14 0.14 0.14 0.14  /
+
+   &TEMP_OBS
+   fgchk_inv_t = 0.8    !  stability-dep. factor for fg-check limit for T  (recommended: 0.8)
+   fgchk_inv_q = 0.6    !  stability-dep. factor for fg-check limit for RH (recommended: 0.6)
+   /
 
  &run
    !===================
