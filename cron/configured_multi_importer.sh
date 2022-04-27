@@ -19,7 +19,20 @@ import_configured() {
         ARKI_CONF=${ARKI_CONF%.*}.$configext
     fi
     log "importing configured $format$2"
-    time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
+    if [ "$HPC_SYSTEM" = g100 ]; then # ill case
+	case $signal in
+	    cosmo_2I_fcruc | cosmo_2I_fcens | cosmo_2I_assim | cosmo_2I_assim_kenda)
+		log "executing batch import"
+		srun --qos=qos_meteo -A smr_prod --ntasks=1 --partition=g100_meteo_prod --mem=7G -x r505c01n02 arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
+		log "batch import done"
+		;;
+	    *)
+		time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
+		;;
+	esac
+    else # healthy case
+        time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
+    fi
     if [ -n "$signalfile" -a -n "$signal" ]; then
 	import_signal_imported "$signal" $reftime $2
     fi
