@@ -30,7 +30,7 @@ get_one() {
             fname="${file_list[ind]}"
             filepath="${FTPDIR}/${fname}"
             log "starting download of $filepath"
-            ncftpget -V -f $WORKDIR_BASE/nwprun/.auth/meteoam_cineca.cfg . $filepath  || continue
+            ncftpget -z -V -f $WORKDIR_BASE/nwprun/.auth/meteoam_cineca.cfg . $filepath  || continue
 
             # If the downloaded file is not empty, it is unzipped and its index
             # in "file_list" is saved to be deleted later. Reverse order in
