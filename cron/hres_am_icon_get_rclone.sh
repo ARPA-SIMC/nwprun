@@ -5,11 +5,11 @@
 
 # define custom functions
 get_init() {
-    export PROCNAME=hres_am_icon_get
+    export PROCNAME=hres_am_foricon_get
 }
 
 get_setup() {
-    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=hres_am_icon"
+    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=hres_am_foricon"
     file_pattern="U3S????????????????1"
     file_processed=()
     file_list_file=${PROCNAME}_list.$$
@@ -32,7 +32,7 @@ get_cleanup() {
 get_one() {
     while true; do
 	donenothing=Y
-	rclone --transfers 8 --include-from $file_list_file copy meteoam-cin:$FTPDIR/ .
+	rclone --transfers 1 --include-from $file_list_file copy meteoam-cin:$FTPDIR/ .
 	for file in $file_pattern; do
 	    alreadydone=
 	    if [ -f "$file" ]; then
