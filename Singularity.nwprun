@@ -1,7 +1,7 @@
 BootStrap: yum
 OSVersion: 8
-MirrorURL: http://mirror.centos.org/centos-%{OSVERSION}/%{OSVERSION}/BaseOS/$basearch/os/
-Include: yum
+MirrorURL: http://dl.rockylinux.org/pub/rocky/%{OSVERSION}/BaseOS/x86_64/os/
+Include: dnf
 
 %runscript
     exec "$@"
