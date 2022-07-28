@@ -7,6 +7,8 @@ from nwprun import *
 
 common_extra_env = {
     "NNODES_MODEL": 4,
+    "NTASKS_PREPROC": 32,
+    "NTASKS_MODEL": 96,
     "EXTRA_SCHED": "",
     "NO_FAIL": "FALSE",
     "TASK_PER_CORE": "1",
@@ -24,7 +26,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
-                    ntries=1,
+                    ntries=2,
                     extra_env=extra_env)
 
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
@@ -58,7 +60,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
-                    ntries=1,
+                    ntries=2,
                     extra_env=extra_env)
 
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
@@ -92,7 +94,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
-                    ntries=1,
+                    ntries=2,
                     extra_env=extra_env)
 
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
@@ -126,7 +128,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
-                    ntries=1,
+                    ntries=2,
                     extra_env=extra_env)
 
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",
@@ -160,7 +162,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",
-                    ntries=1,
+                    ntries=2,
                     extra_env=extra_env)
 
 conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0",

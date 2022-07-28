@@ -1,1 +1,1 @@
-#SBATCH --ntasks=96
+#SBATCH --ntasks=%NTASKS_MODEL%
