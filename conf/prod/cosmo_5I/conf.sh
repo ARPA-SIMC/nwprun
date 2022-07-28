@@ -40,12 +40,12 @@ MODEL_NLEV=45
 # preprocessing (interpolation)
 MODEL_PRE_WORKDIR=$WORKDIR/int2lm
 MODEL_PRE_DATADIR=$WORKDIR/int2lm/data
-MODEL_PRE_BIN=$HOME/srcgnu_centos7/int2lm_180226_2.05/tstint2lm
+MODEL_PRE_BIN=$HOME/srcgnu_centos8/int2lm_180226_2.05/tstint2lm
 #MODEL_PRE_BIN=$HOME/srcgnu/int2lm_180226_2.05/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
-MODEL_BIN=$HOME/srcgnu_centos7/cosmo_180802_5.05_1_dp/lmparbin_all
+MODEL_BIN=$HOME/srcgnu_centos8/cosmo_180802_5.05_1_dp/lmparbin_all
 #MODEL_BIN=$HOME/srcgnu/cosmo_180802_5.05_1_dp_openmpi3/lmparbin_all
 MODEL_STATIC=$HOME/data/cosmo
 
@@ -75,5 +75,5 @@ MODEL_INTER_GP=33
 GRIB_CENTER=80
 ARKI_DIR=$WORKDIR/arki
 
-LD_LIBRARY_PATH=$HOME/srcgnu_centos7/install/lib:$LD_LIBRARY_PATH
+LD_LIBRARY_PATH=$HOME/srcgnu_centos8/install/lib:$LD_LIBRARY_PATH
 STOP_ON_FAIL=N
