@@ -68,7 +68,7 @@ fmt_365d = mdates.DateFormatter("%d %b %Y")
 # plot general fontsize and resolution
 size     = 24
 font     = {'size': size}
-dpi      = 150
+dpi      = 120
 plt.rc('font', **font)
 
 # Command line input

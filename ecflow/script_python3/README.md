@@ -1,7 +1,7 @@
 #### KENDA DIAGNOSTICS
 # Required packages:
-The python3 scripts "read_ekf.py" and "plot_ekf.py", launched by "diagnostic_ekf.ecf" 
-require the following python3 modules:
+The python3 scripts "read_ekf.py", "plot_ekf.py", "read_data_lhn.py" and 
+"plot_data_lhn.py" launched by "diagnostic_ekf.ecf" require the following python3 modules:
 - matplotlib
 - argparse
 - datetime

@@ -26,10 +26,18 @@ source $WORKDIR_BASE/env_python3/bin/activate
 # Read ekf data
 python3 %BASEDIR%/ecflow/script_python3/read_ekf.py --folder $LETKF_ARCHIVE --report $REPORT
 
-# Retrieve last data analyzed by 'read_ekf.py' and plot data
+# Read LHN data
+python3 %BASEDIR%/ecflow/script_python3/read_data_lhn.py --folder $LETKF_ARCHIVE \
+            --lencyc $LEN_CYCLE --sri_freq $MODEL_LHN_DT 
+
+# Retrieve last data analyzed by 'read_ekf.py'
 last_date=$(head -n 1 'last_date.txt')
-python3 %BASEDIR%/ecflow/script_python3/plot_ekf.py --report $REPORT --lencyc $LEN_CYCLE \
-                                                    --last_date $last_date
+
+# Plot EKF and LHN data (using the same value of "last_date")
+python3 %BASEDIR%/ecflow/script_python3/plot_ekf.py --report $REPORT --lencyc \
+                $LEN_CYCLE  --last_date $last_date
+python3 %BASEDIR%/ecflow/script_python3/plot_data_lhn.py --lencyc $LEN_CYCLE  \
+                --last_date $last_date
 
 # Deactivate virtual environment
 deactivate
@@ -38,6 +46,7 @@ deactivate
 if [ ${#EMAIL_ADDRESS[@]} -ne 0 ]; then
     rep_arr=($REPORT)
     att_files="-a last24h.png -a last30d.png -a last365d.png"
+    att_files+=" -a LHN_last24h.png -a LHN_last30d.png -a LHN_last365d.png"
     for rep in "${rep_arr[@]}"; do
         att_files+=" -a last30d_${rep}.png       -a last365d_${rep}.png"
         att_files+=" -a last30d_${rep}_check.png -a last365d_${rep}_check.png"
