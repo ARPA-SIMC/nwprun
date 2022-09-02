@@ -1,4 +1,4 @@
-MODEL_BIN=/ind2/meteo/a07smr03/lami/srcintel/cosmo_5.08_radial_wind/radarbin_nud
+MODEL_BIN=/ind2/meteo/a07smr03/lami/srcintel/cosmo_5.08_radial_wind_noclut/radarbin_nud
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
