@@ -60,9 +60,15 @@ archive_suite() {
 
 archive_perm() {
     if [ -n "$CINECA_ARCHIVE_POST" ]; then
+	# Create archive folder and save deterministic analysis
         subdir=%SUITE%/$DATE$TIME
 	mkdir -p $CINECA_ARCHIVE_POST/$subdir
 	rsync -pt $detfile $CINECA_ARCHIVE_POST/$subdir
+
+	# Save ensemble analysis at 21 UTC
+        if [ "$TIME" = "21" ]; then
+            rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $CINECA_ARCHIVE_POST/$subdir
+	fi
     fi
 }
 
