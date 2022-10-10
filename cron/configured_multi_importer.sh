@@ -31,9 +31,12 @@ import_configured() {
 #		;;
 #	esac
 #    else # healthy case
-        time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
+    time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
 #    fi
     if [ -n "$signalfile" -a -n "$signal" ]; then
+	if [ -n "$signal_method" ]; then
+	    export IMPORT_SIGNAL_METHOD=$signal_method # override if requested
+	fi
 	import_signal_imported "$signal" $reftime $2
     fi
     rm -f $2
@@ -49,6 +52,9 @@ import_configured_end() {
     rm -f *.tmp
     if ! ls | grep -v '\.sh$'>/dev/null; then
 	if [ -n "$signal" ]; then
+	    if [ -n "$signal_method" ]; then
+		export IMPORT_SIGNAL_METHOD=$signal_method # override if requested
+	    fi
 	    import_signal_imported "$signal" $reftime
 	fi
 	rm -f *.sh

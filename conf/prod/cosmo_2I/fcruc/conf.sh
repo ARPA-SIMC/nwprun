@@ -40,6 +40,7 @@ ARKI_DLDIR=$WORKDIR_BASE/download
 POSTPROC_LIST=(lami_make_arkiruc lami_make_vprof)
 VPROF_NETWORK=cosmo_2I_vprof
 MODEL_SIGNAL=cosmo_2I_fcruc
+CONFIGURED_SIGNAL_METHOD=$IMPORT_SIGNAL_METHOD,meteohub
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki
 MODEL_ARCHIVE_ANA=$WORKDIR/../enda/archive
