@@ -6,7 +6,7 @@
   ymode_write='w  ',
   yform_read='apix',
   l_ke_in_gds=.TRUE.,
-  ngribout=1,
+  ngribout=2,
  /END
 
  &DATABASE
@@ -57,6 +57,24 @@
   yvarsl=' ',
   lcheck = .TRUE.,
   lwrite_const=.TRUE.
+  ydir='@MODEL_DATADIR@',
+  yform_write = 'api1',
+ /END
+
+ &GRIBOUT
+  nprocess_ini=@MODEL_FCRUC_GP@,
+  nprocess_bd=@MODEL_FCRUC_GP@,
+  hcomb=0,@MODEL_STOP@,1,
+  lanalysis=.FALSE.,
+  luvmasspoint=.TRUE.,
+  yvarml=' ',
+  yvarpl=' ',
+  yvarzl='U       ','V       ',
+  zlev=100.,
+  lzint_above_ground = .TRUE.,
+  yvarsl=' ',
+  lcheck = .TRUE.,
+  lwrite_const=.FALSE.,
   ydir='@MODEL_DATADIR@',
   yform_write = 'api1',
  /END

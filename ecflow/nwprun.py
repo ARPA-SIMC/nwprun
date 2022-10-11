@@ -55,7 +55,7 @@ class ModelConfig:
         self.conf = {"runlist": [],
                      "membrange": "0", "nofail": False, "modelname": "cosmo",
                      "gts": True, "lhn": True, "radarvol": False,
-                     "preprocname": None,
+                     "preprocname": None, "getparentname": "get_parent",
                      "postprocrange": None, "postproctype": "async", 
                      "timer": None, "cronfreq": 10,
                      "wait_wt": "04:10:00", "preproc_wt": "01:00:00",
@@ -78,6 +78,8 @@ class ModelConfig:
                 self.conf['preprocname'] = "int2lm"
             else:
                 self.conf['preprocname'] = "pre"+self.conf['modelname']
+        if self.conf['modelname'] == "icon":
+            self.conf['getparentname'] = "get_parent_icon"
 
     def getconf(self):
         return self.conf
@@ -131,9 +133,9 @@ class Preproc:
     def add_to(self, node):
         fam = node.add_family("preproc")
         fam.add_trigger("./check_memb:required == 2")
-        task = fam.add_task("get_parent")
+        task = fam.add_task(self.conf['getparentname'])
         SchedEnv("sh").add_to(task) # interactive because net access required for galileo
-        task = fam.add_task(self.conf['preprocname']).add_trigger("./get_parent == complete")
+        task = fam.add_task(self.conf['preprocname']).add_trigger("./"+self.conf['getparentname']+" == complete")
         task.add_variable("WALL_TIME", self.conf["preproc_wt"])
         if self.conf['preprocname'] == "int2lm":
             fam.add_task("merge_analysis").add_trigger("./"+self.conf['preprocname']+" == complete")
@@ -171,7 +173,9 @@ class EpsMembers:
     def add_to(self, node):
         ensfam = node.add_family("eps_members")
         for eps_memb in self.conf['membrange']:
-            if eps_memb == 0:
+            if eps_memb == -1:
+                fname = "control" # control
+            elif eps_memb == 0:
                 fname = "deterministic" # deterministic
             else:
                 fname = "eps_member_"+str(eps_memb)
