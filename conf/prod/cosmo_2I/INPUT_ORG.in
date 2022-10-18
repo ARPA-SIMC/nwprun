@@ -30,7 +30,7 @@
   rlam_mom=0.0,
   rat_lam=1.0,
   rat_can=1.0,
-  rat_sea=20.,
+  rat_sea=10.,
   tkhmin=0.4,
   tkmmin=0.4,
   c_lnd=2.0,
