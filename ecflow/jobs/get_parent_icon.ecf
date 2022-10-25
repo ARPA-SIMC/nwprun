@@ -1,0 +1,69 @@
+%include <sched_wait.h>
+%include <%HPCENV%/smnd.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/getarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+
+set -x
+if [ -n "$PARENTMODEL_DATADIR" ]; then
+    safe_rm_rf $PARENTMODEL_DATADIR
+    mkdir -p $PARENTMODEL_DATADIR
+    cd $PARENTMODEL_DATADIR
+fi
+
+arki_loop() {
+    nwpbctimeloop_init
+    while nwpbctimeloop_loop; do
+        if [ -n "$PARENTMODEL_SIGNAL" ]; then
+            import_signal_wait $PARENTMODEL_SIGNAL $DATES_SLICE$TIMES_SLICE "*" "$PARENTMODEL_SIGNAL_NFILES"
+        fi
+
+	# Download static data for boundary conditions (topography GRIB1 and GRIB2)
+        if [ -n "$MODEL_ARKI_PARENT_STATIC" ]; then
+	    getarki_static mars_topo.grib
+    	    grib_set -s editionNumber=2 mars_topo.grib mars_topo.g2
+	fi
+	
+        getarki_icbc || return 1
+    done
+}
+
+
+arki_loop_backup() {
+    MODEL_DELTABD=$(($MODEL_DELTABD+3))
+    nwpbctimeloop_init
+    while nwpbctimeloop_loop; do
+        getarki_icbc || return 1
+    done
+}
+
+
+signal_loop() {
+    nwpbctimeloop_init
+    while nwpbctimeloop_loop; do
+        if [ -n "$PARENTMODEL_SIGNAL" ]; then
+            import_signal_wait $PARENTMODEL_SIGNAL $DATES_SLICE$TIMES_SLICE "*" "$PARENTMODEL_SIGNAL_NFILES"
+        fi
+    done
+}
+
+
+set_import_signal_method $PARENTMODEL_ARKI_DS
+
+. $NWPCONFBINDIR/icon_model.sh
+. $NWPCONFBINDIR/cineca_site.sh
+
+if [ -n "$ENS_MEMB" ]; then # perturbed bc
+    if [ "$ENS_MEMB" -gt 0 ]; then
+        arki_loop || arki_loop_backup
+    elif [ "$ENS_MEMB" -eq -2 ]; then
+# gestire il caso -2=loop su tutti i membri (compreso/escluso det?)
+        echo "ENS_MEMB -2 not managed yet"
+    fi
+else # deterministic bc (improve condition)
+    arki_loop 
+fi

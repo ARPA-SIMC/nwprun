@@ -1,0 +1,28 @@
+%include <sched_mpi_preproc.h>
+%include <%HPCENV%/modules.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/icon_model.sh
+. $NWPCONFBINDIR/parcomp.sh
+# end of setup
+
+set -x
+
+# Remove and re-create directory
+safe_rm_rf $MODEL_PRE_WORKDIR 
+mkdir -p $MODEL_PRE_WORKDIR
+cd $MODEL_PRE_WORKDIR
+
+# Create directory for output files of iconremap
+mkdir -p $MODEL_PRE_DATADIR
+
+# Number of BC files
+nbc=$(( $MODEL_STOP/$PARENTMODEL_FREQFC+1 ))
+
+# Number of remap tasks
+bc_tasks=$(( ($nbc+$NBC_PER_TASK-1)/$NBC_PER_TASK+1 ))
+
+srun --ntasks=$bc_tasks %BASEDIR%/ecflow/jobs/run_remap.sh 
+

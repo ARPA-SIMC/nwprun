@@ -1,0 +1,19 @@
+%include <sched_postproc.h>
+%include <%HPCENV%/smnd.h>
+%include <head.h>
+
+export LOG4C_PRIORITY=debug
+export LOG4C_APPENDER=stderr
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/icon_model.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+. $NWPCONFBINDIR/lami_postproc.sh
+# end of setup
+
+set -x
+cd $MODEL_DATADIR
+
+putarki_configured_model_output $(($MODEL_STOP + 1))
