@@ -1,0 +1,13 @@
+tur_len = 150
+rlam_heat = 10
+cloud_num = 5.00e+08
+entr_sc = 0.0003
+pat_len = 1000
+crsmin = 150
+tkhmin = 0.75
+tkmmin = 0.75
+rat_sea = 1.
+q_crit = 1.6
+mu_rain = 0.5
+rain_n0_factor = 0.1
+c_soil = 1.0
