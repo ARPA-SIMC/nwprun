@@ -1,5 +1,5 @@
 BootStrap: yum
-OSVersion: 32
+OSVersion: 36
 MirrorURL: http://download.fedoraproject.org/pub/fedora/linux/releases/%{OSVERSION}/Everything/$basearch/os/
 
 # if you want a complete basic image, add @Core
