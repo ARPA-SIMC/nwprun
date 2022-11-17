@@ -61,9 +61,9 @@
  steps_per_file               =  1
  mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_plevs_z"
- filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
- ready_file                   = '@MODEL_DATADIR@/ICON_<datetime2>.rf'
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_z_pl"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_+<ddhhmmss>.rf'
  pl_varlist                   = u,v,temp,qv,geopot
  p_levels                     = 85000.,70000.,50000.
  output_grid                  =  .FALSE.
@@ -80,9 +80,9 @@
  steps_per_file               =  1
  mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_surf_z"
- filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
- ready_file                   = '@MODEL_DATADIR@/ICON_<datetime2>.rf'
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_z_surf"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_+<ddhhmmss>.rf'
  ml_varlist                   = pres_msl,tot_prec,t_2m,td_2m,u_10m,v_10m,gust10,cape_ml,lpi,clch,clcm,clcl,snow_con,snow_gsp
  output_grid                  =  .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
@@ -97,9 +97,10 @@
  output_bounds                =  0.,0.,3600.              ! start, end, increment        
  steps_per_file               =  1                                                      
  mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
- include_last                 = .FALSE.                                                         
- output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_soil_z"                                 
- filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+ include_last                 = .FALSE.
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_z_soil"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_+<ddhhmmss>.rf'
  ml_varlist                   = t_so,w_so,z_mc,topography_c                                                  
  output_grid                  =  .FALSE.                                                      
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased         
@@ -116,8 +117,9 @@
 ! steps_per_file               =  1
 ! mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
 ! include_last                 = .FALSE.
-! output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_chimere"
-! filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+! output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_z_chimere"
+! filename_format              = '<output_filename>+<ddhhmmss>'                   ! file name base
+! ready_file                   = '@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_+<ddhhmmss>.rf'
 ! ml_varlist                   = pres,temp,u,v,qv,qc,qi,qr,qs,w_so,t_2m,td_2m,prec_con,prec_gsp,alhfl_s,ashfl_s,asob_s,athb_s,h_snow,w_snow,pres_sfc
 ! m_levels                     = 14...65
 ! output_grid                  =  .FALSE.
@@ -134,8 +136,9 @@
  steps_per_file               =  1
  mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_surf_u"
- filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_u_surf"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_+<ddhhmmss>.rf'
  ml_varlist                   = tot_prec,t_2m,pres_sfc
  output_grid                  =  .FALSE.
  stream_partitions_ml         =  1 ! needs to be adapted if num_io_procs is increased
@@ -149,8 +152,9 @@
  steps_per_file               =  1
  mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_MECl"
- filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_u_MECl"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_+<ddhhmmss>.rf'
  ml_varlist                   = u,v,temp,pres,qv,
                                 u_10m,v_10m,gust10,t_2m,td_2m,TMAX_2M,TMIN_2M,
                                 clcl,clcm,clch,clct,
