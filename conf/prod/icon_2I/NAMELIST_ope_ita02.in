@@ -1,0 +1,356 @@
+&limarea_nml
+! fac_latbc_presbiascor        = 1
+ latbc_varnames_map_file      = "map_file.latbc"
+ latbc_boundary_grid          = "@MODEL_PRE_DATADIR@/lateral_boundary.grid.nc"
+ latbc_filename               = "lbc_@DATES@@TIMES@_<y><m><d><h>.nc"
+ init_latbc_from_fg           = .false.
+ itype_latbc                  = 1
+ dtime_latbc                  = 3600.
+ latbc_path                   = "@MODEL_PRE_DATADIR@"
+ nretries                     = 300
+ retry_wait_sec               = 60
+/
+&parallel_nml
+ nproma          =  8
+ p_test_run      = .false.
+ l_test_openmp   = .true.
+ l_log_checks    = .true.
+ num_io_procs    =  3 ! may be more if frequent output is written
+ num_restart_procs = 0
+ num_prefetch_proc = 1
+ itype_comm      =  1
+ iorder_sendrecv =  3
+/
+&grid_nml
+ dynamics_grid_filename  =  '@LOCALGRID@',
+ radiation_grid_filename =  '@LOCALGRID_PARENT@',
+ dynamics_parent_grid_id = 0,1
+ lredgrid_phys           = .true.
+ lfeedback               = .true.
+ l_limited_area          = .true.
+ ifeedback_type          = 2
+! start_time  = 0., ! irrelevant without nesting
+/
+&initicon_nml
+ init_mode                    = 2 ! For ICON-LAM runs, use 7 when initialized from ICON and 2 from IFS
+ zpbl1                        = 500.
+ zpbl2                        = 1000.
+ lread_ana                    = .false. ! true if analysis increments are read
+ ifs2icon_filename            = "@MODEL_PRE_DATADIR@/ic_@DATES@@TIMES@.nc"
+ filetype                     = 4
+ ana_varnames_map_file        = "map_file.ana"
+ ltile_coldstart              = .TRUE.
+ ltile_init                   = .TRUE. ! True for IFS, False for ICON
+/
+&io_nml
+ itype_pres_msl               = 5
+ itype_rh                     = 1
+! output_nml_dict             = 'map_file.fc'
+ lmask_boundary               = .true. ! false in assimilation cycle
+/
+&gribout_nml
+ generatingCenter             = 80
+ generatingSubcenter          = 255
+ generatingProcessIdentifier  = 2
+/
+&output_nml
+!### Pressure levels
+ filetype                     =  2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          =  1
+ output_bounds                =  0.,280800.,10800.    ! start, end, increment
+ steps_per_file               =  1
+ mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+ include_last                 = .FALSE.
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_plevs_z"
+ filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/ICON_<datetime2>.rf'
+ pl_varlist                   = u,v,temp,qv,geopot
+ p_levels                     = 85000.,70000.,50000.
+ output_grid                  =  .FALSE.
+ stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
+ remap                        = 1   !0 in case unstructured grid is required
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
+/
+&output_nml
+!### Surface
+ filetype                     =  2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          =  1
+ output_bounds                =  0.,280800.,3600.        ! start, end, increment
+ steps_per_file               =  1
+ mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+ include_last                 = .FALSE.
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_surf_z"
+ filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/ICON_<datetime2>.rf'
+ ml_varlist                   = pres_msl,tot_prec,t_2m,td_2m,u_10m,v_10m,gust10,cape_ml,lpi,clch,clcm,clcl,snow_con,snow_gsp
+ output_grid                  =  .FALSE.
+ stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
+ remap                        = 1   !0 in case unstructured grid is required
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
+/
+&output_nml
+!### Soil, topography, height of model levels (only at intial time)
+ filetype                     =  2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          =  1                                                        
+ output_bounds                =  0.,0.,3600.              ! start, end, increment        
+ steps_per_file               =  1                                                      
+ mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+ include_last                 = .FALSE.                                                         
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_soil_z"                                 
+ filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+ ml_varlist                   = t_so,w_so,z_mc,topography_c                                                  
+ output_grid                  =  .FALSE.                                                      
+ stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased         
+ remap                        = 1   !0 in case unstructured grid is required                
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
+/                                                                                                                                                             
+!&output_nml
+!### Chimere Ita: model levels up to 10 km + surface
+! Cloud varibles: qc,qi are specific content, qr,qs are mixing ratio; other parameters available
+! filetype                     =  2                        ! output format: 2=GRIB2, 4=NETCDFv2
+! dom                          =  1
+! output_bounds                =  0.,280800.,3600.        ! start, end, increment
+! steps_per_file               =  1
+! mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+! include_last                 = .FALSE.
+! output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_chimere"
+! filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+! ml_varlist                   = pres,temp,u,v,qv,qc,qi,qr,qs,w_so,t_2m,td_2m,prec_con,prec_gsp,alhfl_s,ashfl_s,asob_s,athb_s,h_snow,w_snow,pres_sfc
+! m_levels                     = 14...65
+! output_grid                  =  .FALSE.
+! stream_partitions_ml         =  1 ! needs to be adapted if num_io_procs is increased
+! remap                        = 1 !0 in case unstructured grid is required
+! reg_lon_def                  = 4.36,0.09,19.931
+! reg_lat_def                  = 35.2,0.06,48.881
+!/
+&output_nml
+!### Unstructured grid:debug
+ filetype                     =  2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          =  1
+ output_bounds                =  0.,280800.,3600.        ! start, end, increment
+ steps_per_file               =  1
+ mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+ include_last                 = .FALSE.
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_surf_u"
+ filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+ ml_varlist                   = tot_prec,t_2m,pres_sfc
+ output_grid                  =  .FALSE.
+ stream_partitions_ml         =  1 ! needs to be adapted if num_io_procs is increased
+ remap                        =  0 !0 in case unstructured grid is required
+/
+&output_nml
+!### Unstructured grid: MEC-light
+ filetype                     =  2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          =  1
+ output_bounds                =  0.,280800.,3600.        ! start, end, increment
+ steps_per_file               =  1
+ mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+ include_last                 = .FALSE.
+ output_filename              = "@MODEL_DATADIR@/ope_ita02_@DATES@@TIMES@_MECl"
+ filename_format              = '<output_filename>+<hhhmmss>'                   ! file name base
+ ml_varlist                   = u,v,temp,pres,qv,
+                                u_10m,v_10m,gust10,t_2m,td_2m,TMAX_2M,TMIN_2M,
+                                clcl,clcm,clch,clct,
+                                asodifd_s,asodird_s,t_g,h_snow,pres_sfc,tot_prec
+ m_levels                     = 1...65
+ output_grid                  =  .TRUE.
+ stream_partitions_ml         =  1 ! needs to be adapted if num_io_procs is increased
+ remap                        =  0 !0 in case unstructured grid is required
+/
+! &meteogram_output_nml
+! !### Meteograms
+!  lmeteogram_enabled = .TRUE.
+!  ninc_mtgrm     = 45
+!  stationlist_tot(1)%lat = 44.6547
+!  stationlist_tot(1)%lon = 11.6236
+!  stationlist_tot(1)%zname = 'SPC'
+! /
+&run_nml
+ num_lev        = 65
+ lvert_nest     = .false.
+ dtime          = 20.     ! timestep in seconds - 24. for R2B10, 
+ ldynamics      = .TRUE.       ! dynamics
+ ltransport     = .true.
+ ntracer        = 5
+ iforcing       = 3
+ ltestcase      = .false.
+ msg_level      = 12 ! 12 delivers more detailed report during integration
+ ltimer         = .true.
+ timers_level   = 10
+ check_uuid_gracefully = .false.
+ output         = "nml"
+/
+&nwp_phy_nml
+lgrayzone_deepconv = .true.
+inwp_gscp       = 2,2,
+mu_rain         = 0.5
+rain_n0_factor  = 0.1
+inwp_convection = 1
+lshallowconv_only = .false.
+inwp_radiation  = 1
+inwp_cldcover   = 1
+inwp_turb       = 1
+inwp_satad      = 1
+inwp_sso        = 1
+inwp_gwd        = 0
+inwp_surface    = 1
+latm_above_top  = .true.
+ldetrain_conv_prec = .true.
+efdt_min_raylfric = 7200.
+itype_z0         = 2
+icapdcycl        = 3
+icpl_aero_conv   = 1
+icpl_aero_gscp   = 1
+icpl_o3_tp       = 1
+dt_rad    = 720.
+dt_conv   = 120.,
+dt_sso    = 120.,
+dt_gwd    = 360.,
+/
+&nwp_tuning_nml
+tune_sgsclifac = 1
+itune_albedo = 1
+tune_gkwake = 0.25
+tune_zvz0i = 0.85
+tune_box_liq = 0.04
+tune_rhebc_land = 0.825
+tune_rcucov = 0.075
+tune_gfrcrit = 0.333
+tune_gkdrag = 0.0
+tune_minsnowfrac = 0.3
+tune_box_liq_asy = 4
+tune_gust_factor = 7
+icpl_turb_clc = 2
+max_calibfac_clcl = 2
+/
+&turbdiff_nml
+  tkhmin        = 0.5
+  tkmmin        = 0.75
+  pat_len       = 750.
+  tur_len       = 300.
+  rat_sea       = 0.8
+  ltkesso       = .true.
+  frcsmot       = 0.2   ! these 2 switches together apply vertical smoothing of the TKE source terms
+  imode_frcsmot = 2     ! in the tropics (only), which reduces the moist bias in the tropical lower troposphere
+ ! use horizontal shear production terms with 1/SQRT(Ri) scaling to prevent unwanted side effects:
+  itype_sher    = 2    
+  ltkeshs       = .true.
+  a_hshr        = 2.0
+  icldm_turb    = 2
+  q_crit        = 2.0
+  imode_tkesso  = 2
+  alpha1        = 0.125
+/
+&lnd_nml
+  ntiles         = 3
+  nlev_snow      = 3
+  lmulti_snow    = .false.
+  itype_heatcond = 3
+  idiag_snowfrac = 20
+  lsnowtile      = .true.
+  lseaice        = .true.
+  llake          = .true.
+  itype_lndtbl   = 4
+  itype_evsl     = 4
+  itype_root     = 2
+  itype_trvg     = 3
+  cwimax_ml      = 5.e-4
+  c_soil         = 1.25
+  c_soil_urb     = 0.5
+  sstice_mode    = 2
+/
+&radiation_nml
+  direct_albedo_water = 3
+  albedo_whitecap = 1
+  irad_o3     = 79
+  irad_aero   = 6
+  albedo_type = 2          ! Modis albedo
+  islope_rad  = 0
+  vmr_co2     = 390.e-06   ! values representative for 2012
+  vmr_ch4     = 1800.e-09
+  vmr_n2o     = 322.0e-09
+  vmr_o2      = 0.20946
+  vmr_cfc11   = 240.e-12
+  vmr_cfc12   = 532.e-12 
+/
+&nonhydrostatic_nml
+  iadv_rhotheta   = 2
+  ivctype         = 2
+  itime_scheme    = 4
+  exner_expol     = 0.6
+  vwind_offctr    = 0.2
+  damp_height     = 12250.
+  rayleigh_coeff  = 5.0
+! the following divergence damping settings should also be used in assimilation cycle; the settings used in the global
+! DA cycle might compromise the dynamics of convection
+  divdamp_fac     = 0.004
+  divdamp_order   = 24
+  divdamp_type    = 32
+  divdamp_trans_start = 12500.
+  divdamp_trans_end   = 17500.
+  l_open_ubc      = .false.
+  igradp_method   = 3
+  l_zdiffu_t      = .true.
+  thslp_zdiffu    = 0.02
+  thhgtd_zdiffu   = 125.
+  htop_moist_proc = 22500.
+  hbot_qvsubstep  = 22500
+/
+&sleve_nml
+ min_lay_thckn   = 20.
+ itype_laydistr  = 1
+ top_height      = 22000.
+ stretch_fac     = 0.65
+ decay_scale_1   = 4000.
+ decay_scale_2   = 2500.
+ decay_exp       = 1.2
+ flat_height     = 16000.
+/
+&dynamics_nml
+ iequations     = 3
+ idiv_method    = 1
+ divavg_cntrwgt = 0.50
+ lcoriolis      = .true.
+/
+&transport_nml
+ ctracer_list = '12345'
+ ivadv_tracer = 3,3,3,3,3,3
+ itype_hlimit = 3,4,4,4,4,4
+ ihadv_tracer = 52,2,2,2,2,2
+ llsq_svd       = .TRUE.
+ beta_fct       = 1.005
+/
+&diffusion_nml
+ hdiff_order      = 5
+ itype_vn_diffu   = 1
+ itype_t_diffu    = 2
+ hdiff_efdt_ratio = 24
+ hdiff_smag_fac   = 0.025
+ lhdiff_vn        = .true.
+ lhdiff_temp      = .true.
+/
+&interpol_nml
+  nudge_zone_width = 10
+  nudge_max_coeff  = 0.05  ! use 0.075 in assimilation cycle
+  lsq_high_ord     = 3
+  l_intp_c2l       = .true.
+  l_mono_c2l       = .true.
+!  support_baryctr_intp = .true.
+/
+&gridref_nml
+ grf_intmethod_e  = 6
+ grf_intmethod_ct = 2
+ grf_tracfbk      = 2
+ denom_diffu_v    = 150.
+/
+&extpar_nml
+ itopo                = 1
+ n_iter_smooth_topo   = 1,
+ hgtdiff_max_smooth_topo = 750.,
+ heightdiff_threshold = 2250.,
+ itype_vegetation_cycle = 1 ! 2 is actually the ICON-D2 setup but needs T2M-CLIM data which is not available from extpar web ui
+ extpar_filename      = "@LOCALGRID_EXTERNAL@"
+/

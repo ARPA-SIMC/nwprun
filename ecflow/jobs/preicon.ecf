@@ -1,5 +1,5 @@
 %include <sched_mpi_preproc.h>
-%include <%HPCENV%/modules.h>
+%include <%HPCENV%/modules_icon.h>
 %include <head.h>
 
 # source other optional modules
@@ -24,5 +24,11 @@ nbc=$(( $MODEL_STOP/$PARENTMODEL_FREQFC+1 ))
 # Number of remap tasks
 bc_tasks=$(( ($nbc+$NBC_PER_TASK-1)/$NBC_PER_TASK+1 ))
 
+echo "ambiente prima di srun"
+echo "$NWPCONF"
+conf_template
+export OMP_NUM_THREADS=1
 srun --ntasks=$bc_tasks %BASEDIR%/ecflow/jobs/run_remap.sh 
 
+# Copy "lateral_boundary.grid.nc"
+cp $MODEL_PRE_WORKDIR/remap_1/lateral_boundary.grid.nc $MODEL_PRE_DATADIR
