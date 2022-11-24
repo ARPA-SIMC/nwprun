@@ -23,9 +23,9 @@
  /END
  &GRID_IN
   ni_gme = @ICON_NI@, i3e_gme = @ICON_NLEV@, kcontrol_fi = @ICON_KCONTROL_FI@,
-  ke_in_tot = 90, nlevskip = 20,
+  ke_in_tot = @ICON_NLEV@, nlevskip = 31,
   yicon_grid_cat='@PARENTMODEL_STATIC@',
-  yicon_grid_lfn='icon_grid_arpa_R03B07.nc',
+  yicon_grid_lfn='icon_grid_arpa2_R03B07_20220601_tiles.nc',
  /END
  &LMGRID
   ielm_tot=386, jelm_tot=434, kelm_tot=@MODEL_NLEV@,
