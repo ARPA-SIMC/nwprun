@@ -35,7 +35,8 @@ get_one() {
             # If the downloaded file is not empty, it is unzipped and its index
             # in "file_list" is saved to be deleted later. Reverse order in
             # "delete" array must be kept!
-            if [ -s $fname ]; then
+	    log "finish download at $filepath"
+	    if [ -s $fname ]; then
                 tmpdir=`mktemp -d $PWD/tmptar.XXXXXXXXXX`
                 tar --transform='s?.*/??g' -C $tmpdir -xvf $fname
                 log "file $fname successfully downloaded and unpacked"
