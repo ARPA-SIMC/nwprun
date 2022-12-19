@@ -39,7 +39,6 @@
   lana_qg = @COSMO_FAST_NML@,
   llb_qg = .FALSE.
  /END
-  lbd_frame=.TRUE.,
  &GRIBOUT
   nprocess_ini=@MODEL_FCRUC_GP@,
   nprocess_bd=@MODEL_FCRUC_GP@,
@@ -60,21 +59,19 @@
   ydir='@MODEL_DATADIR@',
   yform_write = 'api1',
  /END
-
  &GRIBOUT
   nprocess_ini=@MODEL_FCRUC_GP@,
   nprocess_bd=@MODEL_FCRUC_GP@,
-  hcomb=0,@MODEL_STOP@,1,
+  ngrib=33,67,100,133,167,200,233,267,300,333,367,400,433,467,500,533,567,600,
+3,667,700,733,767,800,833,867,900,933,967,1000,1033,1067,1100,1133,1167,1200,
   lanalysis=.FALSE.,
-  luvmasspoint=.TRUE.,
-  yvarml=' ',
+  yvarml='TOT_PR',
   yvarpl=' ',
-  yvarzl='U       ','V       ',
-  zlev=100.,
-  lzint_above_ground = .TRUE.,
+  yvarzl=' ',
   yvarsl=' ',
   lcheck = .TRUE.,
-  lwrite_const=.FALSE.,
-  ydir='@MODEL_DATADIR@',
+  lwrite_const=.FALSE.
+  ydir='@MODEL_DATADIR@/extra1',
+  ysuffix='_prec',
   yform_write = 'api1',
  /END
