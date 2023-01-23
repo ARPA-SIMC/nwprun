@@ -39,10 +39,10 @@ case "%SUITE%" in
         else
             putarki_model_output $(($MODEL_STOP + 1)) -w
         fi
-# copy high frequency precipitation somewhere (example)
-        #subdir=cosmo_2I_fcruc/$DATE$TIME
-        #mkdir -p $CINECA_ARCHIVE_POST/$subdir
-        #cp -a extra1/lfff* $CINECA_ARCHIVE_POST/$subdir
+# copy high frequency precipitation somewhere 
+        subdir=cosmo_2I_fcruc/$DATE$TIME
+        mkdir -p $CINECA_ARCHIVE_POST/$subdir
+        cp -a extra1/lfff* $CINECA_ARCHIVE_POST/$subdir
         ;;
     *)
         if [ "$ARKI_SCAN_METHOD" = "configured_importer" ]; then
