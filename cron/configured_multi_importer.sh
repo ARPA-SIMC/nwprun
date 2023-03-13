@@ -137,7 +137,7 @@ import_one() {
 				safe_source $syncconf
 				cd $syncdir
 				rsync -ptR --chmod=ug=rwX ./$syncsubdir/$upfile $sync_dest
-				if [ -n "$LOGSIM_SIGNAL_SYNC" -a -f "./$syncsubdir/start.sh" ]; then
+				if [ -n "$logsim_signal_sync" -a -f "./$syncsubdir/start.sh" ]; then
                                     safe_source ./$syncsubdir/start.sh
 				    LOGSIM_PROCESS=$signal
                                     DATE=${reftime:0:8}
@@ -228,7 +228,7 @@ set -e
 # source other optional modules
 . $NWPCONFBINDIR/arki_tools.sh
 # better condition?
-if [ -n "$LOGSIM_SIGNAL_SYNC" ]; then
+if [ -n "$SIMC_SITE" ]; then
     . $NWPCONFBINDIR/simc_site.sh
 fi
 

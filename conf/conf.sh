@@ -6,9 +6,16 @@ case "$HPC_SYSTEM" in
 # General
     WORKDIR=$WORK/$NWPCONF
     LOGDIR=$WORK/log
+    ARKI_DIR=$WORKDIR_BASE/arkimet
+    ARKI_CONF=$ARKI_DIR/config
+    ARKI_SCAN_METHOD=configured_importer
+    IMPORT_SIGNAL_METHOD=filesystem
     IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
-    LOGSIM_SIGNAL_SYNC=Y
+    ARKI_IMPROOT=$WORKDIR_BASE/import
+    ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
+    SIMC_TOOLS=
+    SIMC_SITE=Y
 # Radar
     RADAR_MOSAICODIR=$HOME/radarsri2grib
     RADAR_LHNDIR=$HOME/radarsri2grib
@@ -18,20 +25,13 @@ case "$HPC_SYSTEM" in
 # General
     WORKDIR=/arkimet/arkimet/$NWPCONF
     LOGDIR=$HOME/log
-    ;;
-  galileo ) # Cineca HPC galileo
-# General
-    WORKDIR=$WORKDIR_BASE/$NWPCONF
-    LOGDIR=$CINECA_SCRATCH/log
-    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
-    ;;
-  meucci ) # Cineca HPC meucci
-# General
-    WORKDIR=$WORKDIR_BASE/$NWPCONF
-    LOGDIR=$WORKDIR_BASE/log
-    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
-    EXTRA_MPIRUN="-genv I_MPI_FABRICS=shm:dapl -genv I_MPI_DAPL_SCALABLE_PROGRESS=1 -genv DAT_OVERRIDE=$NWPCONFDIR/$NWPCONF/dat.conf -genv DAPL_ACK_RETRY=7 -genv DAPL_ACK_TIMER=20 -genv DAPL_CM_ROUTE_TIMEOUT_MS=20000 -genv DAPL_CM_ARP_TIMEOUT_MS=10000 -genv DAPL_UCM_REP_TIME=2000 -genv DAPL_UCM_RTU_TIME=2000 -genv DAPL_UCM_RETRY=7 -genv DAPL_UCM_CQ_SIZE=2000 -genv DAPL_UCM_QP_SIZE=2000"
-    EXTRA_MPIRUN_LETKF="-genv I_MPI_FABRICS=shm:tcp"
+    ARKI_DIR=/arkimet/arkimet
+    ARKI_CONF=$ARKI_DIR/config
+    ARKI_SCAN_METHOD=arki_importer
+    IMPORT_SIGNAL_METHOD=psql
+    ARKI_IMPROOT=~arki-imp/arki-imp
+    ARKI_IMPDIR=~arki-imp/arki-imp/generic
+    ARKI_USE_INOTIFY=Y
     ;;
   g100 ) # Cineca HPC galileo 100
 # General
@@ -40,8 +40,17 @@ case "$HPC_SYSTEM" in
 	    WORKDIR=$WORKDIR_RELOC/$NWPCONF
     fi
     LOGDIR=$WORKDIR_BASE/log
+    ARKI_DIR=$WORKDIR_BASE/arkimet
+    ARKI_CONF=$ARKI_DIR/config
+    ARKI_SCAN_METHOD=configured_importer
+    IMPORT_SIGNAL_METHOD=filesystem
     IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
+    ARKI_IMPROOT=$WORKDIR_BASE/import
+    ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
+    SIMC_TOOLS="singularity exec -B /ind2/meteo -B /ind2/meteoarch $WORKDIR_BASE/nwprun.sif"
+    CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
+    CINECA_RUN=/ind2/meteo/a07smr01/LM_WorkDir/g100/lm/PROD/work
     ;;
   marconi ) # Cineca HPC marconi
 # General
