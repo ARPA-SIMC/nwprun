@@ -30,7 +30,7 @@ case "$HPC_SYSTEM" in
     ARKI_SCAN_METHOD=arki_importer
     IMPORT_SIGNAL_METHOD=psql
     ARKI_IMPROOT=~arki-imp/arki-imp
-    ARKI_IMPDIR=~arki-imp/arki-imp/generic
+    ARKI_IMPDIR=$ARKI_IMPROOT
     ARKI_USE_INOTIFY=Y
     ;;
   g100 ) # Cineca HPC galileo 100
