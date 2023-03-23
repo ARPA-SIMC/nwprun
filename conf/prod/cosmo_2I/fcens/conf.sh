@@ -1,7 +1,7 @@
 MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
 MODEL_PRE_BIN=$WORKDIR_BASE/srcintel/int2lm_180226_2.05/tstint2lm
-FXTR_HOME=$WORKDIR_BASE/srcintel/fieldExtra-12.6.0/
-FXTR_BIN=$FXTR_HOME/src/fieldextra_intel_opt_omp
+FXTR_HOME=$WORKDIR_BASE/srcgnu/Fieldextra_14.0.0
+FXTR_BIN=$FXTR_HOME/src/fieldextra_gnu_opt_omp
 FXTR_WORKDIR=$WORKDIR/fxtr
 FXTR_DATADIR=$FXTR_WORKDIR/data
 POSTPROC_EPS_WORKDIR=$WORKDIR/postproc_eps

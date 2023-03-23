@@ -41,6 +41,8 @@ def get_var_grib(grib_data):
     ltr       = int(grib_data.lengthOfTimeRange)
     if itr==0:
         cumstep=ltr/60
+    else:
+        cumstep=ltr
     if grib_data.has_key('derivedForecast'): medi = grib_data.derivedForecast
     if grib_data.has_key('percentileValue'): perc = grib_data.percentileValue
     if grib_data.has_key('scaleFactorOfLowerLimit') and grib_data.has_key('scaledValueOfLowerLimit'):
