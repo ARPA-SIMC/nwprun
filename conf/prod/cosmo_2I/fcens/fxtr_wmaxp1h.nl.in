@@ -17,7 +17,7 @@
   out_type_alternate_code=.true.
 /
 
-&Process in_field="VMAX_10M", scale = 1., set_auxiliary_metainfo='generatingProcessIdentifier=201' /
+&Process in_field="VMAX_10M", scale = 1. /
 
 &Process out_field="VMAX_10M", product_category='eps_mean' /
 &Process out_field="VMAX_10M", product_category='eps_quantile', quantile=0 /
