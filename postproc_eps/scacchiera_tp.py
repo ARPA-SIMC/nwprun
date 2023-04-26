@@ -57,8 +57,7 @@ if __name__ == '__main__':
     
     val = []
     for i in range(1, 21):
-        #dir_in = "{}/cosmo.{}/data/lfff????0000".format( path_in, str(i) )
-        dir_in = "{}/2021100321.{}/lfff????0000".format( path_in, f"{i:03d}" )
+        dir_in = "{}/cosmo.{}/data/lfff????0000".format( path_in, str(i) )
    
         for f in glob.glob(dir_in):
         # Estraggo i campi di TP
