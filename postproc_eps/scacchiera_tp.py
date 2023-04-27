@@ -35,13 +35,13 @@ if __name__ == '__main__':
     if not os.path.exists( "{}".format(fold_out) ):
         os.makedirs( "{}".format(fold_out) )
 
-    print (args.subtype)
+    #print (args.subtype)
     if len(args.subtype) > 1:
         print("Per questo post-processing è previsto l'uso di un sub_type alla volta, esco")
         sys.exit(1)
     else:
         sub_type = args.subtype[0]
-        print("STATISTICA: ", sub_type)
+        #print("STATISTICA: ", sub_type)
         if sub_type == 'average':
             thresh = [ 1, 2, 5, 10, 20 ]        
         elif sub_type == 'max':
@@ -57,7 +57,8 @@ if __name__ == '__main__':
     
     val = []
     for i in range(1, 21):
-        dir_in = "{}/cosmo.{}/data/lfff????0000".format( path_in, str(i) )
+        #dir_in = "{}/cosmo.{}/data/lfff????0000".format( path_in, str(i) )
+        dir_in = "{}/2021100321.{}/lfff????0000".format( path_in, f"{i:03d}" )
    
         for f in glob.glob(dir_in):
         # Estraggo i campi di TP

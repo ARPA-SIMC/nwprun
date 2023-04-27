@@ -53,9 +53,9 @@ if __name__ == '__main__':
         sf.append( sflist )
         sv.append( svlist ) 
 
-    print("tresh= ", thresh)
-    print("sf= ", sf)
-    print("sv= ", sv)
+    #print("tresh= ", thresh)
+    #print("sf= ", sf)
+    #print("sv= ", sv)
 
     # Definisco la soglia per il calcolo del percentile
     percent = 90

@@ -114,10 +114,10 @@ def estrai_campi_su_macroaree( fname, valore, sub_type, aree, regione ):
 
 def estrai_prob_su_macroaree( fname, valore, subtype, aree, regione, thresh, sf, sv, percent ):
     prodotto = os.path.basename(fname).split('.',1)[0]
-    print(subtype)
+    #print(subtype)
     for i in range(len(thresh)):        
         csvname = "{}_{}_{}_soglia{}_{}.csv".format( subtype, valore, prodotto, str(thresh[i]), regione )
-        print( i, str(thresh[i]), sf[i], sv[i] )
+        #print( i, str(thresh[i]), sf[i], sv[i] )
         grib_copy = "grib_copy -w productDefinitionTemplateNumber=9,scaleFactorOfLowerLimit={},scaledValueOfLowerLimit={} " \
             "{} campo.grib".format(sf[i], sv[i], fname)  
         subprocess.call( grib_copy.split(), shell=False )
