@@ -29,11 +29,13 @@ ftp_mkdir() {
 }
 
 ftp_cp_one() {
+    if [ -f "$1" ]; then
     LD_LIBRARY_PATH= curl \
 		   --ftp-ssl-control \
 		   --netrc-file $WORKDIR_BASE/nwprun/.auth/infomet.netrc \
 		   -T "$1" \
 		   $INFOMET_UP_URL/$INFOMET_UP_BASEDIR/$2/
+    fi
 }
 
 ftp_cp_all() {

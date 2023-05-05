@@ -102,6 +102,22 @@ cp -a $FXTR_DATADIR/*.grib $CINECA_ARCHIVE_POST/$subdir
 
 }
 
+fxtr_compute_prob_extra() {
+%include <%HPCENV%/modules.h>
+. ~/smnd_profile
+export OMP_NUMTHREADS=16
+
+cd $FXTR_WORKDIR
+# add new products, no archiving for the moment
+for delta in 01 03 24; do
+    conf_template fxtr_tpp${delta}hup.nl
+    $FXTR_BIN fxtr_tpp${delta}hup.nl
+done
+conf_template fxtr_lpi01hup.nl
+$FXTR_BIN fxtr_lpi01hup.nl
+
+}
+
 # this can be run simultaneously with fieldextra
 scacchiera_tp() {
 #  module load singularity
@@ -137,7 +153,7 @@ mappe_eps() {
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/mappe_eps.py \
      $WORKDIR_BASE/nwprun/postproc_eps/Regioni_latlon.tif \
      $WORKDIR_BASE/nwprun/postproc_eps/ProvinceER_latlon.tif \
-     "$FXTR_DATADIR/*_?????????????${1}.grib" $POSTPROC_EPS_DATADIR
+     "$FXTR_DATADIR/*h_?????????????${1}.grib" $POSTPROC_EPS_DATADIR
 }
 
 # get aree file
@@ -151,6 +167,7 @@ date -u
 (fxtr_compute_prob) &
 fxtr_pid=$!
 (scacchiera_tp) &
+(fxtr_compute_prob_extra) &
 
 # wait for fieldextra
 wait $fxtr_pid
