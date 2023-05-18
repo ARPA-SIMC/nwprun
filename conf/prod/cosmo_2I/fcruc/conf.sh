@@ -37,8 +37,10 @@ ARKI_SCAN_METHOD=configured_importer
 unset ARKI_IMPDIR
 ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
 ARKI_DLDIR=$WORKDIR_BASE/download
-POSTPROC_LIST=(lami_make_arkiruc lami_make_vprof)
-VPROF_NETWORK=cosmo_2I_vprof
+CROSS_COORD_FILE=$WORKDIR_BASE/nwprun/conf/cross.shp
+CROSS_NETWORK=cosmo_2I_fcruc_c
+VPROF_NETWORK=cosmo_2I_fcruc_v
+POSTPROC_LIST=(lami_make_arkiruc lami_make_vprof lami_make_cross)
 MODEL_SIGNAL=cosmo_2I_fcruc
 CONFIGURED_SIGNAL_METHOD=$IMPORT_SIGNAL_METHOD
 # setup for arkilocal
