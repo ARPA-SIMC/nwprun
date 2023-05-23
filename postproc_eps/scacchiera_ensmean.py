@@ -23,7 +23,8 @@ if __name__ == '__main__':
 
     # Estraggo la sigla della Regione dal nome dello shapefile
     dumaree = os.path.basename( aree )
-    regione = dumaree[ len("macroaree_"):-len(".shp") ]
+    regione = dumaree[len("macroaree_"):]
+    regione = regione.split(".")[0] # rimuovo qualunque suffisso
     print( "Post-processing per la Regione {}".format(regione) )
 
     path_in = args.path_in # default = "/autofs/scratch-rad/vpoli/FCST_PROB/fxtr/data" 
@@ -44,7 +45,7 @@ if __name__ == '__main__':
     for subtype in sub_type: #[ 'average', 'max' ]:
         for j in cumulate:
             # Lista dei file per scadenza 
-            search = "{}/{}*.grib".format(path_in, j)
+            search = "{}/{}_*.grib".format(path_in, j)
             lista = glob.glob(search)
 
             if j == 'tpp01h':
@@ -67,14 +68,15 @@ if __name__ == '__main__':
     # lista dei file e rinomino il campo delle cumulate (da tpp01h a
     # tpp01hday2); contestualmente l'aggiungo all'array cumulate
     # perchè venga analizzato e plottato.
-    for subtype in sub_type: #['average', 'max']:
-        search = "{}_{}_tpp01h_*{}.csv".format( subtype, valore, regione )
-        lista = sorted( glob.glob(search) )
-        day2 = lista[len(lista)//2:]
-        for i in day2: 
-            os.rename( i, i.replace( 'tpp01h', 'tpp01hday2' ) )
+    if 'tpp01h' in cumulate:
+        for subtype in sub_type: #['average', 'max']:
+            search = "{}_{}_tpp01h_*{}.csv".format( subtype, valore, regione )
+            lista = sorted( glob.glob(search) )
+            day2 = lista[len(lista)//2:]
+            for i in day2:
+                os.rename( i, i.replace( 'tpp01h', 'tpp01hday2' ) )
 
-    cumulate.append('tpp01hday2')
+        cumulate.append('tpp01hday2')
 
     for j in cumulate:
         # Preparo le figure
