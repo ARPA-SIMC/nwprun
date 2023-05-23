@@ -45,6 +45,10 @@ def get_args():
     parser.add_argument( '-tp', '-accumulation_time', nargs='+', dest="cumulate",
                          required=False, default=['tpp01h', 'tpp03h'],
                          help="Tempo di cumulazione richiesto ('tpp01h', 'tpp03h')" )
+    parser.add_argument( '-op', '--operations', dest="operations", required=False,
+                         help="Elenco di operazioni da compiere, C=cumulazione, S=scacchiera",
+                         default="CS")
+
     
     args = parser.parse_args()
     return args
@@ -135,15 +139,15 @@ def estrai_prob_su_macroaree( fname, valore, subtype, aree, regione, thresh, sf,
             c_format = "shp"
             trans_type = "polyinter"
 
-            vg6d_getpoint = "vg6d_getpoint --coord-file={} " \
-                "--coord-format={} --trans-type={} --sub-type={} " \
-                "--percentile={:d} --output-format=native campo.grib pre.v7d".format( aree,  \
-                                                                                    c_format, trans_type, subtype, percent )
-            subprocess.call( vg6d_getpoint.split(), shell=False )
+        vg6d_getpoint = "vg6d_getpoint --coord-file={} " \
+            "--coord-format={} --trans-type={} --sub-type={} " \
+            "--percentile={:d} --output-format=native campo.grib pre.v7d".format( aree,  \
+                                                                                  c_format, trans_type, subtype, percent )
+        subprocess.call( vg6d_getpoint.split(), shell=False )
             
-            v7d_trans = "v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
-	        "pre.v7d {}".format( csvname )
-            subprocess.call( v7d_trans.split(), shell=False )
+        v7d_trans = "v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
+	    "pre.v7d {}".format( csvname )
+        subprocess.call( v7d_trans.split(), shell=False )
 
     # Elimino il file dati.v7d
     subprocess.call( [ "rm", "pre.v7d" ] )
