@@ -10,6 +10,29 @@ from datetime import datetime,timedelta
 
 from eps_utils import macro, get_args, heatmap
 
+
+def cumula_membri(nmemb, path_in):
+    for i in range(1, nmemb+1):
+        dir_in = "{}/cosmo.{}/data/lfff????0000".format( path_in, str(i) )
+        #dir_in = "{}/2021100321.{}/lfff????0000".format( path_in, f"{i:03d}" )
+
+        for f in glob.glob(dir_in):
+            # Estraggo i campi di TP
+            grib_copy = "grib_copy -w shortName=tp {} tp_{}.grib".format(f, os.path.basename(f))
+            subprocess.call(grib_copy.split(),shell=False)
+        # Unisco i file e calcolo le cumulate
+        os.system("cat tp_*.grib > tp.grib")
+
+        tobedeleted = glob.glob( "tp_lfff*" )
+        for f in tobedeleted:
+            os.remove(f)
+
+        grib_cum = "vg6d_transform --comp-stat-proc=1 --comp-step='00 03' --comp-full-steps " \
+            "tp.grib tp3h_membro{}.grib".format(str(i),)
+        os.system( grib_cum )
+        subprocess.call( [ "rm", "tp.grib" ] )
+
+
 #------------------------------------------------------------------------
 # Creazione della scacchiera di probabilità di superamento delle soglie
 # delle precipitazione media(massima) sulle macroaree.
@@ -20,62 +43,49 @@ from eps_utils import macro, get_args, heatmap
 #------------------------------------------------------------------------
 if __name__ == '__main__':
 
+    nmemb = 20
     args = get_args()
-
-    aree = args.aree
-    # Estraggo la sigla della Regione dal nome dello shapefile
-    dumaree = os.path.basename( aree )
-    regione = dumaree[ len("macroaree_"):-len(".shp") ]
-    print( "Post-processing per la Regione {}".format(regione) )
-    
     path_in = args.path_in
 
-    fold_out = args.fold_out
-    # Creo la directory di output, "fold_out", se non esiste
-    if not os.path.exists( "{}".format(fold_out) ):
-        os.makedirs( "{}".format(fold_out) )
+    if "S" in args.operations:
+        aree = args.aree
+        # Estraggo la sigla della Regione dal nome dello shapefile
+        dumaree = os.path.basename( aree )
+        regione = dumaree[len("macroaree_"):]
+        regione = regione.split(".")[0] # rimuovo qualunque suffisso
+        print( "Post-processing per la Regione {}".format(regione) )
 
-    #print (args.subtype)
-    if len(args.subtype) > 1:
-        print("Per questo post-processing è previsto l'uso di un sub_type alla volta, esco")
-        sys.exit(1)
-    else:
-        sub_type = args.subtype[0]
-        #print("STATISTICA: ", sub_type)
-        if sub_type == 'average':
-            thresh = [ 1, 2, 5, 10, 20 ]        
-        elif sub_type == 'max':
-            thresh = [ 10, 20, 30, 50, 70 ]
+        fold_out = args.fold_out
+        # Creo la directory di output, "fold_out", se non esiste
+        if not os.path.exists( "{}".format(fold_out) ):
+            os.makedirs( "{}".format(fold_out) )
+
+        if len(args.subtype) > 1:
+            print("Per questo post-processing è previsto l'uso di un sub_type alla volta, esco")
+            sys.exit(1)
         else:
-            print("Sub_type non definito, esco")
-            sys.exit(2)
-            
-    units = '[%]'
+            sub_type = args.subtype[0]
+            if sub_type == 'average':
+                thresh = [ 1, 2, 5, 10, 20 ]
+            elif sub_type == 'max':
+                thresh = [ 10, 20, 30, 50, 70 ]
+            else:
+                print("Sub_type non definito, esco")
+                sys.exit(2)
+
+        units = '[%]'
 
     # Estrazione di TP trioraria per ciascun membro e calcolo della media
     # sulle macroaree 
-    
-    val = []
-    for i in range(1, 21):
-        #dir_in = "{}/cosmo.{}/data/lfff????0000".format( path_in, str(i) )
-        dir_in = "{}/2021100321.{}/lfff????0000".format( path_in, f"{i:03d}" )
-   
-        for f in glob.glob(dir_in):
-        # Estraggo i campi di TP
-            grib_copy = "grib_copy -w shortName=tp {} tp_{}.grib".format(f, os.path.basename(f))
-            subprocess.call(grib_copy.split(),shell=False)
-        # Unisco i file e calcolo le cumulate
-        os.system("cat tp_*.grib > tp.grib")
-    
-        tobedeleted = glob.glob( "tp_lfff*" )
+    if "C" in args.operations:
+        tobedeleted = glob.glob("tp3h_membro*.grib")
         for f in tobedeleted:
             os.remove(f)
+        cumula_membri(nmemb, path_in)
+    if not "S" in args.operations: quit()
     
-        grib_cum = "vg6d_transform --comp-stat-proc=1 --comp-step='00 03' --comp-full-steps " \
-            "tp.grib tp3h_membro{}_{}.grib".format( str(i), regione )
-        os.system( grib_cum )
-        subprocess.call( [ "rm", "tp.grib" ] )
-
+    val = []
+    for i in range(1, nmemb+1):
         # per velocizzare la procedura, aree puo' ossere un file grib
         # generato una-tantum ad hoc a partire da un singolo grib di esempio e
         # dallo shapefile desiderato con il comando:
@@ -91,7 +101,7 @@ if __name__ == '__main__':
 
         vg6d_getpoint = "vg6d_getpoint --coord-file={} " \
             "--coord-format={} --trans-type={} --sub-type={} " \
-            "--output-format=native tp3h_membro{}_{}.grib pre.v7d".format( aree, c_format, trans_type, sub_type, str(i), regione )
+            "--output-format=native tp3h_membro{}.grib pre.v7d".format( aree, c_format, trans_type, sub_type, str(i))
         subprocess.call(vg6d_getpoint.split(),shell=False)
 
         csvname = "tp3h_membro{}_{}.csv".format( str(i), regione )
@@ -102,10 +112,6 @@ if __name__ == '__main__':
         # Elimino il file dati non necessari
         subprocess.call( ["rm", "pre.v7d"] )
 
-        tobedeleted = glob.glob("tp3h_membro*.grib")
-        for f in tobedeleted:
-            os.remove(f)
-    
         csvname = "tp3h_membro{}_{}.csv".format( str(i), regione ) #da cancellare
         val.append( pd.read_csv( csvname, delimiter=',',
                                  names=[ 'Date', 'Time range', 'P1', 'P2',
