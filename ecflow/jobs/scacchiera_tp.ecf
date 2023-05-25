@@ -7,7 +7,7 @@ scacchiera_tp() {
 
   mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_tp
   cd $POSTPROC_EPS_WORKDIR/scacchiera_tp
-  $SIMC_TOOLS $WORKDIR_BASE/testeps/nwprun/postproc_eps/scacchiera_tp.py \
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
    -shp $1 -op S \
    -out $POSTPROC_EPS_DATADIR/scacchiera/superamento_soglie/${DATE}
 

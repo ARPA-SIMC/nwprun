@@ -6,17 +6,17 @@ scacchiera_prob() {
   mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_prob
   cd $POSTPROC_EPS_WORKDIR/scacchiera_prob
 
-  $SIMC_TOOLS $WORKDIR_BASE/testeps/nwprun/postproc_eps/scacchiera_prob.py \
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
    -shp $1 -tp tpp01h -st max \
    -in $FXTR_DATADIR \
    -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/1H/${DATE}
 
-  $SIMC_TOOLS $WORKDIR_BASE/testeps/nwprun/postproc_eps/scacchiera_prob.py \
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
    -shp $1 -tp tpp03h -st max \
    -in $FXTR_DATADIR \
    -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/3H/${DATE}
 
-  $SIMC_TOOLS $WORKDIR_BASE/testeps/nwprun/postproc_eps/scacchiera_prob.py \
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
    -shp $1 -tp tpp24h -st max \
    -in $FXTR_DATADIR \
    -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/24H/${DATE}

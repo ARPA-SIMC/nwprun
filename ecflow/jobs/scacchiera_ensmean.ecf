@@ -6,12 +6,12 @@ scacchiera_ensmean() {
   mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_ensmean
   cd $POSTPROC_EPS_WORKDIR/scacchiera_ensmean
 
-  $SIMC_TOOLS $WORKDIR_BASE/testeps/nwprun/postproc_eps/scacchiera_ensmean.py \
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
    -shp $1 -tp tpp01h \
    -in $FXTR_DATADIR \
    -out $POSTPROC_EPS_DATADIR/scacchiera/ensmean/1H/${DATE}
 
-  $SIMC_TOOLS $WORKDIR_BASE/testeps/nwprun/postproc_eps/scacchiera_ensmean.py \
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_ensmean.py \
    -shp $1 -tp tpp03h \
    -in $FXTR_DATADIR \
    -out $POSTPROC_EPS_DATADIR/scacchiera/ensmean/3H/${DATE}

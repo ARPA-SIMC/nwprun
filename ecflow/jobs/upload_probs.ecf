@@ -1,13 +1,5 @@
 %include <sched_wait.h>
 %include <head.h>
 
-# source other optional modules
-#. $NWPCONFBINDIR/parcomp.sh
-#. $NWPCONFBINDIR/nwpwait.sh
-#. $NWPCONFBINDIR/putarki.sh
-#. $NWPCONFBINDIR/arki_tools.sh
-
-echo "uploading with rclone"
-
 cd $POSTPROC_EPS_DATADIR
-rclone-v1.62.2 copy . ftpsimc:$INFOMET_UP_BASEDIR
+rclone-v1.62.2 -v copy . ftpsimc:$INFOMET_UP_BASEDIR
