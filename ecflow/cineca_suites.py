@@ -1,15 +1,4 @@
-#!/bin/bash
-'''':
-for interpreter in python python3
-do
-    which $interpreter >/dev/null 2>&1 && exec $interpreter "$0" "$@"
-done
-echo "$0: No python could be found" >&2
-exit 1
-# '''
-# temporary hack for running python(2) on meucci and python3 on g100
-# https://stackoverflow.com/questions/63360890/how-to-write-a-shebang-line-that-will-call-either-either-python3-or-python2-whic
-# remove ASAP
+#!/usr/bin/python3
 
 import os,sys
 import datetime
@@ -165,7 +154,8 @@ basicenv = BasicEnv(srctree=os.environ["OPE"],
 
 conf = ModelConfig({"gts": False, "lhn": True, "membrange": "1-20",
                     "postprocrange": "1-20",
-                    "runlist": [GetObs, EpsMembers, EpsPostproc]}).getconf()
+                    "runlist": [GetObs, EpsMembers, EpsPostproc],
+                    "epspostproclevel": 2}).getconf()
 fcens = ModelSuite("cosmo_2I_fcens")
 basicenv.add_to(fcens.suite)
 day = fcens.suite.add_family("day").add_repeat(
@@ -186,7 +176,7 @@ fcens.write(interactive=interactive)
 fcens.replace(interactive=interactive)
 
 # repeat fcens for generating a recover suite
-conf.update({"startmethod": "manual"})
+conf.update({"startmethod": "manual", "epspostproclevel": 2})
 fcens = ModelSuite("cosmo_2I_fcens_recover")
 basicenv.add_to(fcens.suite)
 day = fcens.suite.add_family("day").add_repeat(

@@ -1,0 +1,141 @@
+%include <sched_heavy.h>
+#include <%HPCENV%/smnd.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/parcomp.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+
+set -x
+
+# for fieldextra
+safe_rm_rf $FXTR_WORKDIR
+mkdir -p $FXTR_WORKDIR $FXTR_DATADIR
+# for scacchiera & c.
+safe_rm_rf $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
+mkdir -p $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
+
+fix_ensemble_members() {
+. ~/smnd_profile
+
+# evaluate availability and reference time
+# ensemble members
+set -a ma
+lma=
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    ma[$n]=N
+    if [ -f "$WORKDIR/cosmo.$n/data/lfff02030000" ]; then
+        gdate=`grib_get -w count=1 -p dataDate:s $WORKDIR/cosmo.$n/data/lfff02030000`
+        gtime=`grib_get -w count=1 -p dataTime:s $WORKDIR/cosmo.$n/data/lfff02030000`
+        if [ "$gdate" = "$DATE" -a "$gtime" = "${TIME}00" ]; then
+            ma[$n]=Y
+            lma=$n
+        fi
+    fi
+done
+echo "Ensemble member forecasts: ${ma[*]}"
+echo "Last available forecast: $lma"
+$ecflow_client --meter=n_members ${#ma[*]}
+
+# no forecasts available at all, abort
+if [ -z "$lma" ]; then
+    exit 1
+fi
+
+# link or replace forecasts
+# ensemble members
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    # rm -r $FXTR_WORKDIR/input.$n3 # senza la barra
+    n3=`printf "%%03d" $n`
+    if [ "${ma[$n]}" = Y ]; then
+        ln -s $WORKDIR/cosmo.$n/data \
+            $FXTR_WORKDIR/input.$n3
+    elif [ -n "$lma" ]; then # use another member
+        for file in $WORKDIR/cosmo.$lma/data/lfff????????; do
+            mkdir -p $FXTR_WORKDIR/input.$n3
+# ripristinare $SIMC_TOOLS per uniformita` se e` il caso
+            grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
+#            $SIMC_TOOLS grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
+        done
+    fi
+done
+}
+
+accumulate_for_scacchiera_tp() {
+
+  mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_tp
+  cd $POSTPROC_EPS_WORKDIR/scacchiera_tp
+  $SIMC_TOOLS $WORKDIR_BASE/testeps/nwprun/postproc_eps/scacchiera_tp.py \
+   -op C -in $WORKDIR
+  $ecflow_client --event=tp_acc
+
+}
+
+fxtr_compute_prob() {
+%include <%HPCENV%/modules.h>
+. ~/smnd_profile
+export OMP_NUMTHREADS=16
+
+cd $FXTR_WORKDIR
+# prepare fxtr namelist
+for delta in 01 03 24; do
+    conf_template fxtr_tpp${delta}h.nl
+    $FXTR_BIN fxtr_tpp${delta}h.nl
+done
+conf_template fxtr_wspeedp1h.nl
+$FXTR_BIN fxtr_wspeedp1h.nl
+conf_template fxtr_wmaxp1h.nl
+$FXTR_BIN fxtr_wmaxp1h.nl
+
+# correct grib table number for old grib_api versions
+for file in $FXTR_DATADIR/*.grib; do
+# ripristinare $SIMC_TOOLS per uniformita` se e` il caso
+    grib_set -s tablesVersion=11 $file $file.tmp
+#    $SIMC_TOOLS grib_set -s tablesVersion=11 $file $file.tmp
+    mv $file.tmp $file
+done
+$ecflow_client --event=main_prob
+
+dirname=${MODEL_SIGNAL}_prob
+putarki_configured_setup $dirname "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
+for file in $FXTR_DATADIR/*.grib; do
+    if [ -f "$file" ]; then
+        putarki_configured_archive $dirname $file
+    fi
+done
+putarki_configured_end $dirname
+
+# copy to archive
+subdir=cosmo_2I_fcens/$DATE$TIME
+mkdir -p $CINECA_ARCHIVE_POST/$subdir
+cp -a $FXTR_DATADIR/*.grib $CINECA_ARCHIVE_POST/$subdir
+
+}
+
+fxtr_compute_prob_extra() {
+%include <%HPCENV%/modules.h>
+. ~/smnd_profile
+export OMP_NUMTHREADS=16
+
+cd $FXTR_WORKDIR
+# add new products, no archiving for the moment
+for delta in 01 03 24; do
+    conf_template fxtr_tpp${delta}hup.nl
+    $FXTR_BIN fxtr_tpp${delta}hup.nl
+done
+conf_template fxtr_lpi01hup.nl
+$FXTR_BIN fxtr_lpi01hup.nl
+$ecflow_client --event=extra_prob
+
+}
+
+# all functions launched within () so that they use a separate environment
+# due to module incompatibility
+(fix_ensemble_members)
+# launch everything in parallel
+(fxtr_compute_prob) &
+(accumulate_for_scacchiera_tp) &
+(fxtr_compute_prob_extra) &
+wait

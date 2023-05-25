@@ -1,0 +1,76 @@
+%include <sched_heavy.h>
+%include <head.h>
+
+mappe_eps() {
+
+  cd $POSTPROC_EPS_WORKDIR
+  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/mappe_eps.py \
+     $WORKDIR_BASE/nwprun/postproc_eps/Regioni_latlon.tif \
+     $WORKDIR_BASE/nwprun/postproc_eps/ProvinceER_latlon.tif \
+     "$FXTR_DATADIR/*h_?????????????${1}.grib" $POSTPROC_EPS_DATADIR
+
+}
+
+mappe_dispatch() {
+  cd $POSTPROC_EPS_DATADIR		 
+  dest=$1
+  shift
+  mkdir -p $dest
+  mv -f $@ $dest || true
+}
+
+# poor man parallelization
+for n in `seq 0 9`; do
+    (mappe_eps $n) &
+done
+wait
+
+mappe_dispatch precipitazione/italia/probabilita/1H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_italia.png
+
+mappe_dispatch precipitazione/italia/probabilita/3H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_prob_italia.png
+
+mappe_dispatch precipitazione/italia/probabilita/24H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_prob_italia.png
+
+mappe_dispatch precipitazione/italia/meanmax/1H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_italia.png
+
+mappe_dispatch precipitazione/italia/meanmax/3H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_meanmax_italia.png
+
+# questa viene fatta ma non trasferita, la attiviamo?
+mappe_dispatch precipitazione/italia/meanmax/24H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_meanmax_italia.png
+
+mappe_dispatch precipitazione/emro/probabilita/1H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_emro.png
+
+mappe_dispatch precipitazione/emro/probabilita/3H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_prob_emro.png
+
+mappe_dispatch precipitazione/emro/probabilita/24H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_prob_emro.png
+
+mappe_dispatch precipitazione/emro/meanmax/1H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_emro.png
+
+mappe_dispatch precipitazione/emro/meanmax/3H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_meanmax_emro.png
+
+mappe_dispatch precipitazione/emro/meanmax/24H/${DATE} \
+  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_meanmax_emro.png
+
+# vmax maps
+mappe_dispatch vmax10m/italia/probabilita/${DATE} \
+  MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_italia.png
+
+mappe_dispatch vmax10m/italia/meanmax/${DATE} \
+  MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_italia.png
+
+mappe_dispatch vmax10m/emro/probabilita/${DATE} \
+  MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_emro.png
+
+mappe_dispatch vmax10m/emro/meanmax/${DATE} \
+  MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_emro.png

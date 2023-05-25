@@ -61,7 +61,7 @@ class ModelConfig:
                      "wait_wt": "04:10:00", "preproc_wt": "01:00:00",
                      "model_wt": "05:00:00", "analysis_wt": "01:20:00",
                      "startmethod": "check_run",
-                     "starttime": "00:00"}
+                     "starttime": "00:00", "epspostproclevel": 1}
         self.conf.update(conf) # update default with user data
         # special treatment for some fields
         self.conf['membrange'] = rangeexpand(self.conf['membrange'])
@@ -244,8 +244,20 @@ class EpsPostproc:
     def add_to(self, node):
         fam = node.add_family("eps_postproc")
         fam.add_trigger("./eps_members == complete")
-        fam.add_task("compute_prob")
-        fam.add_task("upload_prob").add_trigger("./compute_prob == complete")
+        if self.conf["epspostproclevel"] == 1:
+            fam.add_task("compute_prob")
+            fam.add_task("upload_prob").add_trigger("./compute_prob == complete")
+        elif self.conf["epspostproclevel"] == 2:
+            cp = fam.add_task("compute_probs")
+            cp.add_meter("n_members", 0, max(self.conf['membrange']), 0)
+            cp.add_event("main_prob")
+            cp.add_event("extra_prob")
+            cp.add_event("tp_acc")
+            fam.add_task("scacchiera_tp").add_trigger("./compute_probs:tp_acc == set")
+            fam.add_task("scacchiera_ensmean").add_trigger("./compute_probs:main_prob == set")
+            fam.add_task("scacchiera_prob").add_trigger("./compute_probs:main_prob == set")
+            fam.add_task("mappe_eps").add_trigger("./compute_probs:main_prob == set")
+            fam.add_task("upload_probs").add_trigger("./scacchiera_tp == complete and ./scacchiera_tp == complete and ./scacchiera_ensmean == complete and ./scacchiera_prob == complete and ./mappe_eps == complete")
 
 # Add family for the diagnostic of KENDA
 class EndaDiagnostics:
