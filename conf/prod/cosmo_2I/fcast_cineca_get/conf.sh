@@ -5,8 +5,10 @@ if [ -n "$CINECA_MAIN_SYSTEM" ]; then
 fi
 # modificare
 LAMI_CINECA_WORKDIR=$WORKDIR_BASE/download/work/$MODEL_SIGNAL
-POSTPROC_LIST=(lami_make_nit lami_make_vprof)
-VPROF_NETWORK=cosmo_2I_vprof
+CROSS_COORD_FILE=$WORKDIR_BASE/nwprun/conf/cross.shp
+CROSS_NETWORK=cosmo_2I_fcast_c
+VPROF_NETWORK=cosmo_2I_fcast_v
+POSTPROC_LIST=(lami_make_nit lami_make_vprof lami_make_cross)
 
 
 # $TIME deve essere protetto perche' non e' ancora noto, lo sviluppo con eval
