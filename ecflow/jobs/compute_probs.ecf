@@ -79,11 +79,12 @@ fxtr_compute_prob() {
 export OMP_NUMTHREADS=16
 
 cd $FXTR_WORKDIR
-# prepare fxtr namelist
+# precipitation probabilities
 for delta in 01 03 24; do
     conf_template fxtr_tpp${delta}h.nl
     $FXTR_BIN fxtr_tpp${delta}h.nl
 done
+# wind speed/gust probabilities
 conf_template fxtr_wspeedp1h.nl
 $FXTR_BIN fxtr_wspeedp1h.nl
 conf_template fxtr_wmaxp1h.nl
@@ -121,10 +122,12 @@ export OMP_NUMTHREADS=16
 
 cd $FXTR_WORKDIR
 # add new products, no archiving for the moment
+# upscaled precipitation probabilities
 for delta in 01 03 24; do
     conf_template fxtr_tpp${delta}hup.nl
     $FXTR_BIN fxtr_tpp${delta}hup.nl
 done
+# upscaled lightning potential index probabilities
 conf_template fxtr_lpi01hup.nl
 $FXTR_BIN fxtr_lpi01hup.nl
 $ecflow_client --event=extra_prob

@@ -3,28 +3,33 @@
 
 scacchiera_prob() {
 
-  mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_prob
-  cd $POSTPROC_EPS_WORKDIR/scacchiera_prob
+  if [ "$2" = "er" ]; then
+      sub=""
+  else
+      sub="$2/"
+  fi
 
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
    -shp $1 -tp tpp01h -st max \
    -in $FXTR_DATADIR \
-   -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/1H/${DATE}
+   -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/1H/$sub${DATE}
 
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
    -shp $1 -tp tpp03h -st max \
    -in $FXTR_DATADIR \
-   -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/3H/${DATE}
+   -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/3H/$sub${DATE}
 
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_prob.py \
    -shp $1 -tp tpp24h -st max \
    -in $FXTR_DATADIR \
-   -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/24H/${DATE}
+   -out $POSTPROC_EPS_DATADIR/scacchiera/maxprob/24H/$sub${DATE}
 
 }
 
+mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_prob
+cd $POSTPROC_EPS_WORKDIR/scacchiera_prob
 for reg in $REGLIST; do
     AREE=`conf_getfile macroaree_$reg.grib`
-    scacchiera_prob $AREE &
+    scacchiera_prob $AREE $reg &
 done
 wait

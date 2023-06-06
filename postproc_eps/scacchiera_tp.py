@@ -85,6 +85,7 @@ if __name__ == '__main__':
     if not "S" in args.operations: quit()
     
     val = []
+    pre_un = "pre_{}.v7d".format(regione)
     for i in range(1, nmemb+1):
         # per velocizzare la procedura, aree puo' ossere un file grib
         # generato una-tantum ad hoc a partire da un singolo grib di esempio e
@@ -101,24 +102,24 @@ if __name__ == '__main__':
 
         vg6d_getpoint = "vg6d_getpoint --coord-file={} " \
             "--coord-format={} --trans-type={} --sub-type={} " \
-            "--output-format=native tp3h_membro{}.grib pre.v7d".format( aree, c_format, trans_type, sub_type, str(i))
+            "--output-format=native tp3h_membro{}.grib {}".format( aree, c_format, trans_type, sub_type, str(i), pre_un)
         subprocess.call(vg6d_getpoint.split(),shell=False)
 
         csvname = "tp3h_membro{}_{}.csv".format( str(i), regione )
         v7d_trans = "v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
-	    "pre.v7d {}".format( csvname )
+	    "{} {}".format( pre_un, csvname )
         subprocess.call(v7d_trans.split(), shell=False)
 
         # Elimino il file dati non necessari
-        subprocess.call( ["rm", "pre.v7d"] )
+        subprocess.call( ["rm", pre_un] )
 
-        csvname = "tp3h_membro{}_{}.csv".format( str(i), regione ) #da cancellare
         val.append( pd.read_csv( csvname, delimiter=',',
                                  names=[ 'Date', 'Time range', 'P1', 'P2',
                                          'Longitude', 'Latitude', 'Level1',
                                          'L1', 'Level2', 'L2', 'Report',
                                          'B01192', 'B13011' ],
                                  skiprows=0) )
+        os.remove(csvname)
 
     df = pd.concat(val).sort_values(by=['Date', 'B01192'])
     pd.set_option( 'display.max_rows', df.shape[0]+1 )
@@ -245,10 +246,6 @@ if __name__ == '__main__':
 
         fig.savefig( fileout, bbox_inches='tight' )
         plt.close()
-    
-    
-    tobedeleted=glob.glob( "tp3h_membro*{}.csv".format( regione ) )
-    for f in tobedeleted:
-        os.remove(f)
+
 
     quit()

@@ -59,7 +59,6 @@ if __name__ == '__main__':
                 
             # Estrazione campi sulle macroaree usando le soglie opportune
             for fname in filelist:
-                #print(fname)
                 csvname = estrai_campi_su_macroaree( fname, valore, subtype, aree, regione )
 
     # Lettura dei csv prodotti per la generazione delle scacchiere.
@@ -102,7 +101,6 @@ if __name__ == '__main__':
             lista = glob.glob(search)
             
             for f in sorted(lista):
-                #print("Leggo file: ",f)
                 df = pd.read_csv( f.strip(), delimiter=',',
                                   names = ['Date', 'Time range', 'P1', 'P2',
                                            'Longitude', 'Latitude', 'Level1',
@@ -113,6 +111,7 @@ if __name__ == '__main__':
                 run.append(df['Date'])
                 lead.append(df['P1'])
                 cum.append(df['P2'])
+                os.remove(f) # cancello subito il file csv
             
             df = pd.concat(val,axis=1)
             data = pd.concat(run,axis=1)
@@ -140,7 +139,6 @@ if __name__ == '__main__':
                 orafcst.insert(0,orazero.strftime('%d/%m\n%H'))
             else:
                 orafcst.insert(0,orazero.strftime('%H'))
-            #print(orafcst)
 
             # Definisco date/time del run (emissione/validità) per il nome del file in output
             inizio = datetime.strptime( run[0], '%Y-%m-%d %H:%M:%S' ) - timedelta( seconds=x[0] )
@@ -189,9 +187,5 @@ if __name__ == '__main__':
         fig.savefig( fileout, bbox_inches='tight' )
         plt.close()
 
-    # Elimino i file csv
-    tobedeleted = glob.glob( "*_{}*.csv".format(valore) )
-    for f in tobedeleted:
-        os.remove(f)
 
 quit()
