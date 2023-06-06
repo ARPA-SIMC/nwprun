@@ -6,6 +6,7 @@
 # define custom functions
 get_init() {
     export PROCNAME=gts_bufr_get
+    export ECF_MONITOR=Y
 }
 
 get_setup() {

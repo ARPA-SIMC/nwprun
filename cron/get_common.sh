@@ -69,6 +69,13 @@ main_loop() {
     . $NWPCONFBINDIR/putarki.sh
     . $NWPCONFBINDIR/arki_tools.sh
     . $NWPCONFBINDIR/nwpwait.sh
+    if [ -n "$ECF_MONITOR" ]; then
+	export ECF_NAME=/cron_get/${EXTRA_CONF////_}${PROCNAME%_get}
+	export ECF_PASS=FREE
+	export ECF_TIMEOUT=10 # probably not what i meant
+	export ECF_TRYNO=0
+	export ECF_JOBOUT=$LOGDIR/`basename $0`.log
+    fi
     get_post
     # end of setup
 
@@ -102,6 +109,7 @@ main_loop() {
 	    fi
 	    trap_check
 
+	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --init=$$ || true
 	    log "starting download and archiving for $DATE$TIME"
 	    nwpwait_setup
 	    get_setup
@@ -111,20 +119,25 @@ main_loop() {
 		if [ "$res" = 0 ]; then # improve $res management
 		    get_cleanup # correct here?
 		    log "download and archiving for $DATE$TIME finished successfully"
+         	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --complete || true
 		    break
 		elif [ "$res" = 2 ]; then
 		    log "data for $DATE$TIME not available, but later data available, continuing"
+         	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --abort || true
 		    break
 		fi
 		if nwpwait_wait; then
 		    trap_check
 		else
 		    log "download and archiving for $DATE$TIME did not finish successfully"
+         	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --abort || true
 		    break
 		fi
 	    done
 	    #    get_cleanup
 	    save_state $PROCNAME.state DATE TIME
+	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --label=lastdate $DATE$TIME || true
+
 	done
     fi
 }

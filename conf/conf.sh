@@ -16,6 +16,7 @@ case "$HPC_SYSTEM" in
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
     SIMC_TOOLS=
     SIMC_SITE=Y
+    ecflow_client=ecflow_client
 # Radar
     RADAR_MOSAICODIR=$HOME/radarsri2grib
     RADAR_LHNDIR=$HOME/radarsri2grib
@@ -51,6 +52,7 @@ case "$HPC_SYSTEM" in
     SIMC_TOOLS="singularity exec -B /ind2/meteo -B /ind2/meteoarch $WORKDIR_BASE/nwprun.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/ind2/meteo/a07smr01/LM_WorkDir/g100/lm/PROD/work
+    ecflow_client="$WORKDIR_BASE/nwprun/ecflow/ec_wrap ecflow_client"
     ;;
   marconi ) # Cineca HPC marconi
 # General

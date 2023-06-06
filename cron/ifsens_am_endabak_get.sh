@@ -5,6 +5,7 @@
 get_init() {
     export PROCNAME=endabak_get
     export EXTRA_CONF=ifsens_am/
+    export ECF_MONITOR=Y
 }
 
 

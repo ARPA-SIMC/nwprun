@@ -6,6 +6,7 @@
 # define custom functions
 get_init() {
     export PROCNAME=radar_vol_get
+    export ECF_MONITOR=Y
 }
 
 get_setup() {
