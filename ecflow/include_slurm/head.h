@@ -10,6 +10,9 @@ export ECF_NAME=%ECF_NAME%    # The name of this current task
 export ECF_PASS=%ECF_PASS%    # A unique password
 export ECF_TRYNO=%ECF_TRYNO%  # Current try number of the task
 export ECF_DENIED=%ECF_DENIED:% # Optional, if set, ecflow_client exits when connection with server fails
+# a non-null $DISPLAY (from ecflow env) may interfere with some graphical processes
+# hopefully nobody needs it intentionally
+unset DISPLAY
 # record the process id. Also used for zombie detection
 if [ -n "$PBS_JOBID" ]; then
     export ECF_RID=${PBS_JOBID%%.*}
