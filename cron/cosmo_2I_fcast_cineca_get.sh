@@ -6,6 +6,7 @@
 get_init() {
     export PROCNAME=fcast_cineca_get
     export EXTRA_CONF=cosmo_2I/
+    export ECF_MONITOR=Y
 }
 
 # enter main loop
