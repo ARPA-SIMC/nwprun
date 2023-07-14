@@ -34,7 +34,7 @@ suite = defs.add_suite(suitename)
 basicenv.add_to(suite)
 
 for fam in famlist:
-    suite.add_task(fam).add_label("lastdate", "no data").add_variable("ECF_PASS", "FREE")
+    suite.add_task(fam).add_label("currdate", "no data").add_label("lastdate", "no data").add_variable("ECF_PASS", "FREE")
 
 name = suitename+".def"
 

@@ -110,6 +110,7 @@ main_loop() {
 	    trap_check
 
 	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --init=$$ || true
+	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --label=currdate $DATE$TIME || true
 	    log "starting download and archiving for $DATE$TIME"
 	    nwpwait_setup
 	    get_setup
