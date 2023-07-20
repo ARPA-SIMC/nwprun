@@ -14,13 +14,14 @@ Include: dnf
     dnf config-manager --set-enabled appstream
 
     dnf copr enable -y simc/stable
-# install packages required for scacchiera
-    dnf install -y $COMPOPT python3-pandas python3-matplotlib python3-numpy 
+# install packages required for scacchiera & c. eccodes-devel seems to be
+# erroneously required by python3-eccodes
+    dnf install -y $COMPOPT python3-pandas python3-matplotlib python3-numpy python3-cartopy python3-pygrib python3-eccodes python3-gdal eccodes-devel
 # install smnd packages from simc repository
-    dnf install -y $COMPOPT wreport bufr2netcdf dballe arkimet libsim
+    dnf install -y $COMPOPT wreport bufr2netcdf dballe arkimet libsim ma_utils
 # other useful packages
     dnf install -y $COMPOPT ncview
 # save some space
     dnf clean all
-    # rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
+    rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
 
