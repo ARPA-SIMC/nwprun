@@ -5,7 +5,7 @@ case "$HPC_SYSTEM" in
   *.metarpa | maial* | nodo* ) # Arpae
 # General
     WORKDIR=$WORK/$NWPCONF
-    LOGDIR=$WORK/log
+    LOGDIR=$WORKDIR_BASE/log
     ARKI_DIR=$WORKDIR_BASE/arkimet
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=configured_importer
