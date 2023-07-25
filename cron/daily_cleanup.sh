@@ -28,9 +28,7 @@ exec >>$LOGDIR/`basename $0`.log 2>&1
 log "cleaning import and download directories"
 ARKI_DLDIR=$WORKDIR_BASE/download
 putarki_configured_dailycleanup 40
-log "cleaning import_signal directories"
-import_signal_dailycleanup 40
-# arki_dailycleanup ???
+# arkimet and import_signal are cleaned up in configured_multi_importer.sh
 
 log "rotating log files"
 PATH=$PATH:/usr/sbin:/sbin
