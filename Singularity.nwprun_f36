@@ -29,3 +29,7 @@ Include: dnf
 # save some space
     dnf clean all
     rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
+
+%environment
+    export LOG4C_APPENDER=stderr
+    export LOG4C_PRIORITY=info

@@ -6,9 +6,9 @@ echo "from cloud.sylabs.io and execute singularity remote login"
 
 set -e
 set -x
-for img in Singularity.*; do
+for img in Singularity.*_r8; do
 	suff=${img#*.}
-	singularity build --remote library://dcesari/default/smnd:$suff $img
+	singularity build --remote library://dcesari/default/simctools:$suff $img
 done
 
 

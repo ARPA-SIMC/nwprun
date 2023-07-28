@@ -14,13 +14,10 @@ Include: dnf
     dnf config-manager --set-enabled appstream
 
     dnf copr enable -y simc/stable
-# install packages required for scacchiera & c. eccodes-devel seems to be
-# erroneously required by python3-eccodes
-    dnf install -y $COMPOPT python3-pandas python3-matplotlib python3-numpy python3-cartopy python3-pygrib python3-eccodes python3-gdal eccodes-devel
 # install smnd packages from simc repository
-    dnf install -y $COMPOPT wreport bufr2netcdf dballe arkimet libsim ma_utils
-# other useful packages
-    dnf install -y $COMPOPT ncview
+    dnf install -y $COMPOPT wreport bufr2netcdf dballe arkimet libsim ma_utils wreport-debuginfo bufr2netcdf-debuginfo dballe-debuginfo arkimet-debuginfo libsim-debuginfo ma_utils-debuginfo
+# debugging tools
+    dnf install -y $COMPOPT gdb strace valgrind
 # save some space
     dnf clean all
     rm -rf /var/lib/{dnf,rpm,yum} /var/cache/*
@@ -30,5 +27,5 @@ Include: dnf
     export LOG4C_PRIORITY=info
 
 %help
-    This container includes most of the tools developed at SIMC and
-    the specific tools required for running nwp postprocessing.
+    This container includes most of the tools developed at SIMC
+    together with their debugging symbols and debugging tools.
