@@ -66,7 +66,7 @@ CLEANEXIT() {
 # Trap any signal that may cause the script to fail
 trap '{ CLEANEXIT ; }' EXIT
 trap '{ echo "Exiting with error"; ERROR ; }' ERR
-trap '{ echo "Killed by a signal"; ERROR ; }' 1 2 3 4 5 6 7 8 10 12 13 15
+trap '{ echo "Killed by a signal"; ERROR ; }' 1 2 3 4 5 6 7 8 10 12 13
 
 # diagnostics
 env|grep SLURM || true
