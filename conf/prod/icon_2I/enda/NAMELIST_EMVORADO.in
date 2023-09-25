@@ -1,0 +1,67 @@
+ &RADARSIM_PARAMS
+  dom=1,
+  icountry=3,
+  ldebug_radsim=.true.,
+  lout_geom=.false.,
+  loutradwind=.true.,
+  loutdbz=.true.,
+! itype_refl_glob=1,
+  dbz_meta_glob%itype_refl=1,
+  lextdbz=.true.,
+! llookup_mie_glob=.true.,
+  dbz_meta_glob%llookup_mie=.true.,
+  lfall=.false.,
+  lonline=.false.,
+  lsode=.false.,
+  lsmooth=.false.,
+  lweightdbz=.false.,
+  lvoldata_output=.false.,
+  lfdbk_output=.true.,
+  lreadmeta_from_netcdf=.true.,
+  lequal_azi_alldatasets=.true.,
+  itype_obserr_vr=2,
+  baseval_obserr_vr=2.5,
+  maxval_obserr_vr=25.0,
+  ramp_lowdbz_obserr_vr=0.0,
+  ramp_highdbz_obserr_vr=10.0,
+  itype_supobing=1,
+      supob_nrb = 3, ! threshold for number of radar bins used for superobbing
+      ! resolution of the cartesian grid for superobing [m]: (default: 20000.0)
+      supob_cart_resolution = 10000.0,
+      ! width of averaging area for superobing [m]: (default: sqrt(2)*20000.0 = 28284.3)
+      supob_ave_width = 14142.1,
+      ! min. ranges of superobing points for vr and z [m]: (default: 0.75*sqrt(2)*20000.0 = 21213.2)
+      supob_minrange_vr = 10606.6,
+      supob_minrange_z = 10606.6,
+      ! maximal azimut sector (symetrical to its center) for v_r superobing [deg]:
+      supob_azi_maxsector_vr = 40.0,
+      supob_vrw = 10.0, !(m/s) threshold for stddev of radial wind values within a superobed bi
+!      supob_rfl = 1e15, !(mm^6/m^3) threshold for stddev of reflectivity values within a superobed bin
+      ! flag for qc control of obs data
+      lqc_flag = .false.,
+      ! flag for dealiasing of obs radial wind data
+      ldealiase_vr_obs = .true.,
+      ! lower threshold for valid Ze values, to which smaller valid values are
+      !   set before average_superobing. Two thresholds, one for obs and one for sim.
+      !   Both should normally be equal and same as corresponding threshold in LETKF software:
+      supob_lowthresh_z_obs = 5.0,
+      supob_lowthresh_z_sim = 5.0,
+  ydirradarin='@HDF5_WORKDIR@/',
+  ysubdirfof='@MODEL_DATADIR@',
+  ydir_mielookup_read='@WORKDIR@/lookup_Mie_write',
+  ydir_mielookup_write='@WORKDIR@/lookup_Mie_write',
+!  ldo_composite=.TRUE.,
+!  lcomposite_output=.TRUE.,
+  ydirradarout='@MODEL_DATADIR@',
+!  nradsta_namelist=1,
+!  rs_meta(10)%station_id = 16105,
+!  rs_meta(10)%el_arr     = 0.6,1.5,2.5,3.5,4.6,5.6,7.1,9.1,11.1,13.5,16.0,
+!  rs_meta(10)%nel = 11,
+!  rs_meta(10)%az_start = 0.0,
+!  rs_meta(10)%naz = 360,
+!  rs_meta(10)%az_inc = 1.0,
+!  rs_meta(10)%nra = 200,
+!  rs_meta(10)%ra_inc = 1000.0,
+!  rs_meta(2)%station_id= 16145,
+!  rs_meta(2)%station_name= 'SPC',
+ /END

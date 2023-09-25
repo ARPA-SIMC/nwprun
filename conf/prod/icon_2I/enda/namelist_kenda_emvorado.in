@@ -1,0 +1,313 @@
+! ==================================================================================
+! REPORT namelist
+! ==================================================================================
+&REPORT check='TIME'      use='dismiss'  / ! no constraint on obs-ana time
+&REPORT check='NONE'      use='active'   / !
+&REPORT check='AREA'      use='passive'  / ! passive near boundaries of domain
+&REPORT check='HEIGHT'    use='passive'  / ! passive near boundaries of domain
+&REPORT check='DOMAIN'    use='dismiss'  / ! dismiss out of boundaries of domain
+&REPORT check='NO_OBS'    use='dismiss'  / ! dismiss reports without observations
+&REPORT excl_bnd = 0.67 height_t = 200.  / ! exclude 0.67 deg. lateral, above 300 hPa
+&REPORT type='RADAR'      use='active'   / ! use radar data 
+&REPORT type='RADAR'      check='OBS_ERR' use='passive' /  ! obs passine negli ekf
+
+! ==================================================================================
+! RADAR observation operator
+! ==================================================================================
+&RADAR_OBS
+    use_refl   =  11   ! (11=active) 4=notused, 7=passive reflectivity usage flag
+    use_radvel =  11   ! (11=active) 4=notused radial velocity    usage flag
+   ! iprintout  =  0   ! (0=no) steering of printout
+   ! split_rprt =  F   ! (T)    create separate record for each radar observation
+   ! join_rprt  =  F   ! (T)    join separate records before statistics output
+   ! dealias_fg =  T   ! (T)    dealias radial wind (by first guess)
+   ! chk_alias  =  2.  ! (2.)   check dealiasing (compare to spread)
+   ! ofg_alias  =  0.2 ! (0.7)  check dealiasing (compare to o-fg)
+/
+
+! ==================================================================================
+! RULES for obs
+! ==================================================================================
+&RULES
+    comment     = 'specific parameters for RADAR'
+    obstype     = 13            ! modtype RADAR
+    uv%v_loc    = 0.3           ! Verical    localization for radial winds
+    uv%h_loc    = 16.0          ! Horizontal localization for radial winds
+    o%v_loc     = 0.3           ! Verical    localization for refelectivity
+    o%h_loc     = 16.0          ! Horizontal localization for refelectivity
+    o%sgm_fg(1) = 10 !999       ! First guess check for reflectivity
+/
+&RULES
+    comment     = 'specific parameters for SYNOP'
+    obstype     = 1           ! modtype SYNOP
+    q%use       = 7           ! set status for RH2M
+    t%use       = 7           ! set status for T2M
+/
+
+! ==================================================================================
+! rescale ps observation error
+! ==================================================================================
+&FOF_INPUT
+   ps_obs_error     = -0.5   ! factor to ps obs error (6.0)
+   refl_obs_error   = 10
+   percent_fg_check = -1.0   ! percentage of fg check hits required for rejection
+/
+
+! ==================================================================================
+! reset observation error
+! ==================================================================================
+&OBSERR obstype='PILOT' quantity='u'  table='extern'  scale=1.0
+     err= 1.95 2.00 1.88 1.91 2.04
+          2.48 2.48,2.48 2.48 2.48
+          2.48,2.48 2.48 2.48 2.48  /
+&OBSERR obstype='PILOT' quantity='v'  table='extern'  scale=1.0
+     err= 1.95 2.00 1.88 1.91 2.04
+          2.48 2.48,2.48 2.48 2.48
+          2.48,2.48 2.48 2.48 2.48  /
+&OBSERR obstype='PILOT' quantity='t'  table='extern'  scale=1.0
+     err= 1.10 0.85 0.67 0.55 0.54
+          0.56 0.56,0.56 0.56 0.56
+          0.56,0.56 0.56 0.56 0.56  /
+&OBSERR obstype='PILOT' quantity='rh'  table='extern'  scale=1.0
+     err= 0.09 0.13 0.12 0.13 0.13
+          0.14 0.14,0.14 0.14 0.14
+          0.14,0.14 0.14 0.14 0.14  /
+&OBSERR obstype='AIREP' quantity='u'  table='extern'  scale=1.0
+     err= 1.95 2.00 1.88 1.91 2.04
+          2.48 2.48,2.48 2.48 2.48
+          2.48,2.48 2.48 2.48 2.48  /
+&OBSERR obstype='AIREP' quantity='v'  table='extern'  scale=1.0
+     err= 1.95 2.00 1.88 1.91 2.04
+          2.48 2.48,2.48 2.48 2.48
+          2.48,2.48 2.48 2.48 2.48  /
+&OBSERR obstype='AIREP' quantity='t'  table='extern'  scale=1.0
+     err= 1.10 0.85 0.67 0.55 0.54
+          0.56 0.56,0.56 0.56 0.56
+          0.56,0.56 0.56 0.56 0.56  /
+&OBSERR obstype='AIREP' quantity='rh'  table='extern'  scale=1.0
+     err= 0.09 0.13 0.12 0.13 0.13
+          0.14 0.14,0.14 0.14 0.14
+          0.14,0.14 0.14 0.14 0.14  /
+&OBSERR obstype='TEMP' quantity='u'  table='extern'  scale=1.0
+     err= 1.95 2.00 1.88 1.91 2.04
+          2.48 2.48,2.48 2.48 2.48
+          2.48,2.48 2.48 2.48 2.48  /
+&OBSERR obstype='TEMP' quantity='v'  table='extern'  scale=1.0
+     err= 1.95 2.00 1.88 1.91 2.04
+          2.48 2.48,2.48 2.48 2.48
+          2.48,2.48 2.48 2.48 2.48  /
+&OBSERR obstype='TEMP' quantity='t'  table='extern'  scale=1.0
+     err= 1.10 0.85 0.67 0.55 0.54
+          0.56 0.56,0.56 0.56 0.56
+          0.56,0.56 0.56 0.56 0.56  /
+&OBSERR obstype='TEMP' quantity='rh'  table='extern'  scale=1.0
+     err= 0.09 0.13 0.12 0.13 0.13
+          0.14 0.14,0.14 0.14 0.14
+          0.14,0.14 0.14 0.14 0.14  /
+
+&TEMP_OBS
+   fgchk_inv_t = 0.8    ! stability-dep. factor for fg-check limit for T  (recommended: 0.8)
+   fgchk_inv_q = 0.6    ! stability-dep. factor for fg-check limit for RH (recommended: 0.6)
+/
+
+! ==================================================================================
+! RUN settings
+! ==================================================================================
+&run
+   ! -------------------------------------------------------------------------------
+   ! General parameters
+   ! -------------------------------------------------------------------------------
+   !nproc1         = 1 !16
+   !nproc2         = 40 !1     
+   method         = 'LETKF'
+   model          = 'ICON'    
+   center         = @GRIB_CENTER@
+   cosmo_refatm   = 2
+   cosmo_ivctype  = 2
+   l_ke_in_gds    = .true.
+   nex            = 9259                        ! experiment number
+   run_type       = 2                           ! haupt=0, (vor=1), ass=2, test=3
+   ensemble_id    = 2                           ! +++ to be replaced by NUMEX +++ 
+   input          = "@LETKF_WORKDIR@/input"     ! input directory
+   output         = "@LETKF_DATADIR@"           ! output directory
+   aux            = "."                         ! output auxiliary data to work dir
+   time_ana       = @DATE@@TIME@0000            ! analysis           date
+   time_ref       = @DATES@@TIMES@0000          ! forecast reference date
+   npe_read_obs   = 100000                      ! read observations from all PEs
+!  nproc_repro    = 4                           ! (-1) # of PEs for reproducable runs
+   runtime        = 190001010000
+   expseed        = 1
+   proc_ana       = @MODEL_ASSIM_GP@            ! generating process (DWD: typnr)
+   proc_ana_ens   = @MODEL_ASSIM_GP@
+   range_ana      = 13                          ! time range indicator
+   grib_library   = 2 !*
+   grib_edition   = 2 !*
+   cosmo_ivctype  = 2
+   cosmo_refatm   = 2
+   otime_include  = 1          ! 1: include analysis time, -1: exclude analysis time
+   otime_shift    = 0          ! no time shift for observations
+
+   ! -------------------------------------------------------------------------------
+   ! settings for ICON LETKF
+   ! -------------------------------------------------------------------------------
+   grid_file      = "@LOCALGRID@"
+   invar_det      = "@MODEL_DATADIR@/icon_@DATES@@TIMES@_const.grb" 
+   fg_file        = '@LETKF_WORKDIR@/input/lfff@DATE@@TIME@0000' ! det. analysis (det_run=0|1)
+   !!!!!!!!!!!!!!!!!!
+   ! NOTA IMPORTANTE: read_fields and pass_fields soley relevant for EnVar, NOT LETKF
+   !!!!!!!!!!!!!!!!!!
+   read_fields    = 'pp tsurf t u v w q qcl qci qr qs qg z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow t_ice h_ice fr_ice T_MNW_LK T_WML_LK T_BOT_LK C_T_LK H_ML_LK'
+   pass_fields    = 'w tsurf qci qr qs qg z0 soiltyp plcov lai rootdp vio3 hmo3 t_s t_snow w_i qv_s w_snow t_so w_so freshsnw for_e for_d rho_snow h_ice t_ice t_sea'
+   opt_fields     = 'fr_ice' 
+   urun_fields    = ''    
+   runtype        = ''
+   io_max_gather  = 50000000            ! max.gather buffer size for write: 50MB
+ /
+
+! ==================================================================================
+! Ensemble Kalman Filter
+! ==================================================================================
+&ENKF 
+   ! -------------------------------------------------------------------------------
+   ! General settings
+   ! -------------------------------------------------------------------------------
+   k_enkf     = @ENS_TOTAL_MEMB@ ! ensemble size (32)
+   det_run    = 1        ! compute deterministic analysis 
+   write_grid = F        ! .true. for COSMO, .false. for ICON
+   src_fc     = 0        ! fc  from 0:mean      1:psas fc
+   gen_ens    = F        ! generate random forecast ensemble 
+   m_flag     = 0        ! 0: no me 1: me to ens 2: me to ens+mean 3: me to mean only
+   moderr_fc  = 0        ! add model error to forecast     
+   mf         = 0.0      ! B-amplitude for model error
+   mf0        = 0.0      ! B-amplitude for model error (mean)
+   grid_diag  = 1        ! diagn. on coarse grid 0: no , 1: yes  (1)
+   rms_diag   = 0        ! rms-stat 0: no, 1: for fg 2: for ana (1)
+   diag_type  = 1        ! rms-stat for 0: det-run 1: mean      (1)       
+   norm_flag  = 0        ! 0: standard norm, 1: energy norm       
+   gp_mat     = 0        ! grid point output (W-matrices) 
+   ane_fname  = 'laf@DATE@@TIME@0000'   ! basename ensemble      analysis
+   ana_file   = 'laf@DATE@@TIME@0000'   ! basename deterministic analysis
+   fce_fname  = '@LETKF_WORKDIR@/input/lfff@DATE@@TIME@0000'     ! xxx.001 - generic
+   grid_file  = "@LOCALGRID@"
+   invar_ens  = "@MODEL_DATADIR@/icon_@DATES@@TIMES@_const.grb"
+   fof_prefix = @FOF_PRE@               ! prefix of feedback files
+   ana_read   = 'analysis_op'   ! oper. analysis (compute statistics) - rms_diag=0|1
+   no_ps_inc  = .true.   ! no surface pressure    increment
+   no_tv_inc  = .false.  ! no virtual temperature increment
+   no_rh_inc  = .false.  ! no rh invcrement
+   no_uv_inc  = .false.  ! no uv increment
+   rf         =  3       ! horizontal coarsening factor
+   rni        =  1       ! reduced ni-resolution (GME only)     
+   nzr        =  30      ! number of height levels (coarse grid)
+   kappa      =  1.05    ! factor for growth of forecast. cov. infl. err.
+   va         =  0.107453       ! error off (analysed) rho-estimate (cycled)
+   gp_ind     = 1 77 15 1
+                3 77 15 1
+                4 77 15 1
+                5 77 15 1
+                7 77 15 1
+                10 77 15 1
+                20 77 15 1
+                30 77 15 1
+                65 77 15 1
+                100 77 15 1     ! W-matrix output grid indices (coarse grid)
+   read_seq   = F
+
+   ! -------------------------------------------------------------------------------
+   ! Inflation and localization
+   ! -------------------------------------------------------------------------------
+   q_bound    = T        ! apply bounds to humidity variables
+   sat_ad     = T        ! saturation adjustement
+   hyd_bal    = T        ! hydrost. bal. of ana. incr.
+   bal_var    = 0        ! variable which is hyd. bal. (0 pp, 1 T)
+   adap_rho   = F        ! adapt. rho infl (F/T), set to F (andreas)
+   rho        = 1.0      ! covariance inflation factor (cycled)
+   adap_rho_l = 0.5      ! lower bound for adap rho (0.5)
+   adap_rho_u = 3.0      ! upper bound for adap rho  (9.0)
+   alpha      = 0.1      ! weight of new adaptive computed rho (0.33)
+   adap_R     = T        ! use adap. R-corr. (local, ens space)
+   adap_R_l   = 1.0      ! lower bound for adap R (0.75)
+   adap_R_u   = 1.0      ! upper bound for adap R (2.0)             
+   ensbc_weights = 1     ! apply weights at boundaries (ens bc only)
+!  r_factor   = 1.0      ! factor R is multplied with in adap rho comp.
+   lh         = 80.0     ! horizontal localisation length scale (km) (100)
+   lv         = 0.3      ! vertical   localisation length scale (ln p)(0.3/10.0)
+   adap_loc   = T
+   nobs_gp    = 100.0
+   lh_min     = 50.0
+   lh_max     = 100.0
+   lv_surf    = 0.075    ! min.ver.lenghtscale for obs.weights
+   lv_top     = 0.5      ! max.ver.lenghtscale for obs.weights
+   p_zero     = 70.0     ! zero   weight  above this level (hPa) (default: 100)
+   p_one      = 200.0    ! reduce weights above this level (hPa) (default: 300)
+   apply_rho  = 2
+   apply_rtpp = F
+   apply_rtps = T
+   rtpp_alpha = 0.75
+   adj_wso    = .5 .5 .5 .5 .5 .5 .5 .5
+
+   ! -------------------------------------------------------------------------------
+   ! Variable to read, write (for analysisi and increments) and update 
+   ! -------------------------------------------------------------------------------
+   ! Variables for diagnostics and for which ensemble mean in computed (so, if you
+   ! want to update a variable, it must be present also here):
+   par_diagn  = '- pp + pf + qr + qs + qg'
+              ! [+ default: 'pf t tsurf q u v qcl qci']
+
+   ! Variables to explicitly update (opposites in par_fce):
+   par_trans  = '- tsurf + qr + qs + qg'
+              ! [+ default: 'pf t tsurf q u v qcl qci']
+
+   ! Variables to read from first guess:
+   par_read   = 'h_ice t_ice + qr + qs + qg + fr_ice'
+              ! [+ default: 'pf t tsurf q u v qcl qci']
+              ! [+ variables in 'par_fce']
+
+  ! Variables to write to analysis:
+   par_write  = '+ qr + qs + qg'
+              ! [+ default: 'pf t q u v qcl qci']
+              ! [+ variables in 'par_fce']
+
+   ! Variables to take from fc ensemble, should be same as par_read (all SST/SNOW 
+   ! variables):
+   par_fc_en  = '+ h_ice + t_ice - pp + pf + h_snow + qr + qs + qg + fr_ice'
+              ! [+ default: 'pf t ph tsurf q u v qcl qci']
+              ! [+ variables in 'par_fce']
+
+   ! Variables to take from FG, to non-update (take from forecast ensemble and pass)
+   ! Should be the opposite of 'par_trans'
+   par_fce    = 'qv_s tsurf t_so w_so w_i + h_ice + t_ice + h_snow + fr_ice - qr - qs - qg'
+              ! [+ default: 'qr qs']
+
+   ! Variables to take from forecast mean 
+   par_fcm    = '- qv_s - freshsnw - rho_snow - tsurf - t_snow - t_so - w_so - w_i - w_snow - qr - qs - qg'
+              ! [+ default: '']
+
+   ! Variables to take from deterministic run:
+   par_fc_det = ''! 'SMA_ANA'
+
+   ! Write analysis increments
+   out_anin    = T          ! write analysis increments
+   out_anin_qc = T          ! write analysis increments for qc
+   out_anin_qi = T          ! write analysis increments for qi
+   out_anin_qr = T          ! write analysis increments for qr
+   out_anin_qs = T          ! write analysis increments for qs
+   out_anin_qg = T          ! write analysis increments for qg
+!   out_anin_w  = T         ! write analysis increments for w --> not yet handled by ICON
+   out_an_para = T          ! parallel output of files
+/
+
+! ==================================================================================
+! Model error
+! ==================================================================================
+&model_error
+ name       = 'W_SO'            ! disturb soil moisture
+ scales     = 0.003 100 0.4 24  ! 0.002 of soil capacity,100km,0.4m vertical,24 hour
+              0.003 10 0.4 24   ! 0.002 of soil capacity,10km,0.4m vertical,24 hour
+ clip_sym   = T
+/
+&model_error
+ name       = 'SST'             ! disturb SST
+ scales     = 1  100 0 24       ! 1K +  100 km length scale pattern, 24 hour
+/
+
