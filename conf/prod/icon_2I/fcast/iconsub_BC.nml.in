@@ -4,7 +4,7 @@
   lwrite_grid      = .TRUE.
 /
 &subarea_nml
-  order            = '@auxgrid@'
+  order            = 'lateral_boundary'
   grf_info_file    = '@LOCALGRID@'
   min_refin_c_ctrl = 1
   max_refin_c_ctrl = 14

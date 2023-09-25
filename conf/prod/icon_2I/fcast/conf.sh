@@ -4,11 +4,10 @@ PARENTMODEL_SIGNAL=hres_am_foricon
 PARENTMODEL_FREQINI=6
 PARENTMODEL_FREQANA=6
 PARENTMODEL_FREQFC=1
-PARENTMODEL_QRQS=.FALSE.
-#MODEL_LHN=.TRUE.
-#MODEL_NH_LHN=4
+MODEL_LHN=.FALSE.
+MODEL_NH_LHN=24
 MODEL_BACK=0
-MODEL_STOP=78
+MODEL_STOP=21
 MODEL_BCANA=N
 #MODEL_SOIL_PARENT=Y
 #MODEL_SNOW_PARENT=Y
@@ -29,7 +28,6 @@ ARKI_DLDIR=$WORKDIR_BASE/download
 #POSTPROC_LIST=(lami_make_arkiruc lami_make_vprof)
 #VPROF_NETWORK=icon_2I_vprof
 MODEL_SIGNAL=icon_2I_fcast
-MODEL_ARKI_PARENT_STATIC="level:GRIB1,1 or GRIB2S,105,,1; product:GRIB1,,128,129 or GRIB2,98,0,3,4"
 NBC_PER_TASK=1
 
 # suite timing
@@ -38,4 +36,23 @@ NWPWAITELAPS=10800
 NWPWAITSOLAR_RUN=3000
 # dopo quando tempo rinuncio a girare la suite e passare alla successiva
 NWPWAITSOLAR=43200
-NWPWAITWAIT=30
+NWPWAITWAIT=60
+
+# New
+# MEC modificato per la verifica
+DACE_BASE=/g100_work/smr_prod/srcintel_thomas/dace_code_2.06_mec
+MEC_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/mec
+MEC_WORKDIR=$WORKDIR/mec
+LETKF_CONST=$DACE_BASE/data
+
+# Time difference between model and parent reftime 
+case $TIME in
+    03 | 09 | 15 | 21)
+        MODEL_DELTABD=3
+        ;;
+    00 | 06 | 12 | 18)
+        MODEL_DELTABD=0
+esac
+
+# Initialize forecast using IAU and KENDA increments
+MODEL_ARCHIVE_ANA=/g100_scratch/userexternal/tgastald/prod/icon_2I/enda/archive

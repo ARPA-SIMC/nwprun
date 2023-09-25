@@ -33,16 +33,16 @@
  outputname     = "QI"
  intp_method = 3
 /
-!&input_field_nml  ! rain water content
-! inputname      = "CRWC"
-! outputname     = "QR"
-! intp_method = 3
-!/
-!&input_field_nml  ! snow water content
-! inputname      = "CSWC"
-! outputname     = "QS"
-! intp_method = 3
-!/
+&input_field_nml  ! rain water content
+ inputname      = "CRWC"
+ outputname     = "QR"
+ intp_method = 3
+/
+&input_field_nml  ! snow water content
+ inputname      = "CSWC"
+ outputname     = "QS"
+ intp_method = 3
+/
 &input_field_nml  ! surface pressure
  inputname      = "LNSP"
  outputname     = "LNPS" 

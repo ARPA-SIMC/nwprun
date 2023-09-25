@@ -8,7 +8,7 @@
 &master_model_nml
   model_type=1
   model_name="ATMO"
-  model_namelist_filename="NAMELIST_ope_ita02"
+  model_namelist_filename="namelist_icon"
   model_min_rank=1
   model_max_rank=65536
   model_inc_rank=1
