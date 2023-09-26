@@ -28,6 +28,7 @@ common_extra_env = {
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/enda_norad",
+    "NNODES_PREMODEL": 3,
     "NNODES_MODEL": 3,
     "NNODES_ENDA": 4
 })
@@ -66,6 +67,7 @@ enda_norad.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/enda",
+    "NNODES_PREMODEL": 3,
     "NNODES_MODEL": 3,
     "NNODES_ENDA": 8
 })
@@ -104,6 +106,7 @@ enda.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/fcruc",
+    "NNODES_PREMODEL": 8,
     "NNODES_MODEL": 16,
     "NNODES_ENDA": 4
 })
@@ -141,6 +144,7 @@ fcruc.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/fcens",
+    "NNODES_PREMODEL": 6,
     "NNODES_MODEL": 6,
     "NNODES_ENDA": 4,
     "ECF_TIMEOUT": "14400"

@@ -27,7 +27,7 @@ arki_loop() {
 
 
 arki_loop_backup() {
-    MODEL_DELTABD=$(($MODEL_DELTABD+3))
+    MODEL_DELTABD=$(($MODEL_DELTABD+$PARENTMODEL_FREQINI))
     nwpbctimeloop_init
     while nwpbctimeloop_loop; do
         getarki_icbc || return 1
@@ -100,6 +100,11 @@ case "%SUITE%" in
 # end of setup
         signal_loop
         ;;
+
+    icon*)
+	. $NWPCONFBINDIR/icon_model.sh
+	arki_loop || arki_loop_backup
+	;;
 
 esac
 

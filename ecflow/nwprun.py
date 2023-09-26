@@ -60,6 +60,7 @@ class ModelConfig:
                      "timer": None, "cronfreq": 10,
                      "wait_wt": "04:10:00", "preproc_wt": "01:00:00",
                      "model_wt": "05:00:00", "analysis_wt": "01:20:00",
+                     "mec_wt": "00:30:00",
                      "startmethod": "check_run",
                      "starttime": "00:00", "epspostproclevel": 1}
         self.conf.update(conf) # update default with user data
@@ -139,6 +140,8 @@ class Preproc:
         task.add_variable("WALL_TIME", self.conf["preproc_wt"])
         if self.conf['preprocname'] == "int2lm":
             fam.add_task("merge_analysis").add_trigger("./"+self.conf['preprocname']+" == complete")
+        elif self.conf['preprocname'] == "preicon":
+            fam.add_task("merge_analysis_icon").add_trigger("./"+self.conf['preprocname']+" == complete")
 
 # Add a model run and postprocessing family to a node, to be called by
 # EpsMembers.
@@ -204,6 +207,18 @@ class EpsMembers:
             task.add_complete("../model == complete")
             task.add_trigger("../model == aborted || ../preproc == aborted || ../check_memb == aborted"+timerdep)
 
+# Add a verification family to the suite, to be run after the ensemble model run
+class Verification:
+    def __init__(self, conf={}):
+        self.conf = {}
+        self.conf.update(conf)
+
+    def add_to(self, node):
+        fam = node.add_family("verification")
+        fam.add_trigger("./eps_members == complete && ./get_obs == complete")
+        task_mec = fam.add_task("mec")
+        task_mec.add_variable("WALL_TIME", self.conf["mec_wt"])
+
 # Add an ensemble data assimilation family to a suite, to be run
 # collectively after the ensemble model run, tailored for kenda. To be
 # called by WaitAndRun.
@@ -215,7 +230,12 @@ class EndaAnalysis:
     def add_to(self, node):
         fam = node.add_family("enda_analysis")
         fam.add_trigger("./eps_members == complete")
-        fam.add_task("prepare_kenda")
+        if self.conf['modelname'] == "icon":
+            task_mec = fam.add_task("mec")
+            task_mec.add_variable("WALL_TIME", self.conf["mec_wt"])
+            fam.add_task("prepare_kenda").add_trigger("./mec == complete")
+        else:
+            fam.add_task("prepare_kenda")
         task = fam.add_task("kenda").add_trigger("./prepare_kenda == complete")
         task.add_variable("WALL_TIME", self.conf["analysis_wt"])
         fam.add_task("archive_kenda").add_trigger("./kenda == complete")
@@ -290,6 +310,8 @@ class WipeRun:
         trig = ""
         if GetObs in self.conf['runlist']:
             trig = expr_or(trig, "../run/get_obs == aborted")
+        if Verification in self.conf['runlist']:
+            trig = expr_or(trig, "../run/verification == aborted")
         if EndaAnalysis in self.conf['runlist']:
             trig = expr_or(trig, "../run/enda_analysis == aborted")
         if ContinuousAnalysis in self.conf['runlist']:

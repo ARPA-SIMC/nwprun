@@ -24,11 +24,13 @@ common_extra_env = {
     "ECF_DENIED": ""
 }
 
-# Suite icon
+# Suite enda
 extra_env = common_extra_env.copy()
 extra_env.update({
-    "NWPCONF": "prod/icon_2I/fcast",
-    "NNODES_MODEL": 6
+    "NWPCONF": "prod/icon_2I/enda",
+    "NNODES_PREMODEL": 1,
+    "NNODES_MODEL": 3,
+    "NNODES_ENDA": 8
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -37,20 +39,58 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": False, "lhn": False, "membrange": "0",
-                    "postprocrange": "0",
+conf = ModelConfig({"gts": True, "lhn": True, "radarvol": False, "membrange": "0-29",
+                    "postprocrange": "-1",
                     "modelname": "icon",
-                    "runlist": [EpsMembers],
-                    "preproc_wt":"00:20:00", "model_wt": "02:00:00"}).getconf()
-icon = ModelSuite("icon_2I_fcast")
-basicenv.add_to(icon.suite)
-day = icon.suite.add_family("day").add_repeat(
-    ecflow.RepeatDate("YMD", 
+                    "runlist": [GetObs, EpsMembers, EndaAnalysis],
+                    "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
+enda = ModelSuite("icon_2I_enda")
+basicenv.add_to(enda.suite)
+day = enda.suite.add_family("day").add_repeat(
                       int((datetime.datetime.now()-datetime.timedelta(days=delta[0])).strftime("%Y%m%d")),
                       20301228))
 
 hdep = None # first repetition has no dependency
-for h in range(0, 24, 6):
+for h in range(0, 24, 1):
+    famname = "hour_" + ("%02d" % h)
+    hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
+    #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
+    hdep = famname # dependency for next repetition
+
+enda.check()
+enda.write(interactive=interactive)
+enda.replace(interactive=interactive)
+
+
+# Suite icon fcast
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/icon_2I/fcast",
+    "NNODES_PREMODEL": 3,
+    "NNODES_MODEL": 6,
+    "NNODES_ENDA": 6
+})
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
+                    worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
+                    sched="slurm",
+                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    ntries=2,
+                    extra_env=extra_env)
+
+conf = ModelConfig({"gts": True, "lhn": False, "membrange": "0",
+                    "postprocrange": "-1",
+                    "modelname": "icon", 
+                    "runlist": [GetObs, EpsMembers, Verification],
+                    "preproc_wt":"00:20:00", "model_wt": "02:00:00"}).getconf()
+icon = ModelSuite("icon_2I_fcast")
+basicenv.add_to(icon.suite)
+day = enda.suite.add_family("day").add_repeat(
+                      int((datetime.datetime.now()-datetime.timedelta(days=delta[1])).strftime("%Y%m%d")),
+                      20301228))
+
+hdep = None # first repetition has no dependency
+for h in range(0, 24, 3):
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time

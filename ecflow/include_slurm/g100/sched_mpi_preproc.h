@@ -1,1 +1,1 @@
-#SBATCH --nodes=%NNODES_MODEL%
+#SBATCH --nodes=%NNODES_PREMODEL%
