@@ -79,8 +79,8 @@ class ModelConfig:
                 self.conf['preprocname'] = "int2lm"
             else:
                 self.conf['preprocname'] = "pre"+self.conf['modelname']
-        if self.conf['modelname'] == "icon":
-            self.conf['getparentname'] = "get_parent_icon"
+        #if self.conf['modelname'] == "icon":
+        #    self.conf['getparentname'] = "get_parent_icon"
 
     def getconf(self):
         return self.conf
@@ -153,7 +153,12 @@ class Model:
     def add_to(self, node):
         fam = node.add_family("model")
         trig = "./preproc == complete"
-        if GetObs in self.conf['runlist']: trig+= " && ../../get_obs == complete"
+        if GetObs in self.conf['runlist']: 
+            if self.conf['modelname'] == "icon":
+                if self.conf["lhn"]:      trig+= " && ../../get_obs/get_radarlhn == complete"
+                if self.conf["radarvol"]: trig+= " && ../../get_obs/get_radarvol == complete"
+            else:
+                trig+= " && ../../get_obs == complete"
         fam.add_trigger(trig)
         fam.add_variable("WALL_TIME", self.conf["model_wt"])
         fam.add_task(self.conf['modelname']).add_event("started")
@@ -229,14 +234,15 @@ class EndaAnalysis:
 
     def add_to(self, node):
         fam = node.add_family("enda_analysis")
-        fam.add_trigger("./eps_members == complete")
+        fam.add_trigger("./eps_members == complete && ./get_obs == complete")
+        fam.add_task("prepare_kenda")
         if self.conf['modelname'] == "icon":
             task_mec = fam.add_task("mec")
+            task_mec.add_trigger("./prepare_kenda == complete")
             task_mec.add_variable("WALL_TIME", self.conf["mec_wt"])
-            fam.add_task("prepare_kenda").add_trigger("./mec == complete")
+            task = fam.add_task("kenda").add_trigger("./mec == complete")
         else:
-            fam.add_task("prepare_kenda")
-        task = fam.add_task("kenda").add_trigger("./prepare_kenda == complete")
+            task = fam.add_task("kenda").add_trigger("./prepare_kenda == complete")
         task.add_variable("WALL_TIME", self.conf["analysis_wt"])
         fam.add_task("archive_kenda").add_trigger("./kenda == complete")
 

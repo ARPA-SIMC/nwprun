@@ -65,6 +65,28 @@ archive_perm() {
 	mkdir -p $CINECA_ARCHIVE_POST/$subdir
 	rsync -pt $detfile $CINECA_ARCHIVE_POST/$subdir
 
+	if [[ "%SUITE%" == "icon_2I_enda"* ]]; then
+	    # Retrieve first guess lead time
+	    model_stop_min=$((MODEL_STOP * 60))
+	    dt_shift_min=$((DT_IAU / 120))
+	    lead_time_min=$((model_stop_min - dt_shift_min))
+	    lt_hh=$((lead_time_min /  60 ))
+	    lt_mm=$((lead_time_min %% 60 ))
+
+	    # Save deterministic first guess
+	    fgfile=$MODEL_DATADIR/icon_${DATES}${TIMES}_+000${lt_hh}${lt_mm}00.grb
+            rsync -pt $fgfile $FG_FOLD/icon_${DATES}${TIMES}_+000${lt_hh}${lt_mm}00_000.grb
+
+	    # Save ensemble first guess
+            if [ "$TIME" = "21" ]; then
+		for n in `seq 1 $ENS_TOTAL_MEMB`; do
+		    n3=`printf "%%03d" $n`		
+	    	    fgfile=$MODEL_DATADIR/icon_${DATES}${TIMES}_+000${lt_hh}${lt_mm}00.grb
+	    	    rsync -pt $fgfile $FG_FOLD/icon_${DATES}${TIMES}_+000${lt_hh}${lt_mm}00_${n3}.grb
+		done
+	    fi
+	fi
+
 	# Save ensemble analysis at 21 UTC
         if [ "$TIME" = "21" ]; then
             rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000.??? $CINECA_ARCHIVE_POST/$subdir

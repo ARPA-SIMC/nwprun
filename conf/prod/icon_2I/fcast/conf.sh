@@ -55,4 +55,4 @@ case $TIME in
 esac
 
 # Initialize forecast using IAU and KENDA increments
-MODEL_ARCHIVE_ANA=/g100_scratch/userexternal/tgastald/prod/icon_2I/enda/archive
+MODEL_ARCHIVE_ANA=$WORKDIR/../enda/archive

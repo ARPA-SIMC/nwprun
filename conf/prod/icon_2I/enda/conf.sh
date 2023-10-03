@@ -104,7 +104,7 @@ NBC_PER_TASK=1
 # suite timing
 NWPWAITELAPS=10800
 # differenza tra tempo nominale e tempo di attivazione della suite
-NWPWAITSOLAR_RUN=3000
+NWPWAITSOLAR_RUN=1200
 # dopo quando tempo rinuncio a girare la suite e passare alla successiva
 NWPWAITSOLAR=43200
 NWPWAITWAIT=30

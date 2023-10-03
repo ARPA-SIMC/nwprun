@@ -9,31 +9,46 @@
 # end of setup
 
 set -x
-
-# Remove and re-create directory
-safe_rm_rf $MODEL_WORKDIR
-mkdir -p $MODEL_WORKDIR
-cd $MODEL_WORKDIR
-
-# Create directory for output files of iconremap
-mkdir -p $MODEL_DATADIR
-
-# Create variables for date in namelist
-export inidate=$( $DATECOM --date "${DATES} ${TIMES}" '+%%Y-%%m-%%dT%%H:%%M:%%SZ' )
-export findate=$( $DATECOM --date "${DATEE} ${TIMEE}" '+%%Y-%%m-%%dT%%H:%%M:%%SZ' )
-
-# Copy files for correspondence between GRIB2 shortNames and ICON internal names
-cp $(conf_getfile map_file.ana) $MODEL_WORKDIR
-cp $(conf_getfile map_file.latbc) $MODEL_WORKDIR
+date
 
 # Copy data for EcRad
+cd $MODEL_WORKDIR
 cp $ECRAD_DATA/rrtmg_lw.nc $MODEL_WORKDIR
 cp $ECRAD_DATA/ECHAM6_CldOptProps.nc $MODEL_WORKDIR
-
-# Create namelist
-conf_template icon_master.namelist NAMELIST_ope_ita02
 
 # Run ICON
 $ecflow_client --event=started # trigger start of postproc
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN
 
+# Save LHN diagnostics for deterministic member of KENDA
+n3=`printf "%%03d" $ENS_MEMB`
+if [ "%SUITE%" == "icon_2I_enda"* -a "$n3" -eq "000" ]; then
+    FS_DATE=$WORKDIR/archive/${DATE}${TIME}
+    mkdir -p $FS_DATE
+    rsync -pt $MODEL_WORKDIR/lhn.log      $FS_DATE  || true
+fi
+
+# Archive first guess for next ICON assimilation cycle
+if [[ "%SUITE%" == "icon_2I_enda"* ]]; then
+    # Retrieve first guess lead time
+    model_stop_min=$((MODEL_STOP * 60))
+    dt_shift_min=$((DT_IAU / 120))
+    lead_time_min=$((model_stop_min - dt_shift_min))
+    lt_hh=$((lead_time_min /  60 ))
+    lt_mm=$((lead_time_min %% 60 ))
+
+    # Create archive folder
+    FG_FOLD=$WORKDIR/first_guess/${DATES}${TIMES}
+    mkdir -p $FG_FOLD
+
+    # Archive
+    fgfile=$MODEL_DATADIR/icon_${DATES}${TIMES}_+000${lt_hh}${lt_mm}00.grb
+    rsync -pt $fgfile $FG_FOLD/icon_${DATES}${TIMES}_+000${lt_hh}${lt_mm}00_${n3}.grb
+
+    # Clean-up (to be improved)
+    delete_date=`date_sub $DATES $TIMES 48`
+    delete_time=`time_sub $DATES $TIMES 48`
+    safe_rm_rf $WORKDIR/first_guess/${delete_date}${delete_time}
+fi
+
+date

@@ -10,7 +10,7 @@ parser = optparse.OptionParser(usage="%prog [OPTIONS]")
 parser.add_option("--yes", help="work in non-interactive mode and answer yes to all questions (it will overwrite files and replace scripts on server)",
                   action="store_true")
 parser.add_option("--delta", help="comma-separated list of delta time in days to go back, for each suite",
-                  default="0")
+                  default="0,0,0")
 
 opts, args = parser.parse_args()
 interactive = not opts.yes
@@ -39,7 +39,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": True, "lhn": True, "radarvol": False, "membrange": "0-29",
+conf = ModelConfig({"gts": True, "lhn": True, "radarvol": False, "membrange": "0-2",
                     "postprocrange": "-1",
                     "modelname": "icon",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis],
@@ -47,6 +47,7 @@ conf = ModelConfig({"gts": True, "lhn": True, "radarvol": False, "membrange": "0
 enda = ModelSuite("icon_2I_enda")
 basicenv.add_to(enda.suite)
 day = enda.suite.add_family("day").add_repeat(
+    ecflow.RepeatDate("YMD", 
                       int((datetime.datetime.now()-datetime.timedelta(days=delta[0])).strftime("%Y%m%d")),
                       20301228))
 
@@ -85,7 +86,8 @@ conf = ModelConfig({"gts": True, "lhn": False, "membrange": "0",
                     "preproc_wt":"00:20:00", "model_wt": "02:00:00"}).getconf()
 icon = ModelSuite("icon_2I_fcast")
 basicenv.add_to(icon.suite)
-day = enda.suite.add_family("day").add_repeat(
+day = icon.suite.add_family("day").add_repeat(
+    ecflow.RepeatDate("YMD", 
                       int((datetime.datetime.now()-datetime.timedelta(days=delta[1])).strftime("%Y%m%d")),
                       20301228))
 

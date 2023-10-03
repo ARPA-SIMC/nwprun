@@ -1,0 +1,275 @@
+%include <sched_wait.h>
+%include <%HPCENV%/smnd.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/icon_model.sh
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/getarki.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arkiana.sh
+. $NWPCONFBINDIR/arkilocal.sh
+. $NWPCONFBINDIR/arki_tools.sh
+# end of setup
+
+set -x
+
+
+# DA SISTEMARE, SPECIE PER LA GESTIONE DEI FORECAST
+if [ -n "$ARKI_DIR" ]; then
+    # analysis is managed locally
+    # create local dataset if not existing
+    arkilocal_setup
+    if [ "$MODEL_BACK" == "0" ]; then # if forecast run, erase dataset
+        arkilocal_create -c
+    else # if analysis, keep it (it will be erased when archiving analysis)
+        arkilocal_create
+    fi
+
+    # DA RIVALUTARE IN BASE A COSA SI VUOLE USARE PER INIZIALIZZARE IL FORECAST
+    # (ANALISI PIENA O INCREMENTI?)
+    # Da capire emglio come fare, questo passaggio viene fatto anche in run_remap.sh
+    # Occhio che non basta commentare qui, bisogna anche gestire la parte sopra
+    # del arkilocal_create -c 
+    # retrieve and locally archive ensemble analysis (fcens and fcruc)
+    if [ -n "$MODEL_ARCHIVE_ANA" ]; then
+        # if analysis is provided externally, wait for it and archive locally
+        if [ -n "$ENS_MEMB" ]; then
+            ext=.`printf "%%03d" $ENS_MEMB`
+        else
+            ext=$ANA_DET_EXT
+        fi
+
+        # Retrieve analysis increments
+        ana=$MODEL_ARCHIVE_ANA/$DATES$TIMES/laf${DATES}${TIMES}${ANA_EXT}_inc${ext}
+        nwpwait_setup        
+    	while true; do
+            [ -f "$ana" ] && { putarki_archive grib $ana; break; } || true
+            nwpwait_wait || break # go on in case of missing analysis
+        done
+    fi
+else
+    # analysis is retrieved through arkimet
+    import_signal_wait ${ARKI_DS_ASSIM##*/} $DATES$TIMES laf$DATES$TIMES$ANA_EXT
+fi
+
+cd $MODEL_PRE_DATADIR
+
+
+# ----------------------------------------------------------------------------------
+# Retrieve first guess path
+# ----------------------------------------------------------------------------------
+# First guess initialization date and time
+fg_date=`date_sub $DATES $TIMES $ASS_CYCLE_LENGTH`
+fg_time=`time_sub $DATES $TIMES $ASS_CYCLE_LENGTH`
+
+# First guess lead time
+model_stop_min=$((ASS_CYCLE_LENGTH * 60))
+dt_shift_min=$((DT_IAU / 120))
+lead_time_min=$((model_stop_min - dt_shift_min))
+lt_hh=$((lead_time_min /  60 ))
+lt_mm=$((lead_time_min %% 60 ))
+
+# First guess ensemble meber suffix
+n3=`printf "%%03d" $ENS_MEMB`
+
+# Define first guess directory and file names
+fg_dir=$WORKDIR/first_guess/${fg_date}${fg_time}
+fg_file_in=icon_${fg_date}${fg_time}_+000${lt_hh}${lt_mm}00_${n3}.grb
+
+# If first guess is provided externally, define differently "fg_dir" and "fg_file_in"
+if [ -n "$MODEL_ARCHIVE_ANA" ]; then
+    fg_dir=$MODEL_ARCHIVE_ANA/$DATES$TIMES 
+    fg_file_in=icon_${fg_date}${fg_time}_+000${lt_hh}${lt_mm}00.grb
+fi
+
+
+# ----------------------------------------------------------------------------------
+# Retrieve number of GRIB messages for analysis increments 
+# ----------------------------------------------------------------------------------
+# Datetime in arkimet format
+reftime=`getarki_datetime $DATES $TIMES`
+
+# Number of messages
+ngrib_inc=`$SIMC_TOOLS arki-query --summary-short \
+           "reftime:=$reftime;$MODEL_ARKI_TIMERANGE_ASSIM_INC" \
+           $ARKI_DIR/ASSIM_INC |grep Count:  | sed 's/^.*: //'`
+
+
+# ----------------------------------------------------------------------------------
+# If first guess and analysis increments exist, they are retrieved. Then, if a file
+# containing SST exists, i.e. a "correct" SST exists, it is added to analysis 
+# increments, otherwise T_SO is retrieved and added to analysis increments.
+# The former approach applies to:
+#   - deterministic run
+#   - ensemble mebers from 02/03/2023 at 00 UTC
+#   - ensemble mebers at 00 UTC, i.e. TIMES=00, before 02/03/2023 at 00 UTC. This is
+#     a "fake" SST since it is taken by "get_paent_icon.ecf" from IFS-HRES instead of
+#     IFS-ENS.
+# The latter approach applies to:
+#   - ensemble mebers at every hour except 00 UTC before 02/03/2023 at 00 UTC.
+# ----------------------------------------------------------------------------------
+if [[ -s $fg_dir/$fg_file_in && $ngrib_inc -gt 0 ]]; then 
+    # This is a warm start
+    echo "Warm start using IAU"
+    MODEL_FAST_ASSIM=Y
+    MODEL_SLOW_ASSIM=Y
+
+    # Copy first guess
+    fg_file_out=icon_${fg_date}${fg_time}_+000${lt_hh}${lt_mm}00.gr1b
+    rsync -p $fg_dir/$fg_file_in $fg_file_out 
+
+    # Get analysis increments
+    anainc_file=laf${DATES}${TIMES}0000_inc.grb
+    arki-query --data -o $anainc_file "reftime:=$reftime;$MODEL_ARKI_TIMERANGE_ASSIM_INC" \
+        $ARKI_DIR/ASSIM_INC
+
+    # Add SST from IFS to the file containing analysis increments
+    centre="centre=80,subCentre=255"
+    time="dataDate=$DATES,dataTime=${TIMES}00,significanceOfReferenceTime=0"
+    process_1="typeOfProcessedData=0,typeOfGeneratingProcess=0"
+    process_2="generatingProcessIdentifier=$MODEL_ASSIM_GP,backgroundProcess=2"
+    other="stepRange=0,shapeOfTheEarth=6"
+
+    # Set as analysis
+    $SIMC_TOOLS grib_set -s ${centre},${time},${process_1},${process_2},${other} \
+        ic_${DATES}${TIMES}_sst.grib ic_${DATES}${TIMES}_sst_ana.grib
+
+    # Add to analysis file
+    cat $anainc_file ic_${DATES}${TIMES}_sst_ana.grib > ana_with_sst.grib
+    cp ana_with_sst.grib $anainc_file
+
+else
+    echo "Cold start"
+    MODEL_FAST_ASSIM=N
+    MODEL_SLOW_ASSIM=N
+
+    # retrieve "slow" fields from model analysis archive up to a reasonable
+    # interval in the past (FROM_ASSIM_SLOW)
+    parentslow=laf${DATES}${TIMES}0000_soil.grb
+    slow_back=0
+    while [ $slow_back -le "$MODEL_SLOW_PAST_H" ]; do
+    	slow_date=`date_sub $DATES $TIMES $slow_back`
+    	slow_time=`time_sub $DATES $TIMES $slow_back`
+    	slow_reftime="reftime:="`getarki_datetime $slow_date $slow_time`
+    	arki-query --data -o $parentslow \
+    	    "$slow_reftime;$MODEL_ARKI_FROM_ASSIM_SLOW1;" \
+    	    $ARKI_DS_ASSIM
+        arki-query --data \
+            "$slow_reftime;$MODEL_ARKI_FROM_ASSIM_SLOW2;" \
+            $ARKI_DS_ASSIM >> $parentslow
+
+    	n=`grib_count $parentslow` || n=0
+    	if [ $n -ge $MODEL_N_ASSIM_SLOW ]; then
+    	    # found something
+    	    if [ $slow_back -gt 0 ]; then
+    	    	# move forward the date and rearchive
+    	    	grib_set -s dataDate=$DATES,dataTime=${TIMES}00 \
+    	        $parentslow $parentslow.update
+    	    	mv $parentslow.update $parentslow
+    	    fi
+    	    break
+    	fi
+    	slow_back=$(($slow_back + 24)) # fixed to 24 for daily cycle
+    done
+
+    if [ -s $parentslow ]; then
+	MODEL_SLOW_ASSIM=Y
+    fi
+fi
+
+
+# ----------------------------------------------------------------------------------
+# Define namelist and copy dictionaries
+# ----------------------------------------------------------------------------------
+# Remove and re-create directory for model run
+safe_rm_rf $MODEL_WORKDIR
+mkdir -p $MODEL_DATADIR
+cd $MODEL_WORKDIR
+
+# Create variables for date in namelist
+export inidate=$( $DATECOM --date "${DATES} ${TIMES}" '+%%Y-%%m-%%dT%%H:%%M:%%SZ' )
+export findate=$( $DATECOM --date "${DATEE} ${TIMEE}" '+%%Y-%%m-%%dT%%H:%%M:%%SZ' )
+
+# Warm start
+if [ $MODEL_FAST_ASSIM == "Y" ]; then
+    # Define namelist variables for IAU initialization
+    INIT_MODE=5
+    FILEFG=$fg_file_out
+    FILEAN=$anainc_file
+    LREAD_ANA=.true.
+    FILETYPE=2
+    LATBC_FG=.true.
+    LTILE=.false.
+    DT_SHIFT=-$((DT_IAU / 2))
+
+    # Copy files for correspondence between GRIB2 shortNames and ICON internal names
+    cp $(conf_getfile map_file.ana_IAU) $MODEL_WORKDIR/map_file.ana
+    cp $(conf_getfile map_file.latbc_IAU) $MODEL_WORKDIR/map_file.latbc
+
+# Cold start
+else
+    if [ $MODEL_SLOW_ASSIM == "Y" ]; then
+        INIT_MODE=3
+        FILEFG=$parentslow
+        FILEAN=""
+        LREAD_ANA=.false.
+        FILETYPE=2
+        LATBC_FG=.false.
+        LTILE=.true.
+        DT_SHIFT=0.
+    else
+    	# Define namelist variables for IFS initialization
+    	INIT_MODE=2
+    	FILEFG=""
+    	FILEAN=""
+    	LREAD_ANA=.false.
+    	FILETYPE=4
+    	LATBC_FG=.false.
+    	LTILE=.true.
+    	DT_SHIFT=0.
+    fi
+
+    # Copy files for correspondence between GRIB2 shortNames and ICON internal names
+    cp $(conf_getfile map_file.ana) $MODEL_WORKDIR
+    cp $(conf_getfile map_file.latbc) $MODEL_WORKDIR/map_file.latbc
+fi
+
+# Transform MODEL_NH_LHN from hours to seconds
+if [ -z ${MODEL_NH_LHN+x} ]; then
+   MODEL_NS_LHN=10800
+else
+   MODEL_NS_LHN=$(( MODEL_NH_LHN*3600 ))
+fi
+
+# Handle radar volumes for namelist
+if [ "%RADVOL%" == "Y" ] && ls $HDF5_WORKDIR/* >/dev/null 2>&1; then
+    # Namelist for EMVORADO 
+    conf_template NAMELIST_EMVORADO
+
+    # Directory for Mie look-up tables
+    mkdir -p $WORKDIR/lookup_Mie_write
+
+    # Activate EMVORADO in ICON namelist
+    if [ -z "$ACT_EMVORADO" ]; then
+        export ACT_EMVORADO=.true.
+    fi
+else
+    export ACT_EMVORADO=.false.
+fi
+
+# Define new variable for perturbationNumber
+if [ -z "$ENS_MEMB" ]; then
+   PERT_NUMB=-1
+else
+   PERT_NUMB=$ENS_MEMB
+fi
+
+# Export namelist variables
+export INIT_MODE LREAD_ANA FILEFG FILEAN FILETYPE LATBC_FG LTILE DT_SHIFT MODEL_NS_LHN PERT_NUMB
+
+# Create ICON namelist
+conf_template icon_master.namelist namelist_icon
+
+
