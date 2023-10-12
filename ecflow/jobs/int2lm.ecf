@@ -30,6 +30,7 @@ if [ "$MODEL_PUBLISH_CONF" = "Y" -a -z "$ENS_MEMB" ]; then
 fi
 
 rm -f YU*
+parcomp_computetopo
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_PRE_BIN
 
 # rename the analysis for further repeatable postprocessing

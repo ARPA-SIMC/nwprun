@@ -14,6 +14,6 @@ mkdir -p $MODEL_WORKDIR
 cd $MODEL_PRE_WORKDIR
 
 conf_template moloch.inp
-# not needed
+parcomp_computetopo
 $ecflow_client --event=started # trigger start of postproc
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN
