@@ -17,6 +17,7 @@ safe_rm_rf $MODEL_PRE_WORKDIR $MODEL_PRE_DATADIR
 mkdir -p $MODEL_PRE_WORKDIR $MODEL_PRE_DATADIR
 cd $MODEL_PRE_WORKDIR
 
+parcomp_computetopo
 conf_template INPUT
 # special treatment for ICON, link static file in data dir
 # required for having the hhl file in the same dir
@@ -30,7 +31,6 @@ if [ "$MODEL_PUBLISH_CONF" = "Y" -a -z "$ENS_MEMB" ]; then
 fi
 
 rm -f YU*
-parcomp_computetopo
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_PRE_BIN
 
 # rename the analysis for further repeatable postprocessing

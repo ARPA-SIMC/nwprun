@@ -13,7 +13,7 @@ safe_rm_rf $MODEL_WORKDIR
 mkdir -p $MODEL_WORKDIR
 cd $MODEL_PRE_WORKDIR
 
-conf_template moloch.inp
 parcomp_computetopo
+conf_template moloch.inp
 $ecflow_client --event=started # trigger start of postproc
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN

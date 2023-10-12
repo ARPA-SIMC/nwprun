@@ -39,6 +39,7 @@ else
     export ACT_EMVORADO=.FALSE.
 fi
 
+parcomp_computetopo
 conf_template INPUT_ORG INPUT_DYN INPUT_PHY INPUT_ASS INPUT_DIA INPUT_INI
 
 if [ -n "$ENS_TOTAL_MEMB" -a -n "$ENS_MEMB" ]; then
@@ -49,7 +50,6 @@ if [ "$MODEL_PUBLISH_CONF" = "Y" -a -z "$ENS_MEMB" ]; then
     (rsync -t INPUT* "$MODEL_CONF_ARCHIVE" || true) &
 fi
 rm -f YU*
-parcomp_computetopo
 $ecflow_client --event=started # trigger start of postproc
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN
 
