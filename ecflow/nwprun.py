@@ -235,13 +235,13 @@ class EndaAnalysis:
     def add_to(self, node):
         fam = node.add_family("enda_analysis")
         fam.add_trigger("./eps_members == complete && ./get_obs == complete")
-        fam.add_task("prepare_kenda")
         if self.conf['modelname'] == "icon":
             task_mec = fam.add_task("mec")
-            task_mec.add_trigger("./prepare_kenda == complete")
             task_mec.add_variable("WALL_TIME", self.conf["mec_wt"])
-            task = fam.add_task("kenda").add_trigger("./mec == complete")
+            fam.add_task("prepare_kenda_icon").add_trigger("./mec == complete")
+            task = fam.add_task("kenda").add_trigger("./prepare_kenda_icon == complete")
         else:
+            fam.add_task("prepare_kenda")
             task = fam.add_task("kenda").add_trigger("./prepare_kenda == complete")
         task.add_variable("WALL_TIME", self.conf["analysis_wt"])
         fam.add_task("archive_kenda").add_trigger("./kenda == complete")

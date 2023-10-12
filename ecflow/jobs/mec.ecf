@@ -24,6 +24,29 @@ for f in `ls $BUFR_WORKDIR/cdfin*.nc`; do
     ln -fs $f ${MEC_WORKDIR}/input
 done
 
+# evaluate availability of deterministic first guess
+if [ -s "$WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb" ]; then
+    da=Y
+fi
+
+# evaluate availability of ensemble member first guess
+set -a ma
+lma=
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    if [ -s "$WORKDIR/icon.$n/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb" ]; then
+        # First guess exists
+        ma[$n]=Y
+        lma=$n
+    else
+        ma[$n]=N
+    fi
+done
+
+# no analyses available at all, we are in canvas breeches (Bassini), abort
+if [ "$da" != Y -a -z "$lma" ]; then
+    exit 1
+fi
+
 # Link forecast files
 echo "Link model output files"
 for hh in `seq 0 1 $MODEL_STOP`; do
@@ -32,23 +55,49 @@ for hh in `seq 0 1 $MODEL_STOP`; do
     nohours=$(printf "%%02d" $(( ${hh} %% 24 )))
 
     # Link deterministic
-    filename=icon_${DATES}${TIMES}_+${nodays}${nohours}0000.grb
-    ln -fs ${MODEL_WORKDIR}/data/$filename ${MEC_WORKDIR}/input
+    filename=icon_${DATES}${TIMES}00_+${nodays}${nohours}0000.grb
+    if [ "$da" = Y ]; then
+      	ln -fs $WORKDIR/icon/data/$filename ${MEC_WORKDIR}/input
+#        ln -fs $$WORKDIR/icon/data/$filename $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
+    else
+	ln -fs $WORKDIR/icon.$lma/data/$filename ${MEC_WORKDIR}/input
+#        ln -fs $WORKDIR/icon.$lma/data/$filename $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
+    fi
 
     # Link ensemble members
     if [[ $ENS_TOTAL_MEMB -gt 0 ]]; then 
         for mem in `seq 1 $ENS_TOTAL_MEMB`; do
             mem3=`printf "%%03d" $mem`
-            filename=icon_${DATES}${TIMES}_+${nodays}${nohours}0000.grb
-            ln -fs ${MODEL_WORKDIR}.${mem}/data/$filename   \
-                   ${MEC_WORKDIR}/input/${filename}.${mem3}
+	    if [ "${ma[$n]}" = Y ]; then
+            	ln -fs $WORKDIR/icon.${mem}/data/$filename    \
+                       ${MEC_WORKDIR}/input/${filename}.${mem3}
+#                ln -fs $WORKDIR/icon.${mem}/data/$filename    \
+#			$LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+	    elif [ -n "$lma" ]; then # use another member
+		ln -fs $WORKDIR/icon.${lma}/data/$filename    \
+                       ${MEC_WORKDIR}/input/${filename}.${mem3}
+#                ln -fs $WORKDIR/icon.${lma}/data/$filename    \
+#                       $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+	    else
+        	ln -fs $WORKDIR/icon/data/$filename   	      \
+                       ${MEC_WORKDIR}/input/${filename}.${mem3}
+#                ln -fs $WORKDIR/icon/data/$filename           \
+#                       $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+	    fi
         done
     fi
 done
 
-# Link constant file for ICON
-echo "Link constant fields"
-ln -fs ${MODEL_DATADIR}/icon_${DATES}${TIMES}_const.grb ${MEC_WORKDIR}/const
+# Link constant file for ICON and reference atmosphere ("fg_file" in the namellist). It must
+# be the last forecast file, that is the last file linked ("filename")
+echo "Link constant fields and reference atmosphere"
+if [ "$da" = Y ]; then
+    ln -fs $WORKDIR/icon/data/icon_${DATES}${TIMES}00_const.grb ${MEC_WORKDIR}/const
+    ln -s  $WORKDIR/icon/data/$filename ${MEC_WORKDIR}/input/fg_file
+else
+    ln -fs $WORKDIR/icon.${lma}/data/icon_${DATES}${TIMES}00_const.grb ${MEC_WORKDIR}/const
+    ln -s  $WORKDIR/icon.${lma}/data/$filename ${MEC_WORKDIR}/input/fg_file
+fi
 
 # Link constant file for KENDA
 echo "Link constant fields for KENDA"
@@ -58,15 +107,10 @@ ln -s ${LETKF_CONST}/ww15mgh.grd ${MEC_WORKDIR}/const/
 echo "Link ICON grid"
 ln -s ${LOCALGRID} ${MEC_WORKDIR}/const/
 
-# Link file for reference atmosphere ("fg_file" in the namellist). It must
-# be the last  forecast file, that is the last file linked ("filename")
-echo "Link file for reference atmosphere"
-ln -s ${MODEL_DATADIR}/$filename ${MEC_WORKDIR}/input/fg_file
-
 # Create blacklist
 touch ${MEC_WORKDIR}/input/blklsttmp
 
-# Crate namelisti (VSTART necessary only for verification in fcast suite)
+# Create namelist (VSTART necessary only for verification in fcast suite)
 export VSTART=-$(( MODEL_STOP * 60 ))      
 conf_template namelist_mec
 mv namelist_mec run/namelist
@@ -76,10 +120,8 @@ chmod 755 run/namelist
 cd $MEC_WORKDIR/run
 parcomp_mpirun $EXTRA_MPIRUN $MEC_BIN
 
-# Save mof files for diagnostics
-# Save LHN diagnostics for deterministic member of KENDA
-n3=`printf "%%03d" $ENS_MEMB`
-if [ "%SUITE%" == "icon_2I_enda"* -a "$n3" -eq "000" ]; then
+# Save YUSTATS files for diagnostics
+if [ "%SUITE%" == "icon_2I_enda"* ]; then
     FS_DATE=$WORKDIR/archive/${DATE}${TIME}
     rsync -pt $MEC_WORKDIR/run/YUSTATS  $FS_DATE/MEC_YUSTATS || true
 fi

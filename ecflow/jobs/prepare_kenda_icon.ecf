@@ -1,0 +1,252 @@
+%include <sched_light.h>
+%include <head.h>
+
+
+# source other optional modules
+# dirty trick
+MODEL_BACK=$MODEL_STOP
+. $NWPCONFBINDIR/nwptime.sh
+#. $NWPCONFBINDIR/cosmo_model.sh
+# end of setup
+
+safe_rm_rf $LETKF_DATADIR
+safe_rm_rf $LETKF_WORKDIR/input
+mkdir -p $LETKF_WORKDIR $LETKF_DATADIR
+mkdir -p $LETKF_WORKDIR/input
+cd $LETKF_WORKDIR
+rm -f $LETKF_WORKDIR/letkf_skip
+
+
+# ---------------------------------------------------------------------------
+# evaluate availability: deterministic
+# ---------------------------------------------------------------------------
+# Check first guess. If it exists and it is non-empty, look for fof files; 
+# otherwise set that fof files are missing because they are certainly
+# missing, empty or corrupt.
+if [ -s "$WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb" ]; then
+    # First guess exists
+    da=Y
+
+    # Check fof for radar observations: "do_rad" is 'Y' if there are files
+    # matching "pattern_fofrad" and all of these files are non-empty.
+    pattern_fofrad="$WORKDIR/icon/data/fof_radar_id*${DATES}${TIMES}0000.nc"
+    if [[ $(ls -A $pattern_fofrad) ]]; then   # ls returns anything?
+        do_rad=Y
+        for fof_file in $pattern_fofrad; do
+            if [ ! -s $fof_file ]; then
+                do_rad=N
+                break
+            fi
+        done
+        n_fofrad_det=`ls $pattern_fofrad |wc -l`
+    else
+        do_rad=N
+    fi
+
+# First guess does not exist, so fof files are missing, empty or corrupt
+else
+    da=N
+    do_rad=N
+fi
+
+echo "Deterministic analysis:                $da"
+echo "Deterministic foffo radar:             $do_rad"
+if [ "$do_rad" == "Y" ]; then
+    echo "Deterministic number of foffo radar:   $n_fofrad_det "
+fi
+echo ''
+
+
+# ---------------------------------------------------------------------------
+# evaluate availability: ensemble members 
+# ---------------------------------------------------------------------------
+set -a ma
+lma=
+set -a mo_rad
+set -a n_fofrad_ens
+lmo_rad=
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    if [ -s "$WORKDIR/icon.$n/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb" ]; then
+        # First guess exists
+        ma[$n]=Y
+        lma=$n
+
+        # Check fof for radar observations: "do_rad" is 'Y' if there are 
+        # files matching "pattern_fofrad" and all of these files are 
+        # non-empty.
+        pattern_fofrad="$WORKDIR/icon.$n/data/fof_radar_id*${DATES}${TIMES}0000.nc"
+        if [[ $(ls -A $pattern_fofrad) ]]; then   # ls returns anything?
+            for fof_file in $pattern_fofrad; do
+                if [ ! -s $fof_file ]; then
+                    echo $fof_file "is an empty file"
+                    mo_rad[$n]=N
+                    break
+                fi
+            done
+            if [ "${mo_rad[$n]}" = N ]; then
+                n_fofrad_ens[$n]='-'
+            else
+                mo_rad[$n]=Y
+                lmo_rad=$n
+                n_fofrad_ens[$n]=`ls $pattern_fofrad |wc -l`
+            fi
+        else
+            mo_rad[$n]=N
+        fi
+
+    # First guess does not exist, so fof files are missing, empty or corrupt
+    else
+        ma[$n]=N
+        mo_rad[$n]=N
+    fi
+done
+
+# hopefully we have "$lma" = "$lmo" -o -z "$lmo"
+echo "Ensemble member analyses:              ${ma[*]}"
+echo "Last available analysis:               $lma"
+echo "Ensemble member foffi radar:           ${mo_rad[*]}"
+echo "Ensemble member number of foffi radar: ${n_fofrad_ens[*]}"
+echo "Last available foffo radar:            $lmo_rad"
+echo ''
+
+
+# ---------------------------------------------------------------------------
+# replace analysis
+# ---------------------------------------------------------------------------
+# no analyses available at all, we are in canvas breeches (Bassini), abort
+if [ "$da" != Y -a -z "$lma" ]; then
+    exit 1
+fi
+
+# deterministic
+if [ "$da" = Y ]; then
+    ln -s $WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
+	$LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
+else
+    # Link for KENDA
+    ln -s $WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
+	$LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
+fi
+
+# ensemble members
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    n3=`printf "%%03d" $n`
+    if [ "${ma[$n]}" = Y ]; then
+	ln -s $WORKDIR/icon.$n/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
+	    $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+
+    elif [ -n "$lma" ]; then # use another member
+	ln -s $WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
+	    $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+
+    else # use det
+	ln -s $WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
+	    $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+    fi
+done
+
+
+# ---------------------------------------------------------------------------
+# replace foffi
+# ---------------------------------------------------------------------------
+# Are conventional observations available? If yes, link files
+conv_obs=N
+shopt -s nullglob
+for f in ${MEC_WORKDIR}/output/mof*`; do
+    conv_obs=Y
+    ln -fs $f ${LETKF_WORKDIR}/input
+done
+shopt -u nullglob
+echo "Assimilation of conventional observations: $conv_obs"
+
+# Are radar observations available?
+if ([[ "$do_rad" == Y ]] || [[ -n "$lmo_rad" ]]); then
+    rad_obs=Y
+else
+    rad_obs=N
+fi
+echo "Assimilation of radar observations:        $rad_obs"
+
+# no observations available at all, tell next job to skip letkf and
+# use det analysis, no foffi are linked, no namelist created
+if ([[ "$conv_obs" == N ]] && [[ "$rad_obs" == N ]]); then
+    touch $LETKF_WORKDIR/letkf_skip
+    exit 0
+fi
+
+# Define prefix for conventional observations to be added to namelist
+# variable "fof_prefix"
+export FOF_CONV=$(for fofc in ${MEC_WORKDIR}/output/mof*; do \
+                    if [ -f $fofc ]; then \
+                    dumf=$(basename $fofc);
+                    echo -n \'${dumf:0:-3}\'\ ; fi; done)
+
+# If there are fof of radar observations, save their prefix to be added to 
+# namelist variable "fof_prefix"
+if [[ "$do_rad" == Y ]]; then 
+    FOF_RAD=$(for fofr in ${WORKDIR}/cosmo/data/fof_radar_id*; \
+                    do if [ -f $fofr ]; then \
+                        dumf=$(basename $fofr)
+                        echo -n \'${dumf:0:19}\' \ ; fi; done)
+elif ([[ "$do_rad" == N ]] && [[ -n "$lmo_rad" ]]); then
+    FOF_RAD=$(for fofr in ${WORKDIR}/cosmo.$lmo_rad/data/fof_radar_id*; \
+                    do if [ -f $fofr ]; then \
+                        dumf=$(basename $fofr)
+                        echo -n \'${dumf:0:19}\' \ ; fi; done)
+fi
+
+# Define namelist variable "fof_prefix"
+if ([[ "$conv_obs" == Y ]] && [[ "$rad_obs" == Y ]]); then
+    export FOF_PRE="$FOF_CONV $FOF_RAD"
+elif ([[ "$conv_obs" == Y ]] && [[ "$rad_obs" == N ]]); then
+    export FOF_PRE=$FOF_CONV
+elif ([[ "$conv_obs" == N ]] && [[ "$rad_obs" == Y ]]); then
+    export FOF_PRE=$FOF_RAD
+fi
+
+# deterministic: radar observations
+if [ "$do_rad" = Y ]; then
+    for fofr in $WORKDIR/icon/data/fof_radar_id*; do
+        ID=${fofr##*/}
+        ln -fs ${WORKDIR}/icon/data/${ID} \
+            ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000.nc
+    done
+elif ([[ "$do_rad" == N ]] && [[ -n "$lmo_rad" ]]); then
+    for fofr in $WORKDIR/icon.$lmo_rad/data/fof_radar_id*; do
+        ID=${fofr##*/}
+        ln -fs ${WORKDIR}/icon.$lmo_rad/data/${ID} \
+            ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000.nc
+    done
+fi
+
+# ensemble members
+for n in `seq 1 $ENS_TOTAL_MEMB`; do
+    n3=`printf "%%03d" $n`
+
+    # radar observations
+    if [ "$rad_obs" = Y ]; then
+        if [ "${mo_rad[$n]}" = Y ]; then
+            for fofr in $WORKDIR/icon.$n/data/fof_radar_id*; do
+                ID=${fofr##*/}
+                ln -fs ${WORKDIR}/icon.$n/data/${ID} \
+                    ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
+            done
+        elif [ -n "$lmo_rad" ]; then # use another member
+            for fofr in $WORKDIR/icon.$lmo_rad/data/fof_radar_id*; do
+                ID=${fofr##*/}
+                ln -fs ${WORKDIR}/icon.$lmo_rad/data/${ID} \
+                    ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
+            done
+        else
+            for fofr in $WORKDIR/icon/data/fof_radar_id*; do
+                ID=${fofr##*/}
+                ln -fs ${WORKDIR}/icon/data/${ID} \
+                    ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
+            done
+        fi
+    fi
+done
+
+# prepare kenda namelist and remove old files
+conf_template namelist
+rm ekf* || true

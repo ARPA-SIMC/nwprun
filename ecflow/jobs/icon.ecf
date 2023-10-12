@@ -23,7 +23,7 @@ parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN
 # Save LHN diagnostics for deterministic member of KENDA
 n3=`printf "%%03d" $ENS_MEMB`
 if [ "%SUITE%" == "icon_2I_enda"* -a "$n3" -eq "000" ]; then
-    FS_DATE=$WORKDIR/archive/${DATE}${TIME}
+    FS_DATE=$WORKDIR/archive/${DATE}${TIME}00
     mkdir -p $FS_DATE
     rsync -pt $MODEL_WORKDIR/lhn.log      $FS_DATE  || true
 fi
@@ -38,12 +38,12 @@ if [[ "%SUITE%" == "icon_2I_enda"* ]]; then
     lt_mm=$((lead_time_min %% 60 ))
 
     # Create archive folder
-    FG_FOLD=$WORKDIR/first_guess/${DATES}${TIMES}
+    FG_FOLD=$WORKDIR/first_guess/${DATES}${TIMES}00
     mkdir -p $FG_FOLD
 
     # Archive
-    fgfile=$MODEL_DATADIR/icon_${DATES}${TIMES}_+000${lt_hh}${lt_mm}00.grb
-    rsync -pt $fgfile $FG_FOLD/icon_${DATES}${TIMES}_+000${lt_hh}${lt_mm}00_${n3}.grb
+    fgfile=$MODEL_DATADIR/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb
+    rsync -pt $fgfile $FG_FOLD/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_${n3}.grb
 
     # Clean-up (to be improved)
     delete_date=`date_sub $DATES $TIMES 48`

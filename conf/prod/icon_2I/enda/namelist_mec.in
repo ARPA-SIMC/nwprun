@@ -18,7 +18,7 @@
    read_fields    = 'ps t u v pf q qcl qci qr qs qg t2m td2m clct clcl clcm clch h_snow'
    opt_fields     = 'ps h_snow clct clcl clcm clch'
    grib_library   = 2                        ! GRIB-API used: 1=GRIBEX  2=GRIB2-API
-   invar_det      = '@MEC_WORKDIR@/const/icon_@DATES@@TIMES@_const.grb' ! optional: file with invariant fields
+   invar_det      = '@MEC_WORKDIR@/const/icon_@DATES@@TIMES@00_const.grb' ! optional: file with invariant fields
 !   cosmo_refatm   = 2                       ! reference atmosphere to be used for COSMO:1or2
 !   cosmo_ivctype  = 2                       ! vertical coordinate type to be used for COSMO:1to4 
    grid_file      = '@MEC_WORKDIR@/const/@DOMAIN@.nc'
@@ -41,7 +41,7 @@
   k_enkf    = @ENS_TOTAL_MEMB@                 ! ensemble size
   det_run   = 1                                ! process deterministic run
   grid_file = '@MEC_WORKDIR@/const/@DOMAIN@.nc'  
-  invar_ens = '@MEC_WORKDIR@/const/icon_@DATES@@TIMES@_const.grb' 
+  invar_ens = '@MEC_WORKDIR@/const/icon_@DATES@@TIMES@00_const.grb' 
  /
 
  !================================
@@ -53,7 +53,7 @@
                                              ! and tinc=100 it takes grib every hour (lff300, lff200, 
                                              ! 100, 000) so in fc_file i have to put lfffddvvmmss  
   rm_old        = 2                          ! overwrite entries in verification file ?
-  fc_file       = 'icon_@DATES@@TIMES@_+DDVVMMSS.grb'   ! template for forecast file name
+  fc_file       = 'icon_@DATES@@TIMES@00_+DDVVMMSS.grb'   ! template for forecast file name
   prefix_out    = 'mof'
   ens_suffix    ='._ENS_'                    ! suffix for ensemble file name
   det_suffix    = ''                         ! suffix for determ. file name

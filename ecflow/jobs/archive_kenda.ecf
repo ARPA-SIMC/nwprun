@@ -5,7 +5,11 @@
 # module load singularity || true
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
-. $NWPCONFBINDIR/cosmo_model.sh
+if [[ "%SUITE%" == "icon"* ]]; then
+    . $NWPCONFBINDIR/icon_model.sh
+else    
+    . $NWPCONFBINDIR/cosmo_model.sh
+fi
 . $NWPCONFBINDIR/putarki.sh
 . $NWPCONFBINDIR/arkilocal.sh
 . $NWPCONFBINDIR/arki_tools.sh

@@ -75,13 +75,13 @@ lt_mm=$((lead_time_min %% 60 ))
 n3=`printf "%%03d" $ENS_MEMB`
 
 # Define first guess directory and file names
-fg_dir=$WORKDIR/first_guess/${fg_date}${fg_time}
-fg_file_in=icon_${fg_date}${fg_time}_+000${lt_hh}${lt_mm}00_${n3}.grb
+fg_dir=$WORKDIR/first_guess/${fg_date}${fg_time}00
+fg_file_in=icon_${fg_date}${fg_time}00_+000${lt_hh}${lt_mm}00_${n3}.grb
 
 # If first guess is provided externally, define differently "fg_dir" and "fg_file_in"
 if [ -n "$MODEL_ARCHIVE_ANA" ]; then
     fg_dir=$MODEL_ARCHIVE_ANA/$DATES$TIMES 
-    fg_file_in=icon_${fg_date}${fg_time}_+000${lt_hh}${lt_mm}00.grb
+    fg_file_in=icon_${fg_date}${fg_time}00_+000${lt_hh}${lt_mm}00.grb
 fi
 
 
@@ -117,7 +117,7 @@ if [[ -s $fg_dir/$fg_file_in && $ngrib_inc -gt 0 ]]; then
     MODEL_SLOW_ASSIM=Y
 
     # Copy first guess
-    fg_file_out=icon_${fg_date}${fg_time}_+000${lt_hh}${lt_mm}00.gr1b
+    fg_file_out=icon_${fg_date}${fg_time}00_+000${lt_hh}${lt_mm}00.gr1b
     rsync -p $fg_dir/$fg_file_in $fg_file_out 
 
     # Get analysis increments
