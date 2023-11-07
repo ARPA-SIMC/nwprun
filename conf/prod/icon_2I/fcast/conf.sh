@@ -7,7 +7,7 @@ PARENTMODEL_FREQFC=1
 MODEL_LHN=.FALSE.
 MODEL_NH_LHN=24
 MODEL_BACK=0
-MODEL_STOP=21
+MODEL_STOP=6
 MODEL_BCANA=N
 #MODEL_SOIL_PARENT=Y
 #MODEL_SNOW_PARENT=Y
@@ -48,11 +48,12 @@ LETKF_CONST=$DACE_BASE/data
 # Time difference between model and parent reftime 
 case $TIME in
     03 | 09 | 15 | 21)
-        MODEL_DELTABD=3
+        MODEL_DELTABD=9
         ;;
     00 | 06 | 12 | 18)
-        MODEL_DELTABD=0
+        MODEL_DELTABD=6
 esac
 
 # Initialize forecast using IAU and KENDA increments
 MODEL_ARCHIVE_ANA=$WORKDIR/../enda/archive
+MODEL_ARCHIVE_FG=$WORKDIR/../enda/first_guess

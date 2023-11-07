@@ -151,7 +151,7 @@
    ! settings for ICON LETKF
    ! -------------------------------------------------------------------------------
    grid_file      = "@LOCALGRID@"
-   invar_det      = "@MODEL_DATADIR@/icon_@DATES@@TIMES@_const.grb" 
+   invar_det      = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_const.grb" 
    fg_file        = '@LETKF_WORKDIR@/input/lfff@DATE@@TIME@0000' ! det. analysis (det_run=0|1)
    !!!!!!!!!!!!!!!!!!
    ! NOTA IMPORTANTE: read_fields and pass_fields soley relevant for EnVar, NOT LETKF
@@ -189,7 +189,7 @@
    ana_file   = 'laf@DATE@@TIME@0000'   ! basename deterministic analysis
    fce_fname  = '@LETKF_WORKDIR@/input/lfff@DATE@@TIME@0000'     ! xxx.001 - generic
    grid_file  = "@LOCALGRID@"
-   invar_ens  = "@MODEL_DATADIR@/icon_@DATES@@TIMES@_const.grb"
+   invar_ens  = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_const.grb"
    fof_prefix = @FOF_PRE@               ! prefix of feedback files
    ana_read   = 'analysis_op'   ! oper. analysis (compute statistics) - rms_diag=0|1
    no_ps_inc  = .true.   ! no surface pressure    increment

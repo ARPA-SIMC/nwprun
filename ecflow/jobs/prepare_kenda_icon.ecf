@@ -16,6 +16,7 @@ mkdir -p $LETKF_WORKDIR/input
 cd $LETKF_WORKDIR
 rm -f $LETKF_WORKDIR/letkf_skip
 
+set -x
 
 # ---------------------------------------------------------------------------
 # evaluate availability: deterministic
@@ -152,7 +153,7 @@ done
 # Are conventional observations available? If yes, link files
 conv_obs=N
 shopt -s nullglob
-for f in ${MEC_WORKDIR}/output/mof*`; do
+for f in ${MEC_WORKDIR}/output/mof*; do
     conv_obs=Y
     ln -fs $f ${LETKF_WORKDIR}/input
 done
@@ -220,11 +221,11 @@ elif ([[ "$do_rad" == N ]] && [[ -n "$lmo_rad" ]]); then
 fi
 
 # ensemble members
-for n in `seq 1 $ENS_TOTAL_MEMB`; do
-    n3=`printf "%%03d" $n`
-
-    # radar observations
-    if [ "$rad_obs" = Y ]; then
+if [ "$rad_obs" = Y ]; then
+    for n in `seq 1 $ENS_TOTAL_MEMB`; do
+        n3=`printf "%%03d" $n`
+    
+        # radar observations
         if [ "${mo_rad[$n]}" = Y ]; then
             for fofr in $WORKDIR/icon.$n/data/fof_radar_id*; do
                 ID=${fofr##*/}
@@ -244,9 +245,10 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
                     ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
             done
         fi
-    fi
-done
+    done
+fi
 
 # prepare kenda namelist and remove old files
-conf_template namelist
+conf_template namelist_kenda
+mv namelist_kenda namelist
 rm ekf* || true

@@ -78,10 +78,9 @@ n3=`printf "%%03d" $ENS_MEMB`
 fg_dir=$WORKDIR/first_guess/${fg_date}${fg_time}00
 fg_file_in=icon_${fg_date}${fg_time}00_+000${lt_hh}${lt_mm}00_${n3}.grb
 
-# If first guess is provided externally, define differently "fg_dir" and "fg_file_in"
-if [ -n "$MODEL_ARCHIVE_ANA" ]; then
-    fg_dir=$MODEL_ARCHIVE_ANA/$DATES$TIMES 
-    fg_file_in=icon_${fg_date}${fg_time}00_+000${lt_hh}${lt_mm}00.grb
+# If first guess is provided externally, define differently "fg_dir"
+if [ -n "$MODEL_ARCHIVE_FG" ]; then
+    fg_dir=$MODEL_ARCHIVE_FG/${fg_date}${fg_time}00
 fi
 
 
@@ -98,17 +97,14 @@ ngrib_inc=`$SIMC_TOOLS arki-query --summary-short \
 
 
 # ----------------------------------------------------------------------------------
-# If first guess and analysis increments exist, they are retrieved. Then, if a file
-# containing SST exists, i.e. a "correct" SST exists, it is added to analysis 
-# increments, otherwise T_SO is retrieved and added to analysis increments.
-# The former approach applies to:
-#   - deterministic run
-#   - ensemble mebers from 02/03/2023 at 00 UTC
-#   - ensemble mebers at 00 UTC, i.e. TIMES=00, before 02/03/2023 at 00 UTC. This is
-#     a "fake" SST since it is taken by "get_paent_icon.ecf" from IFS-HRES instead of
-#     IFS-ENS.
-# The latter approach applies to:
-#   - ensemble mebers at every hour except 00 UTC before 02/03/2023 at 00 UTC.
+# Define model start, based on availability of first guess and analysis increments:
+# - If both exist, they are retrieved and SST is added to analysis increments file. 
+#   Model will be initialized with IAU.
+# - If at least one of them does not exist but "slow variables" (soil...) for one of
+#   the previous day is available, "slow variables" are retrieved and model will be
+#   initialized with ICON-2I soil and IFS atmosphere
+# - If at least one of them does not exist and "slow variables" ca not be retrieved, 
+#   the model will be initialized with IFS soil and atmosphere.
 # ----------------------------------------------------------------------------------
 if [[ -s $fg_dir/$fg_file_in && $ngrib_inc -gt 0 ]]; then 
     # This is a warm start
@@ -125,21 +121,20 @@ if [[ -s $fg_dir/$fg_file_in && $ngrib_inc -gt 0 ]]; then
     arki-query --data -o $anainc_file "reftime:=$reftime;$MODEL_ARKI_TIMERANGE_ASSIM_INC" \
         $ARKI_DIR/ASSIM_INC
 
-    # Add SST from IFS to the file containing analysis increments
+    # Set SST as analysis
     centre="centre=80,subCentre=255"
     time="dataDate=$DATES,dataTime=${TIMES}00,significanceOfReferenceTime=0"
     process_1="typeOfProcessedData=0,typeOfGeneratingProcess=0"
     process_2="generatingProcessIdentifier=$MODEL_ASSIM_GP,backgroundProcess=2"
     other="stepRange=0,shapeOfTheEarth=6"
-
-    # Set as analysis
     $SIMC_TOOLS grib_set -s ${centre},${time},${process_1},${process_2},${other} \
         ic_${DATES}${TIMES}_sst.grib ic_${DATES}${TIMES}_sst_ana.grib
 
-    # Add to analysis file
+    # Add to analysis increments file
     cat $anainc_file ic_${DATES}${TIMES}_sst_ana.grib > ana_with_sst.grib
     cp ana_with_sst.grib $anainc_file
 
+# First guess and/or analysis increments not available
 else
     echo "Cold start"
     MODEL_FAST_ASSIM=N
@@ -211,6 +206,8 @@ if [ $MODEL_FAST_ASSIM == "Y" ]; then
 # Cold start
 else
     if [ $MODEL_SLOW_ASSIM == "Y" ]; then
+	# Define namelist variables for model initialization from ICON-2I soil and
+	# IFS atmosphere
         INIT_MODE=3
         FILEFG=$parentslow
         FILEAN=""

@@ -4,7 +4,7 @@ MODEL_STOP=1
 MODEL_BCANA=N
 
 # Number of ensemble members
-ENS_TOTAL_MEMB=29
+ENS_TOTAL_MEMB=2
 
 # Radar assimilation
 ACT_EMVORADO=.FALSE.
@@ -41,7 +41,6 @@ if [ -n "$ENS_MEMB" ]; then
     PARENTMODEL_ARKI_DS=$ARKI_DIR/ifsens_am_foricon
     PARENTMODEL_ARKI_DS_SST=$ARKI_DIR/hres_am_foricon
     PARENTMODEL_SIGNAL=ifsens_am_enda
-    PARENTMODEL_SIGNAL_SST=hres_am_foricon
     PARENTMODEL_FREQINI=6
     PARENTMODEL_FREQANA=6
     PARENTMODEL_FREQFC=1
