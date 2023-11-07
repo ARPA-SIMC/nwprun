@@ -9,12 +9,15 @@ get_init() {
 }
 
 get_setup() {
-    TEMPLATE=`conf_getfile $TEMPLATE_NAME`
-    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=${TEMPLATE_NAME%.grib}"
+    for tmpl in ${TEMPLATE_LIST[*]}; do
+	putarki_configured_setup ${tmpl%.grib} "reftime=$DATE$TIME" "format=grib" "signal=${tmpl%.grib}"
+    done
 }
 
 get_cleanup() {
-        putarki_configured_end $PROCNAME
+    for tmpl in ${TEMPLATE_LIST[*]}; do
+        putarki_configured_end ${tmpl%.grib}
+    done
 }
 
 get_one() {
@@ -33,16 +36,20 @@ get_one() {
     if [ -f "$fname" ]; then
 	log "SRI data for $DATE$TIME successfully downloaded"
 
-        rm -f $lfname
-        $SIMC_TOOLS $NWPCONFBINDIR/sridpc_hdf52grib2.py --lhn_grid=cosmo \
-		    --grib_template=$TEMPLATE \
-		    --input_file=$fname \
-		    --output_file=$lfname >/dev/null
+	for tmpl in ${TEMPLATE_LIST[*]}; do
+	    tmplfile=`conf_getfile $tmpl`
+	    modelname=${tmpl%%_*}
+            rm -f $lfname
+            $SIMC_TOOLS $NWPCONFBINDIR/sridpc_hdf52grib2.py --lhn_grid=$modelname \
+			--grib_template=$tmplfile \
+			--input_file=$fname \
+			--output_file=$lfname >/dev/null
 
 
-	putarki_configured_archive $PROCNAME $lfname
+	    putarki_configured_archive ${tmpl%.grib} $lfname
+	    rm -f $lfname
+	done
 	log "SRI data for $DATE$TIME successfully processed and sent to archive"
-	rm -f $lfname
 	return 0
     fi
     return 1
