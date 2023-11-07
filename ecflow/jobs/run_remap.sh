@@ -56,7 +56,7 @@ if [ $SLURM_PROCID -eq 0 ] ; then
     # Extract and save, in separate files, soil water content (GRIB 1, parameters
     # 39-42), other surface fields (other GRIB 1 data) and atmospheric fields 
     # (other GRIB 2 data).
-        cat << EOF > swv.filt
+    cat << EOF > swv.filt
     if (editionNumber == 1) {
       if (indicatorOfParameter == 39 || indicatorOfParameter == 40 || indicatorOfParameter == 41 || indicatorOfParameter == 42) {
         write "soil.[indicatorOfParameter:i].grb";
@@ -75,32 +75,31 @@ if [ $SLURM_PROCID -eq 0 ] ; then
       }
     }
 EOF
-        grib_filter swv.filt $PARENTMODEL_DATADIR/$(inputmodel_name a)
+    grib_filter swv.filt $PARENTMODEL_DATADIR/$(inputmodel_name a)
 
-        # Convert swv -> smi (soil moisture index)  
-        cdo sub $flc_file $wlt_file den.grb # denominator
-        for lev in 39 40 41 42; do
-          echo "smi: process lev "$lev
-          rm -f num.grb tmp.grb
-          cdo sub soil.${lev}.grb $wlt_file num.grb # numerator
-          cdo div num.grb den.grb tmp.grb # num/den
-          cat tmp.grb >> smi_geo.grb
-        done
+    # Convert swv -> smi (soil moisture index)  
+    cdo sub $flc_file $wlt_file den.grb # denominator
+    for lev in 39 40 41 42; do
+      echo "smi: process lev "$lev
+      rm -f num.grb tmp.grb
+      cdo sub soil.${lev}.grb $wlt_file num.grb # numerator
+      cdo div num.grb den.grb tmp.grb # num/den
+      cat tmp.grb >> smi_geo.grb
+    done
 
     # Convert all the GRIB1 messages (saved surface fields and SMI) to GRIB2 and 
     # append to the same file "surf.g2". Append also constant data (topography,
     # (topography, land sea mask, soil type, surface roughness length) taken
     # from MODEL_STATIC.
-        grib_set -s editionNumber=2,scanningMode=0 surface.grb smi_geo.grb  \
-             ${MODEL_STATIC}/${IFS_ds}/z_surface_${IFS_ds}.grb              \
-             ${MODEL_STATIC}/${IFS_ds}/sr_surface_${IFS_ds}.grb             \
-             ${MODEL_STATIC}/${IFS_ds}/lsm_surface_${IFS_ds}.grb            \
-             ${MODEL_STATIC}/${IFS_ds}/slt_${IFS_ds}.grb                    \
-        	 surf.g2
+    grib_set -s editionNumber=2,scanningMode=0 surface.grb smi_geo.grb  \
+         ${MODEL_STATIC}/${IFS_ds}/z_surface_${IFS_ds}.grb              \
+         ${MODEL_STATIC}/${IFS_ds}/sr_surface_${IFS_ds}.grb             \
+         ${MODEL_STATIC}/${IFS_ds}/lsm_surface_${IFS_ds}.grb            \
+         ${MODEL_STATIC}/${IFS_ds}/slt_${IFS_ds}.grb                    \
+    	 surf.g2
 
-    # If SST on land is 0°C (instead of "missing"), set to missing values on
-    # (partly) land cells. Adapted from Enrico's patch. Necessary for 
-    # experiments with non-corrected SST, may be removed later
+    # If SST on land is 0°C (instead of "missing"), set the SST over all land and 
+    # partly land points as the SST of the closest sea point
     miss_sst=$(grib_get -w shortName=sst -P numberOfMissing surf.g2)
     if [ $miss_sst -eq 0 ] ; then
         # Apply filter to GRIB file
@@ -116,11 +115,27 @@ EOF
         }
 EOF
         grib_filter sst.filt surf.g2
-        
-        # Apply mask
-        $SIMC_TOOLS vg6d_transform --trans-type=metamorphosis                 \
-            --sub-type=maskvalid --coord-format=grib_api  --coord-file=lsm.g2 \
-            --maskbounds=-1.,0. sst_org.g2 sst_msk.g2
+
+        # Convert lsm to NetCDF and mask values greater than 0
+        cdo -f nc copy lsm.g2 lsm.nc
+        cdo -expr,'mask=lsm; mask=(mask>0.0)?1000:mask; lsm' lsm.nc lsm4sst.nc
+
+	# Convert SST to NetCDF and merge with lsm
+        cdo -f nc copy sst_org.g2 sst_org.nc
+        cdo merge sst_org.nc lsm4sst.nc lsm_and_sst.nc
+
+	# Apply mask to SST and set masked values to missing
+        cdo -expr,'sst=(mask==1000)?1000:sst' lsm_and_sst.nc lsm_and_sst_msk.nc
+        cdo -setctomiss,1000 lsm_and_sst_msk.nc lsm_and_sst_miss.nc
+
+	# Set SST values over land points
+        cdo setmisstonn lsm_and_sst_miss.nc sst_an.nc
+
+        # Convert to GRIB and correct metadata
+        cdo -f grb copy sst_an.nc sst_an.grb
+        grib_set -s table2Version=128,centre=98,generatingProcessIdentifier=152,indicatorOfParameter=34,indicatorOfTypeOfLevel=1,level=0,timeRangeIndicator=1,subCentre=0,paramId=34 sst_an.grb tmp_a1.grb
+        grib_set -s generatingProcessIdentifier=153,timeRangeIndicator=0 tmp_a1.grb sst_msk.grib1
+        grib_set -s editionNumber=2,scanningMode=0 sst_msk.grib1 sst_msk.g2
 
         # Append masked SST to other surface fields
         cat lsm.g2 sst_msk.g2 surf_others.g2 > surf_new.g2
@@ -155,32 +170,22 @@ EOF
     echo "Do not process IC, except for SST"
     export out_file_sst=$MODEL_PRE_DATADIR/ic_${DATES}${TIMES}_sst.grib
 
-    # Extract SST e lsm
+    # Extract SST
     grib_copy -w shortName='sst' $PARENTMODEL_DATADIR/$(inputmodel_name a) sst.grib1
 
-    # If SST has no missing values, check if file "sst_ifs_hres.grib" exists 
-    # (this is SST from IFS-HRES for ensemble members to be employed at 00 UTC
-    # for experiments). TO BE REOVED FOR OPERATIONAL IMPLEMENTATION.
-    # In any case, convert to GRIB2.
+    # If SST on land is 0°C (instead of "missing"), set the SST over all land and 
+    # partly land points as the SST of the closest sea point (take "sst_msk.g2"
+    # created before. Otherwise, convert to GRIB2
     miss_sst=$(grib_get -P numberOfMissing sst.grib1)
     if [ $miss_sst -eq 0 ] ; then
-        # Apply mask
-        $SIMC_TOOLS vg6d_transform --trans-type=metamorphosis                   \
-            --sub-type=maskvalid --coord-format=grib_api  			\
-	    --coord-file=${MODEL_STATIC}/${IFS_ds}/lsm_surface_${IFS_ds}.grb	\
-            --maskbounds=-1.,0. sst.grib1 sst_msk.grib1
-
-	# Convert SST to grib2
-	grib_set -s editionNumber=2,scanningMode=0 sst_msk.grib1 sst.grib
+	mv sst_msk.g2 sst.grib
+    else
+        grib_set -s editionNumber=2,scanningMode=0 sst.grib1 sst.grib
     fi
 
-    # Interpolate on ICON grid. This is done only if missing values are present
-    # (this check can be REMOVED for operational implementation)
-    miss_sst_new=$(grib_get -P numberOfMissing sst.grib)
-    if [ $miss_sst_new -gt 0 ]; then
-        conf_template iconremap_SST.nml
-        $MODEL_PRE_BINDIR/iconremap -vvv --remap_nml iconremap_SST.nml
-    fi
+    # Interpolate on ICON grid 
+    conf_template iconremap_SST.nml
+    $MODEL_PRE_BINDIR/iconremap -vvv --remap_nml iconremap_SST.nml
 
 
 # ----------------------------------------------------------------------------------
@@ -206,7 +211,7 @@ else
     # Loop on hours to be processed
     for tt in $(seq $h1 $PARENTMODEL_FREQFC $h2) ; do
         # Copy input removing topographies and converting all to GRIB2
-	    cat << EOF > topo_g2.filt
+	cat << EOF > topo_g2.filt
         if (editionNumber == 1) {
           if (indicatorOfParameter == 129 || indicatorOfParameter == 173) {
             write "surface_dummy.grb";
@@ -222,14 +227,14 @@ else
           }
         }
 EOF
-  	    grib_filter topo_g2.filt $PARENTMODEL_DATADIR/$(inputmodel_name $tt)
+  	grib_filter topo_g2.filt $PARENTMODEL_DATADIR/$(inputmodel_name $tt)
 
-	    # Append topographies to boundary data converting to grib2
-	    grib_set -s editionNumber=2 \
-	    	 ${MODEL_STATIC}/${IFS_ds}/z_hybrid_${IFS_ds}.grb \
-	    	 ${MODEL_STATIC}/${IFS_ds}/z_surface_${IFS_ds}.grb topo.grib
-	    cat topo.grib >> $datafile
-	    rm -f topo.grib
+	# Append topographies to boundary data converting to grib2
+	grib_set -s editionNumber=2 \
+		 ${MODEL_STATIC}/${IFS_ds}/z_hybrid_${IFS_ds}.grb \
+		 ${MODEL_STATIC}/${IFS_ds}/z_surface_${IFS_ds}.grb topo.grib
+	cat topo.grib >> $datafile
+	rm -f topo.grib
       
         # Check if vertical velocity is present. If not, append an empty field
         grib_copy -w parameterCategory=2,parameterNumber=8 $datafile w.grib
