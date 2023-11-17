@@ -39,7 +39,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": True, "lhn": True, "radarvol": False, "membrange": "0-2",
+conf = ModelConfig({"gts": True, "lhn": True, "radarvol": False, "membrange": "0-24",
                     "postprocrange": "-1",
                     "modelname": "icon",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis],
@@ -79,10 +79,10 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": True, "lhn": False, "membrange": "0",
-                    "postprocrange": "-1",
+conf = ModelConfig({"gts": False, "lhn": True, "membrange": "0",
+                    "postprocrange": "0",
                     "modelname": "icon", 
-                    "runlist": [GetObs, EpsMembers, Verification],
+                    "runlist": [GetObs, EpsMembers],
                     "preproc_wt":"00:20:00", "model_wt": "02:00:00"}).getconf()
 icon = ModelSuite("icon_2I_fcast")
 basicenv.add_to(icon.suite)
@@ -102,4 +102,26 @@ for h in range(0, 24, 3):
 icon.check()
 icon.write(interactive=interactive)
 icon.replace(interactive=interactive)
+
+# Suite enda_dia
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/icon_2I/enda_dia",
+})
+basicenv = BasicEnv(srctree=os.environ["OPE"],
+                    worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
+                    sched="slurm",
+                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    ntries=2,
+                    extra_env=extra_env)
+
+conf = ModelConfig({"runlist": [EndaDiagnostics], "startmethod": "starttime_cron",
+                    "starttime": "06:30"}).getconf()
+enda_dia = ModelSuite("icon_2I_enda_dia")
+basicenv.add_to(enda_dia.suite)
+WaitAndRun(dep=None, conf=conf).add_to(enda_dia.suite)
+
+enda_dia.check()
+enda_dia.write(interactive=interactive)
+enda_dia.replace(interactive=interactive)
 

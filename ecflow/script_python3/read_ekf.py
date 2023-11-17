@@ -332,6 +332,7 @@ for rep in report:
         print("- Passive:  %s | %s" %("{:>20}".format(pas),    "{:>7}".format(pas_rel)))
         print("- Rejected: %s | %s" %("{:>20}".format(rej),    "{:>7}".format(rej_rel)))
         if excl_var != []:
+            print(excl_var)
             print("- Excluded observaions: ", [var_dict[ev] for ev in excl_var])
         list_save = [ana_date, ana_time, tot_rel, act_rel, pas_rel, rej_rel]
         save_on_csv(fname_sum, head_sum, list_save)

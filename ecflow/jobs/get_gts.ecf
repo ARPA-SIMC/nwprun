@@ -4,7 +4,11 @@
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
-. $NWPCONFBINDIR/cosmo_model.sh
+if [[ "%SUITE%" == "icon"* ]]; then
+    . $NWPCONFBINDIR/icon_model.sh
+else
+    . $NWPCONFBINDIR/cosmo_model.sh
+fi
 . $NWPCONFBINDIR/nwpwait.sh
 . $NWPCONFBINDIR/getarki.sh
 . $NWPCONFBINDIR/arki_tools.sh
@@ -17,7 +21,11 @@ cd $BUFR_WORKDIR
 
 set_import_signal_method $BUFR_ARKI_DS_CONV
 if import_signal_wait gts_bufr $DATE$TIME "*"; then
-    cosmo_getarki_obsncdf
+    if [[ "%SUITE%" == "icon"* ]]; then
+        icon_getarki_obsncdf
+    else
+        cosmo_getarki_obsncdf
+    fi
 else
     touch noobs
     touch blklsttmp

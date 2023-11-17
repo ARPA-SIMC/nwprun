@@ -8,7 +8,7 @@ MODEL_BACK=1
 MODEL_STOP=1
 MODEL_BCANA=N
 MODEL_FREQINI=3
-ENS_TOTAL_MEMB=36
+ENS_TOTAL_MEMB=24
 ENS_DET_MEMB=Y
 
 # warning ARKI_DIR is redefined later for other purposes, find a better way!
