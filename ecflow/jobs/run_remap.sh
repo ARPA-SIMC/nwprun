@@ -96,7 +96,7 @@ EOF
          ${MODEL_STATIC}/${IFS_ds}/sr_surface_${IFS_ds}.grb             \
          ${MODEL_STATIC}/${IFS_ds}/lsm_surface_${IFS_ds}.grb            \
          ${MODEL_STATIC}/${IFS_ds}/slt_${IFS_ds}.grb                    \
-    	 surf.g2
+        	 surf.g2
 
     # If SST on land is 0°C (instead of "missing"), set the SST over all land and 
     # partly land points as the SST of the closest sea point
@@ -120,15 +120,15 @@ EOF
         cdo -f nc copy lsm.g2 lsm.nc
         cdo -expr,'mask=lsm; mask=(mask>0.0)?1000:mask; lsm' lsm.nc lsm4sst.nc
 
-	# Convert SST to NetCDF and merge with lsm
+	    # Convert SST to NetCDF and merge with lsm
         cdo -f nc copy sst_org.g2 sst_org.nc
         cdo merge sst_org.nc lsm4sst.nc lsm_and_sst.nc
 
-	# Apply mask to SST and set masked values to missing
+	    # Apply mask to SST and set masked values to missing
         cdo -expr,'sst=(mask==1000)?1000:sst' lsm_and_sst.nc lsm_and_sst_msk.nc
         cdo -setctomiss,1000 lsm_and_sst_msk.nc lsm_and_sst_miss.nc
 
-	# Set SST values over land points
+	    # Set SST values over land points
         cdo setmisstonn lsm_and_sst_miss.nc sst_an.nc
 
         # Convert to GRIB and correct metadata
