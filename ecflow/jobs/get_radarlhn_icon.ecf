@@ -1,0 +1,47 @@
+%include <sched_light.h>
+%include <%HPCENV%/smnd.h>
+%include <%HPCENV%/modules_preicon.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/icon_model.sh
+. $NWPCONFBINDIR/parcomp.sh
+. $NWPCONFBINDIR/getarki.sh
+# end of setup
+
+set -x
+safe_rm_rf $MODEL_LHN_WORKDIR
+mkdir -p $MODEL_LHN_WORKDIR
+cd $MODEL_LHN_WORKDIR
+
+icon_getarki_lhn
+
+# Remap data for ICON
+cd $MODEL_LHN_WORKDIR
+if ls *.grib 1> /dev/null 2>&1; then
+    # Remap only if files are present
+    cat *.grib > LHN.grib
+    export lhnfile=$MODEL_LHN_WORKDIR/LHN.grib
+    export out_file=$MODEL_LHN_WORKDIR/radardata_DOM1.nc
+    rm -f $out_file
+
+    # Change the center (temporary modification)
+    grib_set -s centre=78 LHN.grib LHN_new.grib
+    mv LHN_new.grib LHN.grib
+
+    # create iconremap main namelist
+    conf_template iconremap_LHN.nml
+
+    # run iconremap
+    parcomp_mpirun $EXTRA_MPIRUN $MODEL_PRE_BINDIR/iconremap -vvv --remap_nml iconremap_LHN.nml
+
+    # Check if LHN file is created 
+    if [ ! -s $out_file ] ; then
+        echo "Error after LHN files iconremap in run_remap.sh"
+        exit 10
+    fi
+else
+    echo "Files for LHN do not exist"
+fi
+
