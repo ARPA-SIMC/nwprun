@@ -20,16 +20,8 @@ cp $ECRAD_DATA/ECHAM6_CldOptProps.nc $MODEL_WORKDIR
 $ecflow_client --event=started # trigger start of postproc
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN
 
-# Save LHN diagnostics for deterministic member of KENDA
-n3=`printf "%%03d" $ENS_MEMB`
-if [ "%SUITE%" == "icon_2I_enda"* -a "$n3" -eq "000" ]; then
-    FS_DATE=$WORKDIR/archive/${DATE}${TIME}00
-    mkdir -p $FS_DATE
-    rsync -pt $MODEL_WORKDIR/lhn.log      $FS_DATE  || true
-fi
-
 # Archive first guess for next ICON assimilation cycle
-if [[ "%SUITE%" == "icon_2I_enda"* ]]; then
+if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
     # Retrieve first guess lead time
     model_stop_min=$((MODEL_STOP * 60))
     dt_shift_min=$((DT_IAU / 120))
@@ -38,17 +30,27 @@ if [[ "%SUITE%" == "icon_2I_enda"* ]]; then
     lt_mm=$((lead_time_min %% 60 ))
 
     # Create archive folder
-    FG_FOLD=$WORKDIR/first_guess/${DATES}${TIMES}00
-    mkdir -p $FG_FOLD
+    ARC_FOLD=$MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}
+    mkdir -p $ARC_FOLD
+
+    # Define file suffix
+    if [ -z "$ENS_MEMB" ]; then
+        n3=det
+    else  
+        n3=`printf "%%03d" $ENS_MEMB`
+    fi
 
     # Archive
     fgfile=$MODEL_DATADIR/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb
-    rsync -pt $fgfile $FG_FOLD/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_${n3}.grb
-
-    # Clean-up (to be improved)
-    delete_date=`date_sub $DATES $TIMES 48`
-    delete_time=`time_sub $DATES $TIMES 48`
-    safe_rm_rf $WORKDIR/first_guess/${delete_date}${delete_time}
+    rsync -pt $fgfile $ARC_FOLD/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_${n3}.grb
 fi
+
+# Save LHN diagnostics for deterministic member of KENDA
+if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]] && [[ -z "$ENS_MEMB" ]]); then
+    subdir=%SUITE%/$DATE$TIME
+    mkdir -p $CINECA_ARCHIVE_POST/$subdir
+    rsync -pt $MODEL_WORKDIR/lhn.log $CINECA_ARCHIVE_POST/$subdir  || true
+fi
+
 
 date

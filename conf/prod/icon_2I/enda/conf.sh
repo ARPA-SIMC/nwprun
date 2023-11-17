@@ -4,14 +4,13 @@ MODEL_STOP=1
 MODEL_BCANA=N
 
 # Number of ensemble members
-ENS_TOTAL_MEMB=2
+ENS_TOTAL_MEMB=24
 
 # Radar assimilation
 ACT_EMVORADO=.FALSE.
 RADLIST="16101 16102 16103 16105 16106 16107 16112 16144 16199 16998 16999"
 MODEL_LHN=.TRUE.
 MODEL_NH_LHN=3
-ARKI_LHN_DS=$ARKI_DIR/radar_sri
 
 # Time difference between model and parent reftime 
 case $TIME in
@@ -80,6 +79,9 @@ else # deterministic run or analysis
 fi
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive
 
+# Number of boundary conditions handled by each task
+NBC_PER_TASK=1
+
 # Environment variable definition for MEC and LETKF
 MEC_WORKDIR=$WORKDIR/mec
 LETKF_WORKDIR=$WORKDIR/letkf
@@ -92,14 +94,6 @@ MEC_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/mec
 LETKF_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/var3d
 LETKF_CONST=$DACE_BASE/data
 
-#MODEL_SOIL_PARENT=Y
-#MODEL_SNOW_PARENT=Y
-#MODEL_LAKE=Y
-# differenza tra reftime del modello e del padre
-MODEL_SLOW_PAST_H=144
-
-NBC_PER_TASK=1
-
 # suite timing
 NWPWAITELAPS=10800
 # differenza tra tempo nominale e tempo di attivazione della suite
@@ -107,3 +101,5 @@ NWPWAITSOLAR_RUN=1200
 # dopo quando tempo rinuncio a girare la suite e passare alla successiva
 NWPWAITSOLAR=43200
 NWPWAITWAIT=30
+# wait for analysis?
+WAIT_ANALYSIS=N

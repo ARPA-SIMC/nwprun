@@ -14,9 +14,9 @@ safe_rm_rf $LETKF_WORKDIR/input
 mkdir -p $LETKF_WORKDIR $LETKF_DATADIR
 mkdir -p $LETKF_WORKDIR/input
 cd $LETKF_WORKDIR
-rm -f $LETKF_WORKDIR/letkf_skip
-
 set -x
+rm -f $LETKF_WORKDIR/letkf_skip $LETKF_WORKDIR/ekf* $LETKF_WORKDIR/ana_inc_0.*
+
 
 # ---------------------------------------------------------------------------
 # evaluate availability: deterministic
@@ -116,33 +116,37 @@ echo ''
 # ---------------------------------------------------------------------------
 # no analyses available at all, we are in canvas breeches (Bassini), abort
 if [ "$da" != Y -a -z "$lma" ]; then
+    echo "No first guess available, abort"
     exit 1
 fi
 
-# deterministic
+# deterministic, including constant data
 if [ "$da" = Y ]; then
     ln -s $WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
-	$LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
+	      $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
+    ln -s $WORKDIR/icon/data/icon_${DATES}${TIMES}00_const.grb      \
+          $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000_const
 else
-    # Link for KENDA
     ln -s $WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
-	$LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
+	      $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
+    ln -s $WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_const.grb \
+          $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000_const
 fi
 
 # ensemble members
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
     n3=`printf "%%03d" $n`
     if [ "${ma[$n]}" = Y ]; then
-	ln -s $WORKDIR/icon.$n/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
-	    $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+	    ln -s $WORKDIR/icon.$n/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
+	        $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
 
     elif [ -n "$lma" ]; then # use another member
-	ln -s $WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
-	    $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+	    ln -s $WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
+	        $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
 
     else # use det
-	ln -s $WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
-	    $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+	    ln -s $WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
+	        $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
     fi
 done
 
@@ -251,4 +255,3 @@ fi
 # prepare kenda namelist and remove old files
 conf_template namelist_kenda
 mv namelist_kenda namelist
-rm ekf* || true

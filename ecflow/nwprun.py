@@ -122,7 +122,10 @@ class GetObs:
                 if self.conf['preprocname'] == 'int2lm' and self.conf['membrange'] == [0]:
                     fam.add_task("get_radarlhn").add_variable("NO_FAIL", "TRUE").add_trigger('../eps_members/deterministic/preproc/merge_analysis == complete')
                 else:
-                    fam.add_task("get_radarlhn").add_variable("NO_FAIL", "TRUE")
+                    if self.conf['modelname'] == "icon":
+                        fam.add_task("get_radarlhn_icon").add_variable("NO_FAIL", "TRUE")
+                    else:
+                        fam.add_task("get_radarlhn").add_variable("NO_FAIL", "TRUE")
             if self.conf['radarvol']: fam.add_task("get_radarvol")
 
 # Add a model preprocessing family to a node, to be called by EpsMembers.
@@ -155,7 +158,7 @@ class Model:
         trig = "./preproc == complete"
         if GetObs in self.conf['runlist']: 
             if self.conf['modelname'] == "icon":
-                if self.conf["lhn"]:      trig+= " && ../../get_obs/get_radarlhn == complete"
+                if self.conf["lhn"]:      trig+= " && ../../get_obs/get_radarlhn_icon == complete"
                 if self.conf["radarvol"]: trig+= " && ../../get_obs/get_radarvol == complete"
             else:
                 trig+= " && ../../get_obs == complete"
@@ -240,11 +243,13 @@ class EndaAnalysis:
             task_mec.add_variable("WALL_TIME", self.conf["mec_wt"])
             fam.add_task("prepare_kenda_icon").add_trigger("./mec == complete")
             task = fam.add_task("kenda").add_trigger("./prepare_kenda_icon == complete")
+            task.add_variable("WALL_TIME", self.conf["analysis_wt"])
+            fam.add_task("archive_kenda_icon").add_trigger("./kenda == complete")
         else:
             fam.add_task("prepare_kenda")
             task = fam.add_task("kenda").add_trigger("./prepare_kenda == complete")
-        task.add_variable("WALL_TIME", self.conf["analysis_wt"])
-        fam.add_task("archive_kenda").add_trigger("./kenda == complete")
+            task.add_variable("WALL_TIME", self.conf["analysis_wt"])
+            fam.add_task("archive_kenda").add_trigger("./kenda == complete")
 
 # Add a continuous analysis step to a suite, to be run after model
 # run, it has a simpler structure than enda family. To be called by

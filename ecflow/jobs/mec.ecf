@@ -58,33 +58,25 @@ for hh in `seq 0 1 $MODEL_STOP`; do
     filename=icon_${DATES}${TIMES}00_+${nodays}${nohours}0000.grb
     if [ "$da" = Y ]; then
       	ln -fs $WORKDIR/icon/data/$filename ${MEC_WORKDIR}/input
-#        ln -fs $$WORKDIR/icon/data/$filename $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
     else
 	ln -fs $WORKDIR/icon.$lma/data/$filename ${MEC_WORKDIR}/input
-#        ln -fs $WORKDIR/icon.$lma/data/$filename $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
     fi
 
     # Link ensemble members
     if [[ $ENS_TOTAL_MEMB -gt 0 ]]; then 
         for mem in `seq 1 $ENS_TOTAL_MEMB`; do
             mem3=`printf "%%03d" $mem`
-	    if [ "${ma[$n]}" = Y ]; then
-            	ln -fs $WORKDIR/icon.${mem}/data/$filename    \
+	        if [ "${ma[$mem]}" = Y ]; then
+                ln -fs $WORKDIR/icon.${mem}/data/$filename    \
                        ${MEC_WORKDIR}/input/${filename}.${mem3}
-#                ln -fs $WORKDIR/icon.${mem}/data/$filename    \
-#			$LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
-	    elif [ -n "$lma" ]; then # use another member
-		ln -fs $WORKDIR/icon.${lma}/data/$filename    \
+	        elif [ -n "$lma" ]; then # use another member
+		        ln -fs $WORKDIR/icon.${lma}/data/$filename    \
                        ${MEC_WORKDIR}/input/${filename}.${mem3}
-#                ln -fs $WORKDIR/icon.${lma}/data/$filename    \
-#                       $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
-	    else
-        	ln -fs $WORKDIR/icon/data/$filename   	      \
+	        else
+            	ln -fs $WORKDIR/icon/data/$filename   	      \
                        ${MEC_WORKDIR}/input/${filename}.${mem3}
-#                ln -fs $WORKDIR/icon/data/$filename           \
-#                       $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
-	    fi
-        done
+	        fi
+            done
     fi
 done
 

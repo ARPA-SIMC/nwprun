@@ -40,7 +40,7 @@
  zpbl2                       = 1000.
  lread_ana                   = @LREAD_ANA@      ! true if analysis increments are read
  ifs2icon_filename           = "@MODEL_PRE_DATADIR@/ic_@DATES@@TIMES@.nc"
- dwdfg_filename              = "/g100_work/smr_prod/casi_studio/ICON/ICON-EU/soil_for_initialization_completo/soil_ICON-EU_2023042900_remapped.nc"
+ dwdfg_filename              = "/g100_work/smr_prod/casi_studio/ICON/ICON-EU/soil_for_initialization_completo/soil_ICON-EU_2023111506_remapped.nc"
  dwdana_filename             = "@MODEL_PRE_DATADIR@/@FILEAN@"
  filetype                    = @FILETYPE@
  ana_varnames_map_file       = "map_file.ana"
@@ -86,9 +86,9 @@
  mode                        =  1               ! 1: forecast mode (relative t-axis), 
                                                 ! 2: climate mode (absolute t-axis)
  include_last                = .FALSE.
- output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@_const"
+ output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_const"
  filename_format             = '<output_filename>'                   ! file name base
- ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@_+<ddhhmmss>.rf'
+ ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                  = z_ifc, topography_c, fis, soiltyp, 
                                fr_land, fr_lake, depth_lk,
                                plcov, lai, rootdp, for_d, 
@@ -112,9 +112,9 @@
  mode                        =  1                    ! 1: forecast mode (relative t-axis),
                                                      ! 2: climate mode (absolute t-axis)
  include_last                = .FALSE.
- output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@"
+ output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00"
  filename_format             = '<output_filename>_+<ddhhmmss>'     ! file name base
- ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@_+<ddhhmmss>.rf'
+ ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                  = u, v, w, temp, pres,
                                qc, qg, qi, qr, qs, qv,
                                tke, gz0,
@@ -157,9 +157,9 @@
  mode                        =  1                    ! 1: forecast mode (relative t-axis),
                                                      ! 2: climate mode (absolute t-axis)
  include_last                = .FALSE.
- output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@"
+ output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00"
  filename_format             = '<output_filename>_+<ddhhmmss>_reg'      ! file name base
- ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@_+<ddhhmmss>_reg.rf'
+ ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>_reg.rf'
  ml_varlist                  = graupel_gsp, rain_gsp, snow_gsp, tot_prec,
                                pres_sfc, pres_msl,
                                u_10m, v_10m, gust10,
@@ -186,9 +186,9 @@
  mode                        =  1                    ! 1: forecast mode (relative t-axis),
                                                      ! 2: climate mode (absolute t-axis) 
  include_last                = .TRUE.                ! Default, ma settato a caso
- output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@"
+ output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00"
  filename_format             = '<output_filename>_+<ddhhmmss>'     ! file name base
- ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@_+<ddhhmmss>.rf'
+ ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                  = u, v, vn, w, temp, theta_v, pres, 
                                qc, qg, qi, qr, qs, qv,
                                tke, rho, gz0,

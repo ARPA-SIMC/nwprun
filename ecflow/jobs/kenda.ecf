@@ -11,6 +11,8 @@
 export GRIB_DEFINITION_PATH=$GRIB_API_EDZW/1.16.0/definitions.cnmc:$GRIB_API_EDZW/1.16.0/definitions
 export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.16.0/samples
 
+set -x
+
 cd $LETKF_WORKDIR
 KENDA_CRASH=N
 if [ ! -f "$LETKF_WORKDIR/letkf_skip" ]; then
@@ -20,15 +22,34 @@ if [ ! -f "$LETKF_WORKDIR/letkf_skip" ]; then
         parcomp_mpirun $EXTRA_MPIRUN_LETKF $LETKF_BIN || KENDA_CRASH=Y
     fi
 fi
-if [ -f "$LETKF_WORKDIR/letkf_skip" -o "$KENDA_CRASH" = "Y" ]; then
+
 # if there are no observations or the analysis crashed make a fake analysis
 # make a physical copy of the link targets to help the successive
 # archiving process
-    cp $LETKF_WORKDIR/input/laf${DATE}${TIME}0000 \
-        $LETKF_DATADIR/laf${DATE}${TIME}0000.det
-    for n in `seq 1 $ENS_TOTAL_MEMB`; do
-        n3=`printf "%%03d" $n`
-        cp $LETKF_WORKDIR/input/laf${DATE}${TIME}0000.$n3 \
-            $LETKF_DATADIR/laf${DATE}${TIME}0000.$n3
-    done
+if [ -f "$LETKF_WORKDIR/letkf_skip" -o "$KENDA_CRASH" = "Y" ]; then
+    # ICON model
+    if [[ "%SUITE%" == "icon"* ]]; then
+	    # Create file with zero analysis incrementes for determinitic
+        cp $(conf_getfile ana_inc_0.det) $LETKF_WORKDIR
+	    $SIMC_TOOLS grib_set -s dataDate=$DATE,dataTime=$TIME ana_inc_0.det \
+		        $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.det
+
+        # Create file with zero analysis incrementes for ensemble members
+        cp $(conf_getfile ana_inc_0.ens) $LETKF_WORKDIR
+        for n in `seq 1 $ENS_TOTAL_MEMB`; do
+            n3=`printf "%%03d" $n`
+            $SIMC_TOOLS grib_set -s dataDate=$DATE,dataTime=$TIME,perturbationNumber=$n \
+                 ana_inc_0.ens $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.$n3
+        done
+
+    # COSMO model
+    else
+        cp $LETKF_WORKDIR/input/laf${DATE}${TIME}0000 \
+            $LETKF_DATADIR/laf${DATE}${TIME}0000.det
+        for n in `seq 1 $ENS_TOTAL_MEMB`; do
+            n3=`printf "%%03d" $n`
+            cp $LETKF_WORKDIR/input/laf${DATE}${TIME}0000.$n3 \
+                $LETKF_DATADIR/laf${DATE}${TIME}0000.$n3
+        done
+    fi
 fi

@@ -1,0 +1,87 @@
+%include <sched_wait.h>
+%include <%HPCENV%/smnd.h>
+%include <head.h>
+
+# module load singularity || true
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+. $NWPCONFBINDIR/icon_model.sh
+. $NWPCONFBINDIR/putarki.sh
+. $NWPCONFBINDIR/arkilocal.sh
+. $NWPCONFBINDIR/arki_tools.sh
+. $NWPCONFBINDIR/lami_postproc.sh
+# end of setup
+
+
+archive_suite() {
+    if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
+        # Save all ensemble members and determnistic
+        mkdir -p  $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}
+        rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.??? \
+		          $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}
+        if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
+            rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.??? 	
+		              $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
+        fi
+
+        # Clean data at least 5 days old
+        if [ "$TIME" = "00" ]; then
+            for mm in 6 7 8; do
+                MM=`date --date="${DATE} $mm day ago" +%%Y%%m%%d`
+                safe_rm_rf $MODEL_ARCHIVE_OUTPUT_ANA/${MM}??
+            done
+        fi
+    fi
+}
+
+
+archive_perm() {
+    if [ -n "$CINECA_ARCHIVE_POST" ]; then
+	    # Create archive folder and save deterministic analysis increments
+        subdir=%SUITE%/$DATE$TIME
+	    mkdir -p $CINECA_ARCHIVE_POST/$subdir
+	    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.det $CINECA_ARCHIVE_POST/$subdir
+
+        # Save ensemble analysis increments at 21 UTC
+        if [ "$TIME" = "21" ]; then
+            rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.??? \
+                      $CINECA_ARCHIVE_POST/$subdir
+        fi
+
+	    # Retrieve first guess lead time
+	    model_stop_min=$((MODEL_STOP * 60))
+	    dt_shift_min=$((DT_IAU / 120))
+	    lead_time_min=$((model_stop_min - dt_shift_min))
+	    lt_hh=$((lead_time_min /  60 ))
+	    lt_mm=$((lead_time_min %% 60 ))
+
+	    # Save deterministic first guess
+	    fgfile=$WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb
+        fgfile_out=icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_det.grb
+        rsync -pt $fgfile $CINECA_ARCHIVE_POST/$subdir/$fgfile_out
+
+	    # Save ensemble first guess
+        if [ "$TIME" = "21" ]; then
+	        for n in `seq 1 $ENS_TOTAL_MEMB`; do
+	            n3=`printf "%%03d" $n`	
+	            fgfile=$WORKDIR/icon.$n/data/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb
+                fgfile_out=icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_${n3}.grb
+           	    rsync -pt $fgfile $CINECA_ARCHIVE_POST/$subdir/$fgfile_out
+	        done
+	    fi
+
+        # Save ekf files for diagnostics
+        rsync -pt $LETKF_WORKDIR/ekf* $CINECA_ARCHIVE_POST/$subdir || true
+    fi
+}
+
+set -x
+
+# archive on suite tree (local and remote) for other suites
+archive_suite &
+
+# archive permanently locally under the arkimet dir
+archive_perm &
+
+# put a barrier here to avoid challenging Zeus
+wait

@@ -1,3 +1,4 @@
+# Model environment variables
 MODEL_BASE=/g100_work/smr_prod/srcintel/icon-2.6.5.1
 MODEL_BIN=$MODEL_BASE/bin/icon
 ECRAD_DATA=$MODEL_BASE/data
@@ -14,7 +15,7 @@ HDF5_WORKDIR=$WORKDIR/radar_vol
 BUFR_ARKI_DS_CONV=$ARKI_DIR/gts_bufr_conv
 BUFR_ARKI_DS_NOCONV=$ARKI_DIR/gts_bufr_noconv
 BUFR_ARKI_DS_RADARVOL=$ARKI_DIR/radar_vol
-ARKI_LHN_DS=$ARKI_DIR/radar_sri
+ARKI_LHN_DS=$ARKI_DIR/icon_2I_radar
 MODEL_LHN_DT=600
 FREQ_FILE_BUFR=1 #improve
 
