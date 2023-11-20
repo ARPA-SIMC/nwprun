@@ -24,7 +24,7 @@ common_extra_env = {
     "ECF_DENIED": ""
 }
 
-# Suite enda
+# Suite enda_norad
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/enda_norad",
@@ -63,7 +63,7 @@ enda_norad.write(interactive=interactive)
 enda_norad.replace(interactive=interactive)
 
 
-# Suite enda_radvol
+# Suite enda
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/enda",
