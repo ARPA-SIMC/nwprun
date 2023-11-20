@@ -13,7 +13,21 @@ export LOG4C_APPENDER=stderr
 . $NWPCONFBINDIR/lami_postproc.sh
 # end of setup
 
+icon_postproc() {
+    IFS=_ read -ra keys <<< $1
+    case ${keys[4]} in # verify [4]
+        *A1* | *A2* | *A3*)
+        putarki_configured_archive $2 $1 grib
+        ;&
+    *Pv*)
+        lami_make_crossg2 $1 ${1}_crossg2
+        [ -s "${1}_crossg2" ] && putarki_configured_archive $2 ${1}_${crossg2}
+        rm -f ${1}_crossg2
+        ;&
+    esac
+}
+
 set -x
 cd $MODEL_DATADIR
-
+export POSTPROC_FUNC=icon_postproc
 putarki_configured_model_output $(($MODEL_STOP + 1))

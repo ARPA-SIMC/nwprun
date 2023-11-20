@@ -1,0 +1,41 @@
+&output_nml
+!### 3.1) Ita; 5km; model levels fino a 10 km + superficie (Chimere Ita)
+! Cloud varibles: qc,qi are specific content, qr,qs are mixing ratio; other parameters available
+ filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          = 1
+ output_time_unit             = 3                        ! output in hours (3) 
+ output_bounds                = 0.,@MODEL_STOP@,1.       ! start, end, increment
+ steps_per_file               = 1
+ mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+ include_last                 = .FALSE.
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSup_ita5km_A0P0"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
+ ml_varlist                   = pres,temp,u,v,qv,qc, albdif,t_2m,u_10m,v_10m,tot_prec,asob_s,alhfl_s,ashfl_s,clct,clcl,clcm,clch,pres_sfc,w_so,t_so,t_sk,t_seasfc
+ m_levels                     = 14...65
+ output_grid                  = .FALSE.
+ stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
+ remap                        = 1 !0 in case unstructured grid is required
+ reg_lon_def                  = 2.7,0.06,22.201
+ reg_lat_def                  = 33.5,0.04,49.101
+/
+&output_nml
+!### 3.2) Ita; 5km; topo+hlay (Chimere Ita)
+ filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          = 1                                                        
+ output_time_unit             = 3                        ! output in hours (3) 
+ output_bounds                = 0.,0.,1.                 ! start, end, increment        
+ steps_per_file               = 1                                                      
+ mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+ include_last                 = .FALSE.                                                         
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_static_ita5km_A0P0"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
+ ml_varlist                   = z_mc,topography_c
+ m_levels                     = 14...65
+ output_grid                  = .FALSE.
+ stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased         
+ remap                        = 1 ! 0 in case unstructured grid is required                
+ reg_lon_def                  = 2.7,0.06,22.201
+ reg_lat_def                  = 33.5,0.04,49.101
+/
