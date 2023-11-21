@@ -7,7 +7,7 @@
  steps_per_file               = 1
  mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSup_ita2km_A2P0"
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSup_ita2km_A2Pv"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                   = u,v,temp,pres,qv,w

@@ -18,12 +18,15 @@ icon_postproc() {
     case ${keys[4]} in # verify [4]
         *A1* | *A2* | *A3*)
         putarki_configured_archive $2 $1 grib
-        ;&
+        ;;&
     *Pv*)
         lami_make_crossg2 $1 ${1}_crossg2
-        [ -s "${1}_crossg2" ] && putarki_configured_archive $2 ${1}_${crossg2}
+        [ -s "${1}_crossg2" ] && putarki_configured_archive $2 ${1}_crossg2 $POSTPROC_FORMAT
         rm -f ${1}_crossg2
-        ;&
+        lami_make_vprofg2 $1 ${1}_vprofg2
+        [ -s "${1}_vprofg2" ] && putarki_configured_archive $2 ${1}_vprofg2 $POSTPROC_FORMAT
+        rm -f ${1}_vprofg2
+        ;;&
     esac
 }
 

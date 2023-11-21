@@ -56,6 +56,9 @@ MODEL_ARKI_TIMERANGE_FCAST="origin:GRIB2,,,2,,$MODEL_FCAST"
 ANA_EXT=0000
 ANA_DET_EXT=.det
 
+# postprocessing
+CROSS_COORD_FILE=$WORKDIR_BASE/nwprun/conf/cross.shp
+
 # Per gli esperimenti
 STOP_ON_FAIL=Y
 
