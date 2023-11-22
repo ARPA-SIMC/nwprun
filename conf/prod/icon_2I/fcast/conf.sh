@@ -8,9 +8,9 @@ PARENTMODEL_FREQFC=1
 
 # Model environment variables
 MODEL_BACK=0
-MODEL_STOP=6
+MODEL_STOP=72
 MODEL_BCANA=N
-MODEL_FREQINI=6
+MODEL_FREQINI=12
 ENS_TOTAL_MEMB=0
 MODEL_ARCHIVE_ANA=$WORKDIR/../enda/archive
 
@@ -49,9 +49,9 @@ VPROF_NETWORK=icon_2I_fcast_v
 MODEL_SIGNAL=icon_2I_fcast
 
 # suite timing
-NWPWAITELAPS=10800
+NWPWAITELAPS=43200
 # differenza tra tempo nominale e tempo di attivazione della suite
-NWPWAITSOLAR_RUN=3000
+NWPWAITSOLAR_RUN=1800
 # dopo quando tempo rinuncio a girare la suite e passare alla successiva
 NWPWAITSOLAR=43200
 NWPWAITWAIT=60

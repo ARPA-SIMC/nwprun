@@ -35,7 +35,7 @@ extra_env.update({
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    client_wrap=os.path.join(os.environ["WORKDIR_BASE"], "nwprun","ecflow","ec_wrap"),
                     ntries=2,
                     extra_env=extra_env)
 
@@ -69,13 +69,13 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/icon_2I/fcast",
     "NNODES_PREMODEL": 3,
-    "NNODES_MODEL": 6,
+    "NNODES_MODEL": 16,
     "NNODES_ENDA": 6
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    client_wrap=os.path.join(os.environ["WORKDIR_BASE"], "nwprun","ecflow","ec_wrap"),
                     ntries=2,
                     extra_env=extra_env)
 
@@ -83,7 +83,7 @@ conf = ModelConfig({"gts": False, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "modelname": "icon", 
                     "runlist": [GetObs, EpsMembers],
-                    "preproc_wt":"00:20:00", "model_wt": "02:00:00"}).getconf()
+                    "preproc_wt":"00:20:00", "model_wt": "03:00:00"}).getconf()
 icon = ModelSuite("icon_2I_fcast")
 basicenv.add_to(icon.suite)
 day = icon.suite.add_family("day").add_repeat(
@@ -108,10 +108,10 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/icon_2I/enda_dia",
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    client_wrap=os.path.join(os.environ["WORKDIR_BASE"], "nwprun","ecflow","ec_wrap"),
                     ntries=2,
                     extra_env=extra_env)
 
