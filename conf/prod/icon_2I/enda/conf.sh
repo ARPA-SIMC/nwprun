@@ -103,3 +103,6 @@ NWPWAITSOLAR=43200
 NWPWAITWAIT=30
 # wait for analysis?
 WAIT_ANALYSIS=N
+
+# Da rimuovere quando sarà tutto operativo (tenendo quello al livello sopra)
+STOP_ON_FAIL=N

@@ -46,11 +46,35 @@ if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
 fi
 
 # Save LHN diagnostics for deterministic member of KENDA
-if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]] && [[ -z "$ENS_MEMB" ]]); then
+if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
+    # Define file suffix
+    if [ -z "$ENS_MEMB" ]; then
+        n3=det
+    else
+        n3=`printf "%%03d" $ENS_MEMB`
+    fi
+
+    # Create folder
     subdir=%SUITE%/$DATE$TIME
     mkdir -p $CINECA_ARCHIVE_POST/$subdir
-    rsync -pt $MODEL_WORKDIR/lhn.log $CINECA_ARCHIVE_POST/$subdir  || true
-fi
 
+    # Save deterministic diagnostic file every hour and lhn
+    if [[ -z "$ENS_MEMB" ]]; then
+        filename_orig=`basename $MODEL_DATADIR/*+00010000_diag.grb`
+        filename_copy=${filename_orig:0:-4}_${n3}.grb
+        rsync -pt $MODEL_DATADIR/$filename_orig \
+                  $CINECA_ARCHIVE_POST/$subdir/$filename_copy          || true
+        rsync -pt $MODEL_WORKDIR/lhn.log $CINECA_ARCHIVE_POST/$subdir  || true
+
+    # Save ensemble diagnostic file at 21 UTC
+    else
+        if [ "$TIME" = "21" ]; then
+            filename_orig=`basename $MODEL_DATADIR/*+00010000_diag.grb`
+            filename_copy=${filename_orig:0:-4}_${n3}.grb
+            rsync -pt $MODEL_DATADIR/$filename_orig  \
+                      $CINECA_ARCHIVE_POST/$subdir/$filename_copy  || true
+        fi
+    fi
+fi
 
 date
