@@ -1,5 +1,11 @@
+! Complete domain; 2km; pressure levels + surface; only forecast
+! Still to check: 
+! - reduce pressure levels (keep only: 250, 500, 700, 850, 925, 1000)
+! - possible duplicates: t_s, t_seasfc (equal to t_g); t_so (t_so(0) is equal to t_g except under snow; other levels may not be needed)
+! - albdif of alb_dif (are they equal?)
+
 &output_nml
-!### 1.1) all; 2km; livelli di pressione (salop)
+! Pressure levels
  filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
  dom                          = 1
  output_time_unit             = 3                        ! output in hours (3) 
@@ -15,12 +21,11 @@
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required                
-! diversi in Thomas, questi sono di Enrico
  reg_lon_def                  = 2.7,0.025,22.301
  reg_lat_def                  = 33.5,0.02,49.101
 /
 &output_nml
-!### 1.2) all; 2km; superficie (salop, mare)
+! Surface
  filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
  dom                          = 1
  output_time_unit             = 3                        ! output in hours (3) 
@@ -28,7 +33,7 @@
  steps_per_file               = 1
  mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_sup_all2km_A2P0"
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_surf_all2km_A2P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
 ! aggiunto t_seasfc da Thomas, sostituiti tqc,tqi,tqr,tqs,tqg con twater
@@ -44,7 +49,7 @@
  reg_lat_def                  = 33.5,0.02,49.101
 /
 &output_nml
-!### 1.4) all; 2km; topo+lsm (salop, mare; solo istante iniziale)
+! Static fields: topo+lsm
  filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
  dom                          = 1                                                        
  output_time_unit             = 3                        ! output in hours (3) 

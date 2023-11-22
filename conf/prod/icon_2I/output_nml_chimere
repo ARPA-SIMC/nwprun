@@ -1,6 +1,9 @@
+! Complete domain; 2km; model levels up to 10 km + surface
+! Still to check: albdif or alb_dif?
+! Variables that may be added: qr,qi,athb_s,alhfl_s,ashfl_s,h_snow (optional); clct,t_so,t_sk,t_seasfc (duplicates?)
+
 &output_nml
-!### 3.1) Ita; 5km; model levels fino a 10 km + superficie (Chimere Ita)
-! Cloud varibles: qc,qi are specific content, qr,qs are mixing ratio; other parameters available
+! model levels up to 10 km + surface
  filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
  dom                          = 1
  output_time_unit             = 3                        ! output in hours (3) 
@@ -8,10 +11,10 @@
  steps_per_file               = 1
  mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSup_ita5km_A0P0"
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurf_ita5km_A0P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- ml_varlist                   = pres,temp,u,v,qv,qc, albdif,t_2m,u_10m,v_10m,tot_prec,asob_s,alhfl_s,ashfl_s,clct,clcl,clcm,clch,pres_sfc,w_so,t_so,t_sk,t_seasfc
+ ml_varlist                   = pres,temp,u,v,qv,qc, pres_sfc,t_2m,u_10m,v_10m,w_so,clcl,clcm,clch,tot_prec,asob_s,albdif,alhfl_s,ashfl_s,t_g
  m_levels                     = 14...65
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
@@ -20,7 +23,7 @@
  reg_lat_def                  = 33.5,0.04,49.101
 /
 &output_nml
-!### 3.2) Ita; 5km; topo+hlay (Chimere Ita)
+! Static fields: topo + hlayers
  filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
  dom                          = 1                                                        
  output_time_unit             = 3                        ! output in hours (3) 

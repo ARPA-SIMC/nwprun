@@ -74,9 +74,9 @@
 ! ------------------------------------------------------------------------------------------
 ! OUTPUT: include predefined templates
 ! ------------------------------------------------------------------------------------------
-@INCLUDE output_nml_nat@
-@INCLUDE output_nml_gen@
-@INCLUDE output_nml_lama@
+@INCLUDE output_nml_mec@
+@INCLUDE output_nml_main@
+@INCLUDE output_nml_rsd@
 @INCLUDE output_nml_chimere@
 
 &run_nml

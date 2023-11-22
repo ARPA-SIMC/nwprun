@@ -1,39 +1,35 @@
-! Italy; 2km; model levels + surface; only analysis (kenda)
-! Still to check: t_s,t_so,t_sk,t_seasfc (duplicates?); alb_dif (or albdif?); td_2m,rain_con,rain_gsp (remove?); clcl,clcm,clch (replace with ceiling?)
+! Italy; 2km; model levels; only forecast
 
 &output_nml
-! Model levels + surface
- filetype                     =  2                        ! output format: 2=GRIB2, 4=NETCDFv2
- dom                          =  1
- output_time_unit             =  3                        ! output in hours (3)
- output_bounds                =  0.,@MODEL_STOP@,1.       ! start, end, increment
- steps_per_file               =  1
- mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+! model levels
+ filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          = 1
+ output_time_unit             = 3                        ! output in hours (3) 
+ output_bounds                = 0.,@MODEL_STOP@,1.       ! start, end, increment
+ steps_per_file               = 1
+ mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurfAna_ita2km_A2P0"
- filename_format              = '<output_filename>+<ddhhmmss>'                   ! file name base
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurf_ita2km_A2Pv"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- ml_varlist                   = pres,temp,u,v,qv,qc,qr,qs,qi,qg,w, t_2m,td_2m,u_10m,v_10m,
-                                tot_prec,rain_con,rain_gsp,snow_con,snow_gsp, asob_s,athb_s,alhfl_s,ashfl_s,aumfl_s,avmfl_s,asodifd_s,asodird_s,
-                                clct,clcl,clcm,clch, pres_sfc,pres_msl, w_so,t_s,t_so,t_sk,t_seasfc, alb_dif,gz0
+ ml_varlist                   = u,v,temp,pres,qv,w
  m_levels                     = 1...65
- output_grid                  =  .FALSE.
- stream_partitions_ml         =  1 ! needs to be adapted if num_io_procs is increased
+ output_grid                  = .FALSE.
+ stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required                
  reg_lon_def                  = 6.5,0.025,18.601
  reg_lat_def                  = 35.4,0.02,47.301
 /
-
 &output_nml
 ! Static fields: topo + lsm + hlayers
  filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
  dom                          = 1                                                       
- output_time_unit             = 3                        ! output in hours (3)
+ output_time_unit             = 3                        ! output in hours (3) 
  output_bounds                = 0.,0.,1.                 ! start, end, increment        
  steps_per_file               = 1                                                      
  mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.                                                         
- output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_staticAna_ita2km_A2P0"
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_static_ita2km_A2P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                   = z_mc,topography_c,fr_land
@@ -44,3 +40,4 @@
  reg_lon_def                  = 6.5,0.025,18.601
  reg_lat_def                  = 35.4,0.02,47.301
 /
+! manca lama analisi
