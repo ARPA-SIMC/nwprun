@@ -11,7 +11,7 @@
  mode                         =  1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
  output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurfAna_ita2km_A2P0"
- filename_format              = '<output_filename>+<ddhhmmss>'                   ! file name base
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                   = pres,temp,u,v,qv,qc,qr,qs,qi,qg,w, t_2m,td_2m,u_10m,v_10m,
                                 tot_prec,rain_con,rain_gsp,snow_con,snow_gsp, asob_s,athb_s,alhfl_s,ashfl_s,aumfl_s,avmfl_s,asodifd_s,asodird_s,

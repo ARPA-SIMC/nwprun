@@ -40,7 +40,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     extra_env=extra_env)
 
 conf = ModelConfig({"gts": True, "lhn": True, "radarvol": False, "membrange": "0-40",
-                    "postprocrange": "-1",
+                    "postprocrange": "0",
                     "modelname": "icon",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis],
                     "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()

@@ -71,8 +71,9 @@
 &gribout_nml
  generatingCenter            = 80
  generatingSubcenter         = 255
- generatingProcessIdentifier = 2
+ generatingProcessIdentifier = @MODEL_ASSIM_GP@
  perturbationNumber          = @PERT_NUMB@
+ localDefinitionNumber       = -1
 /
 
 ! ------------------------------------------------------------------------------------------
@@ -207,6 +208,8 @@
 /
 
 @INCLUDE output_nml_lama@
+@INCLUDE output_nml_chimere@
+@INCLUDE output_nml_sea@
 
 &run_nml
  num_lev                     = 65

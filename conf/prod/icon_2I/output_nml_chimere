@@ -11,7 +11,7 @@
  steps_per_file               = 1
  mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
- output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurf_ita5km_A0P0"
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurf_all5km_A0P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                   = pres,temp,u,v,qv,qc, pres_sfc,t_2m,u_10m,v_10m,w_so,clcl,clcm,clch,tot_prec,asob_s,albdif,alhfl_s,ashfl_s,t_g
@@ -31,7 +31,7 @@
  steps_per_file               = 1                                                      
  mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.                                                         
- output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_static_ita5km_A0P0"
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_static_all5km_A0P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                   = z_mc,topography_c

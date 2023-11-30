@@ -16,7 +16,7 @@ export LOG4C_APPENDER=stderr
 icon_postproc() {
     IFS=_ read -ra keys <<< $1
     case ${keys[4]} in # verify [4]
-        *A1* | *A2* | *A3*)
+        *A0* | *A1* | *A2* | *A3*)
         putarki_configured_archive $2 $1 grib
         ;;&
     *Pv*)

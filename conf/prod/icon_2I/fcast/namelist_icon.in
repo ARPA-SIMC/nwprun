@@ -69,6 +69,7 @@
  generatingCenter            = 80
  generatingSubcenter         = 255
  generatingProcessIdentifier = @MODEL_FCAST_GP@
+ localDefinitionNumber       = -1
 /
 
 ! ------------------------------------------------------------------------------------------
