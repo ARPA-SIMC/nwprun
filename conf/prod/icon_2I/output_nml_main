@@ -17,7 +17,7 @@
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  pl_varlist                   = u,v,temp,qv,geopot,omega,rh
- p_levels                     = 5000.,10000.,15000.,20000.,25000.,30000.,40000.,50000.,60000.,70000.,85000.,92500.,95000.,100000.
+ p_levels                     = 25000.,50000.,70000.,85000.,92500.,100000.
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required                
@@ -37,7 +37,7 @@
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
 ! aggiunto t_seasfc da Thomas, sostituiti tqc,tqi,tqr,tqs,tqg con twater
- ml_varlist                   = t_2m,td_2m,u_10m,v_10m, tmin_2m,tmax_2m,gust10,
+ ml_varlist                   = t_2m,td_2m,u_10m,v_10m,gust10,
                                 tot_prec,rain_con,rain_gsp,snow_con,snow_gsp,graupel_gsp, clct,clch,clcm,clcl,
                                 asob_s,asodifd_s,asodird_s, athb_s,athd_s,athu_s, aumfl_s,avmfl_s, ashfl_s,alhfl_s,
                                 t_g,t_s,qv_s, w_snow, t_so,w_so, albdif, pres_msl,pres_sfc,t_seasfc,
