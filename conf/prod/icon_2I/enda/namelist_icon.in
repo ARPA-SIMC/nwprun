@@ -73,7 +73,12 @@
  generatingSubcenter         = 255
  generatingProcessIdentifier = @MODEL_ASSIM_GP@
  perturbationNumber          = @PERT_NUMB@
- localDefinitionNumber       = -1
+! see mo_gribout_nml.f90 for preset behavior
+ preset                      = 'none'
+ typeOfGeneratingProcess     = 4
+ localDefinitionNumber       = 0
+ typeOfProcessedData         = 5
+ typeOfEnsembleForecast      = 192
 /
 
 ! ------------------------------------------------------------------------------------------
