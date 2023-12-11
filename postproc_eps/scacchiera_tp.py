@@ -8,9 +8,9 @@ import matplotlib.pyplot as plt
 from matplotlib import colors
 from datetime import datetime,timedelta
 
-from eps_utils import macro, get_args, heatmap
+from eps_utils import macro, get_args, heatmap, cumula_membri
 
-
+"""
 def cumula_membri(nmemb, path_in):
     for i in range(1, nmemb+1):
         dir_in = "{}/cosmo.{}/data/lfff????0000".format( path_in, str(i) )
@@ -31,7 +31,7 @@ def cumula_membri(nmemb, path_in):
             "tp.grib tp3h_membro{}.grib".format(str(i),)
         os.system( grib_cum )
         subprocess.call( [ "rm", "tp.grib" ] )
-
+"""
 
 #------------------------------------------------------------------------
 # Creazione della scacchiera di probabilità di superamento delle soglie
@@ -46,15 +46,18 @@ if __name__ == '__main__':
     nmemb = 20
     args = get_args()
     path_in = args.path_in
-
+    cumulate = args.cumulate # default = ['tpp01h', 'tpp03h']
+    if len(cumulate) > 1:
+        print( "Il default per questo prodotto è una cumulata di 3 ore (tpp03h)." )
+        cumulate = cumulate[1]
+    
     if "S" in args.operations:
         aree = args.aree
         # Estraggo la sigla della Regione dal nome dello shapefile
         dumaree = os.path.basename( aree )
-        regione = dumaree[len("macroaree_"):]
-        regione = regione.split(".")[0] # rimuovo qualunque suffisso
+        regione = dumaree[ len("macroaree_"):-len(".shp") ]
         print( "Post-processing per la Regione {}".format(regione) )
-
+        
         fold_out = args.fold_out
         # Creo la directory di output, "fold_out", se non esiste
         if not os.path.exists( "{}".format(fold_out) ):
@@ -78,16 +81,15 @@ if __name__ == '__main__':
     # Estrazione di TP trioraria per ciascun membro e calcolo della media
     # sulle macroaree 
     if "C" in args.operations:
-        tobedeleted = glob.glob("tp3h_membro*.grib")
+        tobedeleted = glob.glob( "{}_membro*.grib".format(cumulate) )
         for f in tobedeleted:
             os.remove(f)
-        cumula_membri(nmemb, path_in)
+        cumula_membri(nmemb, path_in, cumulate=cumulate)
     if not "S" in args.operations: quit()
     
     val = []
-    pre_un = "pre_{}.v7d".format(regione)
     for i in range(1, nmemb+1):
-        # per velocizzare la procedura, aree puo' ossere un file grib
+        # per velocizzare la procedura, aree può essere un file grib
         # generato una-tantum ad hoc a partire da un singolo grib di esempio e
         # dallo shapefile desiderato con il comando:
         # vg6d_transform --trans-type=maskgen --sub-type=poly
@@ -102,16 +104,16 @@ if __name__ == '__main__':
 
         vg6d_getpoint = "vg6d_getpoint --coord-file={} " \
             "--coord-format={} --trans-type={} --sub-type={} " \
-            "--output-format=native tp3h_membro{}.grib {}".format( aree, c_format, trans_type, sub_type, str(i), pre_un)
+            "--output-format=native {}_membro{}.grib pre.v7d".format( aree, c_format, trans_type, sub_type, cumulate, str(i) )
         subprocess.call(vg6d_getpoint.split(),shell=False)
 
-        csvname = "tp3h_membro{}_{}.csv".format( str(i), regione )
-        v7d_trans = "v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
-	    "{} {}".format( pre_un, csvname )
+        csvname = "{}_membro{}_{}.csv".format( cumulate, str(i), regione )
+        v7d_trans = "v7d_transform --input-format=native --output-format=csv "\
+            "--csv-header=0 pre.v7d {}".format( csvname )
         subprocess.call(v7d_trans.split(), shell=False)
 
         # Elimino il file dati non necessari
-        subprocess.call( ["rm", pre_un] )
+        subprocess.call( ["rm", "pre.v7d"] )
 
         val.append( pd.read_csv( csvname, delimiter=',',
                                  names=[ 'Date', 'Time range', 'P1', 'P2',
@@ -119,7 +121,6 @@ if __name__ == '__main__':
                                          'L1', 'Level2', 'L2', 'Report',
                                          'B01192', 'B13011' ],
                                  skiprows=0) )
-        os.remove(csvname)
 
     df = pd.concat(val).sort_values(by=['Date', 'B01192'])
     pd.set_option( 'display.max_rows', df.shape[0]+1 )
@@ -246,6 +247,10 @@ if __name__ == '__main__':
 
         fig.savefig( fileout, bbox_inches='tight' )
         plt.close()
-
+    
+    
+    tobedeleted=glob.glob( "{}_membro*{}.csv".format( cumulate, regione ) )
+    for f in tobedeleted:
+        os.remove(f)
 
     quit()
