@@ -112,6 +112,22 @@ echo ''
 
 
 # ---------------------------------------------------------------------------
+# Prepare variables and folders for archiving first guess at +55 minutes in
+# case of missing data at +60
+# ---------------------------------------------------------------------------
+# Retrieve first guess lead time
+model_stop_min=$((MODEL_STOP * 60))
+dt_shift_min=$((DT_IAU / 120))
+lead_time_min=$((model_stop_min - dt_shift_min))
+lt_hh=$((lead_time_min /  60 ))
+lt_mm=$((lead_time_min %% 60 ))
+
+# Create archive folder
+ARC_FOLD=$MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}
+mkdir -p $ARC_FOLD
+
+
+# ---------------------------------------------------------------------------
 # replace analysis
 # ---------------------------------------------------------------------------
 # no analyses available at all, we are in canvas breeches (Bassini), abort
@@ -131,6 +147,10 @@ else
 	      $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000
     ln -s $WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_const.grb \
           $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000_const
+
+    # Save first guess for next assimilation cycle or forecast
+    fgfile=$WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb
+    rsync -pt $fgfile $ARC_FOLD/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_det.grb
 fi
 
 # ensemble members
@@ -144,9 +164,17 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
 	    ln -s $WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
 	        $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
 
+        # Save first guess for next assimilation cycle or forecast
+        fgfile=$WORKDIR/icon.$lma/data/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb 
+        rsync -pt $fgfile $ARC_FOLD/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_${n3}.grb
+
     else # use det
 	    ln -s $WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${MODEL_STOP}0000.grb \
 	        $LETKF_WORKDIR/input/lfff${DATE}${TIME}0000.$n3
+
+        # Save first guess for next assimilation cycle or forecast
+        fgfile=$WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb
+        rsync -pt $fgfile $ARC_FOLD/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_${n3}.grb
     fi
 done
 
