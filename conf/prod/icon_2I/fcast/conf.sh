@@ -49,11 +49,11 @@ VPROF_NETWORK=icon_2I_fcast_v
 MODEL_SIGNAL=icon_2I_fcast
 
 # suite timing
-NWPWAITELAPS=43200
+NWPWAITELAPS=14400
 # differenza tra tempo nominale e tempo di attivazione della suite
 NWPWAITSOLAR_RUN=1800
 # dopo quando tempo rinuncio a girare la suite e passare alla successiva
-NWPWAITSOLAR=43200
+NWPWAITSOLAR=14400
 NWPWAITWAIT=60
 # wait for analysis?
 WAIT_ANALYSIS=Y
