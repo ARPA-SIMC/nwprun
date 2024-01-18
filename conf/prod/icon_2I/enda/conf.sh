@@ -99,7 +99,8 @@ NWPWAITELAPS=10800
 # differenza tra tempo nominale e tempo di attivazione della suite
 NWPWAITSOLAR_RUN=1200
 # dopo quando tempo rinuncio a girare la suite e passare alla successiva
-NWPWAITSOLAR=43200
+#NWPWAITSOLAR=43200
+NWPWAITSOLAR=32400
 NWPWAITWAIT=30
 # wait for analysis?
 WAIT_ANALYSIS=N
