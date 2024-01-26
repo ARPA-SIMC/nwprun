@@ -17,7 +17,7 @@ get_setup() {
     for hh in 0 `seq 6 1 12`; do
         vertime=`datetime_add $DATE$TIME $hh`
         vertime=`datetime_cnmc $vertime`
-	file_list[$hh]="$FTPDIR/U3X${reftime}${vertime}1"
+	file_list[$hh]="$UPLDIR/U3X${reftime}${vertime}1"
     done
 }
 
@@ -51,6 +51,5 @@ get_one() {
 }
 
 # enter main loop
-set -x
 declare -A file_list # this must be here otherwise declare implies local
 main_loop "$@"

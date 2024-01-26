@@ -2,7 +2,9 @@
 #LAST_BC_HH=60
 #FREQ_BC_HH=3
 #TOT_ENS_MEMB=20
-FTPDIR=/ind2/meteoarch/a07smr01/arch_lm/g100/auto/download/OPE/AM/LAMI/IFS
+FTPDIR=ICON
+UPLDIR=/ind2/meteoarch/a07smr01/arch_lm/g100/auto/download/OPE/AM/LAMI/IFS
+
 
 
 # quanti secondi aspetto un determinato file prima di passare al

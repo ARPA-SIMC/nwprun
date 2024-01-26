@@ -16,7 +16,7 @@ get_setup() {
     for hh in `seq $FIRST_BC_HH $FREQ_BC_HH $LAST_BC_HH`; do
         vertime=`datetime_add $DATE$TIME $hh`
         vertime=`datetime_cnmc $vertime`
-	file_list[$hh]="$FTPDIR/U3S${reftime}${vertime}1"
+	file_list[$hh]="$UPLDIR/U3S${reftime}${vertime}1"
     done
 }
 
