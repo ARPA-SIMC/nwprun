@@ -16,7 +16,7 @@
  p_test_run                  = .false.
  l_test_openmp               = .true.
  l_log_checks                = .true.
- num_io_procs                = 3                ! may be more if frequent output is written
+ num_io_procs                = 5                ! may be more if frequent output is written
  num_restart_procs           = 0
  num_prefetch_proc           = 1
  itype_comm                  = 1
@@ -73,6 +73,7 @@
  generatingSubcenter         = 255
  generatingProcessIdentifier = @MODEL_ASSIM_GP@
  perturbationNumber          = @PERT_NUMB@
+ localtablesversion          = 0
 ! see mo_gribout_nml.f90 for preset behavior
  preset                      = 'none'
  typeOfGeneratingProcess     = 4
