@@ -52,8 +52,28 @@ case "$HPC_SYSTEM" in
     SIMC_TOOLS="singularity exec -B /ind2/meteo -B /ind2/meteoarch $WORKDIR_BASE/smnd_nwprun_r8.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/ind2/meteo/a07smr01/LM_WorkDir/g100/lm/PROD/work
+    CINECA_UPLDIR=/ind2/meteoarch/a07smr01/arch_lm/g100/auto/download/OPE/AM/LAMI/IFS
     ecflow_client="$WORKDIR_BASE/nwprun/ecflow/ec_wrap ecflow_client"
     ;;
+  leonardo ) # Cineca HPC leonardo
+# General
+    WORKDIR=$WORKDIR_BASE/$NWPCONF
+    LOGDIR=$WORKDIR_BASE/log
+    ARKI_DIR=$WORKDIR_BASE/arkimet
+    ARKI_CONF=$ARKI_DIR/config
+    ARKI_SCAN_METHOD=configured_importer
+    IMPORT_SIGNAL_METHOD=filesystem
+    IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
+    ARKI_IMPROOT=$WORKDIR_BASE/import
+    ARKI_IMPDIR=$ARKI_IMPROOT
+    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
+    SIMC_TOOLS="singularity exec -B $WORK $WORKDIR_BASE/simctools_nwprun_r8.sif"
+    CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
+    CINECA_RUN=/leonardo_work/smr_prod/a07smr01/LM_WorkDir/leonardo/lm/PROD/work
+    CINECA_UPLDIR=/meteo_arch/a07smr01/arch_lm/leonardo/auto/download/OPE/AM/AM/LAMI/IFS
+    ecflow_client="$WORKDIR_BASE/nwprun/ecflow/ec_wrap ecflow_client"
+    ;;
+
   marconi ) # Cineca HPC marconi
 # General
     WORKDIR=$WORKDIR_BASE/$NWPCONF

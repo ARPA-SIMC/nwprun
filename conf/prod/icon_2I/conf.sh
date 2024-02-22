@@ -1,9 +1,9 @@
 # Model environment variables
-MODEL_BASE=/g100_work/smr_prod/srcintel/icon-2.6.5.1
+MODEL_BASE=$WORKDIR_BASE/srcintel/icon-2.6.5.1
 MODEL_BIN=$MODEL_BASE/bin/icon
 ECRAD_DATA=$MODEL_BASE/data
 MODEL_STATIC=$WORKDIR_BASE/data/icon
-MODEL_PRE_BINDIR=/ind2/meteo/a07smr03/icon/build/icontools-2.5.0.intel/icontools
+MODEL_PRE_BINDIR=$WORKDIR_BASE/srcintel/icontools-2.5.0/icontools
 PARENTMODEL_DATADIR=$WORKDIR/input/data
 
 # Working directories for observations
@@ -36,8 +36,8 @@ ASS_CYCLE_LENGTH=1
 DT_IAU=600
 
 # eccodes definitions
-ecd_dwd=/ind2/meteo/a07smr03/icon/definitions/definitions.edzw-2.21.0-1
-ecd_cin=/ind2/meteo/a07smr03/icon/definitions/definitions.cineca-2.21.0
+ecd_dwd=$WORKDIR_BASE/data/definitions/definitions.edzw-2.21.0-1
+ecd_cin=$WORKDIR_BASE/data/definitions/definitions.cineca-2.21.0
 ECCODES_DEFINITION_PATH=${ecd_dwd}:${ecd_cin}
 unset ecd_dwd ecd_cin
 
