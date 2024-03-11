@@ -63,6 +63,3 @@ ANA_DET_EXT=.det
 # postprocessing
 CROSS_COORD_FILE=$WORKDIR_BASE/nwprun/conf/cross.shp
 
-# Per gli esperimenti
-STOP_ON_FAIL=Y
-
