@@ -24,45 +24,6 @@ common_extra_env = {
     "ECF_DENIED": ""
 }
 
-# Suite enda_norad
-extra_env = common_extra_env.copy()
-extra_env.update({
-    "NWPCONF": "prod/cosmo_2I/enda_norad",
-    "NNODES_PREMODEL": 3,
-    "NNODES_MODEL": 3,
-    "NNODES_ENDA": 4
-})
-basicenv = BasicEnv(srctree=os.environ["OPE"],
-                    worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
-                    sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
-                    ntries=2,
-                    extra_env=extra_env)
-
-conf = ModelConfig({"gts": True, "lhn": True, "membrange": "0-40",
-                    "postprocrange": "0",
-                    "runlist": [GetObs, EpsMembers, EndaAnalysis],
-                    "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
-enda_norad = ModelSuite("cosmo_2I_enda_norad")
-basicenv.add_to(enda_norad.suite)
-day = enda_norad.suite.add_family("day").add_repeat(
-    ecflow.RepeatDate("YMD", 
-                      int((datetime.datetime.now()-datetime.timedelta(days=delta[0])).strftime("%Y%m%d")),
-                      20301228))
-
-hdep = None # first repetition has no dependency
-for h in range(0, 24, 3):
-    famname = "hour_" + ("%02d" % h)
-    hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
-    #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
-    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
-    hdep = famname # dependency for next repetition
-
-enda_norad.check()
-enda_norad.write(interactive=interactive)
-enda_norad.replace(interactive=interactive)
-
-
 # Suite enda
 extra_env = common_extra_env.copy()
 extra_env.update({
@@ -144,7 +105,7 @@ fcruc.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/cosmo_2I/fcens",
-    "NNODES_PREMODEL": 6,
+    "NNODES_PREMODEL": 4,
     "NNODES_MODEL": 6,
     "NNODES_ENDA": 4,
     "ECF_TIMEOUT": "14400"
