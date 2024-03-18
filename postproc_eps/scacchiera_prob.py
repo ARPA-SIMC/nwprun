@@ -23,8 +23,7 @@ if __name__ == '__main__':
 
     # Estraggo la sigla della Regione dal nome dello shapefile
     dumaree = os.path.basename( aree )
-    regione = dumaree[len("macroaree_"):]
-    regione = regione.split(".")[0] # rimuovo qualunque suffisso
+    regione = dumaree[ len("macroaree_"):-len(".shp") ]
     print( "Post-processing per la Regione {}".format(regione) )
 
     path_in = args.path_in # default = "/autofs/scratch-rad/vpoli/FCST_PROB/fxtr/data" 
@@ -66,8 +65,9 @@ if __name__ == '__main__':
     for subtype in sub_type:
         for j in cumulate:
             # Lista dei file per scadenza 
-            search = "{}/{}_*.grib".format(path_in, j)
+            search = "{}/{}_??????????????.grib".format(path_in, j)
             lista = glob.glob(search)
+
             if j == 'tpp01h':
                 filelist = sorted(lista)[3:len(lista)]
             elif j == 'tpp03h':
@@ -76,7 +76,7 @@ if __name__ == '__main__':
                 filelist = sorted(lista)
             else:
                 sys.exit( "\nERRORE! Questa cumulata non è gestita.\n" )
-                
+
             # Indice dei valori di soglia per la cumulata selezionata
             n = cumulate.index(j)
 

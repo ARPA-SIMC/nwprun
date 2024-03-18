@@ -23,8 +23,7 @@ if __name__ == '__main__':
 
     # Estraggo la sigla della Regione dal nome dello shapefile
     dumaree = os.path.basename( aree )
-    regione = dumaree[len("macroaree_"):]
-    regione = regione.split(".")[0] # rimuovo qualunque suffisso
+    regione = dumaree[ len("macroaree_"):-len(".shp") ]
     print( "Post-processing per la Regione {}".format(regione) )
 
     path_in = args.path_in # default = "/autofs/scratch-rad/vpoli/FCST_PROB/fxtr/data" 
@@ -45,9 +44,9 @@ if __name__ == '__main__':
     for subtype in sub_type: #[ 'average', 'max' ]:
         for j in cumulate:
             # Lista dei file per scadenza 
-            search = "{}/{}_*.grib".format(path_in, j)
+            search = "{}/{}_??????????????.grib".format(path_in, j)
             lista = glob.glob(search)
-
+            
             if j == 'tpp01h':
                 filelist = sorted(lista)[3:len(lista)]
             elif j == 'tpp03h':
@@ -56,9 +55,10 @@ if __name__ == '__main__':
                 filelist = sorted(lista)
             else:
                 sys.exit( "\nERRORE! Questa cumulata non è gestita\n" )
-                
+
             # Estrazione campi sulle macroaree usando le soglie opportune
             for fname in filelist:
+                #print(fname)
                 csvname = estrai_campi_su_macroaree( fname, valore, subtype, aree, regione )
 
     # Lettura dei csv prodotti per la generazione delle scacchiere.
@@ -101,6 +101,7 @@ if __name__ == '__main__':
             lista = glob.glob(search)
             
             for f in sorted(lista):
+                #print("Leggo file: ",f)
                 df = pd.read_csv( f.strip(), delimiter=',',
                                   names = ['Date', 'Time range', 'P1', 'P2',
                                            'Longitude', 'Latitude', 'Level1',
@@ -111,7 +112,6 @@ if __name__ == '__main__':
                 run.append(df['Date'])
                 lead.append(df['P1'])
                 cum.append(df['P2'])
-                os.remove(f) # cancello subito il file csv
             
             df = pd.concat(val,axis=1)
             data = pd.concat(run,axis=1)
@@ -139,6 +139,7 @@ if __name__ == '__main__':
                 orafcst.insert(0,orazero.strftime('%d/%m\n%H'))
             else:
                 orafcst.insert(0,orazero.strftime('%H'))
+            #print(orafcst)
 
             # Definisco date/time del run (emissione/validità) per il nome del file in output
             inizio = datetime.strptime( run[0], '%Y-%m-%d %H:%M:%S' ) - timedelta( seconds=x[0] )
@@ -187,5 +188,9 @@ if __name__ == '__main__':
         fig.savefig( fileout, bbox_inches='tight' )
         plt.close()
 
+    # Elimino i file csv
+    tobedeleted = glob.glob( "*_{}*.csv".format(valore) )
+    for f in tobedeleted:
+        os.remove(f)
 
 quit()
