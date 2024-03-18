@@ -53,7 +53,7 @@ MODEL_ARCHIVE_ANA=$WORKDIR/../enda/archive
 # data for infomet upload
 INFOMET_UP_URL=ftp://ftpsimc.arpae.it/
 INFOMET_UP_BASEDIR=PREVISIONI/AREA_LIMITATA/COSMO_ENS
-REGLIST="er abru basi cala camp emro friu lazi ligu lomb marc moli piem pugl sard sici tosc tren umbr vdao vene"
+REGLIST="abru basi cala camp emro friu lazi ligu lomb marc moli piem pugl sard sici tosc tren umbr vdao vene"
 
 # scheduler resources
 PARRES="-l select=8:ncpus=32:mpiprocs=32:mem=118gb -q meteoeps"

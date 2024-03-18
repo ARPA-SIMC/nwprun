@@ -11,7 +11,7 @@ macro={
     "basi":[ 'A1', 'A2', 'B', 'C', 'D', 'E1', 'E2' ],
     "cala":[ '1','2','3','4','5','6'],
     "camp":[ '1','2','3','4','5','6','7','8'],
-    "er":[ 'A','B','C','D','E','F','G','H'],
+    "emro":[ 'A','B','C','D','E','F','G','H'],
     "friu":[ 'A','B','C','D'],
     "lazi":[ 'A','B','C','D','E','F','G'],
     "ligu":[ 'A','B','C','D','E'],
@@ -138,12 +138,15 @@ def cumula_membri(nmemb, path_in, cumulate=None):
 
 
 def estrai_campi_su_macroaree( fname, valore, sub_type, aree, regione ):
-    prodotto = os.path.basename(fname).split('.', 1)[0]    
+    prodotto = os.path.basename(fname).split('.', 1)[0]
+    # definisco nomi unici per usare diverse istanze in parallelo
+    campo_un = "campo_{}.grib".format(regione)
+    pre_un = "pre_{}.v7d".format(regione)
 
     csvname = "{}_{}_{}_{}.csv".format( sub_type, valore, prodotto, regione )
     
     grib_copy = "grib_copy -w productDefinitionTemplateNumber=12,derivedForecast=0 " \
-        "{} campo.grib".format( fname )
+        "{} {}".format( fname, campo_un )
     subprocess.call( grib_copy.split(), shell=False )
     
 # per velocizzare la procedura, aree puo' ossere un file grib
@@ -161,26 +164,29 @@ def estrai_campi_su_macroaree( fname, valore, sub_type, aree, regione ):
 
     vg6d_getpoint="vg6d_getpoint --coord-file={} " \
         "--coord-format={} --trans-type={} --sub-type={} " \
-        "--output-format=native campo.grib pre.v7d".format( aree, c_format, trans_type, sub_type )
+        "--output-format=native {} {}".format( aree, c_format, trans_type, sub_type, campo_un, pre_un )
     subprocess.call( vg6d_getpoint.split(), shell=False )
                 
     v7d_trans="v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
-	"pre.v7d {}".format( csvname )
+	"{} {}".format( pre_un, csvname )
     subprocess.call( v7d_trans.split(), shell=False )
 
     # Elimino il file dati.v7d
-    subprocess.call( [ "rm", "pre.v7d" ] )
-    subprocess.call( [ "rm", "campo.grib" ] )
+    subprocess.call( [ "rm", pre_un ] )
+    subprocess.call( [ "rm", campo_un ] )
     return csvname                    
 
 def estrai_prob_su_macroaree( fname, valore, subtype, aree, regione, thresh, sf, sv, percent ):
     prodotto = os.path.basename(fname).split('.',1)[0]
-    #print(subtype)
+    # definisco nomi unici per usare diverse istanze in parallelo
+    campo_un = "campo_{}.grib".format(regione)
+    pre_un = "pre_{}.v7d".format(regione)
+
     for i in range(len(thresh)):        
         csvname = "{}_{}_{}_soglia{}_{}.csv".format( subtype, valore, prodotto, str(thresh[i]), regione )
         #print( i, str(thresh[i]), sf[i], sv[i] )
         grib_copy = "grib_copy -w productDefinitionTemplateNumber=9,scaleFactorOfLowerLimit={},scaledValueOfLowerLimit={} " \
-            "{} campo.grib".format(sf[i], sv[i], fname)  
+            "{} {}".format(sf[i], sv[i], fname, campo_un)
         subprocess.call( grib_copy.split(), shell=False )
     
         # per velocizzare la procedura, aree puo' ossere un file grib
@@ -196,19 +202,19 @@ def estrai_prob_su_macroaree( fname, valore, subtype, aree, regione, thresh, sf,
             c_format = "shp"
             trans_type = "polyinter"
 
-            vg6d_getpoint = "vg6d_getpoint --coord-file={} " \
-                "--coord-format={} --trans-type={} --sub-type={} " \
-                "--percentile={:d} --output-format=native campo.grib pre.v7d".format( aree,  \
-                                                                                    c_format, trans_type, subtype, percent )
-            subprocess.call( vg6d_getpoint.split(), shell=False )
+        vg6d_getpoint = "vg6d_getpoint --coord-file={} " \
+            "--coord-format={} --trans-type={} --sub-type={} " \
+            "--percentile={:d} --output-format=native {} {}".format( aree,  \
+                                                                     c_format, trans_type, subtype, percent, campo_un, pre_un )
+        subprocess.call( vg6d_getpoint.split(), shell=False )
             
-            v7d_trans = "v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
-	        "pre.v7d {}".format( csvname )
-            subprocess.call( v7d_trans.split(), shell=False )
+        v7d_trans = "v7d_transform --input-format=native --output-format=csv --csv-header=0 " \
+	    "{} {}".format( pre_un, csvname )
+        subprocess.call( v7d_trans.split(), shell=False )
 
     # Elimino il file dati.v7d
-    subprocess.call( [ "rm", "pre.v7d" ] )
-    subprocess.call( [ "rm", "campo.grib" ] )
+    subprocess.call( [ "rm", pre_un ] )
+    subprocess.call( [ "rm", campo_un ] )
     
     return csvname                    
 

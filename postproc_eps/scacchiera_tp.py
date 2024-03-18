@@ -55,7 +55,8 @@ if __name__ == '__main__':
         aree = args.aree
         # Estraggo la sigla della Regione dal nome dello shapefile
         dumaree = os.path.basename( aree )
-        regione = dumaree[ len("macroaree_"):-len(".shp") ]
+        regione = dumaree[len("macroaree_"):]
+        regione = regione.split(".")[0] # rimuovo qualunque suffisso
         print( "Post-processing per la Regione {}".format(regione) )
         
         fold_out = args.fold_out
@@ -88,6 +89,7 @@ if __name__ == '__main__':
     if not "S" in args.operations: quit()
     
     val = []
+    pre_un = "pre_{}.v7d".format(regione)
     for i in range(1, nmemb+1):
         # per velocizzare la procedura, aree può essere un file grib
         # generato una-tantum ad hoc a partire da un singolo grib di esempio e
@@ -104,16 +106,16 @@ if __name__ == '__main__':
 
         vg6d_getpoint = "vg6d_getpoint --coord-file={} " \
             "--coord-format={} --trans-type={} --sub-type={} " \
-            "--output-format=native {}_membro{}.grib pre.v7d".format( aree, c_format, trans_type, sub_type, cumulate, str(i) )
+            "--output-format=native {}_membro{}.grib {}".format( aree, c_format, trans_type, sub_type, cumulate, str(i), pre_un )
         subprocess.call(vg6d_getpoint.split(),shell=False)
 
         csvname = "{}_membro{}_{}.csv".format( cumulate, str(i), regione )
         v7d_trans = "v7d_transform --input-format=native --output-format=csv "\
-            "--csv-header=0 pre.v7d {}".format( csvname )
+            "--csv-header=0 {} {}".format( pre_un, csvname )
         subprocess.call(v7d_trans.split(), shell=False)
 
         # Elimino il file dati non necessari
-        subprocess.call( ["rm", "pre.v7d"] )
+        subprocess.call( ["rm", pre_un] )
 
         val.append( pd.read_csv( csvname, delimiter=',',
                                  names=[ 'Date', 'Time range', 'P1', 'P2',

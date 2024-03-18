@@ -23,7 +23,8 @@ if __name__ == '__main__':
 
     # Estraggo la sigla della Regione dal nome dello shapefile
     dumaree = os.path.basename( aree )
-    regione = dumaree[ len("macroaree_"):-len(".shp") ]
+    regione = dumaree[len("macroaree_"):]
+    regione = regione.split(".")[0] # rimuovo qualunque suffisso
     print( "Post-processing per la Regione {}".format(regione) )
 
     path_in = args.path_in # default = "/autofs/scratch-rad/vpoli/FCST_PROB/fxtr/data" 
