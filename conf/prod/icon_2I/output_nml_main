@@ -41,7 +41,7 @@
                                 tot_prec,rain_con,rain_gsp,snow_con,snow_gsp,graupel_gsp, clct,clch,clcm,clcl,
                                 asob_s,asodifd_s,asodird_s, athb_s,athd_s,athu_s, aumfl_s,avmfl_s, ashfl_s,alhfl_s,
                                 t_g,t_s,qv_s, w_snow, t_so,w_so, albdif, pres_msl,pres_sfc,t_seasfc,
-                                tqv,twater,hzerocl,cape_ml,cin_ml,lpi
+                                tqv,twater,hzerocl,snowlmt,cape_ml,cin_ml,lpi
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required                
