@@ -190,7 +190,7 @@ if __name__ == '__main__':
         plt.close()
 
     # Elimino i file csv
-    tobedeleted = glob.glob( "*_{}*.csv".format(valore) )
+    tobedeleted = glob.glob( "*_{}_*_*{}.csv".format(valore, regione) )
     for f in tobedeleted:
         os.remove(f)
 
