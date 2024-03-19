@@ -109,7 +109,7 @@ def soglia( cumulata ):
 
 def cumula_membri(nmemb, path_in, cumulate=None):
     for i in range(1, nmemb+1):
-        dir_in = "{}/cosmo.{}/data/lfff????0000".format( path_in, str(i) )
+        dir_in = f"{path_in}/input.{i:03d}/lfff????0000"
         #dir_in = "{}/2021100321.{}/lfff????0000".format( path_in, f"{i:03d}" )
 
         for f in glob.glob(dir_in):

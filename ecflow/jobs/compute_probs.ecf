@@ -68,7 +68,7 @@ accumulate_for_scacchiera_tp() {
   mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_tp
   cd $POSTPROC_EPS_WORKDIR/scacchiera_tp
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
-   -op C -in $WORKDIR
+   -op C -in $FXTR_WORKDIR
   $ecflow_client --event=tp_acc
 
 }
