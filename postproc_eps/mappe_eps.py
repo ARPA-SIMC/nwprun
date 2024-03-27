@@ -164,7 +164,7 @@ if __name__ == '__main__':
             
                 # Set-up mappa 
                 npanel = 3
-                fig, axs = plt.subplots( 1, 3, figsize=(16, 4), layout="constrained",
+                fig, axs = plt.subplots( 1, 3, figsize=(16, 4), # layout="constrained",
                                          subplot_kw={'projection': ccrs.PlateCarree()} )
                 font = {'size': 8}
                 plt.rc( 'font', **font )
