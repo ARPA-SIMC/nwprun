@@ -4,10 +4,12 @@
 mappe_eps() {
 
   cd $POSTPROC_EPS_WORKDIR
-  $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/mappe_eps.py \
-     $WORKDIR_BASE/nwprun/postproc_eps/Regioni_latlon.tif \
-     $WORKDIR_BASE/nwprun/postproc_eps/ProvinceER_latlon.tif \
-     "$FXTR_DATADIR/*h_?????????????${1}.grib" $POSTPROC_EPS_DATADIR
+  for filein in ${1}; do
+    $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/mappe_eps.py \
+       -shp_it $WORKDIR_BASE/nwprun/postproc_eps/shapefile_confini/gadm41_ITA_1.shp \
+       -shp_er $WORKDIR_BASE/nwprun/postproc_eps/shapefiles/macroaree_emro.shp \
+       -in $filein -out $POSTPROC_EPS_DATADIR
+  done
 
 }
 
@@ -21,56 +23,46 @@ mappe_dispatch() {
 
 # poor man parallelization
 for n in `seq 0 9`; do
-    (mappe_eps $n) &
+    (mappe_eps "$FXTR_DATADIR/*h_?????????????${n}.grib") &
+    (mappe_eps "$FXTR_DATADIR/*hup_?????????????${n}.grib") &
 done
 wait
 
-mappe_dispatch precipitazione/italia/probabilita/1H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_italia.png
+# dispatch maps to directory tree
+declare -A mprod
+mprod[meanmax]=meanmax
+mprod[probabilita]=prob
+mprod[probabilita_upscaled]=probup
 
-mappe_dispatch precipitazione/italia/probabilita/3H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_prob_italia.png
+# prec maps
+for cum in 1 3 24; do
+  mcum=`printf "%%03d" $cum`
+  for prod in meanmax probabilita probabilita_upscaled; do
+    for area in italia emro nord centro sud; do
 
-mappe_dispatch precipitazione/italia/probabilita/24H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_prob_italia.png
+      mappe_dispatch precipitazione/${area}/${prod}/${cum}H/${DATE} \
+        MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_${mcum}_???_${mprod[$prod]}_${area}.png
 
-mappe_dispatch precipitazione/italia/meanmax/1H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_italia.png
-
-mappe_dispatch precipitazione/italia/meanmax/3H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_meanmax_italia.png
-
-# questa viene fatta ma non trasferita, la attiviamo?
-mappe_dispatch precipitazione/italia/meanmax/24H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_meanmax_italia.png
-
-mappe_dispatch precipitazione/emro/probabilita/1H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_emro.png
-
-mappe_dispatch precipitazione/emro/probabilita/3H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_prob_emro.png
-
-mappe_dispatch precipitazione/emro/probabilita/24H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_prob_emro.png
-
-mappe_dispatch precipitazione/emro/meanmax/1H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_emro.png
-
-mappe_dispatch precipitazione/emro/meanmax/3H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_003_???_meanmax_emro.png
-
-mappe_dispatch precipitazione/emro/meanmax/24H/${DATE} \
-  MAP_FC_LENS_PR_0_TPPC_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_024_???_meanmax_emro.png
+    done
+  done
+done
 
 # vmax maps
-mappe_dispatch vmax10m/italia/probabilita/${DATE} \
-  MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_italia.png
+for prod in probabilita meanmax; do
+  for area in italia emro nord centro sud; do
 
-mappe_dispatch vmax10m/italia/meanmax/${DATE} \
-  MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_italia.png
+    mappe_dispatch vmax10m/${area}/${prod}/${DATE} \
+      MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_${mprod[$prod]}_${area}.png
 
-mappe_dispatch vmax10m/emro/probabilita/${DATE} \
-  MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_prob_emro.png
+  done
+done
 
-mappe_dispatch vmax10m/emro/meanmax/${DATE} \
-  MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_emro.png
+# lpi maps
+for prod in probabilita; do
+  for area in italia emro nord centro sud; do
+
+    mappe_dispatch lpi/${area}/${prod}/${DATE} \
+      MAP_FC_LENS_PR_0_LPI_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_000_???_${mprod[$prod]}_${area}.png
+
+  done
+done
