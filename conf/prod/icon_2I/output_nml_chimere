@@ -1,6 +1,5 @@
-! Complete domain; 2km; model levels up to 10 km + surface
-! Still to check: albdif or alb_dif?
-! Variables that may be added: qr,qi,athb_s,alhfl_s,ashfl_s,h_snow (optional); clct,t_so,t_sk,t_seasfc (duplicates?)
+! Complete domain; 5km; model levels up to 10 km + surface
+! Variables that may be added: athb_s,alhfl_s,ashfl_s,h_snow (optional); clct,t_so,t_sk,t_seasfc (duplicates?)
 
 &output_nml
 ! model levels up to 10 km + surface
@@ -14,7 +13,7 @@
  output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurf_all5km_A0P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- ml_varlist                   = pres,temp,u,v,qv,qc, pres_sfc,t_2m,u_10m,v_10m,w_so,clcl,clcm,clch,tot_prec,asob_s,albdif,alhfl_s,ashfl_s,t_g
+ ml_varlist                   = pres,temp,u,v,qv,qc,qr,qi,qs, pres_sfc,t_2m,u_10m,v_10m,w_so,clcl,clcm,clch,tot_prec,asob_s,albdif,alhfl_s,ashfl_s,t_g
  m_levels                     = 14...65
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased

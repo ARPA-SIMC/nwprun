@@ -2,7 +2,6 @@
 ! Still to check: 
 ! - reduce pressure levels (keep only: 250, 500, 700, 850, 925, 1000)
 ! - possible duplicates: t_s, t_seasfc (equal to t_g); t_so (t_so(0) is equal to t_g except under snow; other levels may not be needed)
-! - albdif of alb_dif (are they equal?)
 
 &output_nml
 ! Pressure levels
@@ -21,8 +20,8 @@
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required                
- reg_lon_def                  = 2.7,0.025,22.301
- reg_lat_def                  = 33.5,0.02,49.101
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
 /
 &output_nml
 ! Surface
@@ -40,13 +39,13 @@
  ml_varlist                   = t_2m,td_2m,u_10m,v_10m,gust10,
                                 tot_prec,rain_con,rain_gsp,snow_con,snow_gsp,graupel_gsp, clct,clch,clcm,clcl,
                                 asob_s,asodifd_s,asodird_s, athb_s,athd_s,athu_s, aumfl_s,avmfl_s, ashfl_s,alhfl_s,
-                                t_g,t_s,qv_s, w_snow, t_so,w_so, albdif, pres_msl,pres_sfc,t_seasfc,
-                                tqv,twater,hzerocl,snowlmt,cape_ml,cin_ml,lpi
+                                t_g, w_snow, t_so,w_so, albdif, pres_msl,pres_sfc,
+                                tqv,twater,snowlmt,cape_ml,cin_ml,lpi
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required                
- reg_lon_def                  = 2.7,0.025,22.301
- reg_lat_def                  = 33.5,0.02,49.101
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
 /
 &output_nml
 ! Static fields: topo+lsm
@@ -64,6 +63,6 @@
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased         
  remap                        = 1   !0 in case unstructured grid is required                
- reg_lon_def                  = 2.7,0.025,22.301
- reg_lat_def                  = 33.5,0.02,49.101
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
 /

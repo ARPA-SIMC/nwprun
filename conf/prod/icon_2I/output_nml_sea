@@ -15,8 +15,8 @@
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1 !0 in case unstructured grid is required
- reg_lon_def                  = 2.7,0.025,22.301
- reg_lat_def                  = 33.5,0.02,49.101
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
 /
 &output_nml
 ! Static fields: lsm
@@ -34,7 +34,7 @@
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required
- reg_lon_def                  = 2.7,0.025,22.301
- reg_lat_def                  = 33.5,0.02,49.101
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
 /
 

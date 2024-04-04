@@ -1,5 +1,5 @@
 ! Italy; 2km; model levels + surface; only analysis (kenda)
-! Still to check: t_s,t_so,t_sk,t_seasfc (duplicates?); alb_dif (or albdif?); td_2m,rain_con,rain_gsp (remove?); clcl,clcm,clch (replace with ceiling?)
+! Still to check: t_s,t_so,t_sk,t_seasfc (duplicates?); td_2m,rain_con,rain_gsp (remove?); clcl,clcm,clch (replace with ceiling?)
 
 &output_nml
 ! Model levels + surface
@@ -15,7 +15,7 @@
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                   = pres,temp,u,v,qv,qc,qr,qs,qi,qg,w, t_2m,td_2m,u_10m,v_10m,
                                 tot_prec,rain_con,rain_gsp,snow_con,snow_gsp, asob_s,athb_s,alhfl_s,ashfl_s,aumfl_s,avmfl_s,asodifd_s,asodird_s,
-                                clct,clcl,clcm,clch, pres_sfc,pres_msl, w_so,t_s,t_so,t_sk,t_seasfc, alb_dif,gz0
+                                clct,clcl,clcm,clch, pres_sfc,pres_msl, w_so,t_so,t_g, albdif,gz0
  m_levels                     = 1...65
  output_grid                  =  .FALSE.
  stream_partitions_ml         =  1 ! needs to be adapted if num_io_procs is increased
