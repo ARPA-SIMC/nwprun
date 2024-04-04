@@ -83,6 +83,7 @@
 ! ------------------------------------------------------------------------------------------
 @INCLUDE output_nml_main@
 @INCLUDE output_nml_rsd@
+@INCLUDE output_nml_hzero@
 
 &run_nml
  num_lev                     = 65

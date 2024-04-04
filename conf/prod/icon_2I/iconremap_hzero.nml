@@ -1,0 +1,22 @@
+&remap_nml
+ in_filename       = "hzero_msk.grb"
+ in_type           = 2
+ in_grid_filename  = "/ind2/meteo/a07smr03/icon/grids/ICON_REG3_DOM01/ICON_REG3_DOM01.nc"
+ out_filename      = "hzero_regular.grb"
+ out_type          = 3
+ out_filetype      = 2
+ out_grid_filename = "template_all2km.grb"
+ l_have3dbuffer    = .false.
+/
+!
+! DEFINITIONS FOR IFS INPUT DATA
+! see also: ICON tutorial, section 2.2.2
+!
+! Parameters on model layers (always grib2)
+!
+&input_field_nml  ! Height of zero T
+ inputname      = "HZEROCL"
+ outputname     = "HZEROCL"
+ intp_method = 4
+! intp_method = 8
+/
