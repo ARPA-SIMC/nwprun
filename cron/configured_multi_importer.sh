@@ -19,7 +19,7 @@ import_configured() {
         ARKI_CONF=${ARKI_CONF%.*}.$configext
     fi
     log "importing configured $format$2"
-    time arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
+    time $SIMC_TOOLS arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
     if [ -n "$signalfile" -a -n "$signal" ]; then
 	if [ -n "$signal_method" ]; then
 	    export IMPORT_SIGNAL_METHOD=$signal_method # override if requested
@@ -176,7 +176,7 @@ import_one() {
 	./generic/*)
 	    log "start importing generic $1"
 	    # improve error checking
-	    time arki-scan --dispatch=$ARKI_CONF $1 > /dev/null || true
+	    time $SIMC_TOOLS arki-scan --dispatch=$ARKI_CONF $1 > /dev/null || true
 	    rm -f $1
 	    log "done importing $1"
 	    ;;
