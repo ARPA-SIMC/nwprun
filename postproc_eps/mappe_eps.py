@@ -146,7 +146,7 @@ if __name__ == '__main__':
         print("VARIABILE DA PLOTTARE:", var[0])
         
         try:
-            if ( var[0] == "tprate" or var[0] == "vmax_10m" ):
+            if ( var[0] == "tprate" or var[0] == "vmax_10m" or var[0] == "10fg" ):
                 if var[0] == "tprate":
                     variabile = tprate
                     if int(cumstep) == 1:
@@ -155,9 +155,12 @@ if __name__ == '__main__':
                         vals = [ 10, 20, 30, 50 ]
                     else:
                         vals = [ 30, 50, 100, 150 ]
-                elif var[0] == "vmax_10m":
+                elif var[0] == "vmax_10m" or var[0] == "10fg":
                     variabile = vmax_10m
                     vals = [ 13.9, 17.2, 20.8, 24.5 ]
+
+                #print(variabile)
+                #print(vals)
 
 #----------------------------------------------------------------------------------------
 # PRIMA IMMAGINE - ensmean, max, min, 90esimo percentile
@@ -197,7 +200,7 @@ if __name__ == '__main__':
                         mappe[2] = campi[ ind[0] ]
                         mappe[2][ mappe[2] < 0 ] = 0.
                         var_tit[2] = "90th percentile {}".format( variabile.varln )
-                    elif var[0] == "vmax_10m":
+                    elif var[0] == "vmax_10m" or var[0] == "10fg":
                         # 4) Min
                         ind = [ x for x in range(len(grbs)) if (soglia[x]==None) & (media[x]==None) & (percentile[x]==0) ]
                         mappe[2] = campi[ ind[0] ]
@@ -261,13 +264,14 @@ if __name__ == '__main__':
                         # Salvataggio output - SOTTODOMINI
                         fileout = "{}/MAP_FC_LENS_PR_0_{}_GRND_NULL_NULL_NULL_NULL_{}_{}_{}_{}_meanmax_{}.png".format( fold_out, variabile.fout, inizio.strftime('%Y%m%d%H'), data_fin.strftime('%Y%m%d%H'), f"{int(cumstep):03d}", f"{int(endstep):03d}", key )      
                         plt.savefig( fileout, bbox_inches='tight' )
-
+                        
                     #---------------------------------------------------
                     # Subarea Emilia-Romagna
                     #---------------------------------------------------            
                     er = [ 9., 13., 43., 46. ]
                     shape_er = ShapelyFeature(Reader(shp_reg).geometries(),
                                               ccrs.PlateCarree(), edgecolor='black')
+
                     for col in range(npanel):
                         ax = axs[col]
                         ax.set_extent( er, ccrs.PlateCarree() )
@@ -277,7 +281,7 @@ if __name__ == '__main__':
                     # Nome file output        
                     fileout = "{}/MAP_FC_LENS_PR_0_{}_GRND_NULL_NULL_NULL_NULL_{}_{}_{}_{}_meanmax_emro.png".format( fold_out, variabile.fout, inizio.strftime('%Y%m%d%H'), data_fin.strftime('%Y%m%d%H'), f"{int(cumstep):03d}", f"{int(endstep):03d}" )
                     plt.savefig(fileout, bbox_inches='tight')
-                
+
                     plt.close()
 
 #----------------------------------------------------------------------------------------
