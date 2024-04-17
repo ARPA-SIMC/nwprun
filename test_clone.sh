@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 if [ $# -ne 0 ] ; then
-  echo "Build a clean adn up-to-date icon_test environment"
+  echo "Build a clean and up-to-date icon_test environment"
   echo "All files in icon_test (conf, jobs, running dir, log) are deleted. Files in \"conf\" and \"jobs\" are copied from prod suite"
   exit
 fi
@@ -35,10 +35,11 @@ echo rm -Rf ${WORKDIR_BASE}/test/icon_2I/fcast/*
 mkdir -p ${WORKDIR_BASE}/nwprun/ecflow/jobs_test
 mkdir -p ${WORKDIR_BASE}/import_test/sync_lami
 mkdir -p ${WORKDIR_BASE}/download_test
+mkdir -p ${WORKDIR_BASE}/nwprun/conf/test/icon_2I/fcast
 
 # Copy files from "prod" to "test"
 rsync -lptgov ${WORKDIR_BASE}/nwprun/conf/prod/icon_2I/* ${WORKDIR_BASE}/nwprun/conf/test/icon_2I
 rsync -lptgov ${WORKDIR_BASE}/nwprun/conf/prod/icon_2I/fcast/* ${WORKDIR_BASE}/nwprun/conf/test/icon_2I/fcast
 rsync -lptgov ${WORKDIR_BASE}/nwprun/ecflow/jobs/* ${WORKDIR_BASE}/nwprun/ecflow/jobs_test
-rsync -lptgov ${WORKDIR_BASE}/nwprun/conf/test/icon_2I/fcast/conf.sh.test ${WORKDIR_BASE}/nwprun/conf/test/icon_2I/fcast/conf.sh
+cp ${WORKDIR_BASE}/nwprun/conf/test/icon_2I/fcast/conf.sh.test ${WORKDIR_BASE}/nwprun/conf/test/icon_2I/fcast/conf.sh
 

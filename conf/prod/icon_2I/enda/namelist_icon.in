@@ -74,6 +74,7 @@
  generatingProcessIdentifier = @MODEL_ASSIM_GP@
  perturbationNumber          = @PERT_NUMB@
  localtablesversion          = 0
+ numberOfForecastsInEnsemble = @ENS_TOTAL_MEMB@
 ! see mo_gribout_nml.f90 for preset behavior
  preset                      = 'none'
  typeOfGeneratingProcess     = 4
@@ -213,8 +214,7 @@
  remap                       =  0  ! 0 in case unstructured grid is required
 /
 
-@INCLUDE output_nml_lama@
-@INCLUDE output_nml_chimere@
+@INCLUDE output_nml_iama5@
 @INCLUDE output_nml_sea@
 
 &run_nml

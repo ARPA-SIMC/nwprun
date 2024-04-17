@@ -7,6 +7,7 @@
  out_filetype      = 2
  out_grid_filename = "template_all2km.grb"
  l_have3dbuffer    = .false.
+ ncstorage_file    = "/ind2/meteo/a07smr03/icon/grids/ICON_REG3_DOM01/ncstorage_REG3_all2km.nc"
 /
 !
 ! DEFINITIONS FOR IFS INPUT DATA
@@ -17,6 +18,5 @@
 &input_field_nml  ! Height of zero T
  inputname      = "HZEROCL"
  outputname     = "HZEROCL"
- intp_method = 4
-! intp_method = 8
+ intp_method = 8
 /
