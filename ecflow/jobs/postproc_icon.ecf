@@ -33,7 +33,7 @@ icon_postproc() {
         cp $(conf_getfile template_all2km.grb) .
         grib_copy -w typeOfFirstFixedSurface=4 ${1} hzero.grb
         grib_copy -w typeOfFirstFixedSurface=1 ${1} topo.grb
-        /ind2/meteo/a07smr03/icon/build/math_grib_light.exe 1. hzero.grb 1. topo.grb hzero_msk.grb mskoutl -check=nil
+        ${SIMC_TOOLS} /usr/libexec/ma_utils/math_grib.exe 1. hzero.grb 1. topo.grb hzero_msk.grb mskoutl -check=nil
         ${MODEL_PRE_BINDIR}/iconremap --remap_nml=iconremap_hzero.nml
         mv hzero_regular.grb $out_file
         putarki_configured_archive $2 $out_file grib
