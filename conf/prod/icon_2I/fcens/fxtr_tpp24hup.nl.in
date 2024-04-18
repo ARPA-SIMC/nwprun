@@ -1,0 +1,61 @@
+@INCLUDE fxtr_common.nl@
+
+!---------------------------------------------------------------------------------------
+! Define input and output characteristics:
+! Note that the algorithm used to compute probability fields requires that all ensemble 
+! members are considered in the eps-loop, i.e., epsstop must be equal to the total 
+! number of ensemble members.
+! Generation of prob maps with TOTPREC over 24 hours ABOVE some thresolds
+! Pay attention to tlag
+! Since one output file is written per time step and 24 hour sums of precipitation in 
+! form of snow have to be computed, tlag=-24 must be specified to make all required member 
+! input files accessible at one output time.
+!---------------------------------------------------------------------------------------
+&Process
+  in_file="@FXTR_WORKDIR@/input.<mmm>/lfff<DDHH>0000"
+  epsstart=1, epsstop=@ENS_TOTAL_MEMB@, epsincr=1
+  tstart=3, tstop=@MODEL_STOP@, tincr=24, tlag=-24, out_tstart = 27, out_tincr=24
+  out_file="@FXTR_DATADIR@/tpp24hup_@DATE@@TIME@<DDHH>.grib"
+  out_type="GRIB2", out_mode_weighted_member=.FALSE., out_type_packing= 'simple,10'
+  out_type_alternate_code=.true.
+/
+
+!---------------------------------------------------------------------------------------
+! Define fields to extract, define operations to apply to extracted fields:
+! Difference of total precipitation at current time and 24 hours before.
+!---------------------------------------------------------------------------------------
+&Process in_field = "TOT_PREC", poper="replace_cond,TOT_PREC<0.01,0.0", toper="delta,24,hour" /
+
+!---------------------------------------------------------------------------------------
+! Define derived ensemble member fields:
+! The total precipitation in form of snow is computed as the sum of the components 
+! specified for precip_snow in the model specific global block ModelSpecification. This 
+! block may occur more than once. The active model is specified by model_tag in the global 
+! block GlobalSettings.
+!---------------------------------------------------------------------------------------
+
+
+!!! Upscale precipitation field (tiled_sqmax)
+&Process tmp1_field="TOT_PREC", tag='tp_sqmax', hoper="shifted_sqmax,4.5" /
+
+
+!---------------------------------------------------------------------------------------
+! Define statistical products:
+! Probabilities from ensemble prediction system for a series of lower thresholds of
+! 24 hour sum of total precipitation
+!---------------------------------------------------------------------------------------
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[30,infinite]',
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[50,infinite]',
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[70,infinite]',
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[100,infinite]',
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[150,infinite]',
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/

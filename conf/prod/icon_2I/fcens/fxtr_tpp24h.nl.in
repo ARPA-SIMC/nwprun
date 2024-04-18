@@ -1,0 +1,69 @@
+@INCLUDE fxtr_common.nl@
+
+!---------------------------------------------------------------------------------------
+! Define input and output characteristics:
+! Note that the algorithm used to compute probability fields requires that all ensemble 
+! members are considered in the eps-loop, i.e., epsstop must be equal to the total 
+! number of ensemble members.
+! Generation of prob maps with TOTPREC over 12 hours ABOVE some thresolds
+! Pay attention to tlag
+! Since one output file is written per time step and 6 hour sums of precipitation in 
+! form of snow have to be computed, tlag=-6 must be specified to make all required member 
+! input files accessible at one output time.
+!---------------------------------------------------------------------------------------
+&Process
+  in_file="@FXTR_WORKDIR@/input.<mmm>/lfff<DDHH>0000"
+  epsstart=1, epsstop=@ENS_TOTAL_MEMB@, epsincr=1
+  tstart=3, tstop=@MODEL_STOP@, tincr=24, tlag=-24, out_tstart = 27, out_tincr=24
+  out_file="@FXTR_DATADIR@/tpp24h_@DATE@@TIME@<DDHH>.grib"
+  out_type="GRIB2", out_mode_weighted_member=.FALSE., out_type_packing= 'simple,10'
+  out_type_alternate_code=.true.
+/
+
+!---------------------------------------------------------------------------------------
+! Define fields to extract, define operations to apply to extracted fields:
+! Difference of total precipitation at current time and 12 hours before.
+!---------------------------------------------------------------------------------------
+&Process in_field = "TOT_PREC", toper="delta,24,hour" /
+
+!---------------------------------------------------------------------------------------
+! Define derived ensemble member fields:
+! The total precipitation in form of snow is computed as the sum of the components 
+! specified for precip_snow in the model specific global block ModelSpecification. This 
+! block may occur more than once. The active model is specified by model_tag in the global 
+! block GlobalSettings.
+!---------------------------------------------------------------------------------------
+
+!---------------------------------------------------------------------------------------
+! Define statistical products:
+! Probabilities from ensemble prediction system for a series of lower thresholds of
+! 12 hour sum of total precipitation, using cluster population as member weight.
+!---------------------------------------------------------------------------------------
+&Process out_field="TOT_PREC", product_category='eps_mean',
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_quantile', quantile=0,
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_quantile', quantile=90,
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_quantile', quantile=100,
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=30.,
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=50.,
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=70.,
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=100.,
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+&Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=150.,
+ set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+/
+

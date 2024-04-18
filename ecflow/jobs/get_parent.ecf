@@ -19,7 +19,9 @@ arki_loop() {
     nwpbctimeloop_init
     while nwpbctimeloop_loop; do
         if [ -n "$PARENTMODEL_SIGNAL" ]; then
-            import_signal_wait $PARENTMODEL_SIGNAL $DATES_SLICE$TIMES_SLICE "*" "$PARENTMODEL_SIGNAL_NFILES"
+	    for s in ${PARENTMODEL_SIGNAL[@]}; do # allow multiple signals
+                import_signal_wait $s $DATES_SLICE$TIMES_SLICE "*" "$PARENTMODEL_SIGNAL_NFILES"
+	    done
         fi
         getarki_icbc || return 1
     done

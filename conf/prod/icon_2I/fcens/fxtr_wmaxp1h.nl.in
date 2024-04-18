@@ -1,0 +1,30 @@
+@INCLUDE fxtr_common.nl@
+
+!---------------------------------------------------------------------------------------
+! Define input and output characteristics:
+! Note that the algorithm used to compute probability fields requires that all ensemble 
+! members are considered in the eps-loop, i.e., epsstop must be equal to the total 
+! number of ensemble members.
+! Generation of products for VMAX_10M
+! Pay attention to tlag
+!---------------------------------------------------------------------------------------
+&Process
+  in_file="@FXTR_WORKDIR@/input.<mmm>/lfff<DDHH>0000"
+  epsstart=1, epsstop=@ENS_TOTAL_MEMB@, epsincr=1
+  tstart=0, tstop=@MODEL_STOP@, tincr=1, out_tstart = 1, out_tincr=1
+  out_file="@FXTR_DATADIR@/vmaxp01h_@DATE@@TIME@<DDHH>.grib"
+  out_type="GRIB2", out_mode_weighted_member=.FALSE., out_type_packing= 'simple,10',
+  out_type_alternate_code=.true.
+/
+
+&Process in_field="VMAX_10M", scale = 1. /
+
+&Process out_field="VMAX_10M", product_category='eps_mean' /
+&Process out_field="VMAX_10M", product_category='eps_quantile', quantile=0 /
+&Process out_field="VMAX_10M", product_category='eps_quantile', quantile=100 /
+&Process out_field="VMAX_10M", product_category='eps_probability', prob_tlow=10.8 /
+&Process out_field="VMAX_10M", product_category='eps_probability', prob_tlow=13.9 /
+&Process out_field="VMAX_10M", product_category='eps_probability', prob_tlow=17.2 /
+&Process out_field="VMAX_10M", product_category='eps_probability', prob_tlow=20.8 /
+&Process out_field="VMAX_10M", product_category='eps_probability', prob_tlow=24.5 /
+
