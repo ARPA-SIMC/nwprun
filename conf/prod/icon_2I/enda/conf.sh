@@ -1,3 +1,8 @@
+# Icon bin with EMVORADO
+MODEL_BASE=/g100_work/smr_prod/srcintel_virginia/icon-2.6.5.1
+MODEL_BIN=$MODEL_BASE/bin/icon
+ECRAD_DATA=$MODEL_BASE/data
+
 # Forecast length 
 MODEL_BACK=1
 MODEL_STOP=1
@@ -7,7 +12,9 @@ MODEL_BCANA=N
 ENS_TOTAL_MEMB=24
 
 # Radar assimilation
-ACT_EMVORADO=.FALSE.
+ACT_EMVORADO=.TRUE.
+HDF5_WORKDIR=$WORKDIR/radar_vol
+HDF5_QUARANTINE=$WORKDIR/radar_vol_quarantine
 RADLIST="16101 16102 16103 16105 16106 16107 16112 16144 16199 16998 16999"
 MODEL_LHN=.TRUE.
 MODEL_NH_LHN=3
@@ -38,11 +45,11 @@ esac
 PARENTMODEL=IFS
 if [ -n "$ENS_MEMB" ]; then
     PARENTMODEL_ARKI_DS=$ARKI_DIR/ifsens_am_foricon
-    PARENTMODEL_ARKI_DS_SST=$ARKI_DIR/hres_am_foricon
     PARENTMODEL_SIGNAL=ifsens_am_enda
     PARENTMODEL_FREQINI=6
     PARENTMODEL_FREQANA=6
     PARENTMODEL_FREQFC=1
+    GET_ICBC_MINCOUNT=940 # exactly 945
 
     # input data
     PARENTMODEL_DATADIR=$WORKDIR/input.$ENS_MEMB/data
@@ -65,6 +72,7 @@ else # deterministic run or analysis
     PARENTMODEL_FREQINI=6
     PARENTMODEL_FREQANA=6
     PARENTMODEL_FREQFC=1
+    GET_ICBC_MINCOUNT=1035 # exactly 1040
 
     # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki

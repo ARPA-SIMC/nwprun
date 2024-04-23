@@ -14,6 +14,7 @@ echo $SMND_PROFILE
 set -x
 safe_rm_rf $HDF5_WORKDIR
 mkdir -p $HDF5_WORKDIR
+mkdir -p $HDF5_QUARANTINE
 cd $HDF5_WORKDIR
 
 getarki_radar_vol

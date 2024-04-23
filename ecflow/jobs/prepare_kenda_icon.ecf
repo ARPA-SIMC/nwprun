@@ -1,4 +1,6 @@
 %include <sched_light.h>
+%include <%HPCENV%/modules_icon.h>
+#module load python
 %include <head.h>
 
 
@@ -217,12 +219,12 @@ export FOF_CONV=$(for fofc in ${MEC_WORKDIR}/output/mof*; do \
 # If there are fof of radar observations, save their prefix to be added to 
 # namelist variable "fof_prefix"
 if [[ "$do_rad" == Y ]]; then 
-    FOF_RAD=$(for fofr in ${WORKDIR}/cosmo/data/fof_radar_id*; \
+    FOF_RAD=$(for fofr in ${WORKDIR}/icon/data/fof_radar_id*; \
                     do if [ -f $fofr ]; then \
                         dumf=$(basename $fofr)
                         echo -n \'${dumf:0:19}\' \ ; fi; done)
 elif ([[ "$do_rad" == N ]] && [[ -n "$lmo_rad" ]]); then
-    FOF_RAD=$(for fofr in ${WORKDIR}/cosmo.$lmo_rad/data/fof_radar_id*; \
+    FOF_RAD=$(for fofr in ${WORKDIR}/icon.$lmo_rad/data/fof_radar_id*; \
                     do if [ -f $fofr ]; then \
                         dumf=$(basename $fofr)
                         echo -n \'${dumf:0:19}\' \ ; fi; done)
@@ -237,7 +239,9 @@ elif ([[ "$conv_obs" == N ]] && [[ "$rad_obs" == Y ]]); then
     export FOF_PRE=$FOF_RAD
 fi
 
-# deterministic: radar observations
+# Deterministic: radar observations
+# If fof is not available, it is copied from "lmo_rad" ensmeble member and the NetCDF
+# variable "veri_ens_member" is set to -1
 if [ "$do_rad" = Y ]; then
     for fofr in $WORKDIR/icon/data/fof_radar_id*; do
         ID=${fofr##*/}
@@ -247,8 +251,12 @@ if [ "$do_rad" = Y ]; then
 elif ([[ "$do_rad" == N ]] && [[ -n "$lmo_rad" ]]); then
     for fofr in $WORKDIR/icon.$lmo_rad/data/fof_radar_id*; do
         ID=${fofr##*/}
-        ln -fs ${WORKDIR}/icon.$lmo_rad/data/${ID} \
+        cp ${WORKDIR}/icon.$lmo_rad/data/${ID} \
             ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000.nc
+        source $WORKDIR_BASE/env_python3/bin/activate
+        python3 %BASEDIR%/ecflow/script_python3/change_variable_netcdf.py                 \
+            --path ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000.nc \
+            --variable veri_ens_member --value -1
     done
 fi
 
@@ -258,6 +266,8 @@ if [ "$rad_obs" = Y ]; then
         n3=`printf "%%03d" $n`
     
         # radar observations
+        # If fof is not available, it is copied from an other run and the NetCDF
+        # variable "veri_ens_member" is set to the correct value
         if [ "${mo_rad[$n]}" = Y ]; then
             for fofr in $WORKDIR/icon.$n/data/fof_radar_id*; do
                 ID=${fofr##*/}
@@ -267,14 +277,22 @@ if [ "$rad_obs" = Y ]; then
         elif [ -n "$lmo_rad" ]; then # use another member
             for fofr in $WORKDIR/icon.$lmo_rad/data/fof_radar_id*; do
                 ID=${fofr##*/}
-                ln -fs ${WORKDIR}/icon.$lmo_rad/data/${ID} \
+                cp ${WORKDIR}/icon.$lmo_rad/data/${ID} \
                     ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
+                source $WORKDIR_BASE/env_python3/bin/activate
+                python3 %BASEDIR%/ecflow/script_python3/change_variable_netcdf.py                        \
+                    --path ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc \
+                    --variable veri_ens_member --value $n
             done
         else
             for fofr in $WORKDIR/icon/data/fof_radar_id*; do
                 ID=${fofr##*/}
-                ln -fs ${WORKDIR}/icon/data/${ID} \
+                cp ${WORKDIR}/icon/data/${ID} \
                     ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
+                source $WORKDIR_BASE/env_python3/bin/activate
+                python3 %BASEDIR%/ecflow/script_python3/change_variable_netcdf.py                        \
+                    --path ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc \
+                    --variable veri_ens_member --value $n
             done
         fi
     done

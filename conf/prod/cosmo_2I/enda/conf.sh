@@ -121,6 +121,7 @@ LETKF_BIN=$WORKDIR_BASE/srcintel/dace_code_2.06/build/LINUX64.intel-mpi/bin/var3
 # Radar volumes assimilation
 ACT_EMVORADO=.TRUE.
 HDF5_WORKDIR=$WORKDIR/radar_vol
+HDF5_QUARANTINE=$WORKDIR/radar_vol_quarantine
 RADLIST="16101 16102 16103 16105 16106 16107 16112 16144 16199 16998 16999"
 
 # suite timing

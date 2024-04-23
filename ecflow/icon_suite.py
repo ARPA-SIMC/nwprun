@@ -39,7 +39,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": True, "lhn": True, "radarvol": False, "membrange": "0-40",
+conf = ModelConfig({"gts": True, "lhn": True, "radarvol": True, "membrange": "0-40",
                     "postprocrange": "0",
                     "modelname": "icon",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis],
@@ -142,6 +142,46 @@ for h in 3,6,9,15,18,21:
 icon.check()
 icon.write(interactive=interactive)
 icon.replace(interactive=interactive)
+
+
+# Suite fcens
+extra_env = common_extra_env.copy()
+extra_env.update({
+    "NWPCONF": "prod/icon_2I/fcens",
+    "NNODES_PREMODEL": 3,
+    "NNODES_MODEL": 6,
+    "NNODES_ENDA": 6,
+    "ECF_TIMEOUT": "14400"
+})
+basicenv = BasicEnv(srctree=os.environ["OPE"],
+                    worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
+                    sched="slurm",
+                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    ntries=2,
+                    extra_env=extra_env)
+
+conf = ModelConfig({"gts": False, "lhn": True, "membrange": "1-20",
+                    "postprocrange": "1-20",
+                    "modelname": "icon",
+                    "runlist": [GetObs, EpsMembers, EpsPostproc],
+                    "epspostproclevel": 2}).getconf()
+fcens = ModelSuite("icon_2I_fcens")
+basicenv.add_to(fcens.suite)
+day = fcens.suite.add_family("day").add_repeat(
+    ecflow.RepeatDate("YMD",
+                      int((datetime.datetime.now()-datetime.timedelta(days=delta[2])).strftime("%Y%m%d")),
+                      20301228))
+hdep = None # first repetition has no dependency
+for h in range(21, 24, 3): # h=21
+    famname = "hour_" + ("%02d" % h)
+    hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
+    #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
+    WaitAndRun(dep=hdep, conf=conf).add_to(hour)
+    hdep = famname # dependency for next repetition
+
+fcens.check()
+fcens.write(interactive=interactive)
+fcens.replace(interactive=interactive)
 
 
 # Suite enda_dia
