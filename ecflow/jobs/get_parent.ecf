@@ -104,8 +104,14 @@ case "%SUITE%" in
         ;;
 
     icon*)
-	. $NWPCONFBINDIR/icon_model.sh
-	arki_loop || arki_loop_backup
+        # asynchronous download for ensmeble mebers
+        if [ -n "$ENS_MEMB" ]; then
+            sleep $(( $ENS_MEMB*3 ))       
+        fi
+
+        # Retrieve data
+	    . $NWPCONFBINDIR/icon_model.sh
+	    arki_loop || arki_loop_backup
 	;;
 
 esac
