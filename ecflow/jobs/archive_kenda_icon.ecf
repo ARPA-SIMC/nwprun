@@ -18,10 +18,10 @@ archive_suite() {
         # Save all ensemble members and determnistic
         mkdir -p  $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}
         rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.??? \
-		          $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}
+		          $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}  || true
         if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
             rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.??? 	
-		              $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
+		              $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE      || true
         fi
 
         # Clean data at least 5 days old
@@ -40,12 +40,13 @@ archive_perm() {
 	    # Create archive folder and save deterministic analysis increments
         subdir=%SUITE%/$DATE$TIME
 	    mkdir -p $CINECA_ARCHIVE_POST/$subdir
-	    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.det $CINECA_ARCHIVE_POST/$subdir
+	    rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.det  \
+                  $CINECA_ARCHIVE_POST/$subdir      || true
 
         # Save ensemble analysis increments at 21 UTC
         if [ "$TIME" = "21" ]; then
             rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.??? \
-                      $CINECA_ARCHIVE_POST/$subdir
+                      $CINECA_ARCHIVE_POST/$subdir  || true
         fi
 
 	    # Retrieve first guess lead time
@@ -58,7 +59,7 @@ archive_perm() {
 	    # Save deterministic first guess
 	    fgfile=$WORKDIR/icon/data/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb
         fgfile_out=icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_det.grb
-        rsync -pt $fgfile $CINECA_ARCHIVE_POST/$subdir/$fgfile_out
+        rsync -pt $fgfile $CINECA_ARCHIVE_POST/$subdir/$fgfile_out  || true
 
 	    # Save ensemble first guess
         if [ "$TIME" = "21" ]; then
@@ -66,7 +67,7 @@ archive_perm() {
 	            n3=`printf "%%03d" $n`	
 	            fgfile=$WORKDIR/icon.$n/data/icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00.grb
                 fgfile_out=icon_${DATES}${TIMES}00_+000${lt_hh}${lt_mm}00_${n3}.grb
-           	    rsync -pt $fgfile $CINECA_ARCHIVE_POST/$subdir/$fgfile_out
+           	    rsync -pt $fgfile $CINECA_ARCHIVE_POST/$subdir/$fgfile_out  || true
 	        done
 	    fi
 
