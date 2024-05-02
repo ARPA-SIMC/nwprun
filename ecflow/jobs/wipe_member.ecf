@@ -7,7 +7,7 @@ set -x
 if [ "$STOP_ON_FAIL" != "Y" ]; then
     tobecompleted=${ECF_NAME%%/wipe/wipe_member}
 # in case of failure only postproc (if exists) may need to be killed
-    $ecflow_client --kill $tobecompleted/model/postproc || true
+    $ecflow_client --kill $tobecompleted/model || true
     sleep 30
     $ecflow_client --force=complete recursive $tobecompleted/check_memb $tobecompleted/preproc $tobecompleted/model
 fi
