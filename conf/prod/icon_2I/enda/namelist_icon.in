@@ -216,6 +216,7 @@
 
 @INCLUDE output_nml_iama5@
 @INCLUDE output_nml_sea@
+@INCLUDE output_nml_rsd@
 
 &run_nml
  num_lev                     = 65
