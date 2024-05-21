@@ -70,7 +70,10 @@ for i in defaults:
 if usabile == False:
     if dir_quaratine != "": 
         print("Sposto il file in quarantena")
-        shutil.move(filename, dir_quaratine)
+        try:
+            shutil.move(filename, dir_quaratine)
+        except shutil.Error:
+            os.remove(filename)
     else:
         print("Elimino il file")
         os.remove(filename)
