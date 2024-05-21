@@ -17,8 +17,8 @@ suitename = "cron_get"
 famlist = ["cosmo_5M_assimm18_cineca", "cosmo_5M_assimm12_cineca",
            "cosmo_5M_fcast_cineca", "cosmo_2I_fcast_cineca", "cosmo_am_enda",
            "cosmo_am_eps", "hres_am_foricon", "ifsens_am_enda",
-           "ifsens_am_endabak", "gts_bufr", "radar_lhn", "radar_sri",
-           "radar_vol"]
+           "ifsens_am_endabak", "ifsens_am_eps", "gts_bufr",
+           "radar_lhn", "radar_sri", "radar_vol"]
 
 
 basicenv = BasicEnv(srctree=os.environ["OPE"],
