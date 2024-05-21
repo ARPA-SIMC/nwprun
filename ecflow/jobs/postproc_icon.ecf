@@ -48,4 +48,6 @@ icon_postproc() {
 set -x
 cd $MODEL_DATADIR
 export POSTPROC_FUNC=icon_postproc
+# remove previously postprocessed file possibly left by a failed run (improve)
+rm -f icon_*_hzero_all2km_*_*.grb
 putarki_configured_model_output $(($MODEL_STOP + 1))
