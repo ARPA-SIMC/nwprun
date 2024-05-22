@@ -5,18 +5,18 @@
 
 # define custom functions
 get_init() {
-    export PROCNAME=enda_get
+    export PROCNAME=eps_get
     export EXTRA_CONF=ifsens_am/
 }
 
 get_setup() {
-    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=ifsens_am_enda"
+    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=ifsens_am_eps"
     file_pattern="U3X????????????????1"
     file_processed=()
     file_list_file=${PROCNAME}_list.$$
     rm -f $file_list_file
     reftime=`datetime_cnmc $DATE$TIME`
-    for hh in 0 `seq 6 1 12`; do
+    for hh in `seq 1 5` `seq 19 60`; do
 	vertime=`datetime_add $DATE$TIME $hh`
 	vertime=`datetime_cnmc $vertime`
 	echo "U3X${reftime}${vertime}1"

@@ -32,7 +32,7 @@ get_cleanup() {
 get_one() {
     while true; do
 	donenothing=Y
-	rclone --transfers 1 --include-from $file_list_file copy meteoam-cin:$FTPDIR/ .
+	rclone --transfers 4 --include-from $file_list_file copy meteoam-cin:$FTPDIR/ .
 	for file in $file_pattern; do
 	    alreadydone=
 	    if [ -f "$file" ]; then
