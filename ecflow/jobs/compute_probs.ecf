@@ -93,6 +93,8 @@ done
 
 accumulate_for_scacchiera_tp() {
 
+  # use plain WMO definitions
+  unset ECCODES_DEFINITION_PATH
   mkdir -p $POSTPROC_EPS_WORKDIR/scacchiera_tp
   cd $POSTPROC_EPS_WORKDIR/scacchiera_tp
   $SIMC_TOOLS $WORKDIR_BASE/nwprun/postproc_eps/scacchiera_tp.py \
@@ -110,15 +112,17 @@ cd $FXTR_WORKDIR
 # precipitation probabilities
 for delta in 01 03 24; do
     conf_template fxtr_tpp${delta}h.nl
-    $FXTR_BIN fxtr_tpp${delta}h.nl
+    $FXTR_BIN fxtr_tpp${delta}h.nl &
 done
 # wind speed/gust probabilities
 conf_template fxtr_wspeedp1h.nl
-$FXTR_BIN fxtr_wspeedp1h.nl
+$FXTR_BIN fxtr_wspeedp1h.nl &
 conf_template fxtr_wmaxp1h.nl
-$FXTR_BIN fxtr_wmaxp1h.nl
+$FXTR_BIN fxtr_wmaxp1h.nl &
 
-# Is thi necessary also for ICON?
+wait
+
+# Is this necessary also for ICON?
 if [[ "%SUITE%" == "cosmo"* ]]; then
     # correct grib table number for old grib_api versions
     for file in $FXTR_DATADIR/*.grib; do
@@ -160,11 +164,12 @@ cd $FXTR_WORKDIR
 # upscaled precipitation probabilities
 for delta in 01 03 24; do
     conf_template fxtr_tpp${delta}hup.nl
-    $FXTR_BIN fxtr_tpp${delta}hup.nl
+    $FXTR_BIN fxtr_tpp${delta}hup.nl &
 done
 # upscaled lightning potential index probabilities
 conf_template fxtr_lpi01hup.nl
-$FXTR_BIN fxtr_lpi01hup.nl
+$FXTR_BIN fxtr_lpi01hup.nl &
+wait
 $ecflow_client --event=extra_prob
 
 }
@@ -173,7 +178,7 @@ $ecflow_client --event=extra_prob
 # due to module incompatibility
 (fix_ensemble_members)
 # launch everything in parallel
-(fxtr_compute_prob) &
 (accumulate_for_scacchiera_tp) &
+(fxtr_compute_prob) &
 (fxtr_compute_prob_extra) &
 wait
