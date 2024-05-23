@@ -3,7 +3,7 @@
 This package makes use of various pieces of software, including
 Arpae-SIMC software suite, by means of a
 [singularity](https://sylabs.io/singularity/) or
-[apptainer](https://apptainer.org/) container built with the
+[apptainer](https://apptainer.org/) container, built with the
 definition files available in this repository and also distributed in
 binary form on Sylabs repository.
 
@@ -27,12 +27,12 @@ The containers available within this project are:
    mainly for the [Cosmo](https://www.cosmo-model.org/) community
 
 They are all based on the Rocky8 linux distribution (analogous to
-RedHat 8) and the extra tools are installed through the Arpae-SIMC
+RedHat 8), while the extra tools are installed through the Arpae-SIMC
 [copr
 repository](https://copr.fedorainfracloud.org/coprs/simc/stable/)
 
-The containers are published on the sylabs.io repository so they can
-be downloaded interactively at their [specific
+The containers are published on the sylabs.io repository, thus they
+can be downloaded interactively at their [specific
 address](https://cloud.sylabs.io/library/dcesari/default/simctools) or
 using the `singularity` tool directly:
 
@@ -42,17 +42,18 @@ singularity pull library://dcesari/default/simctools:simc_tools_r8
 
 ### Use of the software within the container
 
-In order to use the containers it is necessary to install (as
-administrator) the singularity or the apptainer software. The simplest
-way to use the tools in the container is by executing the container
-itself (you may need to make it executable with `chmod +x`):
+The containers work on any modern Linux distribution. In order to use
+them it is necessary to install (as administrator) the singularity or
+the apptainer software package. The simplest way to use the tools
+included in a container is by executing the container itself (you may
+need to previously make it executable with `chmod +x`):
 
 ```
 ./simc_tools_r8.sif vg6d_transform --trans-type=zoom --sub-type=coord \
   --ilon=5. --flon=16. --ilat=40. --flat=48. input.grib output.grib
 ```
 
-Alternatively you can run an executable through the singularity
+Alternatively you can run an executable through the `singularity exec`
 command (e.g. in case you need to add command-line arguments to
 singularity):
 
