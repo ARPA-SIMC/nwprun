@@ -287,7 +287,7 @@ class EpsPostproc:
             fam.add_task("scacchiera_tp").add_trigger("./compute_probs:tp_acc == set")
             fam.add_task("scacchiera_ensmean").add_trigger("./compute_probs:main_prob == set")
             fam.add_task("scacchiera_prob").add_trigger("./compute_probs:main_prob == set")
-            fam.add_task("mappe_eps").add_trigger("./compute_probs:main_prob == set")
+            fam.add_task("mappe_eps").add_trigger("./compute_probs:main_prob == set and ./compute_probs:extra_prob == set")
             fam.add_task("upload_probs").add_trigger("./scacchiera_tp == complete and ./scacchiera_tp == complete and ./scacchiera_ensmean == complete and ./scacchiera_prob == complete and ./mappe_eps == complete")
 
 # Add family for the diagnostic of KENDA
