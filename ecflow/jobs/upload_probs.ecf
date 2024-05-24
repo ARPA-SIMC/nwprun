@@ -2,4 +2,6 @@
 %include <head.h>
 
 cd $POSTPROC_EPS_DATADIR
-rclone-v1.62.2 -v copy . ftpsimc:$INFOMET_UP_BASEDIR
+if [ -n "$INFOMET_UP_BASEDIR" ]; then
+    rclone-v1.62.2 -v copy . ftpsimc:$INFOMET_UP_BASEDIR
+fi
