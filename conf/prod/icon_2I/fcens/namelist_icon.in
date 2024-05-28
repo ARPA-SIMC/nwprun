@@ -71,7 +71,7 @@
 &gribout_nml
  generatingCenter            = 80
  generatingSubcenter         = 255
- generatingProcessIdentifier = @MODEL_ASSIM_GP@
+ generatingProcessIdentifier = @MODEL_FCENS_GP@
  perturbationNumber          = @PERT_NUMB@
  numberOfForecastsInEnsemble = @ENS_TOTAL_MEMB@
  localtablesversion          = 0
