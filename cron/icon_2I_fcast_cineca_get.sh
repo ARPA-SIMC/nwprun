@@ -23,12 +23,37 @@ icon_postproc() {
         rm -f ${tmpbase}_vprofg2
         ;;
 
-     *A0* | *A1* | *A2* | *A3*)
+    *Pz*)
+	if [ "${keys[3]}" = "unstr" ]; then # ignore all2km
+# next part from postproc_icon.ecf with adaptations
+	in_file=$PWD/${1}
+	pushd $LAMI_CINECA_WORKDIR
+        rm -f hzero.grb topo.grb
+        out_file=$(echo ${1} | sed s/unstr/all2km/)
+        cp $(conf_getfile iconremap_hzero.nml) .
+        cp $(conf_getfile template_all2km.grb) .
+        $SIMC_TOOLS grib_copy -w typeOfFirstFixedSurface=4 $in_file hzero.grb
+        $SIMC_TOOLS grib_copy -w typeOfFirstFixedSurface=1 $in_file topo.grb
+        $SIMC_TOOLS /usr/libexec/ma_utils/math_grib.exe 1. hzero.grb 1. topo.grb hzero_msk.grb mskoutl -check=nil
+        $MODEL_PRE_BINDIR/iconremap --remap_nml=iconremap_hzero.nml
+        mv hzero_regular.grb $out_file
+        putarki_configured_archive $2 $out_file grib
+	popd
+	fi
+        ;;
+
+    *A0* | *A1* | *A2* | *A3*)
         putarki_configured_archive $2 $1 grib
         ;;
     esac
 }
 
+
+module load profile/archive
+module load intel/oneapi-2021--binary
+module load intelmpi/oneapi-2021--binary
+module load netcdff/4.5.3--oneapi--2021.2.0-ifort
+module load eccodes/2.21.0--intelmpi--oneapi-2021--binary
 
 set -x
 export POSTPROC_FUNC=icon_postproc
