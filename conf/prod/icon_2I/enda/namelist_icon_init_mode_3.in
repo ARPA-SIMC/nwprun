@@ -16,7 +16,7 @@
  p_test_run                  = .false.
  l_test_openmp               = .true.
  l_log_checks                = .true.
- num_io_procs                = 3                ! may be more if frequent output is written
+ num_io_procs                = 10                ! may be more if frequent output is written
  num_restart_procs           = 0
  num_prefetch_proc           = 1
  itype_comm                  = 1
@@ -40,7 +40,7 @@
  zpbl2                       = 1000.
  lread_ana                   = @LREAD_ANA@      ! true if analysis increments are read
  ifs2icon_filename           = "@MODEL_PRE_DATADIR@/ic_@DATES@@TIMES@.nc"
- dwdfg_filename              = "/g100_work/smr_prod/casi_studio/ICON/ICON-EU/soil_for_initialization_completo/soil_ICON-EU_2023111506_remapped.nc"
+ dwdfg_filename              = "/g100_work/smr_prod/casi_studio/ICON/ICON-EU/2024061700/soil_ICON-EU_2024061700_remapped.nc"
  dwdana_filename             = "@MODEL_PRE_DATADIR@/@FILEAN@"
  filetype                    = @FILETYPE@
  ana_varnames_map_file       = "map_file.ana"
@@ -71,8 +71,16 @@
 &gribout_nml
  generatingCenter            = 80
  generatingSubcenter         = 255
- generatingProcessIdentifier = 2
+ generatingProcessIdentifier = @MODEL_ASSIM_GP@
  perturbationNumber          = @PERT_NUMB@
+ localtablesversion          = 0
+ numberOfForecastsInEnsemble = @ENS_TOTAL_MEMB@
+! see mo_gribout_nml.f90 for preset behavior
+ preset                      = 'none'
+ typeOfGeneratingProcess     = 4
+ localDefinitionNumber       = 0
+ typeOfProcessedData         = 5
+ typeOfEnsembleForecast      = 192
 /
 
 ! ------------------------------------------------------------------------------------------
@@ -158,8 +166,8 @@
                                                      ! 2: climate mode (absolute t-axis)
  include_last                = .FALSE.
  output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00"
- filename_format             = '<output_filename>_+<ddhhmmss>_reg'      ! file name base
- ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>_reg.rf'
+ filename_format             = '<output_filename>_+<ddhhmmss>_diag'      ! file name base
+ ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                  = graupel_gsp, rain_gsp, snow_gsp, tot_prec,
                                pres_sfc, pres_msl,
                                u_10m, v_10m, gust10,
@@ -188,7 +196,7 @@
  include_last                = .TRUE.                ! Default, ma settato a caso
  output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00"
  filename_format             = '<output_filename>_+<ddhhmmss>'     ! file name base
- ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
+! ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
  ml_varlist                  = u, v, vn, w, temp, theta_v, pres, 
                                qc, qg, qi, qr, qs, qv,
                                tke, rho, gz0,
@@ -205,6 +213,10 @@
  stream_partitions_ml        =  1  ! needs to be adapted if num_io_procs is increased
  remap                       =  0  ! 0 in case unstructured grid is required
 /
+
+@INCLUDE output_nml_iama5@
+@INCLUDE output_nml_sea@
+@INCLUDE output_nml_rsd@
 
 &run_nml
  num_lev                     = 65
