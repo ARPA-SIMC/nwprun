@@ -9,7 +9,7 @@ MODEL_STOP=1
 MODEL_BCANA=N
 
 # Number of ensemble members
-ENS_TOTAL_MEMB=24
+ENS_TOTAL_MEMB=40
 
 # Radar assimilation
 ACT_EMVORADO=.TRUE.

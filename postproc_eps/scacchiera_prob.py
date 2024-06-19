@@ -218,7 +218,7 @@ if __name__ == '__main__':
                         tipo = 'Massimo'
                     elif subtype == 'percentile':
                         tipo = '%sesimo percentile'%percent
-                    fig.suptitle( "Corsa di COSMO-2I-EPS del {}\n" \
+                    fig.suptitle( "Corsa di ICON-2I-EPS del {}\n" \
                                   "{} delle probabilità sulle macroaree".format( inizio.strftime( '%d/%m/%Y %H:%M' ), tipo ),
                                   y = 1.02 )    
                     if subtype == 'percentile':    
@@ -262,7 +262,7 @@ if __name__ == '__main__':
                     tipo = 'Massimo'
                 elif subtype == 'percentile':
                     tipo = '%sesimo percentile'%percent
-                fig.suptitle( "Corsa di COSMO-2I-EPS del {}\n" \
+                fig.suptitle( "Corsa di ICON-2I-EPS del {}\n" \
                               "{} delle probabilità sulle macroaree".format( inizio.strftime( '%d/%m/%Y %H:%M' ), tipo ),
                               y = 1.02 )    
                 if subtype == 'percentile':    

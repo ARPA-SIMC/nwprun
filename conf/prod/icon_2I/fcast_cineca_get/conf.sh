@@ -1,7 +1,7 @@
-MODEL_SIGNAL=icon_2I_fcast_cineca
-ARKI_DLDIR=$WORKDIR_BASE/download_test
+MODEL_SIGNAL=icon_2I_fcast
+ARKI_DLDIR=$WORKDIR_BASE/download
 if [ -n "$CINECA_MAIN_SYSTEM" ]; then
-    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami8
+    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
 fi
 unset ARKI_IMPDIR
 # modificare

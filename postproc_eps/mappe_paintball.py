@@ -20,7 +20,7 @@ from eps_utils import cumula_membri, get_args, get_var_grib, rotated_grid_transf
 # MAKE PAINTBALL PLOTS WITH PYTHON
 # ------------------------------------------------------------------------------
 # DESCRIZIONE
-# This script makes paintball plots from COSMO-2I-EPS output
+# This script makes paintball plots from ICON-2I-EPS output
 
 if __name__ == '__main__':
 

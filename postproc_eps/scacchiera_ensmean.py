@@ -180,7 +180,7 @@ if __name__ == '__main__':
             fig.tight_layout( pad=1.0 )
             n = n+1
                         
-        fig.suptitle( "Corsa di COSMO-2I-EPS del {}\n" \
+        fig.suptitle( "Corsa di ICON-2I-EPS del {}\n" \
                       .format(inizio.strftime('%d/%m/%Y %H:%M')), y=1.02 )
         # Creo il nome di output secondo la tassonomia di infomet.
         # I campi "periodo di cumulazione" e "scadenza" vengono

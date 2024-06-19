@@ -198,7 +198,7 @@ if __name__ == '__main__':
         tipo = 'media'
     elif sub_type == 'max':
         tipo = 'massima'
-    fig.suptitle( "Corsa di COSMO-2I-EPS del {}\n" \
+    fig.suptitle( "Corsa di ICON-2I-EPS del {}\n" \
                   "Probabilità di superamento soglie della precipitazione {} sulle macroaree "
                   .format( inizio.strftime('%d/%m/%Y %H:%M'), tipo ),
                   y=1.02 )    
@@ -238,7 +238,7 @@ if __name__ == '__main__':
             tipo = 'media'
         elif sub_type == 'max':
             tipo = 'massima'
-        fig.suptitle( "Corsa di COSMO-2I-EPS del {}\n" \
+        fig.suptitle( "Corsa di ICON-2I-EPS del {}\n" \
                       "Probabilità di superamento soglie della precipitazione {} sulle macroaree "
                       .format( inizio.strftime('%d/%m/%Y %H:%M'), tipo ),
                       y=1.02 )    
