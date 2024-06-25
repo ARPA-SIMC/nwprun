@@ -435,14 +435,34 @@ class WaitAndRun:
                 run(self.conf).add_to(fam)
         WipeRun(self.conf).add_to(node)
 
-# Create a model suite to be filled through WaitAndRun class, then
-# check it and load it on the server.
+# Create a model suite to be filled through WaitAndRun class, add
+# limits then check it and load it on the server.
 class ModelSuite():
     def __init__(self, name):
         self.name = name
         self.defs = ecflow.Defs()
         self.suite = self.defs.add_suite(name)
         self.checked = False
+
+
+    def addlimit(self, name, size, nodere):
+        import re
+        noderec = re.compile(nodere)
+#        for suite in self.defs.suites:
+        self.suite.add_limit(name, size) # add limit at suite root level
+        self.__loopnodes(self.suite, name, noderec)
+
+
+    def __loopnodes(self, suite, name, noderec):
+        for node in suite.nodes:
+            if isinstance(node, ecflow.Task): # task, stop here
+                if noderec.search(node.name()):
+                    node.add_inlimit(name, "", 1)
+            else: # family, go deeper
+                if noderec.search(node.name()):
+                    node.add_inlimit(name, "", 1)
+                else: # do not go deeper if the limit applies to the family
+                    self.__loopnodes(node, name, noderec)
 
 
     def check(self):
