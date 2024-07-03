@@ -20,7 +20,11 @@ cd $HDF5_WORKDIR
 getarki_radar_vol
 
 # Save list of downloaded file for diagnostics
-FS_DATE=$WORKDIR/archive/${DATE}${TIME}
-mkdir -p $WORKDIR/archive
-mkdir -p $FS_DATE
-ls . > $FS_DATE/lista_radar || true
+if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
+    # Create folder
+    subdir=%SUITE%/$DATE$TIME
+    mkdir -p $CINECA_ARCHIVE_POST/$subdir
+
+    # Save data
+    ls . > $CINECA_ARCHIVE_POST/$subdir/lista_radar || true
+fi
