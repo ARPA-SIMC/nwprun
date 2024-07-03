@@ -88,7 +88,7 @@
 &run_nml
  num_lev                     = 65
  lvert_nest                  = .false.
- dtime                       = 20.          ! timestep in seconds - 24. for R2B10,
+ dtime                       = @TIME_STEP@          ! timestep in seconds - 24. for R2B10,
  ldynamics                   = .TRUE.       ! dynamics
  ltransport                  = .true.
  ntracer                     = 5

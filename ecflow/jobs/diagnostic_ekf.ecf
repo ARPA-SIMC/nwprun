@@ -27,9 +27,12 @@ source $WORKDIR_BASE/env_python3/bin/activate
 python3 %BASEDIR%/ecflow/script_python3/read_ekf.py --folder $LETKF_ARCHIVE --report $REPORT
 
 # Read LHN data
-if [ "$LHN_DIAGN" == "Y" ]; then
+if [[ "%SUITE%" == "icon"* ]]; then
     python3 %BASEDIR%/ecflow/script_python3/read_data_lhn.py --folder $LETKF_ARCHIVE \
-                --lencyc $LEN_CYCLE --sri_freq $MODEL_LHN_DT 
+                --lencyc $LEN_CYCLE --leniau $(( DT_IAU / 120 )) --timestep $TIME_STEP
+elif [[ "%SUITE%" == "cosmo"* ]]; then
+    python3 %BASEDIR%/ecflow/script_python3/read_data_lhn_cosmo.py --folder $LETKF_ARCHIVE \
+                --lencyc $LEN_CYCLE --sri_freq $MODEL_LHN_DT
 fi
 
 # Retrieve last data analyzed by 'read_ekf.py'
@@ -38,8 +41,10 @@ last_date=$(head -n 1 'last_date.txt')
 # Plot EKF and LHN data (using the same value of "last_date")
 python3 %BASEDIR%/ecflow/script_python3/plot_ekf.py --report $REPORT --lencyc \
                 $LEN_CYCLE  --last_date $last_date
-if [ "$LHN_DIAGN" == "Y" ]; then
-    python3 %BASEDIR%/ecflow/script_python3/plot_data_lhn.py --lencyc $LEN_CYCLE  \
+if [[ "%SUITE%" == "icon"* ]]; then
+    python3 %BASEDIR%/ecflow/script_python3/plot_data_lhn.py --csv_folder $WORKDIR 
+elif [[ "%SUITE%" == "cosmo"* ]]; then
+    python3 %BASEDIR%/ecflow/script_python3/plot_data_lhn_cosmo.py --lencyc $LEN_CYCLE  \
                 --last_date $last_date
 fi
 
@@ -50,18 +55,16 @@ deactivate
 if [ ${#EMAIL_ADDRESS[@]} -ne 0 ]; then
     rep_arr=($REPORT)
     att_files="-a last24h.png -a last30d.png -a last365d.png"
-    if [ "$LHN_DIAGN" == "Y" ]; then
-        att_files+=" -a LHN_last24h.png -a LHN_last30d.png -a LHN_last365d.png"
-    fi
+    att_files+=" -a LHN_last24h.png -a LHN_last30d.png -a LHN_last365d.png"
     for rep in "${rep_arr[@]}"; do
         att_files+=" -a last30d_${rep}.png       -a last365d_${rep}.png"
         att_files+=" -a last30d_${rep}_check.png -a last365d_${rep}_check.png"
     done
     today=`date "+%%d/%%m/%%Y"`
     if [[ "%SUITE%" == "icon"* ]]; then
-        title=`echo 'KENDA diagnostics ICON -' "$today"`
-    else
         title=`echo 'KENDA diagnostics -' "$today"`
+    else
+        title=`echo 'KENDA diagnostics COSMO -' "$today"`
     fi
     echo "$(cat mail.txt)" | /usr/bin/mailx -v $att_files -s "$title" -S sendwait ${EMAIL_ADDRESS[@]}
     echo $?

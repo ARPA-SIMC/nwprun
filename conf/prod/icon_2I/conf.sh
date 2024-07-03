@@ -33,6 +33,9 @@ LOCALGRID=$MODEL_STATIC/domain_$DOMAIN/${DOMAIN}.nc
 LOCALGRID_PARENT=$MODEL_STATIC/domain_$DOMAIN/${DOMAIN}.parent.nc
 LOCALGRID_EXTERNAL=$MODEL_STATIC/domain_$DOMAIN/external_parameter_icon_${DOMAIN}_tiles.nc
 
+# Time step
+TIME_STEP=20
+
 # Specifics for IAU initialization
 ASS_CYCLE_LENGTH=1
 DT_IAU=600
