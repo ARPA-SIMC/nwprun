@@ -5,7 +5,7 @@
  filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
  dom                          = 1
  output_time_unit             = 3                        ! output in hours (3) 
- output_bounds                = 0.,@MODEL_STOP@,1.       ! start, end, increment
+ output_bounds                = @OUTPUT_START@,@MODEL_STOP@,1.       ! start, end, increment
  steps_per_file               = 1
  mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.
@@ -26,7 +26,7 @@
  filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
  dom                          = 1
  output_time_unit             = 3                        ! output in hours (3) 
- output_bounds                = 0.,@MODEL_STOP@,1.       ! start, end, increment
+ output_bounds                = @OUTPUT_START@,@MODEL_STOP@,1.       ! start, end, increment
  steps_per_file               = 1
  mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
  include_last                 = .FALSE.

@@ -7,6 +7,8 @@ ECRAD_DATA=$MODEL_BASE/data
 MODEL_BACK=1
 MODEL_STOP=1
 MODEL_BCANA=N
+# output only at the end for analysis run
+OUTPUT_START=$MODEL_STOP
 
 # Number of ensemble members
 ENS_TOTAL_MEMB=40

@@ -65,3 +65,5 @@ ANA_DET_EXT=.det
 
 # postprocessing
 CROSS_COORD_FILE=$WORKDIR_BASE/nwprun/conf/cross.shp
+# start output at beginning by default
+OUTPUT_START=0
