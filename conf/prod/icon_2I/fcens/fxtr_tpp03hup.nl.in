@@ -45,18 +45,18 @@
 ! 3 hour sum of total precipitation
 !---------------------------------------------------------------------------------------
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[10,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[20,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[30,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[50,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_interval='[70,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 

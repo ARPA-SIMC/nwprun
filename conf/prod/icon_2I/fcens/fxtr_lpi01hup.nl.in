@@ -30,18 +30,18 @@
 ! Probabilities from ensemble prediction system for a series of lower thresholds of LPI
 !---------------------------------------------------------------------------------------
 &Process out_field="LPI", product_category='eps_probability', prob_interval='[0.1,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@'
 /
 &Process out_field="LPI", product_category='eps_probability', prob_interval='[1,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@'
 /
 &Process out_field="LPI", product_category='eps_probability', prob_interval='[5,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@'
 /
 &Process out_field="LPI", product_category='eps_probability', prob_interval='[10,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@'
 /
 &Process out_field="LPI", product_category='eps_probability', prob_interval='[20,infinite]',
- set_auxiliary_metainfo='generatingProcessIdentifier=15'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@'
 /
 

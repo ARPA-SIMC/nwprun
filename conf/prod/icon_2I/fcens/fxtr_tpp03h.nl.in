@@ -40,30 +40,30 @@
 ! 12 hour sum of total precipitation, using cluster population as member weight.
 !---------------------------------------------------------------------------------------
 &Process out_field="TOT_PREC", product_category='eps_mean',
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_quantile', quantile=0,
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_quantile', quantile=90,
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_quantile', quantile=100,
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=10.,
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=20.,
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=30.,
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=50.,
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 &Process out_field="TOT_PREC", product_category='eps_probability', prob_tlow=70.,
- set_auxiliary_metainfo='generatingProcessIdentifier=15', set_trange_type='difference_(end-start)'
+ set_auxiliary_metainfo='generatingProcessIdentifier=@MODEL_FCENS_GP@', set_trange_type='difference_(end-start)'
 /
 
