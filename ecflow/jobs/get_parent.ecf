@@ -104,9 +104,9 @@ case "%SUITE%" in
         ;;
 
     icon*)
-        # asynchronous download for ensmeble mebers
+        # asynchronous download for ensemble members
         if [ -n "$ENS_MEMB" ]; then
-            sleep $(( $ENS_MEMB*3 ))       
+            sleep $(( ($ENS_MEMB-1)*3 ))
         fi
 
         # Retrieve data
