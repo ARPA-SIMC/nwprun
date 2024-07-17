@@ -1,5 +1,5 @@
 FTPDIR=/PRD/SRI
-TEMPLATE_LIST=(cosmo_2I_radar.grib icon_2I_radar.grib)
+TEMPLATE_LIST=(icon_2I_radar.grib)
 
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
