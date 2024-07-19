@@ -18,7 +18,7 @@ get_setup() {
 }
 
 get_cleanup() {
-    putarki_configured_end $MODEL_SIGNAL
+    #putarki_configured_end $MODEL_SIGNAL
     safe_rm_rf $LAMI_CINECA_WORKDIR
 }
 

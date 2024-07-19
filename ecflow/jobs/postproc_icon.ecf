@@ -2,8 +2,6 @@
 %include <head.h>
 %include <%HPCENV%/modules_preicon.h>
 
-export LOG4C_PRIORITY=debug
-export LOG4C_APPENDER=stderr
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
 . $NWPCONFBINDIR/icon_model.sh

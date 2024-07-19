@@ -82,6 +82,8 @@ case "$HPC_SYSTEM" in
     ;;
 esac
 
+LOG4C_APPENDER=stderr
+LOG4C_PRIORITY=warning
 # GRIB coding and BUFR observations
 GRIB_CENTER=80
 #BUFR_ARKI_DS="$ARKI_URL/cnmc_amdar146 $ARKI_URL/cnmc_buoy $ARKI_URL/cnmc_pilot $ARKI_URL/cnmc_ship11 $ARKI_URL/cnmc_ship13 $ARKI_URL/cnmc_ship9 $ARKI_URL/cnmc_synop1 $ARKI_URL/cnmc_synop3 $ARKI_URL/cnmc_temp $ARKI_URL/cnmc_tempship $ARKI_URL/cnmc_wprof"
