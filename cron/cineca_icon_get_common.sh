@@ -27,6 +27,7 @@ get_one() {
     if [ -z "$foundrun" ]; then
         if [ -f "$CINECA_SUITEDIR/icon_${DATE}${TIME}_+00000000.rf" ]; then 
             foundrun=Y
+            log "found run $PROCNAME $DATE$TIME"
         else
             return 1 # wait
         fi
