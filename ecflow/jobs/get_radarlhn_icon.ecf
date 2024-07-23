@@ -27,7 +27,7 @@ if ls *.grib 1> /dev/null 2>&1; then
     rm -f $out_file
 
     # Change the center (temporary modification)
-    grib_set -s centre=78 LHN.grib LHN_new.grib
+    $SIMC_TOOLS grib_set -s centre=78 LHN.grib LHN_new.grib
     mv LHN_new.grib LHN.grib
 
     # create iconremap main namelist

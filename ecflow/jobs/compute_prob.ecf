@@ -27,8 +27,8 @@ lma=
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
     ma[$n]=N
     if [ -f "$WORKDIR/cosmo.$n/data/lfff02030000" ]; then
-        gdate=`grib_get -w count=1 -p dataDate:s $WORKDIR/cosmo.$n/data/lfff02030000`
-        gtime=`grib_get -w count=1 -p dataTime:s $WORKDIR/cosmo.$n/data/lfff02030000`
+        gdate=`$SIMC_TOOLS grib_get -w count=1 -p dataDate:s $WORKDIR/cosmo.$n/data/lfff02030000`
+        gtime=`$SIMC_TOOLS grib_get -w count=1 -p dataTime:s $WORKDIR/cosmo.$n/data/lfff02030000`
         if [ "$gdate" = "$DATE" -a "$gtime" = "${TIME}00" ]; then
             ma[$n]=Y
             lma=$n
@@ -54,9 +54,7 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
     elif [ -n "$lma" ]; then # use another member
         for file in $WORKDIR/cosmo.$lma/data/lfff????????; do
             mkdir -p $FXTR_WORKDIR/input.$n3
-# ripristinare $SIMC_TOOLS per uniformita` se e` il caso
-            grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
-#            $SIMC_TOOLS grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
+            $SIMC_TOOLS grib_set -s perturbationNumber=$n $file $FXTR_WORKDIR/input.$n3/${file##*/}
         done
     fi
 done
@@ -80,9 +78,7 @@ $FXTR_BIN fxtr_wmaxp1h.nl
 
 # correct grib table number for old grib_api versions
 for file in $FXTR_DATADIR/*.grib; do
-# ripristinare $SIMC_TOOLS per uniformita` se e` il caso
-    grib_set -s tablesVersion=11 $file $file.tmp
-#    $SIMC_TOOLS grib_set -s tablesVersion=11 $file $file.tmp
+    $SIMC_TOOLS grib_set -s tablesVersion=11 $file $file.tmp
     mv $file.tmp $file
 done
 
