@@ -27,7 +27,7 @@ Include: dnf
 
 %environment
     export LOG4C_APPENDER=stderr
-    export LOG4C_PRIORITY=info
+    export LOG4C_PRIORITY=warning
 
 %help
     This container includes most of the tools developed at SIMC and
