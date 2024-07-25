@@ -15,7 +15,7 @@ icon_postproc() {
     *Pv*)
         putarki_configured_archive $2 $1 grib
         tmpbase=$LAMI_CINECA_WORKDIR/${1}
-        (lami_make_crossg2 $1 ${tmpbase}_crossg2i; [ -s "${tmpbase}_crossg2" ] && putarki_configured_archive $2 ${tmpbase}_crossg2 $POSTPROC_FORMAT; rm -f ${tmpbase}_crossg2) &
+        (lami_make_crossg2 $1 ${tmpbase}_crossg2; [ -s "${tmpbase}_crossg2" ] && putarki_configured_archive $2 ${tmpbase}_crossg2 $POSTPROC_FORMAT; rm -f ${tmpbase}_crossg2) &
         (lami_make_vprofg2 $1 ${tmpbase}_vprofg2; [ -s "${tmpbase}_vprofg2" ] && putarki_configured_archive $2 ${tmpbase}_vprofg2 $POSTPROC_FORMAT; rm -f ${tmpbase}_vprofg2) &
         wait
         ;;
@@ -40,7 +40,6 @@ icon_postproc() {
         rm -f *
 	popd
 	rmdir $LAMI_CINECA_WORKDIR/$1
-# mettere & in putarki_configured_modelrun, verificare postproc_icon.ecf
 	fi
         ;;
 
