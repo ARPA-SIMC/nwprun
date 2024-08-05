@@ -29,3 +29,5 @@ sleep 30
 ulimit -s unlimited
 $MODEL_PRE_BIN
 #rm -f grib_???
+
+%include <tail.h>

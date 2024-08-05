@@ -33,3 +33,5 @@ for reg in $REGLIST; do
     scacchiera_prob $AREE $reg &
 done
 wait
+
+%include <tail.h>

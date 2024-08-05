@@ -45,3 +45,5 @@ else
     echo "Files for LHN do not exist"
 fi
 
+
+%include <tail.h>

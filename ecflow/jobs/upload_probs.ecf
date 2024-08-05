@@ -7,3 +7,5 @@ if [ -n "$INFOMET_UP_BASEDIR" ]; then
     echo "Transferring $nf files"
     rclone-v1.62.2 -v copy . ftpsimc:$INFOMET_UP_BASEDIR
 fi
+
+%include <tail.h>

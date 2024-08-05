@@ -86,3 +86,5 @@ archive_perm &
 
 # put a barrier here to avoid challenging Zeus
 wait
+
+%include <tail.h>

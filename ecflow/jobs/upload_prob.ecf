@@ -137,3 +137,5 @@ ftp_cp_all MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_???????
 remdir=vmax10m/emro/meanmax/${DATE}
 ftp_mkdir $remdir
 ftp_cp_all MAP_FC_LENS_PR_0_VMAX_GRND_NULL_NULL_NULL_NULL_${DATE}${TIME}_??????????_001_???_meanmax_emro.png $remdir
+
+%include <tail.h>

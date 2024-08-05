@@ -1,0 +1,13 @@
+%include <sched_wait.h>
+%include <%HPCENV%/smnd.h>
+%include <head.h>
+%include <head_iama.h>
+
+echo "" >> $logger
+echo $(date -u) >> $logger
+echo "Running: iama_get_data_files.ecf" >> $logger
+echo "DATE, TIME, PROCDATE, PROCTIME-"$DATE"-"$TIME"-"$PROCDATE"-"$PROCTIME >> $logger
+echo "IAMA_SLOT, ARKI_DLDIR, IAMA5_INPUTMODEL-"$IAMA_SLOT"-"$ARKI_DLDIR"-"$IAMA5_INPUTMODEL >> $logger
+
+
+%include <tail.h>

@@ -15,3 +15,5 @@ mkdir -p $MODEL_LHN_WORKDIR
 cd $MODEL_LHN_WORKDIR
 
 cosmo_getarki_lhn
+
+%include <tail.h>

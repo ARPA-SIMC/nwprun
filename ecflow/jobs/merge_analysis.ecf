@@ -80,3 +80,5 @@ mkdir -p $MODEL_WORKDIR
 mkdir -p $MODEL_DATADIR
 cd $MODEL_WORKDIR
 conf_template INPUT_IO
+
+%include <tail.h>

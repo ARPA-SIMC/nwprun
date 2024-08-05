@@ -180,3 +180,5 @@ done
 date -u
 wait
 date -u
+
+%include <tail.h>

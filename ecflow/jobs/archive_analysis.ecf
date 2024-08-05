@@ -31,3 +31,5 @@ fi
 if [ "$TIME" = "00" -a -n "$ARKI_CONF" ]; then
     arki_dailycleanup $ARKI_CONF 6 12
 fi
+
+%include <tail.h>

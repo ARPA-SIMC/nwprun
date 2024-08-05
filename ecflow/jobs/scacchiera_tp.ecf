@@ -24,3 +24,5 @@ for reg in $REGLIST; do
     scacchiera_tp $AREE $reg
 done
 wait
+
+%include <tail.h>

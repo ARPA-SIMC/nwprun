@@ -206,3 +206,5 @@ export INIT_MODE LREAD_ANA FILEFG FILEAN FILETYPE LATBC_FG LTILE DT_SHIFT MODEL_
 conf_template icon_master.namelist namelist_icon
 
 
+
+%include <tail.h>

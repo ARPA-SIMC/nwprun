@@ -53,3 +53,5 @@ if [ -f "$LETKF_WORKDIR/letkf_skip" -o "$KENDA_CRASH" = "Y" ]; then
         done
     fi
 fi
+
+%include <tail.h>

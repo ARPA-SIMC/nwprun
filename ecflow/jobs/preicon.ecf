@@ -29,3 +29,5 @@ srun --ntasks=$bc_tasks %BASEDIR%/ecflow/jobs/run_remap.sh
 
 # Copy "lateral_boundary.grid.nc"
 cp $MODEL_PRE_WORKDIR/remap_1/lateral_boundary.grid.nc $MODEL_PRE_DATADIR
+
+%include <tail.h>

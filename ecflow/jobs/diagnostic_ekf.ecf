@@ -69,3 +69,5 @@ if [ ${#EMAIL_ADDRESS[@]} -ne 0 ]; then
     echo "$(cat mail.txt)" | /usr/bin/mailx -v $att_files -s "$title" -S sendwait ${EMAIL_ADDRESS[@]}
     echo $?
 fi
+
+%include <tail.h>

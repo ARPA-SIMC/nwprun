@@ -12,3 +12,5 @@ if [ "$STOP_ON_FAIL" != "Y" ]; then
     $ecflow_client --force=complete recursive $tobecompleted/check_memb $tobecompleted/preproc $tobecompleted/model
 fi
 
+
+%include <tail.h>

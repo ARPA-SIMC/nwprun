@@ -34,3 +34,5 @@ fi
 #     lasttime=$TIME
 #     save_state model.state lastdate lasttime
 # fi
+
+%include <tail.h>

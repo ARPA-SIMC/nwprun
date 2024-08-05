@@ -18,3 +18,5 @@ else
     $ecflow_client --event=checked
     sleep 30
 fi
+
+%include <tail.h>

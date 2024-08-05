@@ -78,3 +78,5 @@ if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
 fi
 
 date
+
+%include <tail.h>

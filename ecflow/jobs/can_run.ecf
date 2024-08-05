@@ -4,3 +4,5 @@
 set -x
 
 $ecflow_client --event=ready
+
+%include <tail.h>

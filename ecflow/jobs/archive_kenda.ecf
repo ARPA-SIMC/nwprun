@@ -179,3 +179,5 @@ FS_DATE=$WORKDIR/archive/${DATE}${TIME}
 mkdir -p $WORKDIR/archive
 mkdir -p $FS_DATE
 cp $LETKF_WORKDIR/ekf* $FS_DATE || true
+
+%include <tail.h>

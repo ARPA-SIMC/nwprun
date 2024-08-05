@@ -28,3 +28,5 @@ for reg in $REGLIST; do
     scacchiera_ensmean $AREE $reg &
 done
 wait
+
+%include <tail.h>

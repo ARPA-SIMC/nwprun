@@ -38,3 +38,5 @@ mv -f $MODEL_PRE_DATADIR/laf${DATES}${TIMES} $MODEL_PRE_DATADIR/laf${DATES}${TIM
 if [ "$MODEL_COPYICBC" = "Y" -a -f "$MODEL_PRE_DATADIR/lbff00000000" ]; then
     mv -f $MODEL_PRE_DATADIR/lbff00000000 $MODEL_PRE_DATADIR/lbff00000000_parent
 fi
+
+%include <tail.h>

@@ -63,3 +63,5 @@ if [ "$n3" -eq "000" ]; then
     cp YUREJCT  YUSPECIF YUSTATS YUTIMING YUVERIF $FS_DATE/  || true
 fi
 
+
+%include <tail.h>

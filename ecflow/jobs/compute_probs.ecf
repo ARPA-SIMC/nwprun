@@ -176,3 +176,5 @@ $ecflow_client --event=extra_prob
 (fxtr_compute_prob) &
 (fxtr_compute_prob_extra) &
 wait
+
+%include <tail.h>

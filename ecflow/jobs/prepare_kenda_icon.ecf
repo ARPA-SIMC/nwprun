@@ -206,7 +206,7 @@ echo "Assimilation of radar observations:        $rad_obs"
 # use det analysis, no foffi are linked, no namelist created
 if ([[ "$conv_obs" == N ]] && [[ "$rad_obs" == N ]]); then
     touch $LETKF_WORKDIR/letkf_skip
-    exit 0
+    exit_0
 fi
 
 # Define prefix for conventional observations to be added to namelist
@@ -301,3 +301,5 @@ fi
 # prepare kenda namelist and remove old files
 conf_template namelist_kenda
 mv namelist_kenda namelist
+
+%include <tail.h>

@@ -83,3 +83,5 @@ for prod in probabilita; do
 
   done
 done
+
+%include <tail.h>

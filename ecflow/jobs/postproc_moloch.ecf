@@ -40,3 +40,5 @@ fi
 if [ -n "$MODEL_SIGNAL" -a "$MODEL_BACK" -eq 0 ]; then
     import_signal_imported $MODEL_SIGNAL $DATE$TIME
 fi
+
+%include <tail.h>

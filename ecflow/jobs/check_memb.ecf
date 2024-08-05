@@ -10,3 +10,5 @@ if [ -n "$ENS_MEMB" -a -n "$ENS_TOTAL_MEMB" ]; then
 else
     $ecflow_client --meter=required 2 # member (deterministic) required
 fi
+
+%include <tail.h>

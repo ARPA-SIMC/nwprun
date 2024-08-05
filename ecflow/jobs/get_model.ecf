@@ -1,0 +1,96 @@
+%include <sched_wait.h>
+%include <%HPCENV%/smnd.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+#. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/getarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+
+set -x
+
+# Clean-up
+if [ -n "$MODEL_DATADIR" ]; then
+    safe_rm_rf $MODEL_DATADIR
+    mkdir -p   $MODEL_DATADIR
+    cd $MODEL_DATADIR
+fi
+
+# Retrive whole forecast
+if [ $MODEL_STOP -gt 0 ]; then
+    # Define initialization date and time
+    reftime=`getarki_datetime $DATES $TIMES`
+
+    # Cycle over forecast range
+    for hh in `seq 0 1 $MODEL_STOP`; do
+        # Retrieve lead time in hours and days
+        nodays=$(printf "%%02d" $(( ${hh} / 24 )))
+        nohours=$(printf "%%02d" $(( ${hh} %% 24 )))
+    
+        # Extract data
+        ntry=2
+        timerange="timerange:Timedef,${hh}h,254"
+        ofile=${MODEL_NAME}_${DATES}${TIMES}00_+${nodays}${nohours}0000.grb
+        while [ "$ntry" -gt 0 ]; do
+            $SIMC_TOOLS arki-query --data -o $ofile \
+            "reftime:=$reftime;$timerange;$MODEL_ARKI_PARAM" $MODEL_ARKI_DS
+    
+            # if file is empty retry, otherwise exit
+            if __check_msg_num $ofile; then
+                break
+            fi
+            echo "retrying arki-query"
+            sleep 10
+            ntry=$(($ntry - 1))
+        done
+    done
+
+# Retrive all forecasts associtaed to a specific date (defined by $DATES$TIMES)
+else
+    # Loop back in time
+    hh_back=0
+    step=1
+    while [ $hh_back -le $FC_LENGTH ]; do
+        # Retrieve forecast initialization date and time 
+        ini_date=`date_sub $DATES $TIMES $hh_back hours`
+        ini_time=`time_sub $DATES $TIMES $hh_back hours`
+
+        # Retrieve lead time in hours and days
+        nodays=$(printf "%%02d" $(( ${hh_back} / 24 )))
+        nohours=$(printf "%%02d" $(( ${hh_back} %% 24 )))
+
+        # Extract data
+        ntry=2
+        reftime=`getarki_datetime $ini_date $ini_time`
+        timerange="timerange:Timedef,${hh_back}h,254"
+        ofile=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
+        while [ "$ntry" -gt 0 ]; do
+            $SIMC_TOOLS arki-query --data -o $ofile \
+            "reftime:=$reftime;$timerange;$MODEL_ARKI_PARAM" $MODEL_ARKI_DS
+
+            # if file is empty retry, otherwise exit
+            if __check_msg_num $ofile; then
+                break
+            fi
+            echo "retrying arki-query"
+            sleep 5
+            ntry=$(($ntry - 1))
+        done
+
+        # If no model field is retrieved, skip to previous hour. If we get a file
+        # for the first time, the step of the while loop is increased to the
+        # model frequency of initialization to avoid wasting time
+        if [[ ! -s "$ofile" ]]; then
+            echo "File $ofile does not exist or is empty. Skipping."
+            rm -f $ofile
+        else
+            step=$MODEL_FREQINI
+        fi
+
+        # Incrrease hh_back
+        hh_back=$((hh_back + step))
+    done
+fi
+
+%include <tail.h>

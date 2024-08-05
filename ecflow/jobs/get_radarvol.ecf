@@ -28,3 +28,5 @@ if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
     # Save data
     ls . > $CINECA_ARCHIVE_POST/$subdir/lista_radar || true
 fi
+
+%include <tail.h>
