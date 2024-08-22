@@ -5,6 +5,7 @@ FREQ_BC_HH=1
 FTPDIR=ICON
 UPLDIR=$CINECA_UPLDIR
 
+IMPORT_THREAD=input_bc
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
 #NWPWAITELAPS=1800

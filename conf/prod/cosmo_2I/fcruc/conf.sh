@@ -35,7 +35,7 @@ ENS_TOTAL_MEMB=0
 # setup for remote import
 ARKI_SCAN_METHOD=configured_importer
 unset ARKI_IMPDIR
-ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
+ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
 ARKI_DLDIR=$WORKDIR_BASE/download
 CROSS_COORD_FILE=$WORKDIR_BASE/nwprun/conf/cross.shp
 CROSS_NETWORK=cosmo_2I_fcruc_c

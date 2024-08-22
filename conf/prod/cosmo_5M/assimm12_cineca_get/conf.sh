@@ -1,8 +1,9 @@
 MODEL_SIGNAL=cosmo_5M_assimm12
 ARKI_DLDIR=$WORKDIR_BASE/download
 if [ -n "$CINECA_MAIN_SYSTEM" ]; then
-    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
+    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
 fi
+unset ARKI_IMPDIR
 # modificare
 LAMI_CINECA_WORKDIR=$WORKDIR_BASE/download/work/$MODEL_SIGNAL
 POSTPROC_LIST=(lami_make_itr lami_make_medl lami_make_vprof)

@@ -1,6 +1,7 @@
 FTPDIR=/PRD/SRI
 TEMPLATE_LIST=(icon_2I_radar.grib)
 
+IMPORT_THREAD=input_obs
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
 #NWPWAITELAPS=1800

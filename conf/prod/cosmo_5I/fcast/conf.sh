@@ -15,7 +15,7 @@ NWPWAITWAIT=30
 
 # setup for remote import
 unset ARKI_IMPDIR
-ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_ftpmodelin
+ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.ftpmodelin
 unset ARKI_DLDIR
 POSTPROC_LIST=(lami_make_arki5I)
 #VPROF_NETWORK=cosmo_5I_fcast_vprof

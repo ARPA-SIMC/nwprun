@@ -7,6 +7,7 @@ case "$HPC_SYSTEM" in
     ;;
 esac
 
+IMPORT_THREAD=input_obs
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
 #NWPWAITELAPS=1800

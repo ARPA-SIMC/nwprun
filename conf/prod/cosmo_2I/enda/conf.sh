@@ -106,7 +106,7 @@ else # deterministic run or analysis
 # setup for remote import and download
     ARKI_SCAN_METHOD=configured_importer
     unset ARKI_IMPDIR
-    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
+    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
     ARKI_DLDIR=$WORKDIR_BASE/download
     POSTPROC_LIST=(lami_make_nit)
     MODEL_SIGNAL=cosmo_2I_assim

@@ -1,4 +1,5 @@
 WGETRC=$WORKDIR_BASE/nwprun/.auth/wgetrc_data.dwd.de
+IMPORT_THREAD=input_bc
 
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo

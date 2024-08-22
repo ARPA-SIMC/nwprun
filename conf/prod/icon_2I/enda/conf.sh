@@ -68,6 +68,8 @@ if [ -n "$ENS_MEMB" ]; then
     # setup for arkilocal
     ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
 
+    # setup for remote import and download
+    unset ARKI_IMPDIR
 else # deterministic run or analysis
     PARENTMODEL_ARKI_DS=$ARKI_DIR/hres_am_foricon
     PARENTMODEL_SIGNAL=hres_am_foricon
@@ -82,9 +84,8 @@ else # deterministic run or analysis
     # setup for remote import and download
     ARKI_SCAN_METHOD=configured_importer
     unset ARKI_IMPDIR
-    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
+    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
     ARKI_DLDIR=$WORKDIR_BASE/download
-    #POSTPROC_LIST=(lami_make_nit)
     MODEL_SIGNAL=icon_2I_assim
 fi
 MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive

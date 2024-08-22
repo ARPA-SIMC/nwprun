@@ -23,33 +23,21 @@ case "%SUITE%" in
         cp -p laf?????????? $ARCHIVE/%SUITE%
         ;;
     cosmo_2I_fcens*)
-        if [ "$ARKI_SCAN_METHOD" = "configured_importer" ]; then
-            putarki_configured_model_output $(($MODEL_STOP + 1))
-        else 
-            putarki_model_output $(($MODEL_STOP + 1)) -w
-        fi
+        putarki_configured_model_output $(($MODEL_STOP + 1))
 # copy to archive
         subdir=cosmo_2I_fcens/$DATE$TIME.`printf %%03d $ENS_MEMB`
         mkdir -p $CINECA_ARCHIVE_POST/$subdir
         cp -a lfff* $CINECA_ARCHIVE_POST/$subdir
         ;;
     cosmo_2I_fcruc*)
-        if [ "$ARKI_SCAN_METHOD" = "configured_importer" ]; then
-            putarki_configured_model_output $(($MODEL_STOP + 1))
-        else
-            putarki_model_output $(($MODEL_STOP + 1)) -w
-        fi
+        putarki_configured_model_output $(($MODEL_STOP + 1))
 # copy high frequency precipitation somewhere 
         subdir=cosmo_2I_fcruc/$DATE$TIME
         mkdir -p $CINECA_ARCHIVE_POST/$subdir
         cp -a extra1/lfff* $CINECA_ARCHIVE_POST/$subdir
         ;;
     *)
-        if [ "$ARKI_SCAN_METHOD" = "configured_importer" ]; then
-            putarki_configured_model_output $(($MODEL_STOP + 1))
-        else 
-            putarki_model_output $(($MODEL_STOP + 1)) -w
-        fi
+        putarki_configured_model_output $(($MODEL_STOP + 1))
         ;;
 esac
 

@@ -40,11 +40,10 @@ LETKF_CONST=$DACE_BASE/data
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki
 # setup for remote import
-ARKI_SCAN_METHOD=configured_importer
 #unset ARKI_IMPDIR
 ARKI_IMPDIR=$WORKDIR_BASE/import_test
-# ARKI_SYNCDIR=$WORKDIR_BASE/import/sync_lami
-ARKI_SYNCDIR=$WORKDIR_BASE/import_test/sync_lami
+# ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
+ARKI_SYNCDIR=$WORKDIR_BASE/import_test/sync.lami
 ARKI_DLDIR=$WORKDIR_BASE/download_test
 #POSTPROC_LIST=(lami_make_vprof)
 CROSS_NETWORK=icon_2I_fcast_c
