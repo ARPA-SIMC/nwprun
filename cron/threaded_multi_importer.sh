@@ -121,7 +121,7 @@ import_one() {
 #				safe_source $syncconf
 				cd $syncdir
 				rsync -ptR --chmod=ug=rwX ./$syncsubdir/$upfile $SYNC_DEST
-				if [ -n "$logsim_signal_sync" -a -f "./$syncsubdir/start.sh" ]; then
+				if [ -n "$LOGSIM_SIGNAL_SYNC" -a -f "./$syncsubdir/start.sh" ]; then
                                     safe_source ./$syncsubdir/start.sh
 				    LOGSIM_PROCESS=$signal
                                     DATE=${reftime:0:8}
