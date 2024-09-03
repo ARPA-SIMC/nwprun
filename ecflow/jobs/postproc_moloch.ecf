@@ -19,7 +19,11 @@ for file in $MODEL_PRE_WORKDIR/*.shf; do
     ln -s $file input.shf
     $MODEL_POST_BIN
 done
-putarki_archive_and_wait grib moloch_*.grib2
+putarki_configured_setup $MODEL_SIGNAL "reftime=$DATE$TIME" "signal=$MODEL_SIGNAL"
+for file in moloch_*.grib2; do
+    [ -f "$file" ] && putarki_configured_archive $MODEL_SIGNAL $file grib
+done
+putarki_configured_end $MODEL_SIGNAL
 
 if [ -n "$MODEL_ARCHIVE_OUTPUT_EXTRA" ]; then
     mkdir -p $MODEL_ARCHIVE_OUTPUT_EXTRA

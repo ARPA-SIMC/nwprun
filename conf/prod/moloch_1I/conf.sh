@@ -38,6 +38,6 @@ NWPWAITSOLAR_RUN=7200
 NWPWAITWAIT=30
 
 # reconfigure arkimet for remote archiving at Cineca
-ARKI_SCAN_METHOD=remote_arki_importer
-ARKI_IMPDIR=~arki-imp/arki-imp/generic
+ARKI_SCAN_METHOD=configured_importer
+MODEL_SIGNAL=moloch_1I
 
