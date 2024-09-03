@@ -55,12 +55,5 @@ if [ -n "$LOGSIM_PROCESS" ]; then
     . $NWPCONFBINDIR/simc_site.sh
     simc_send_logevent ''
 fi
-# done here for forecast and in putarki.sh for analysis
-# improve, may also consider -z "$ENS_MEMB"
-if [ -n "$MODEL_SIGNAL" -a "$MODEL_BACK" -eq 0 ]; then
-    if [ "$ARKI_SCAN_METHOD" != "configured_importer" ]; then # temporary
-        import_signal_imported $MODEL_SIGNAL $DATE$TIME
-    fi
-fi
 
 %include <tail.h>
