@@ -1,5 +1,5 @@
 # Icon bin with EMVORADO
-MODEL_BASE=/g100_work/smr_prod/srcintel_virginia/icon-2.6.5.1
+MODEL_BASE=$WORKDIR_BASE/srcintel/icon-2.6.5.1-emvorado
 MODEL_BIN=$MODEL_BASE/bin/icon
 ECRAD_DATA=$MODEL_BASE/data
 
@@ -99,8 +99,7 @@ LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data
 
 # MEC and LETKF executables
-#DACE_BASE=/ind2/meteo/a07smr03/lami/srcintel/dace_code_2.06
-DACE_BASE=/g100_work/smr_prod/srcintel/dace_code_2.15
+DACE_BASE=$WORKDIR_BASE/srcintel/dace_code_2.15
 MEC_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/mec
 LETKF_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/var3d
 LETKF_CONST=$DACE_BASE/data
