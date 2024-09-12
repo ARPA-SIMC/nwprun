@@ -49,6 +49,7 @@ CHOSEN_STR_LIST = [
     'n of points with limited upscaling',
     'n of points with downscaling',
     'n of points with limited downscaling',
+    'n of points with artif. prof',
     'n of points with full spatial weight : numfull'
 ]
 

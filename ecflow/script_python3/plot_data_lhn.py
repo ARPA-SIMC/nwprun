@@ -112,6 +112,107 @@ def filter_data(df, end_date, period):
     return df[(df['datetime'] >= start_date) & (df['datetime'] <= end_date)]
 
 
+def plot_panel_up_down_scaling_abs_values(data, ax, bar_width=1., bar_alpha=1.):
+    """
+    Plot the number of points with upscaling and downscaling on a bar chart.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        DataFrame containing the relevant data for upscaling and downscaling points, 
+        with columns 'datetime', 'n of points with artif. prof', 'n of points with limited upscaling',
+        'n of points with upscaling', 'n of points with limited downscaling', and 'n of points with downscaling'.
+    ax : matplotlib.axes.Axes
+        Axes object on which the bars are plotted.
+    bar_width : float, optional
+        Width of the bars in the plot (default is 1.0).
+    bar_alpha : float, optional
+        Transparency level of the bars (default is 1.0).
+
+    Returns
+    -------
+    None
+
+    """
+    n_downscaling_plot = data['n of points with downscaling'] - data['n of points with limited downscaling']
+    n_upscaling_plot = data['n of points with upscaling'] - data['n of points with limited upscaling']
+    
+    
+    ax.bar(data['datetime'], data['n of points with artif. prof'], bottom=data['n of points with limited upscaling'],
+            width=bar_width, color='#2166ac', alpha=bar_alpha, label='Artificial profiles')
+    ax.bar(data['datetime'], data['n of points with limited upscaling'], bottom=n_upscaling_plot, width=bar_width,
+            color='#4393c3', alpha=bar_alpha, label='Limited Upscaling')
+    ax.bar(data['datetime'], n_upscaling_plot, width=bar_width,
+            color='#92c5de', alpha=bar_alpha, label='Upscaling')
+    ax.bar(data['datetime'], -n_downscaling_plot, width=bar_width,
+            color='#f4a582', alpha=bar_alpha, label='Downscaling')
+    ax.bar(data['datetime'], -data['n of points with limited downscaling'], bottom=-n_downscaling_plot, width=bar_width,
+            color='#d6604d', alpha=bar_alpha, label='Limited Downscaling')
+
+    ax.set_ylabel('Num. of points')
+    ax.set_title('Number of points with up/down scaling')
+
+    # Centering y axis around 0 and making labels positive
+    max_y = data[['n of points with upscaling',
+                  'n of points with limited upscaling',
+                  'n of points with downscaling',
+                  'n of points with limited downscaling']].values.max()*1.05
+    ax.set_ylim([-max_y, max_y])
+    ax.yaxis.set_major_formatter(lambda x, pos: f'{abs(x):g}')
+
+
+def plot_panel_up_down_scaling_percentages(data, ax, bar_width=1., bar_alpha=1.):
+    """
+    Plot the percentage of points with upscaling and downscaling on a bar chart.
+
+    Parameters
+    ----------
+    data : pandas.DataFrame
+        DataFrame containing the relevant data for upscaling and downscaling points, 
+        with columns 'datetime', 'n of points with artif. prof', 'n of points with limited upscaling',
+        'n of points with upscaling', 'n of points with limited downscaling', 'n of points with downscaling', 
+        and 'n of points with increments'.
+    ax : matplotlib.axes.Axes
+        Axes object on which the bars are plotted.
+    bar_width : float, optional
+        Width of the bars in the plot (default is 1.0).
+    bar_alpha : float, optional
+        Transparency level of the bars (default is 1.0).
+
+    Returns
+    -------
+    None
+
+    """
+    n_downscaling_plot = data['n of points with downscaling'] - data['n of points with limited downscaling']
+    n_upscaling_plot = data['n of points with upscaling'] - data['n of points with limited upscaling']
+
+    tot = data['n of points with increments'] 
+    # Note: we can also do
+    # tot = data['n of points with downscaling'] + data['n of points with upscaling'] + data['n of points with artif. prof']
+
+    ytop_limit_dwsc = 100. * data['n of points with limited downscaling'] / tot
+    ytop_norml_dwsc = ytop_limit_dwsc + (100. * n_downscaling_plot / tot)
+    ytop_norml_upsc = ytop_norml_dwsc + (100. * n_upscaling_plot / tot)
+    ytop_limit_upsc = ytop_norml_upsc + (100. * data['n of points with limited upscaling'] / tot)
+    ytop_artif_prof = ytop_limit_upsc + (100. * data['n of points with artif. prof'] / tot)
+    
+    ax.bar(data['datetime'], ytop_artif_prof - ytop_limit_upsc, bottom=ytop_limit_upsc,
+           width=bar_width, color='#2166ac', alpha=bar_alpha, label='Artificial profiles')
+    ax.bar(data['datetime'], ytop_limit_upsc - ytop_norml_upsc, bottom=ytop_norml_upsc,
+           width=bar_width, color='#4393c3', alpha=bar_alpha, label='Limited Upscaling')
+    ax.bar(data['datetime'], ytop_norml_upsc - ytop_norml_dwsc, bottom=ytop_norml_dwsc,
+           width=bar_width, color='#92c5de', alpha=bar_alpha, label='Upscaling')
+    ax.bar(data['datetime'], ytop_norml_dwsc - ytop_limit_dwsc, bottom=ytop_limit_dwsc,
+           width=bar_width, color='#f4a582', alpha=bar_alpha, label='Downscaling')
+    ax.bar(data['datetime'], ytop_limit_dwsc,
+           width=bar_width, color='#d6604d', alpha=bar_alpha, label='Limited Downscaling')
+
+    ax.set_ylabel('Percentage [%]')
+    ax.set_title('Percentage of points with up/down scaling')
+    ax.set_ylim([-5., 105.])
+
+
 def plot_summary(df, end_date, period, save_path):
     """
     Plots the LHN info for the selected period.
@@ -147,44 +248,31 @@ def plot_summary(df, end_date, period, save_path):
     ax0 = axs[0]
     ax0.bar(data['datetime'], data['percentage of available timesteps'], width=bar_width,
              color='tab:gray', alpha=bar_alpha) #, label='# Available timesteps')
-    ax0.set_ylabel('% of available timesteps')
+    ax0.set_ylabel('Percentage [%]')
     ax0.set_title(f'Percentage of available timesteps')
     ax0.set_ylim([-5., 105.])
-
+    
     # Panel 2:  n of points with full spatial weight
     ax1 = axs[1]
     ax1.bar(data['datetime'], data['n of points with full spatial weight : numfull'], width=bar_width,
-            color='tab:purple', alpha=bar_alpha) #, label='# w. full spatial weight')
+            color='#7570b3', alpha=bar_alpha) #, label='# w. full spatial weight')
     ax1.set_ylabel('Num. of points')
     ax1.set_title('Number of points with full spatial weight')
 
     # Panel 3: n of points with increments
     ax2 = axs[2]
     ax2.bar(data['datetime'], data['n of points with increments'], width=bar_width,
-            color='tab:green', alpha=bar_alpha) #, label='# w. increments')
+            color='#1b9e77', alpha=bar_alpha) #, label='# w. increments')
     ax2.set_ylabel('Num. of points')
     ax2.set_title('Number of points with increments')
 
     # Panel 2: up/down scaling
     ax3 = axs[3]
-    ax3.bar(data['datetime'], data['n of points with upscaling'], width=bar_width,
-            color='tab:blue', alpha=bar_alpha, label='Upscaling')
-    ax3.bar(data['datetime'], data['n of points with limited upscaling'], width=bar_width,
-            color='lightblue', alpha=bar_alpha, label='Limited Upscaling')
-    ax3.bar(data['datetime'], -data['n of points with downscaling'], width=bar_width,
-            color='tab:red', alpha=bar_alpha, label='Downscaling')
-    ax3.bar(data['datetime'], -data['n of points with limited downscaling'], width=bar_width,
-            color='sandybrown', alpha=bar_alpha, label='Limited Downscaling')
-    ax3.set_ylabel('Num. of points')
-    ax3.set_title('Number of points with up/down scaling')
-    
-    # Centering y axis around 0 and making labels positive
-    max_y = data[['n of points with upscaling',
-                  'n of points with limited upscaling',
-                  'n of points with downscaling',
-                  'n of points with limited downscaling']].values.max()*1.05
-    ax3.set_ylim([-max_y, max_y])
-    ax3.yaxis.set_major_formatter(lambda x, pos: f'{abs(x):g}')
+    plot_panel_up_down_scaling_percentages(data, ax3, bar_width=bar_width, bar_alpha=bar_alpha)
+
+    # Changing the y-axis tick labels
+    for ax in [ax1, ax2]:
+        ax.ticklabel_format(axis='y', scilimits=[-3, 3])
 
     # Final adjustments to the axes
     start_date = end_date - dt.timedelta(days=period)
@@ -199,9 +287,10 @@ def plot_summary(df, end_date, period, save_path):
     if period <= 1:
         ax3.xaxis.set_major_formatter(mdates.DateFormatter('%d-%b-%Y\n%H:%M'))
     elif period <= 30:
-        ax3.xaxis.set_major_formatter(mdates.DateFormatter('%d-%b-%Y'))
+        ax3.xaxis.set_major_formatter(mdates.DateFormatter('%d-%b\n%Y'))
     else:
         ax3.xaxis.set_major_formatter(mdates.DateFormatter('%d-%b\n%Y'))
+    ax3.tick_params(axis='x', which='major', pad=7)
 
     # Title of figure
     if period <= 1:
@@ -213,7 +302,7 @@ def plot_summary(df, end_date, period, save_path):
     # Legend
     plt.tight_layout()
     plt.subplots_adjust(bottom=0.08)
-    fig.legend(loc='lower center', ncol=4)
+    fig.legend(loc='lower center', ncol=5)
 
     plt.savefig(save_path, dpi=DPI)
     plt.close()
