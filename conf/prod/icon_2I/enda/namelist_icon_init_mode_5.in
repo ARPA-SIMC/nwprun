@@ -174,7 +174,8 @@
                                t_2m, td_2m, t_seasfc
                                t_g, t_s, t_sk, t_seasfc, qv_s,
                                smi, w_so, t_so,
-                               clct, clch, clcm, clcl, clct_mod
+                               clct, clch, clcm, clcl, clct_mod,
+                               asodifd_s, asodird_s, asob_s
  output_grid                 =  .FALSE.
  stream_partitions_ml        =  1  ! needs to be adapted if num_io_procs is increased
  remap                       =  1  ! 0 in case unstructured grid is required

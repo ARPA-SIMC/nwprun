@@ -40,7 +40,7 @@
  zpbl2                       = 1000.
  lread_ana                   = @LREAD_ANA@      ! true if analysis increments are read
  ifs2icon_filename           = "@MODEL_PRE_DATADIR@/ic_@DATES@@TIMES@.nc"
- dwdfg_filename              = "/g100_work/smr_prod/casi_studio/ICON/ICON-EU/2024061700/soil_ICON-EU_2024061700_remapped.nc"
+ dwdfg_filename              = "/g100_work/smr_prod/ICON-EU_restart/2024091100/soil_ICON-EU_2024091100_remapped.nc"
  dwdana_filename             = "@MODEL_PRE_DATADIR@/@FILEAN@"
  filetype                    = @FILETYPE@
  ana_varnames_map_file       = "map_file.ana"
@@ -174,7 +174,8 @@
                                t_2m, td_2m, t_seasfc
                                t_g, t_s, t_sk, t_seasfc, qv_s,
                                smi, w_so, t_so,
-                               clct, clch, clcm, clcl, clct_mod
+                               clct, clch, clcm, clcl, clct_mod,
+                               asodifd_s, asodird_s, asob_s
  output_grid                 =  .FALSE.
  stream_partitions_ml        =  1  ! needs to be adapted if num_io_procs is increased
  remap                       =  1  ! 0 in case unstructured grid is required
