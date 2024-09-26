@@ -81,7 +81,7 @@
 &input_field_nml  ! sea surface temperature
  inputname      = "SST"
  outputname     = "SST" 
- intp_method = 3
+ intp_method     = 4
 ! code           = 34
 /
 &input_field_nml  ! sea-ice cover
