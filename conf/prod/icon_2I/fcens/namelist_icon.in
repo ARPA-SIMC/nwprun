@@ -65,7 +65,7 @@
  itype_pres_msl              = 5
  itype_rh                    = 1
 ! output_nml_dict            = 'map_file.fc'
- lmask_boundary              = .false.          ! false in assimilation cycle
+ lmask_boundary              = .true.          ! false in assimilation cycle
 /
 
 &gribout_nml
@@ -267,7 +267,7 @@ max_calibfac_clcl            = 2
 
 &interpol_nml
   nudge_zone_width = 10
-  nudge_max_coeff  = 0.075  ! use 0.075 in assimilation cycle
+  nudge_max_coeff  = 0.05  ! use 0.075 in assimilation cycle
   lsq_high_ord     = 3
   l_intp_c2l       = .true.
   l_mono_c2l       = .true.
