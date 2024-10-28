@@ -1,11 +1,11 @@
-%include <sched_wait.h>
+%include <sched_transfer.h>
 %include <head.h>
 
 cd $POSTPROC_EPS_DATADIR
 if [ -n "$INFOMET_UP_BASEDIR" ]; then
     nf=$(find . -name \*.png|wc -l)
     echo "Transferring $nf files"
-    rclone-v1.62.2 -v copy . ftpsimc:$INFOMET_UP_BASEDIR
+    rclone- -v copy . ftpsimc:$INFOMET_UP_BASEDIR
 fi
 
 %include <tail.h>
