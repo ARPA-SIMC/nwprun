@@ -11,10 +11,8 @@ CROSS_NETWORK=icon_2I_fcast_c
 VPROF_NETWORK=icon_2I_fcast_v
 #POSTPROC_LIST=(lami_make_nit lami_make_vprof lami_make_cross)
 
-
-CINECA_RUN=/ind2/meteo/a07smr01/ICON_WorkDir/PROD
 # $TIME deve essere protetto perche' non e' ancora noto, lo sviluppo con eval
-CINECA_SUITEDIR_TMPL=$CINECA_RUN/'${TIME:0:2}/ope/forecast/dataoutput'
+CINECA_SUITEDIR_TMPL=$CINECA_RUN_ICON/'${TIME:0:2}/ope/forecast/dataoutput'
 
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo (accordare con NWPWAITSOLAR)
