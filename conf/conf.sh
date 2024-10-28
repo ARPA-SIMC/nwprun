@@ -67,7 +67,7 @@ case "$HPC_SYSTEM" in
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
-    SIMC_TOOLS="singularity exec -B $WORK $WORKDIR_BASE/simctools_nwprun_r8.sif"
+    SIMC_TOOLS="singularity exec -B $WORK -B /leonardo_scratch $WORKDIR_BASE/simctools_nwprun_r8.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/leonardo_work/smr_prod/a07smr01/LM_WorkDir/leonardo/lm/PROD/work
     CINECA_UPLDIR=/meteo_arch/a07smr01/arch_lm/leonardo/auto/download/OPE/AM/AM/LAMI/IFS
