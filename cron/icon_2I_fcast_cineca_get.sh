@@ -29,7 +29,7 @@ icon_postproc() {
 	pushd $LAMI_CINECA_WORKDIR/$1
         rm -f hzero.grb topo.grb
         out_file=../${1/unstr/all2km}
-        cp $(conf_getfile iconremap_hzero.nml) .
+        conf_template iconremap_hzero.nml
         cp $(conf_getfile template_all2km.grb) .
         $SIMC_TOOLS grib_copy -w typeOfFirstFixedSurface=4 $in_file hzero.grb
         $SIMC_TOOLS grib_copy -w typeOfFirstFixedSurface=1 $in_file topo.grb
@@ -49,12 +49,27 @@ icon_postproc() {
     esac
 }
 
+case "$HPC_SYSTEM" in
+  g100 ) # Cineca HPC galileo 100
+    module load profile/archive
+    module load intel/oneapi-2021--binary
+    module load intelmpi/oneapi-2021--binary
+    module load netcdff/4.5.3--oneapi--2021.2.0-ifort
+    module load eccodes/2.21.0--intelmpi--oneapi-2021--binary
+    ;;
+  leonardo ) # Cineca HPC leonardo
+    module load profile/global
+    module load cdo/2.1.0--gcc--11.3.0
+    module load intel-oneapi-compilers/2023.2.1
+    module load intel-oneapi-mkl/2022.2.1
+    module load intel-oneapi-mpi/2021.10.0
+    module load libszip/2.1.1--oneapi--2023.2.0
+    module load zlib/1.2.13--gcc--11.3.0
+    export LD_LIBRARY_PATH=$WORKDIR_BASE/srcintel/eccodes-2.32.0/lib64:$WORKDIR_BASE/srcintel/install/lib:$LD_LIBRARY_PATH
+    export PATH=$WORKDIR_BASE/srcintel/eccodes-2.32.0/bin:$WORKDIR_BASE/srcintel/install/bin:$PATH
+    ;;
+esac
 
-module load profile/archive
-module load intel/oneapi-2021--binary
-module load intelmpi/oneapi-2021--binary
-module load netcdff/4.5.3--oneapi--2021.2.0-ifort
-module load eccodes/2.21.0--intelmpi--oneapi-2021--binary
 
 #set -x
 export POSTPROC_FUNC=icon_postproc

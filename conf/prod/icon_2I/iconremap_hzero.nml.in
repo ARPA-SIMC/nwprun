@@ -1,13 +1,13 @@
 &remap_nml
  in_filename       = "hzero_msk.grb"
  in_type           = 2
- in_grid_filename  = "/ind2/meteo/a07smr03/lami/data/icon/domain_ICON_REG3_DOM01/ICON_REG3_DOM01.nc"
+ in_grid_filename  = "@MODEL_STATIC@/domain_ICON_REG3_DOM01/ICON_REG3_DOM01.nc"
  out_filename      = "hzero_regular.grb"
  out_type          = 3
  out_filetype      = 2
  out_grid_filename = "template_all2km.grb"
  l_have3dbuffer    = .false.
- ncstorage_file    = "/ind2/meteo/a07smr03/lami/data/icon/domain_ICON_REG3_DOM01/ncstorage_REG3_all2km.nc"
+ ncstorage_file    = "@MODEL_STATIC@/domain_ICON_REG3_DOM01/ncstorage_REG3_all2km.nc"
 /
 !
 ! DEFINITIONS FOR IFS INPUT DATA
