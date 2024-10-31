@@ -29,8 +29,8 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/icon_2I/enda",
     "NNODES_PREMODEL": 1,
-    "NNODES_MODEL": 3,
-    "NNODES_ENDA": 8
+    "NNODES_MODEL": 2,
+    "NNODES_ENDA": 6
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -43,7 +43,7 @@ conf = ModelConfig({"gts": True, "lhn": True, "radarvol": True, "membrange": "0-
                     "postprocrange": "0",
                     "modelname": "icon",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis],
-                    "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
+                    "preproc_wt":"00:20:00", "model_wt": "00:20:00"}).getconf()
 enda = ModelSuite("icon_2I_enda")
 basicenv.add_to(enda.suite)
 day = enda.suite.add_family("day").add_repeat(
@@ -68,9 +68,9 @@ enda.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/icon_2I/fcast",
-    "NNODES_PREMODEL": 3,
-    "NNODES_MODEL": 16,
-    "NNODES_ENDA": 6
+    "NNODES_PREMODEL": 2,
+    "NNODES_MODEL": 12,
+    "NNODES_ENDA": 4
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -83,7 +83,7 @@ conf = ModelConfig({"gts": False, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "modelname": "icon", 
                     "runlist": [GetObs, EpsMembers],
-                    "preproc_wt":"00:20:00", "model_wt": "03:00:00"}).getconf()
+                    "preproc_wt":"00:20:00", "model_wt": "02:00:00"}).getconf()
 icon = ModelSuite("icon_2I_fcast")
 basicenv.add_to(icon.suite)
 day = icon.suite.add_family("day").add_repeat(
@@ -164,6 +164,7 @@ conf = ModelConfig({"gts": False, "lhn": True, "membrange": "1-20",
                     "postprocrange": "1-20",
                     "modelname": "icon",
                     "runlist": [GetObs, EpsMembers, EpsPostproc],
+                    "model_wt": "02:00:00",
                     "epspostproclevel": 2}).getconf()
 fcens = ModelSuite("icon_2I_fcens")
 basicenv.add_to(fcens.suite)

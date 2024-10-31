@@ -59,7 +59,7 @@ class ModelConfig:
                      "postprocrange": None, "postproctype": "async", 
                      "timer": None, "cronfreq": 10,
                      "wait_wt": "04:10:00", "preproc_wt": "01:00:00",
-                     "model_wt": "05:00:00", "analysis_wt": "01:20:00",
+                     "model_wt": "05:00:00", "analysis_wt": "00:30:00",
                      "mec_wt": "00:30:00",
                      "startmethod": "check_run",
                      "starttime": "00:00", "epspostproclevel": 1}
