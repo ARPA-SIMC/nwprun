@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source common get_ procedures
-. `dirname $0`/cineca_get_common.sh
+. `dirname $0`/cineca_get_common_ng.sh
 
 get_init() {
     export PROCNAME=assimm12_cineca_get
