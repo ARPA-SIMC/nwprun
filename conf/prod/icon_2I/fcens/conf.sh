@@ -86,4 +86,4 @@ NWPWAITWAIT=60
 # wait for analysis?
 WAIT_ANALYSIS=Y
 # remove operationally!
-STOP_ON_FAIL=Y
+STOP_ON_FAIL=N
