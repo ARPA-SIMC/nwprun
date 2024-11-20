@@ -14,7 +14,7 @@ IMPORT_THREAD=input_bc
 NWPWAITSOLAR_RUN=18000
 # quanti secondi aspetto dopo il tempo nominale per rinunciare a
 # cercare un certo dato e passare al successivo
-NWPWAITSOLAR=36000
+NWPWAITSOLAR=43200
 # durata di ogni ciclo di attesa
 NWPWAITWAIT=60
 # intervallo di disponibilita` dei dati in s
