@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source common get_ procedures
-. `dirname $0`/get_common.sh
+. `dirname $0`/get_common_ng.sh
 
 # define custom functions
 get_init() {
@@ -21,6 +21,10 @@ get_cleanup() {
 }
 
 get_one() {
+    trap "retval=1; return 0" ERR
+    # propagate the error trap to called functions
+    set -o errtrace
+    retval=0 # default return status: finished
     # Create some variables for convenience
     Y=${DATE:0:4}
     m=${DATE:4:2}
@@ -31,7 +35,7 @@ get_one() {
     filepath="${FTPDIR}/${fname}"
     lfname=radar_$DATE$TIME.grib
     log "starting download of $filepath"
-    ncftpget -z -V -f $WORKDIR_BASE/nwprun/.auth/dpc.cfg . $filepath || true
+    ncftpget -z -V -f $WORKDIR_BASE/nwprun/.auth/dpc.cfg . $filepath
 
     if [ -f "$fname" ]; then
 	log "SRI data for $DATE$TIME successfully downloaded"
@@ -50,9 +54,9 @@ get_one() {
 	    rm -f $lfname
 	done
 	log "SRI data for $DATE$TIME successfully processed and sent to archive"
-	return 0
+	return
     fi
-    return 1
+    false
 }
 
 # enter main loop

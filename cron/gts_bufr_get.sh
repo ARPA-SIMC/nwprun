@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source common get_ procedures
-. `dirname $0`/get_common.sh
+. `dirname $0`/get_common_ng.sh
 
 # define custom functions
 get_init() {
@@ -18,14 +18,18 @@ get_cleanup() {
 }
 
 get_one() {
+    trap "retval=1; return 0" ERR
+    # propagate the error trap to called functions
+    set -o errtrace
+    retval=0 # default return status: finished
     file="${FTPDIR}BUFR0001${DATE}${TIME:0:2}.DAT"
     rm -f $file
-    ncftpget -V -f $WORKDIR_BASE/nwprun/.auth/bufr_ruc_get.cfg . $file || true
+    ncftpget -V -f $WORKDIR_BASE/nwprun/.auth/bufr_ruc_get.cfg . $file
     if [ -f "$file" ]; then
 	putarki_configured_archive $PROCNAME $file
-	return 0
+	return
     fi
-    return 1
+    false
 }
 
 # enter main loop

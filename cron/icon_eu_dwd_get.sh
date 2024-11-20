@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source common get_ procedures
-. `dirname $0`/get_common.sh
+. `dirname $0`/get_common_ng.sh
 
 # define custom functions
 get_init() {
@@ -18,16 +18,19 @@ get_cleanup() {
 }
 
 get_one() {
+    trap "retval=1; return 0" ERR
+    # propagate the error trap to called functions
+    set -o errtrace
+    retval=0 # default return status: finished
     file="icon-eu_to_cleps_${DATE}${TIME:0:2}.grb2"
     rm -f $file
 
-
-    wget -nv https://data.dwd.de/data/$file || true
-    if [ -f "$file" ]; then
+    wget -nv https://data.dwd.de/data/$file
+    if [ -s "$file" ]; then
 	putarki_configured_archive $PROCNAME $file
-	return 0
+	return
     fi
-    return 1
+    false
 }
 
 # enter main loop

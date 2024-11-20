@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source common get_ procedures
-. `dirname $0`/get_common.sh
+. `dirname $0`/get_common_ng.sh
 
 # define custom functions
 get_init() {
@@ -18,6 +18,10 @@ get_cleanup() {
 }
 
 get_one() {
+    trap "retval=1; return 0" ERR
+    # propagate the error trap to called functions
+    set -o errtrace
+    retval=0 # default return status: finished
     # Create some variables for convenience
     YYYY=${DATE:0:4}
     DD=${DATE:6:2}
@@ -41,9 +45,9 @@ get_one() {
 	fi
     done
     if [ "$donesomething" = "Y" ]; then
-	return 0
+	return
     else
-	return 1
+	false
     fi
 }
 

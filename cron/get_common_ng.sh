@@ -118,7 +118,6 @@ main_loop() {
 		get_one
 		log "get_one returned: $retval"
 		if [ "$retval" = 0 ]; then # improve $retval management
-		    get_cleanup # correct here?
 		    log "download and archiving for $DATE$TIME finished successfully"
          	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --complete || true
 		    break
@@ -127,6 +126,7 @@ main_loop() {
          	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --abort || true
 		    break
 		fi # else retval = 1 wait further
+		trap_check
 		if nwpwait_wait; then
 		    trap_check
 		else
@@ -135,7 +135,7 @@ main_loop() {
 		    break
 		fi
 	    done
-	    # get_cleanup
+	    get_cleanup
 	    trap_check # do not save state if interrupted
 	    save_state $PROCNAME.state DATE TIME
 	    [ -n "$ECF_MONITOR" ] && timeout_exec 5 $ecflow_client --label=lastdate $DATE$TIME || true
