@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source common get_ procedures
-. `dirname $0`/get_common.sh
+. `dirname $0`/get_common_ng.sh
 
 # define custom functions
 get_init() {
@@ -18,6 +18,10 @@ get_cleanup() {
 }
 
 get_one() {
+    trap "retval=1; return 0" ERR
+    # propagate the error trap to called functions
+    set -o errtrace
+    retval=0 # default return status: finished
     unixdate=`date -u --date="$DATE $TIME" +%s000`
     rm -f sri.tif srill.grib srillmd.grib sriinter.grib
     log "starting download of SRI data for $DATE$TIME"
@@ -45,7 +49,7 @@ get_one() {
 	putarki_configured_archive $PROCNAME sriinter.grib
 	log "SRI data for $DATE$TIME successfully processed and sent to archive"
 	rm -f srill.grib srillmd.grib sriinter.grib
-	return 0
+	return
     fi
 }
 

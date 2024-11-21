@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # source common get_ procedures
-. `dirname $0`/get_common.sh
+. `dirname $0`/get_common_ng.sh
 
 # define custom functions
 get_init() {
@@ -30,6 +30,10 @@ get_cleanup() {
 }
 
 get_one() {
+    trap "retval=1; return 0" ERR
+    # propagate the error trap to called functions
+    set -o errtrace
+    retval=0 # default return status: finished
     while true; do
 	donenothing=Y
 	rclone --transfers 4 --include-from $file_list_file copy meteoam-cin:$FTPDIR/ .
@@ -52,10 +56,10 @@ get_one() {
 	    fi
 	done
 	if [ "${#file_processed[@]}" -ge "$file_count" ]; then
-	    return 0
+	    return
 	fi
 	if [ -n "$donenothing" ]; then
-	    return 1
+	    false
 	fi
     done
 }
