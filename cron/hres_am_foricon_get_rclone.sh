@@ -36,7 +36,7 @@ get_one() {
     retval=0 # default return status: finished
     while true; do
 	donenothing=Y
-	rclone --transfers 4 --include-from $file_list_file copy meteoam-cin:$FTPDIR/ .
+	rclone-am --transfers 4 --include-from $file_list_file copy meteoam-cin:$FTPDIR/ .
 	for file in $file_pattern; do
 	    alreadydone=
 	    if [ -f "$file" ]; then
