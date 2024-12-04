@@ -1,7 +1,6 @@
 %include <sched_wait.h>
 %include <%HPCENV%/sendmail.h>
 %include <%HPCENV%/modules.h>
-module load python
 %include <head.h>
 
 # source other optional modules
@@ -21,6 +20,7 @@ cp $NWPCONFDIR/$NWPCONF/dictionary_variables.csv .
 cp $NWPCONFDIR/$NWPCONF/mail.txt .
 
 # Activate virtual environment for python3 modules
+# module load python
 #source $WORKDIR_BASE/env_python3/bin/activate
 
 # Read ekf data
