@@ -71,7 +71,7 @@ case "$HPC_SYSTEM" in
     SIMC_TOOLS="singularity exec -B $WORK -B /leonardo_scratch $WORKDIR_BASE/simctools_nwprun_r8.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/leonardo_work/smr_prod/a07smr01/LM_WorkDir/leonardo/lm/PROD/work
-    CINECA_RUN_ICON=/leonardo_work/smr_prod/a07smr01/ICON_WorkDir/DEV
+    CINECA_RUN_ICON=/leonardo_work/smr_prod/a07smr01/ICON_WorkDir/PROD
     CINECA_UPLDIR=/meteo_arch/a07smr01/arch_lm/leonardo/auto/download/OPE/AM/AM/LAMI/IFS
     ecflow_client="$WORKDIR_BASE/nwprun/ecflow/ec_wrap ecflow_client"
     ;;
