@@ -50,11 +50,25 @@ if [ $MODEL_STOP -gt 0 ]; then
 else
     # Loop back in time
     hh_back=0
-    step=1
     while [ $hh_back -le $FC_LENGTH ]; do
         # Retrieve forecast initialization date and time 
         ini_date=`date_sub $DATES $TIMES $hh_back hours`
         ini_time=`time_sub $DATES $TIMES $hh_back hours`
+
+        # Check if "ini_time" is one of the initilialization times that we want
+        # to ritrieve. If not, skip to next cycle
+        match_found=0
+        for valid_time in "${INI_TIMES[@]}"; do
+            if [[ "$ini_time" == "$valid_time" ]]; then
+                match_found=1
+                break
+            fi
+        done
+        if [ $match_found == 0 ]; then
+            echo "Not a valid initialization time. Skipping."
+            hh_back=$((hh_back + 1))
+            continue
+        fi
 
         # Retrieve lead time in hours and days
         nodays=$(printf "%%02d" $(( ${hh_back} / 24 )))
@@ -78,18 +92,14 @@ else
             ntry=$(($ntry - 1))
         done
 
-        # If no model field is retrieved, skip to previous hour. If we get a file
-        # for the first time, the step of the while loop is increased to the
-        # model frequency of initialization to avoid wasting time
+        # If no model field is retrieved, skip to previous hour. 
         if [[ ! -s "$ofile" ]]; then
             echo "File $ofile does not exist or is empty. Skipping."
             rm -f $ofile
-        else
-            step=$MODEL_FREQINI
         fi
 
         # Incrrease hh_back
-        hh_back=$((hh_back + step))
+        hh_back=$((hh_back + 1))
     done
 fi
 
