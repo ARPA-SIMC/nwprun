@@ -154,7 +154,9 @@ class Preproc:
         if self.conf['preprocname'] == "int2lm":
             fam.add_task("merge_analysis").add_trigger("./"+self.conf['preprocname']+" == complete")
         elif self.conf['preprocname'] == "preicon":
-            fam.add_task("merge_analysis_icon").add_trigger("./"+self.conf['preprocname']+" == complete")
+            trig = "./"+self.conf['preprocname']+" == complete"
+            if self.conf["radarvol"]: trig+= " && ../../../get_obs/get_radarvol == complete"
+            fam.add_task("merge_analysis_icon").add_trigger(trig)
 
 # Add a model run and postprocessing family to a node, to be called by
 # EpsMembers.
@@ -169,7 +171,7 @@ class Model:
         if GetObs in self.conf['runlist']: 
             if self.conf['modelname'] == "icon":
                 if self.conf["lhn"]:      trig+= " && ../../get_obs/get_radarlhn_icon == complete"
-                if self.conf["radarvol"]: trig+= " && ../../get_obs/get_radarvol == complete"
+#                if self.conf["radarvol"]: trig+= " && ../../get_obs/get_radarvol == complete"
             else:
                 trig+= " && ../../get_obs == complete"
         fam.add_trigger(trig)
