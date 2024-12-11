@@ -201,7 +201,6 @@ if [ "$thread" = "threaded_multi_importer" ]; then
     exit 1
 fi
 
-echo "importing with thread: $thread"
 basedir=$WORKDIR_BASE/nwprun
 # setup common to user scripts
 # basic variables
