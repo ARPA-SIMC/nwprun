@@ -1,0 +1,11 @@
+&remap_nml
+ in_grid_filename  = 'icon_grid_Test_ARPA_0_51_step_1_R03B08_N02_20231113_tiles.nc'
+ in_filename       = '@datafile@'
+ in_type           = 3
+ out_grid_filename = 'lateral_boundary.grid.nc'
+ out_filename      = '@out_file@'
+ out_type          = 2
+ out_filetype      = 4
+ l_have3dbuffer    = .false.
+ ncstorage_file    = "ncstorage_bc.tmp"
+/
