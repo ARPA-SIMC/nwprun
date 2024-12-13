@@ -8,7 +8,7 @@ from nwprun import *
 common_extra_env = {
     "NNODES_PREMODEL": 4,
     "NNODES_MODEL": 4,
-    "NTASKS_PREPROC": 32,
+    "NTASKS_PREMODEL": 32,
     "NTASKS_MODEL": 96,
     "EXTRA_SCHED": "",
     "NO_FAIL": "FALSE",
