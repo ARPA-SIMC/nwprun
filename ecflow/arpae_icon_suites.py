@@ -30,7 +30,8 @@ extra_env.update({
     "NNODES_PREMODEL": 2,
     "NNODES_MODEL": 8,
     "NTASKS_PREMODEL": 64,
-    "NTASKS_MODEL": 256
+    "NTASKS_MODEL": 256,
+    "NTASKS_POSTPROC": 1
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),

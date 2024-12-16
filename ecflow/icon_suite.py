@@ -32,14 +32,16 @@ if hpcenv == "leonardo":
         "NWPCONF": "prod/icon_2I/enda",
         "NNODES_PREMODEL": 1,
         "NNODES_MODEL": 2,
-        "NNODES_ENDA": 6
+        "NNODES_ENDA": 6,
+        "NTASKS_POSTPROC": 2
     })
 else: #default g100
     extra_env.update({
         "NWPCONF": "prod/icon_2I/enda",
         "NNODES_PREMODEL": 1,
         "NNODES_MODEL": 3,
-        "NNODES_ENDA": 8
+        "NNODES_ENDA": 8,
+        "NTASKS_POSTPROC": 2
     })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -80,14 +82,16 @@ if hpcenv == "leonardo":
         "NWPCONF": "prod/icon_2I/fcast",
         "NNODES_PREMODEL": 2,
         "NNODES_MODEL": 12,
-        "NNODES_ENDA": 4
+        "NNODES_ENDA": 4,
+        "NTASKS_POSTPROC": 2
     })
 else: # default g100
     extra_env.update({
         "NWPCONF": "prod/icon_2I/fcast",
         "NNODES_PREMODEL": 2,
         "NNODES_MODEL": 16,
-        "NNODES_ENDA": 6
+        "NNODES_ENDA": 6,
+        "NTASKS_POSTPROC": 2
     })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -127,7 +131,8 @@ extra_env.update({
     "NWPCONF": "prod/icon_2I/fcruc",
     "NNODES_PREMODEL": 3,
     "NNODES_MODEL": 16,
-    "NNODES_ENDA": 6
+    "NNODES_ENDA": 6,
+    "NTASKS_POSTPROC": 2
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -168,6 +173,7 @@ extra_env.update({
     "NNODES_PREMODEL": 3,
     "NNODES_MODEL": 6,
     "NNODES_ENDA": 6,
+    "NTASKS_POSTPROC": 2,
     "ECF_TIMEOUT": "14400"
 })
 basicenv = BasicEnv(srctree=os.environ["OPE"],

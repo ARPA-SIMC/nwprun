@@ -10,6 +10,7 @@ common_extra_env = {
     "NNODES_MODEL": 4,
     "NTASKS_PREMODEL": 32,
     "NTASKS_MODEL": 96,
+    "NTASKS_POSTPROC": 1,
     "EXTRA_SCHED": "",
     "NO_FAIL": "FALSE",
     "TASK_PER_CORE": "1",
