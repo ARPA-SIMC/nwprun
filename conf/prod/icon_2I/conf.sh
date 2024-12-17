@@ -39,10 +39,7 @@ ASS_CYCLE_LENGTH=1
 DT_IAU=600
 
 # eccodes definitions
-ecd_dwd=$WORKDIR_BASE/data/definitions/definitions.edzw-2.21.0-1
-ecd_cin=$WORKDIR_BASE/data/definitions/definitions.cineca-2.21.0
-ECCODES_DEFINITION_PATH=${ecd_dwd}:${ecd_cin}
-unset ecd_dwd ecd_cin
+ECCODES_DEFINITION_PATH=$ECCODES_DEFINITIONS_DWD:$ECCODES_DEFINITIONS_BASE
 
 # Generating process
 MODEL_ASSIM_GP=61

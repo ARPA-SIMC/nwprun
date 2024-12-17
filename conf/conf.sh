@@ -14,6 +14,8 @@ case "$HPC_SYSTEM" in
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
+    ECCODES_DEFINITIONS_BASE=$ECCODES_DEFINITION_PATH
+    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/eccodes_definitions/definitions.edzw
     SIMC_TOOLS=
     SIMC_SITE=Y
     ecflow_client=ecflow_client
@@ -49,6 +51,8 @@ case "$HPC_SYSTEM" in
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
+    ECCODES_DEFINITIONS_BASE=$WORKDIR_BASE/data/definitions/definitions.cineca-2.21.0
+    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/data/definitions/definitions.edzw-2.21.0-1
     SIMC_TOOLS="singularity exec -B /ind2/meteo -B /ind2/meteoarch $WORKDIR_BASE/simctools_nwprun_r8.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/ind2/meteo/a07smr01/LM_WorkDir/g100/lm/PROD/work
@@ -68,19 +72,14 @@ case "$HPC_SYSTEM" in
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
+    ECCODES_DEFINITIONS_BASE=$WORKDIR_BASE/data/definitions/definitions.cineca-2.21.0
+    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/data/definitions/definitions.edzw-2.21.0-1
     SIMC_TOOLS="singularity exec -B $WORK -B /leonardo_scratch $WORKDIR_BASE/simctools_nwprun_r8.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/leonardo_work/smr_prod/a07smr01/LM_WorkDir/leonardo/lm/PROD/work
     CINECA_RUN_ICON=/leonardo_work/smr_prod/a07smr01/ICON_WorkDir/PROD
     CINECA_UPLDIR=/meteo_arch/a07smr01/arch_lm/leonardo/auto/download/OPE/AM/AM/LAMI/IFS
     ecflow_client="$WORKDIR_BASE/nwprun/ecflow/ec_wrap ecflow_client"
-    ;;
-
-  marconi ) # Cineca HPC marconi
-# General
-    WORKDIR=$WORKDIR_BASE/$NWPCONF
-    LOGDIR=$CINECA_SCRATCH/log
-    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
     ;;
 esac
 

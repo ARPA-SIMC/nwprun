@@ -43,12 +43,6 @@ NBC_PER_TASK=1
 MODEL_LHN=.TRUE.
 MODEL_NH_LHN=4
 
-# eccodes definitions
-ecd_dwd=$WORKDIR_BASE/data/definitions/definitions.edzw-2.21.0-1
-ecd_cin=$WORKDIR_BASE/data/definitions/definitions.cineca-2.21.0
-ECCODES_DEFINITION_PATH=${ecd_dwd}:${ecd_cin}
-unset ecd_dwd ecd_cin
-
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki
 # setup for remote import
