@@ -22,13 +22,13 @@ echo "Je suis $SLURM_PROCID de $SLURM_NTASKS avec $SLURM_CPUS_PER_TASK processeu
 
 set -x
 
-# Define name of Arkimet dataset and GRIB input filename for iconremap
-IFS_ds=$(basename $PARENTMODEL_ARKI_DS)
-export datafile=input.grib
-if [ -n "$PARENTMODEL_GRIDFILE" ]; then
-    export gridfile=$PARENTMODEL_GRIDFILE
-else
+if [ "$PARENTMODEL" = "IFS" ]; then
+    # Define name of Arkimet dataset and GRIB input filename for iconremap
+    IFS_ds=$(basename $PARENTMODEL_ARKI_DS)
+    export datafile=input.grib
     export gridfile=$datafile
+else
+    export gridfile=$PARENTMODEL_STATIC/$PARENTMODEL_GRIDFILE
 fi
 
 # Create working directory for this task
@@ -47,6 +47,7 @@ if [ $SLURM_PROCID -eq 0 ] ; then
     echo "No first guess and increments. Process analysis from parent model"
     export out_file=$MODEL_PRE_DATADIR/ic_${DATES}${TIMES}.nc
 
+    if [ "$PARENTMODEL" = "IFS" ]; then
     # Retrieve field capacity/wilting point (fixed)
     flc_file=${MODEL_STATIC}/${IFS_ds}/flc_${IFS_ds}.grb
     wlt_file=${MODEL_STATIC}/${IFS_ds}/wlt_${IFS_ds}.grb
@@ -160,6 +161,9 @@ EOF
             tmp.w.g2
         cat tmp.w.g2 >> $datafile
     fi
+    else  # IFS/ICON
+    export datafile=$PARENTMODEL_DATADIR/$(inputmodel_name a)
+    fi
 
     # Create namelist for iconremap
     conf_template iconremap_IC.nml	
@@ -168,6 +172,7 @@ EOF
     $MODEL_PRE_BINDIR/iconremap -vvv --remap_nml iconremap_IC.nml
 
 
+    if [ "$PARENTMODEL" = "IFS" ]; then
     # ------------------------------------------------------------------------------
     # Interpolate only SST analysis from IFS
     # ------------------------------------------------------------------------------
@@ -191,6 +196,7 @@ EOF
     # Interpolate on ICON grid 
     conf_template iconremap_SST.nml
     $MODEL_PRE_BINDIR/iconremap -vvv --remap_nml iconremap_SST.nml
+    fi
 
 
 # ----------------------------------------------------------------------------------
@@ -215,6 +221,7 @@ else
 
     # Loop on hours to be processed
     for tt in $(seq $h1 $PARENTMODEL_FREQFC $h2) ; do
+	if [ "$PARENTMODEL" = "IFS" ]; then
         # Copy input removing topographies and converting all to GRIB2
 	cat << EOF > topo_g2.filt
         if (editionNumber == 1) {
@@ -249,6 +256,9 @@ EOF
             grib_set -s parameterCategory=2,parameterNumber=8 -d 0. tmp.templ.g2 tmp.w.g2
             cat tmp.w.g2 >> $datafile
         fi
+        else  # IFS/ICON
+        export datafile=$PARENTMODEL_DATADIR/$(inputmodel_name $tt)
+	fi
 
         # Define outpul boundary condition file name
         vtime=$(datetime_add $DATES $TIMES $tt)
