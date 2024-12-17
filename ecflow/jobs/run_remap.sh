@@ -25,6 +25,11 @@ set -x
 # Define name of Arkimet dataset and GRIB input filename for iconremap
 IFS_ds=$(basename $PARENTMODEL_ARKI_DS)
 export datafile=input.grib
+if [ -n "$PARENTMODEL_GRIDFILE" ]; then
+    export gridfile=$PARENTMODEL_GRIDFILE
+else
+    export gridfile=$datafile
+fi
 
 # Create working directory for this task
 mkdir -p ${MODEL_PRE_WORKDIR}/remap_${SLURM_PROCID}

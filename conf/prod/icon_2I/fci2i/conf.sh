@@ -7,6 +7,7 @@ PARENTMODEL_FREQANA=12
 PARENTMODEL_FREQFC=1
 PARENTMODEL_STATIC=$HOME/data/icon
 PARENTMODEL_STATICFILE=iconeu_dwd_foricon_extpar_R03B08_N02_20231113_tiles.nc
+PARENTMODEL_GRIDFILE=iconeu_dwd_foricon_grid_R03B08_N02_20231113_tiles.nc
 
 # Model environment variables
 MODEL_BASE=$HOME/srcgnu/icon

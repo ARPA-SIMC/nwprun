@@ -1,5 +1,5 @@
 &remap_nml
- in_grid_filename  = '@datafile@'
+ in_grid_filename  = '@gridfile@'
  in_filename       = '@datafile@'
  in_type           = 3
  out_grid_filename = 'lateral_boundary.grid.nc'
