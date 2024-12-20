@@ -26,6 +26,10 @@ The containers available within this project are:
  * `bufr2netcdf_r8` minimal container with only the bufr2netcdf tool,
    mainly for the [Cosmo](https://www.cosmo-model.org/) community
 
+ * `Singularity.simc_tools_devel_r8` came as `simc_tools_r8` but
+   containing also the copilers and development libraries for
+   building program with Arpae-SIMC tools.
+
 They are all based on the Rocky8 linux distribution (analogous to
 RedHat 8), while the extra tools are installed through the Arpae-SIMC
 [copr
