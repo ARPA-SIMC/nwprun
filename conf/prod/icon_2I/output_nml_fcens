@@ -12,7 +12,7 @@
  output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_plev_all2km_A2P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- pl_varlist                   = temp,qv,geopot
+ pl_varlist                   = 'temp','qv','geopot'
  p_levels                     = 50000.,70000.,85000.
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
@@ -34,10 +34,10 @@
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
 ! aggiunto t_seasfc da Thomas, sostituiti tqc,tqi,tqr,tqs,tqg con twater
- ml_varlist                   = t_2m,td_2m,u_10m,v_10m,gust10,
-                                tot_prec,rain_con,rain_gsp,snow_con,snow_gsp,graupel_gsp,clct,
-                                asob_s,pres_msl,pres_sfc,
-                                cape_ml,lpi
+ ml_varlist                   = 't_2m','td_2m','u_10m','v_10m','gust10',
+                                'tot_prec','rain_con','rain_gsp','snow_con','snow_gsp','graupel_gsp','clct',
+                                'asob_s','pres_msl','pres_sfc',
+                                'cape_ml','lpi'
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required                
@@ -57,7 +57,7 @@
  output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_static_all2km_A2P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- ml_varlist                   = topography_c,fr_land
+ ml_varlist                   = 'topography_c','fr_land'
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased         
  remap                        = 1   !0 in case unstructured grid is required                

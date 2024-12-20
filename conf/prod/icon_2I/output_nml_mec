@@ -15,10 +15,10 @@
  output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurf_unstr_A1P0"
  filename_format             = '<output_filename>_+<ddhhmmss>'     ! file name base
  ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- ml_varlist                  = u,v,temp,pres,qv,
-                               u_10m,v_10m,gust10,t_2m,td_2m,TMAX_2M,TMIN_2M,
-                               clcl,clcm,clch,clct,
-                               asodifd_s,asodird_s,t_g,h_snow,pres_sfc,tot_prec
+ ml_varlist                  = 'u','v','temp','pres','qv',
+                               'u_10m','v_10m','gust10','t_2m','td_2m','TMAX_2M','TMIN_2M',
+                               'clcl','clcm','clch','clct',
+                               'asodifd_s','asodird_s','t_g','h_snow','pres_sfc','tot_prec'
  m_levels                    = 1...65
  output_grid                 = .FALSE.
  stream_partitions_ml        = 1  ! needs to be adapted if num_io_procs is increased
@@ -37,7 +37,7 @@
  output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_static_unstr_A1P0"
  filename_format             = '<output_filename>_+<ddhhmmss>'     ! file name base
  ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- ml_varlist                  = z_mc,topography_c,fr_land
+ ml_varlist                  = 'z_mc','topography_c','fr_land'
  m_levels                    = 1...65
  output_grid                 = .FALSE.
  stream_partitions_ml        = 1  ! needs to be adapted if num_io_procs is increased
