@@ -1,1 +1,0 @@
-#SBATCH --nodes=%NNODES_ENDA%
