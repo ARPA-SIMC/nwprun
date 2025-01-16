@@ -20,7 +20,9 @@ common_extra_env = {
     "TASK_PER_CORE": "1",
     "HPCENV": os.environ["HPC_SYSTEM"],
     "ECF_TIMEOUT": "7200",
-    "ECF_DENIED": ""
+    "ECF_DENIED": "",
+    "WALL_TIME_WAIT": "04:10:00",
+    "WALL_TIME_ARCHIVE": "04:10:00"
 }
 
 # Suite icon fci2i
@@ -31,7 +33,9 @@ extra_env.update({
     "NNODES_MODEL": 8,
     "NTASKS_PREMODEL": 64,
     "NTASKS_MODEL": 256,
-    "NTASKS_POSTPROC": 1
+    "NTASKS_POSTPROC": 1,
+    "WALL_TIME_PREMODEL": "00:20:00",
+    "WALL_TIME_MODEL": "03:00:00"
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -43,8 +47,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
 conf = ModelConfig({"gts": False, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "modelname": "icon", 
-                    "runlist": [GetObs, EpsMembers],
-                    "preproc_wt":"00:20:00", "model_wt": "03:00:00"}).getconf()
+                    "runlist": [GetObs, EpsMembers]}).getconf()
 icon = ModelSuite("icon_2I_fci2i")
 basicenv.add_to(icon.suite)
 day = icon.suite.add_family("day").add_repeat(

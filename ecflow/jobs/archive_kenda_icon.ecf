@@ -1,4 +1,4 @@
-%include <sched_postproc.h>
+%include <sched_archive.h>
 %include <head.h>
 
 # module load singularity || true
