@@ -22,7 +22,9 @@ common_extra_env = {
     "TASK_PER_CORE": "1",
     "HPCENV": os.environ["HPC_SYSTEM"],
     "ECF_TIMEOUT": "7200",
-    "ECF_DENIED": ""
+    "ECF_DENIED": "",
+    "WALL_TIME_WAIT": "04:10:00",
+    "WALL_TIME_ARCHIVE": "04:10:00"
 }
 
 # Suite enda
@@ -33,7 +35,12 @@ if hpcenv == "leonardo":
         "NNODES_PREMODEL": 1,
         "NNODES_MODEL": 2,
         "NNODES_ENDA": 6,
-        "NTASKS_POSTPROC": 2
+        "NNODES_MEC": 6,
+        "NTASKS_POSTPROC": 2,
+        "WALL_TIME_PREMODEL": "00:20:00",
+        "WALL_TIME_MODEL": "00:20:00",
+        "WALL_TIME_ENDA": "00:30:00",
+        "WALL_TIME_MEC": "00:30:00"
     })
 else: #default g100
     extra_env.update({
@@ -41,7 +48,12 @@ else: #default g100
         "NNODES_PREMODEL": 1,
         "NNODES_MODEL": 3,
         "NNODES_ENDA": 8,
-        "NTASKS_POSTPROC": 2
+        "NNODES_MEC": 8,
+        "NTASKS_POSTPROC": 2,
+        "WALL_TIME_PREMODEL": "00:20:00",
+        "WALL_TIME_MODEL": "00:20:00",
+        "WALL_TIME_ENDA": "00:30:00",
+        "WALL_TIME_MEC": "00:30:00"
     })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -53,8 +65,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
 conf = ModelConfig({"gts": True, "lhn": True, "radarvol": True, "membrange": "0-40",
                     "postprocrange": "0",
                     "modelname": "icon",
-                    "runlist": [GetObs, EpsMembers, EndaAnalysis],
-                    "preproc_wt":"00:20:00", "model_wt": "00:20:00"}).getconf()
+                    "runlist": [GetObs, EpsMembers, EndaAnalysis]}).getconf()
 enda = ModelSuite("icon_2I_enda")
 basicenv.add_to(enda.suite)
 day = enda.suite.add_family("day").add_repeat(
@@ -82,16 +93,18 @@ if hpcenv == "leonardo":
         "NWPCONF": "prod/icon_2I/fcast",
         "NNODES_PREMODEL": 2,
         "NNODES_MODEL": 12,
-        "NNODES_ENDA": 4,
-        "NTASKS_POSTPROC": 2
+        "NTASKS_POSTPROC": 2,
+        "WALL_TIME_PREMODEL": "00:20:00",
+        "WALL_TIME_MODEL": "02:00:00"
     })
 else: # default g100
     extra_env.update({
         "NWPCONF": "prod/icon_2I/fcast",
         "NNODES_PREMODEL": 2,
         "NNODES_MODEL": 16,
-        "NNODES_ENDA": 6,
-        "NTASKS_POSTPROC": 2
+        "NTASKS_POSTPROC": 2,
+        "WALL_TIME_PREMODEL": "00:20:00",
+        "WALL_TIME_MODEL": "02:00:00"
     })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -103,8 +116,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
 conf = ModelConfig({"gts": False, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "modelname": "icon", 
-                    "runlist": [GetObs, EpsMembers],
-                    "preproc_wt":"00:20:00", "model_wt": "02:00:00"}).getconf()
+                    "runlist": [GetObs, EpsMembers]}).getconf()
 icon = ModelSuite("icon_2I_fcast")
 basicenv.add_to(icon.suite)
 day = icon.suite.add_family("day").add_repeat(
@@ -131,8 +143,9 @@ extra_env.update({
     "NWPCONF": "prod/icon_2I/fcruc",
     "NNODES_PREMODEL": 3,
     "NNODES_MODEL": 16,
-    "NNODES_ENDA": 6,
-    "NTASKS_POSTPROC": 2
+    "NTASKS_POSTPROC": 2,
+    "WALL_TIME_PREMODEL": "00:20:00",
+    "WALL_TIME_MODEL": "01:00:00"
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -144,8 +157,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
 conf = ModelConfig({"gts": False, "lhn": True, "membrange": "0",
                     "postprocrange": "0",
                     "modelname": "icon", 
-                    "runlist": [GetObs, EpsMembers],
-                    "preproc_wt":"00:20:00", "model_wt": "01:00:00"}).getconf()
+                    "runlist": [GetObs, EpsMembers]}).getconf()
 icon = ModelSuite("icon_2I_fcruc")
 basicenv.add_to(icon.suite)
 day = icon.suite.add_family("day").add_repeat(
@@ -168,14 +180,29 @@ icon.replace(interactive=interactive)
 
 # Suite fcens
 extra_env = common_extra_env.copy()
-extra_env.update({
-    "NWPCONF": "prod/icon_2I/fcens",
-    "NNODES_PREMODEL": 3,
-    "NNODES_MODEL": 6,
-    "NNODES_ENDA": 6,
-    "NTASKS_POSTPROC": 2,
-    "ECF_TIMEOUT": "14400"
-})
+if hpcenv == "leonardo":
+    extra_env.update({
+        "NWPCONF": "prod/icon_2I/fcens",
+        "NNODES_PREMODEL": 3,
+        "NNODES_MODEL": 6,
+        "NNODES_ENDA": 6,
+        "NTASKS_POSTPROC": 2,
+        "WALL_TIME_PREMODEL": "00:20:00",
+        "WALL_TIME_MODEL": "02:00:00",
+        "ECF_TIMEOUT": "14400"
+    })
+else: #default g100
+    extra_env.update({
+        "NWPCONF": "prod/icon_2I/fcens",
+        "NNODES_PREMODEL": 3,
+        "NNODES_MODEL": 6,
+        "NNODES_ENDA": 6,
+        "NTASKS_POSTPROC": 2,
+        "WALL_TIME_PREMODEL": "00:20:00",
+        "WALL_TIME_MODEL": "03:00:00",
+        "ECF_TIMEOUT": "14400"
+    })
+
 basicenv = BasicEnv(srctree=os.environ["OPE"],
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
@@ -187,7 +214,6 @@ conf = ModelConfig({"gts": False, "lhn": True, "membrange": "1-20",
                     "postprocrange": "1-20",
                     "modelname": "icon",
                     "runlist": [GetObs, EpsMembers, EpsPostproc],
-                    "model_wt": "05:00:00",
                     "epspostproclevel": 2}).getconf()
 fcens = ModelSuite("icon_2I_fcens")
 basicenv.add_to(fcens.suite)
@@ -235,7 +261,8 @@ enda_dia.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/icon_2I/verif_mod",
-    "NNODES_ENDA": 6
+    "NNODES_MEC": 6,
+    "WALL_TIME_MEC": "00:30:00"
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -270,7 +297,8 @@ icon.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/icon_2I/verif_obs",
-    "NNODES_ENDA": 6
+    "NNODES_MEC": 6,
+    "WALL_TIME_MEC": "00:30:00"
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
@@ -305,7 +333,8 @@ icon.replace(interactive=interactive)
 extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/ifs/verif_obs",
-    "NNODES_ENDA": 6
+    "NNODES_MEC": 6,
+    "WALL_TIME_MEC": "00:30:00"
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),

@@ -12,9 +12,9 @@
  output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_mlevSurfAna_all5km_A0P0"
  filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
  ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- ml_varlist                   = pres,temp,u,v,qv,qc,qr,qi,qs,qg,w, 
-                                tot_prec,rain_gsp,snow_gsp, asob_s,athb_s,alhfl_s,ashfl_s,aumfl_s,avmfl_s,asodifd_s,asodird_s,
-                                t_2m,td_2m,u_10m,v_10m,gust10, pres_sfc,pres_msl, w_so,t_so,t_g, clct,clcl,clcm,clch, albdif,gz0
+ ml_varlist                   = 'pres','temp','u','v','qv','qc','qr','qi','qs','qg','w',
+                                'tot_prec','rain_gsp','snow_gsp','asob_s','athb_s','alhfl_s','ashfl_s','aumfl_s','avmfl_s','asodifd_s','asodird_s',
+                                't_2m','td_2m','u_10m','v_10m','gust10','pres_sfc','pres_msl','w_so','t_so','t_g','clct','clcl','clcm','clch','albdif','gz0'
  m_levels                     = 14...65
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased

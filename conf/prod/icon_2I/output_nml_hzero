@@ -12,7 +12,7 @@
  output_filename             = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_hzero_unstr_A2Pz"
  filename_format             = '<output_filename>_+<ddhhmmss>'     ! file name base
  ready_file                  = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
- ml_varlist                  = hzerocl,topography_c
+ ml_varlist                  = 'hzerocl','topography_c'
  m_levels                    = 1...65
  output_grid                 = .FALSE.
  stream_partitions_ml        = 1  ! needs to be adapted if num_io_procs is increased

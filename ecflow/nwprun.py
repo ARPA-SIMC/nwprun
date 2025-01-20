@@ -58,9 +58,6 @@ class ModelConfig:
                      "preprocname": None, "getparentname": "get_parent",
                      "postprocrange": None, "postproctype": "async", 
                      "timer": None, "cronfreq": 10,
-                     "wait_wt": "04:10:00", "preproc_wt": "01:00:00",
-                     "model_wt": "05:00:00", "analysis_wt": "00:30:00",
-                     "mec_wt": "00:30:00",
                      "startmethod": "check_run",
                      "starttime": "00:00", "epspostproclevel": 1}
         self.conf.update(conf) # update default with user data
@@ -150,7 +147,6 @@ class Preproc:
         task = fam.add_task(self.conf['getparentname'])
         SchedEnv("sh").add_to(task) # interactive because net access required for galileo
         task = fam.add_task(self.conf['preprocname']).add_trigger("./"+self.conf['getparentname']+" == complete")
-        task.add_variable("WALL_TIME", self.conf["preproc_wt"])
         if self.conf['preprocname'] == "int2lm":
             fam.add_task("merge_analysis").add_trigger("./"+self.conf['preprocname']+" == complete")
         elif self.conf['preprocname'] == "preicon":
@@ -175,7 +171,6 @@ class Model:
             else:
                 trig+= " && ../../get_obs == complete"
         fam.add_trigger(trig)
-        fam.add_variable("WALL_TIME", self.conf["model_wt"])
         fam.add_task(self.conf['modelname']).add_event("started")
         if self.conf['postproc']:
             if self.conf['postproctype'] == "async":
@@ -237,7 +232,6 @@ class Verification:
         fam = node.add_family("verification")
         fam.add_trigger("./get_model == complete && ./get_obs == complete")
         task_mec = fam.add_task("mec_verif")
-        task_mec.add_variable("WALL_TIME", self.conf["mec_wt"])
 
 # Add an ensemble data assimilation family to a suite, to be run
 # collectively after the ensemble model run, tailored for kenda. To be
@@ -252,16 +246,12 @@ class EndaAnalysis:
         fam.add_trigger("./eps_members == complete && ./get_obs == complete")
         if self.conf['modelname'] == "icon":
             task = fam.add_task("mec")
-            task.add_variable("WALL_TIME", self.conf["mec_wt"])
             fam.add_task("prepare_kenda_icon").add_trigger("./mec == complete")
             task = fam.add_task("kenda").add_trigger("./prepare_kenda_icon == complete")
-            task.add_variable("WALL_TIME", self.conf["analysis_wt"])
             task = fam.add_task("archive_kenda_icon").add_trigger("./kenda == complete")
-            task.add_variable("WALL_TIME", self.conf["wait_wt"])
         else:
             fam.add_task("prepare_kenda")
             task = fam.add_task("kenda").add_trigger("./prepare_kenda == complete")
-            task.add_variable("WALL_TIME", self.conf["analysis_wt"])
             fam.add_task("archive_kenda").add_trigger("./kenda == complete")
 
 # Add a continuous analysis step to a suite, to be run after model

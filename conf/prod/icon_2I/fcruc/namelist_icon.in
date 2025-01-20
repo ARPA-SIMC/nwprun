@@ -63,6 +63,7 @@
  itype_rh                    = 1
 ! output_nml_dict            = 'map_file.fc'
  lmask_boundary              = .true.           ! false in assimilation cycle
+ wshear_uv_heights           = 6000.,-1.,-1.
 /
 
 &gribout_nml

@@ -1,4 +1,4 @@
-%include <sched_mpi_enda.h>
+%include <sched_mpi_mec.h>
 %include <%HPCENV%/modules.h>
 %include <head.h>
 

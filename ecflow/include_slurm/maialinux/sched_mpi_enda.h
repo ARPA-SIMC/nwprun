@@ -1,1 +1,0 @@
-#SBATCH --ntasks=%NTASKS_PREMODEL%
