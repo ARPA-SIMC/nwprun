@@ -5,7 +5,8 @@ from datetime import datetime, timedelta
 DESCRIPTION - 09/01/2025
 This script checks for delays in analysis data production and detects significant 
 variations in soil moisture using GRIB2 files. It performs two main checks:
-  - Data delay check: Verifies that the most recent folder is no older than 6 hours.
+  - Data delay check: Verifies that the most recent folder is no older than "delay_alert" 
+    hours.
   - Soil moisture variation check: Analyzes data from the last N hours (defined by --hours
     option) to detect significant soil moisture variations exceeding a given threshold
     (defined by --threshold option)
@@ -46,21 +47,46 @@ def get_latest_folder(base_path):
         print(f"Error finding latest folder: {e}")
         return None
 
-def check_data_delay(base_path):
+def check_if_processed(folder_name):
     """
-    Checks if the latest folder in the base path is older than 6 hours.
+    Checks if a folder has already been processed.
+    """
+    if os.path.exists(processed_file):
+        with open(processed_file, "r") as f:
+            processed_folders = set(line.strip() for line in f)
+        return folder_name in processed_folders
+    return False
+
+def mark_as_processed(folder_name):
+    """
+    Marks a folder as processed by adding it to the processed file.
+    """
+    with open(processed_file, "a") as f:
+        f.write(folder_name + "\n")
+
+def check_data_delay(base_path, delay_alert):
+    """
+    Checks if the latest folder in the base path is older than "delay_alert" hours.
     If it is, returns an alert message.
     """
+    # Get latest folder
     latest_folder_name = get_latest_folder(base_path)
     if not latest_folder_name:
         return "ERROR: No valid folders found."
     
+    # Skip alert if already processed
+    if check_if_processed(latest_folder_name):
+        print("Alert already sent")
+        return None
+
+    # Convert in datetime format
     latest_folder_time = datetime.strptime(latest_folder_name, "%Y%m%d%H")
     now = datetime.utcnow()
 
-    # Check if the latest folder is older than 6 hours
-    if (now - latest_folder_time).total_seconds() > 6 * 3600:
-        return f"ALERT: No recent data. Latest folder ({latest_folder_name}) is more than 6 hours old.\nCurrent UTC time: {now}\n"
+    # Check if the latest folder is older than "delay_alert" hours
+    if (now - latest_folder_time).total_seconds() > delay_alert * 3600:
+        mark_as_processed(latest_folder_name)  # Mark as processed
+        return f"ALERT: No recent data. Latest folder ({latest_folder_name}) is more than {delay_alert} hours old.\nCurrent UTC time: {now}\n"
 
     return None
 
@@ -116,18 +142,24 @@ def command_line():
     parser.add_argument('--hours', default = 12,     type = int,
                         help = 'Number of hours to consider for soil moisture variation \
                                 analysis (default: 12).')
-    parser.add_argument('--threshold', default = "2.0", type = float,
+    parser.add_argument('--threshold', default = "2.0",   type = float,
                         help = 'Percentage threshold for detecting significant soil     \
                                 moisture variations (default: 2.0).')
+    parser.add_argument('--delay_alert', default = 6,     type = int,
+                        help = 'Minimum number of hours of delay to send an alert       \
+                                (default: 6).')
     return parser.parse_args()
 
 if __name__ == "__main__":
     # Read variables from command line
     args = command_line()
-    folder, hours, threshold = args.folder, args.hours, args.threshold
+    folder, hours, threshold, delay_alert = args.folder, args.hours, args.threshold, args.delay_alert
+
+    # Save last delayed analysis in a file
+    processed_file = "last_delayed_analysis.txt"
 
     # Check for data delay and humidity variation
-    delay_alert = check_data_delay(folder)
+    delay_alert = check_data_delay(folder, delay_alert)
     humidity_alert = check_humidity_variation(folder, hours, threshold)
 
     # If there are any alerts, write them to a file

@@ -25,7 +25,7 @@ export ECCODES_DEFINITION_PATH=$ECCODES_DEFINITIONS_DWD:$ECCODES_DEFINITIONS_BAS
 
 # Check analysis delay and cold restart
 $SIMC_TOOLS python3 $basedir/ecflow/script_python3/check_analysis.py \
-                    --folder $LETKF_ARCHIVE --hours 12 --threshold 2.0
+                    --folder $LETKF_ARCHIVE --hours 12 --threshold 2.0 --delay_alert 4
 
 # Send email if alert_message.txt is present
 if [ -s "alert_message.txt" ]; then
