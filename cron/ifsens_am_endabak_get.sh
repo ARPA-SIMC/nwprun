@@ -14,12 +14,13 @@ get_setup() {
 #    file_pattern="U3X????????????????1"
 # Create array of files to be downloaded
     reftime=`datetime_cnmc $DATE$TIME`
+    reftime_cineca=`datetime_add $DATE $TIME 6`
+    UPLDIR_BAK=$UPLDIR/BCK/$reftime_cineca
     for hh in `seq 13 1 18`; do
         vertime=`datetime_add $DATE$TIME $hh`
         vertime=`datetime_cnmc $vertime`
-	file_list[$hh]="$UPLDIR/U3X${reftime}${vertime}1"
+	file_list[$hh]="U3X${reftime}${vertime}1"
     done
-
 }
 
 get_cleanup() {
@@ -34,17 +35,24 @@ get_one() {
     while true; do
         donenothing=Y
 
-	for i in ${!file_list[@]}; do # ! extract keys from array
-	    file=${file_list[$i]}
-            if [ -f "$file" ]; then
+        for i in ${!file_list[@]}; do # ! extract keys from array
+            file=${file_list[$i]}
+            if [ -f "$UPLDIR/$file" ]; then
                 # process $file
                 log "file $file successfully downloaded and unpacked"
-                putarki_configured_archive $PROCNAME ${file}
+                putarki_configured_archive $PROCNAME $UPLDIR/${file}
                 log "file ${file} successfully sent to archive"
-		unset file_list[$i]
+                unset file_list[$i]
+                donenothing=
+            elif [ -f "$UPLDIR_BAK/$file" ]; then
+                # process $file
+                log "file $file successfully downloaded from backup and unpacked"
+                putarki_configured_archive $PROCNAME $UPLDIR_BAK/${file}
+                log "file ${file} successfully sent to archive"
+                unset file_list[$i]
                 donenothing=
             fi
-	done
+        done
 
 	if [ ${#file_list[@]} -eq 0 ]; then
 	    return
