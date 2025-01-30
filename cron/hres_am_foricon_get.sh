@@ -15,7 +15,7 @@ get_setup() {
     reftime=`datetime_cnmc $DATE$TIME`
     reftime_cineca=`datetime_add $DATE $TIME 6`
     UPLDIR_BAK=$UPLDIR/BCK/$reftime_cineca
-
+    log "Searching files in $UPLDIR and $UPLDIR_BAK alternative sources"
     for hh in `seq $FIRST_BC_HH $FREQ_BC_HH $LAST_BC_HH`; do
         vertime=`datetime_add $DATE$TIME $hh`
         vertime=`datetime_cnmc $vertime`
