@@ -34,10 +34,10 @@ lead_time_min=$((model_stop_min - dt_shift_min))
 lt_hh=$((lead_time_min /  60 ))
 lt_mm=$((lead_time_min %% 60 ))
 
-# Ensemble meber suffix
-if [ -z "$ENS_MEMB" ]; then       # deterministic
+# Ensemble member suffix
+if [ -z "$ENS_MEMB" ]; then  # deterministic
     n3=det
-else                            # ensemble
+else                         # ensemble
     n3=`printf "%%03d" $ENS_MEMB`           
 fi
 
@@ -67,7 +67,7 @@ fi
 #   Model will be initialized with IAU.
 # - If only first guess exists, analysis increments equal to 0 are added. Model
 #   will be initialized with IAU, but without any analysis: soil and atmosphere
-#   infomration of previous cycle are not lost.
+#   information of previous cycle are not lost.
 # - If first guess does not exist, the model will be initialized with IFS soil and
 #   atmosphere.
 #
@@ -154,8 +154,12 @@ if [ "$MODEL_FAST_ASSIM" == "Y" ]; then
 
 # Cold start
 else
-    # Define namelist variables for IFS initialization
-    INIT_MODE=2
+    # Define namelist variables for parent model initialization
+    if [ "$PARENTMODEL" = "IFS" ]; then
+        INIT_MODE=2
+    else
+        INIT_MODE=7
+    fi
     FILEFG=""
     FILEAN=""
     LREAD_ANA=.false.
