@@ -5,7 +5,7 @@ Arpae-SIMC software suite, by means of a
 [singularity](https://sylabs.io/singularity/) or
 [apptainer](https://apptainer.org/) container, built with the
 definition files available in this repository and also distributed in
-binary form on Sylabs repository.
+binary form on public Sylabs repository.
 
 ## User documentation
 
@@ -20,17 +20,17 @@ The containers available within this project are:
    debugging tools (gdb, valgrind, strace and debugging symbols)
 
  * `nwprun_r8` same as `simc_tools_r8` but with some additional python
-   libraries used for generating ensemble plots for the LAMI modelling
-   suites
+   libraries used for generating ensemble plots for the Italian
+   modelling suites
 
  * `bufr2netcdf_r8` minimal container with only the bufr2netcdf tool,
    mainly for the [Cosmo](https://www.cosmo-model.org/) community
 
- * `Singularity.simc_tools_devel_r8` came as `simc_tools_r8` but
-   containing also the copilers and development libraries for
-   building program with Arpae-SIMC tools.
+ * `Singularity.simc_tools_devel_r8` same as `simc_tools_r8` but
+   containing also the copilers and development libraries for building
+   program with Arpae-SIMC tools.
 
-They are all based on the Rocky8 linux distribution (analogous to
+They are all based on the Rocky8 linux distribution (compatible with
 RedHat 8), while the extra tools are installed through the Arpae-SIMC
 [copr
 repository](https://copr.fedorainfracloud.org/coprs/simc/stable/)
@@ -84,5 +84,7 @@ singularity shell ./simc_tools_r8.sif
 
 Execute `singularity remote login` and, in case of failure, get a new
 access token interactively by following the instructions, then run the
-`sylabs_deploy.sh` script.
+`sylabs_deploy.sh` script. In the script the name of the user
+repository is hardcoded in the `$SYLABS_REPO` variable, change as
+needed.
 
