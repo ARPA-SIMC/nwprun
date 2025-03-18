@@ -116,6 +116,18 @@ case "%SUITE%" in
 
 esac
 
+if [ -n "$ADD_ICE_FIELDS" ]; then
+    anafile=`inputmodel_name 0`
+    grib_set -w discipline=10,parameterCategory=2,parameterNumber=1 -S \
+     -s parameterNumber=0 -d 0. \
+     $anafile seaice.grib
+    grib_set -w discipline=2,parameterCategory=3,parameterNumber=20 -S \
+     -s parameterNumber=22 -d 0. \
+     $anafile w_so_ice.grib
+
+    cat seaice.grib w_so_ice.grib >> $anafile
+    rm -f seaice.grib w_so_ice.grib
+fi
 
 # mars code, to be inserted somewhere conditionally
 #. $NWPCONFBINDIR/getmars.sh

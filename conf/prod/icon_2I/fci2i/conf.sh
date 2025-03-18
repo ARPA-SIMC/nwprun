@@ -1,13 +1,18 @@
 # Parent model environment variables
 PARENTMODEL=ICON
 PARENTMODEL_ARKI_DS=$ARKI_DIR/icon_eu_dwd_foricon
-PARENTMODEL_SIGNAL=iconeu_dwd_foricon
+PARENTMODEL_SIGNAL=icon_eu_dwd_foricon
 PARENTMODEL_FREQINI=12
 PARENTMODEL_FREQANA=12
 PARENTMODEL_FREQFC=1
 PARENTMODEL_STATIC=$HOME/data/icon
 PARENTMODEL_STATICFILE=iconeu_dwd_foricon_extpar_R03B08_N02_20231113_tiles.nc
 PARENTMODEL_GRIDFILE=iconeu_dwd_foricon_grid_R03B08_N02_20231113_tiles.nc
+
+# invent W_SO_ICE and FR_ICE and set them to 0
+#ADD_ICE_FIELDS=Y
+# suggestion by MeteoRomania for running Icon on rocky8
+export FI_PROVIDER=tcp
 
 # Model environment variables
 MODEL_BASE=$HOME/srcgnu/icon
