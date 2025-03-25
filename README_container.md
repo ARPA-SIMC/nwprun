@@ -23,6 +23,9 @@ The containers available within this project are:
    libraries used for generating ensemble plots for the Italian
    modelling suites
 
+ * `nwprun_f40` same as `nwprun_r8` but based on a recent Fedora
+   distribution, thus with more recent versions of some packages
+
  * `bufr2netcdf_r8` minimal container with only the bufr2netcdf tool,
    mainly for the [Cosmo](https://www.cosmo-model.org/) community
 
@@ -30,9 +33,9 @@ The containers available within this project are:
    containing also the copilers and development libraries for building
    program with Arpae-SIMC tools.
 
-They are all based on the Rocky8 linux distribution (compatible with
-RedHat 8), while the extra tools are installed through the Arpae-SIMC
-[copr
+They are all based on the Rocky8 (compatible with RedHat 8) or on the
+Fedora 40 linux distributions, while the extra tools are installed
+natively through the Arpae-SIMC [copr
 repository](https://copr.fedorainfracloud.org/coprs/simc/stable/)
 
 The containers are published on the sylabs.io repository, thus they
