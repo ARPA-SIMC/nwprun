@@ -1,9 +1,68 @@
+#!/bin/bash
 %include <sched_wait.h>
-%include <%HPCENV%/smnd.h>
+%include <%HPCENV%/modules_iama.h>
 %include <head.h>
 %include <head_iama.h>
+set -x
+echo "Hello world!"
+echo "Running: iama_proc_data.ecf "$(date -u)
 
-echo "Running: iama_proc_data.ecf"
+# Setup dependent on iama resolution
+if [ $RESOLUTION = 5 ] ; then
+  IAMA_ZOOM=$IAMA5_ZOOM
+  IAMA_USE_FOR=IAMA5_USE_FOR
 
+elif [ $RESOLUTION = 2 ] ; then
+  IAMA_ZOOM=$IAMA2_ZOOM
+  IAMA_USE_FOR=IAMA2_USE_FOR
+
+fi
+
+cd $WORKDIR/${RESOLUTION}km
+
+# 0) get timerange of input data
+if [ ! -s $SOURCE_TAG ] ; then
+  echo "File $(pwd)/${SOURCE_TAG} not found"
+  exit 1
+else
+  in_range=$(head -n 1 ${SOURCE_TAG} |cut -d \  -f 1)
+fi
+
+# 1) cut required subdomain
+
+rm -f ??.grib.zoom
+zw=$(echo $IAMA_ZOOM | awk '{print $1}')
+zs=$(echo $IAMA_ZOOM | awk '{print $2}')
+ze=$(echo $IAMA_ZOOM | awk '{print $3}')
+zn=$(echo $IAMA_ZOOM | awk '{print $4}')
+
+for file in $(ls ??.grib static.grib) ; do
+  $SIMC_TOOLS vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=index --ix=$zw --iy=$zs --fx=$ze --fy=$zn ${file} ${file}.zoom
+done
+
+# 2) Re-arrange input grib: write separate files with 12 timestamps for each typeOfLevel/parameter/
+# - modify reftime and timerange: istantaneous fields are written as anlysis with reftime+1h,
+#   non-instanteous are written as processed analysis with reftime unchanged (ie. beginning of processing interval)
+#
+# Encoding for type of levels (grib2: typeOfFirstFixedSurface):
+#   1=surface, 100=isobaric (cloud layers), 101=MSL, 103=height above ground, 106=depth, 150=model level/layer
+
+rm -f split.filt *_*_*_*.grib
+echo write \"[productDefinitionTemplateNumber]_[typeOfFirstFixedSurface:i]_[discipline]_[parameterCategory]_[parameterNumber].grib\"\; > split.filt
+grib_filter split.filt ??.grib.zoom static.grib.zoom
+
+%include <tail.h>
+
+# 3) If processing forecast, de-cumulate processed fields
+
+if [ $in_range -gt 0 ] ; then
+  echo "ToDo"
+fi
+
+# 4) Convert reference times and timeranges to analysis
+
+for file in $(ls *.grib.zoom) ; do
+  $SIMC_TOOLS grib_forc2ana.exe -proc $file ${file}.ana
+done
 
 %include <tail.h>

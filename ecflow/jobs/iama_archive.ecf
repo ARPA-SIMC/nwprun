@@ -5,5 +5,7 @@
 
 echo "Running: iama_archive.ecf"
 
+# remove initial time
+# send to archive
 
 %include <tail.h>

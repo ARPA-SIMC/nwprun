@@ -1,13 +1,121 @@
+#!/bin/bash
 %include <sched_wait.h>
 %include <%HPCENV%/smnd.h>
 %include <head.h>
 %include <head_iama.h>
+#
+# This script looks for a complete 12h data tranche: select analysis if they are available, otherwise the shortest available forecast.
+# Analysis and forecasts (or forecasts with different refrime) are never mixed.
+#
+# TODO:
+# - manage incomplete input files (chech size / number of messages?)
+#
+set -x
+echo "Hello world!"
+echo "Running: iama_get_data_files.ecf "$(date -u)
 
-echo "" >> $logger
-echo $(date -u) >> $logger
-echo "Running: iama_get_data_files.ecf" >> $logger
-echo "DATE, TIME, PROCDATE, PROCTIME-"$DATE"-"$TIME"-"$PROCDATE"-"$PROCTIME >> $logger
-echo "IAMA_SLOT, ARKI_DLDIR, IAMA5_INPUTMODEL-"$IAMA_SLOT"-"$ARKI_DLDIR"-"$IAMA5_INPUTMODEL >> $logger
+# Setup dependent on iama resolution
+if [ $RESOLUTION = 5 ] ; then
+  IAMA_INPUT_SUFFIX_ANA=$IAMA5_INPUT_SUFFIX_ANA
+  IAMA_INPUT_SUFFIX_ANAST=$IAMA5_INPUT_SUFFIX_ANAST
+  IAMA_INPUT_SUFFIX_FOR=$IAMA5_INPUT_SUFFIX_FOR
+  IAMA_INPUT_SUFFIX_FORST=$IAMA5_INPUT_SUFFIX_FORST
+  IAMA_USE_FOR=IAMA5_USE_FOR
 
+elif [ $RESOLUTION = 2 ] ; then
+  IAMA_INPUT_SUFFIX_ANA=$IAMA2_INPUT_SUFFIX_ANA
+  IAMA_INPUT_SUFFIX_ANAST=$IAMA2_INPUT_SUFFIX_ANAST
+  IAMA_INPUT_SUFFIX_FOR=$IAMA2_INPUT_SUFFIX_FOR
+  IAMA_INPUT_SUFFIX_FORST=$IAMA2_INPUT_SUFFIX_FORST
+  IAMA_USE_FOR=IAMA2_USE_FOR
 
+fi
+
+cd $WORKDIR/${RESOLUTION}km
+
+input_root=$ARKI_DLDIR/configured
+rm -f $SOURCE_TAG
+rm -f ??.grib static.grib
+
+# 1) Check input files: Kenda +1h forecasts
+nok=0
+for hh in $(seq 0 12) ; do
+  hhm1=$(($hh-1))
+  req_vtime=$(date -ud "$PROCDATE $PROCTIME + ${hh}hours" +%%Y%%m%%d%%H)                # $PROCTIME has only 1 digit..
+  req_rtime=$(date -ud "$PROCDATE $PROCTIME + ${hhm1}hours" +%%Y%%m%%d%%H)
+  input_file=${input_root}/${IAMA_INPUTMODEL_ANA}:${req_vtime}::/icon_${req_rtime}00_${IAMA_INPUT_SUFFIX_ANA}_+00010000.grb.grib
+  echo $input_file
+  if [ -s $input_file ] ; then
+    hh2=$(printf %%02d $hh)
+    ln -s $input_file ./${hh2}.grib
+    nok=$(($nok+1))
+  else
+    echo "File not found or empty: "$input_file
+  fi
+done
+
+# Static fields
+req_vtime=$(date -ud "$PROCDATE $PROCTIME +1hours" +%%Y%%m%%d%%H)
+req_rtime=$(date -ud "$PROCDATE $PROCTIME" +%%Y%%m%%d%%H)
+static_file=${input_root}/${IAMA_INPUTMODEL_ANA}:${req_vtime}::/icon_${req_rtime}00_${IAMA_INPUT_SUFFIX_ANAST}_+00000000.grb.grib
+if [ -s $static_file ] ; then
+  ln -s $static_file ./static.grib
+  oks="Y"
+else
+  echo "File not found or empty: "$static_file
+  oks="N"
+fi
+
+# Check if input files are complete
+if [ $nok -ne 13 -o oks = "N" ] ; then
+  echo "Incomplete analysis for tranche $PROCDATE $PROCTIME: expected 12, found $nok, static $oks"
+  if [ $IAMA_USE_FOR = N ] ; then
+    exit 1
+  fi
+else
+  echo "Analysis ok for tranche $PROCDATE $PROCTIME"
+  echo "00 kenda analysis" > $SOURCE_TAG
 %include <tail.h>
+fi
+
+# 2) If Kenda analysis are incomplete, check Icon_2I forecasts
+for lag in $(seq 0 12 60) ; do
+  rm -f ??.grib static.grib
+  flag=$(($lag+12))
+  rm -f ??.grib
+  nok=0
+  for hh in $(seq 0 12) ; do
+    req_trange_dd=$(( ($hh+$lag)/24 ))
+    req_trange_hh=$(( ($hh+$lag)%%24 ))
+    req_trange_hh2=$(printf %%02d $req_trange_hh)
+    input_file=${input_root}/${IAMA_INPUTMODEL_FOR}:${req_rtime}00::/icon_${req_rtime}00_${IAMA_INPUT_SUFFIX_FOR}_+0${req_trange_dd}${req_trange_hh2}0000.grb.grib
+    echo $input_file
+    if [ -s $input_file ] ; then
+      hh2=$(printf %%02d $hh)
+      ln -s $input_file ./${hh2}.grib
+      nok=$(($nok+1))
+    else
+      echo "File not found or empty: "$input_file
+    fi
+  done
+
+# Static fields
+  static_file=${input_root}/${IAMA_INPUTMODEL_FOR}:${req_vtime}::/icon_${req_rtime}00_${IAMA_INPUT_SUFFIX_FORST}_+00000000.grb.grib
+  if [ -s $input_file ] ; then
+    ln -s $input_file ./static.grib
+    oks="Y"
+  else
+    echo "File not found or empty: "$static_file
+    oks="N"
+  fi
+
+  if [ $nok -ne 13 ] ; then
+    echo "Incomplete forecast +${flag} for tranche $PROCDATE $PROCTIME: expected 12, found $nok, static $oks""
+  else
+    echo "Forecast +${flag} ok for tranche $PROCDATE $PROCTIME"
+    echo "$flag icon forecast +${lag} +${flag}" > $SOURCE_TAG
+%include <tail.h>
+  fi
+done
+
+exit 1
