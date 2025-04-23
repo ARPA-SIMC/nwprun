@@ -59,51 +59,6 @@ get_one() {
 	    false # call err trap
 	fi
     fi
-    
-    # initialisations
-    local rfile found
-    while true; do
-	# this is done here in case the directory is removed and recreated
-	if [ ! -d "$CINECA_SUITEDIR/dataoutput" ]; then
-	    false # the run has probably been interrupted, return and wait for a restart
-	fi
-        cd $CINECA_SUITEDIR/dataoutput
-        found=
-# loop on ready-files
-        shopt -s nullglob
-# this trick is required if pattern contains {*,?} because brace({,})
-# expansion is done before variable expansion
-        matchlist=`eval echo "$READYFILE_PATTERN"`
-        for rfile in $matchlist; do
-            if [ -z "${statuslist[$rfile]}" ]; then # it is a new file
-                log "found new ready-file $rfile"
-# process all grib files related to $rfile
-                for gfile in `model_readyfiletoname $rfile`; do
-                    log "processing $gfile"
-		    putarki_configured_archive $MODEL_SIGNAL $gfile grib
-		    # create and archive postprocessed data if required
-		    for ppc in ${POSTPROC_LIST[*]}; do
-			ext=${ppc##*_}
-			$ppc $gfile $LAMI_CINECA_WORKDIR/${gfile}_${ext}
-			[ "$retval" = "0" ] || false
-			[ -s "$LAMI_CINECA_WORKDIR/${gfile}_${ext}" ] && putarki_configured_archive $MODEL_SIGNAL $LAMI_CINECA_WORKDIR/${gfile}_${ext} $POSTPROC_FORMAT
-			rm -f $LAMI_CINECA_WORKDIR/${gfile}_${ext}
-		    done
-                done
-# update status for $rfile
-                statuslist[$rfile]="DONE"
-                found=Y
-            fi
-        done
-        shopt -u nullglob
 
-        if [ -z "$found" ]; then # nothing new has been found
-            if [ ${#statuslist[*]} -eq "$(($MODEL_STOP + 1))" ]; then
-		retval=0 # end of run, consider not to set retval=0, in case some function has failed silently
-		return
-            else
-		false
-            fi
-	fi
-    done
+    putarki_configured_model_output_get_one $(($MODEL_STOP + 1)) $CINECA_SUITEDIR/dataoutput $LAMI_CINECA_WORKDIR
 }
