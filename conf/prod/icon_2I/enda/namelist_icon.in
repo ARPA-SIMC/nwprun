@@ -215,9 +215,10 @@
  remap                       =  0  ! 0 in case unstructured grid is required
 /
 
+@INCLUDE output_nml_main@
 @INCLUDE output_nml_iama5@
-@INCLUDE output_nml_sea@
 @INCLUDE output_nml_rsd@
+@INCLUDE output_nml_mlev@
 
 &run_nml
  num_lev                     = 65

@@ -40,7 +40,7 @@
  zpbl2                       = 1000.
  lread_ana                   = @LREAD_ANA@      ! true if analysis increments are read
  ifs2icon_filename           = "@MODEL_PRE_DATADIR@/ic_@DATES@@TIMES@.nc"
- dwdfg_filename              = "/g100_work/smr_prod/ICON-EU_restart/2024091100/soil_ICON-EU_2024091100_remapped.nc"
+ dwdfg_filename              = "/g100_work/smr_prod/ICON-EU_restart/2024121700/soil_ICON-EU_2024121700_remapped.nc"
  dwdana_filename             = "@MODEL_PRE_DATADIR@/@FILEAN@"
  filetype                    = @FILETYPE@
  ana_varnames_map_file       = "map_file.ana"
@@ -215,9 +215,10 @@
  remap                       =  0  ! 0 in case unstructured grid is required
 /
 
+@INCLUDE output_nml_main@
 @INCLUDE output_nml_iama5@
-@INCLUDE output_nml_sea@
 @INCLUDE output_nml_rsd@
+@INCLUDE output_nml_mlev@
 
 &run_nml
  num_lev                     = 65
