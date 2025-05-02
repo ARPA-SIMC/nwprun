@@ -81,8 +81,8 @@
 ! ------------------------------------------------------------------------------------------
 @INCLUDE output_nml_mec@
 @INCLUDE output_nml_main@
-@INCLUDE output_nml_rsd@
-@INCLUDE output_nml_chimere@
+@INCLUDE output_nml_simc@
+@INCLUDE output_nml_mlev@
 @INCLUDE output_nml_hzero@
 
 &run_nml
