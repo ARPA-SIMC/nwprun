@@ -75,12 +75,21 @@ import_one() {
 #			[ -f $impconf ] && safe_source $impconf
 			cd $impdir
 			excluded=
-			for excl in ${EXCLUDE[*]}; do
+			included=
+			for incl in ${INCLUDE[*]}; do
 			    # next condition performs pattern matching
-			    if [[ "$impsubdir/$upfile" == $excl ]]; then
-				excluded=Y
+			    if [[ "$impsubdir/$upfile" == $incl ]]; then
+				included=Y
 			    fi
 			done
+			if [ -z "$included" ]; then
+			    for excl in ${EXCLUDE[*]}; do
+				# next condition performs pattern matching
+				if [[ "$impsubdir/$upfile" == $excl ]]; then
+				    excluded=Y
+				fi
+			    done
+			fi
 			if [ -z "$excluded" ]; then
 			    import_configured $impsubdir $upfile
 			else
@@ -149,12 +158,21 @@ import_one() {
 #			    safe_source $syncconf
 			    cd $syncdir
 			    excluded=
-			    for excl in ${EXCLUDE[*]}; do
+			    included=
+			    for incl in ${INCLUDE[*]}; do
 				# next condition performs pattern matching
-				if [[ "$syncsubdir/$upfile" == $excl ]]; then
-				    excluded=Y
+				if [[ "$syncsubdir/$upfile" == $incl ]]; then
+				    included=Y
 				fi
 			    done
+			    if [ -z "$included" ]; then
+				for excl in ${EXCLUDE[*]}; do
+				    # next condition performs pattern matching
+				    if [[ "$syncsubdir/$upfile" == $excl ]]; then
+					excluded=Y
+				    fi
+				done
+			    fi
 			    if [ -z "$excluded" ]; then
 				rsync -ptR --chmod=ug=rwX --remove-source-files ./$syncsubdir/$upfile $SYNC_DEST
 			    else
@@ -191,14 +209,16 @@ periodic_check() {
 }
 
 unset LANG
-thread=$(basename $0)
-thread=${thread%%.*}
-#thread=${thread#*.}
-#thread=${thread%.sh}
-#if [ -z "$thread" ]; then
-if [ "$thread" = "threaded_multi_importer" ]; then
-    echo "the script must be linked to <thread>.threaded_multi_importer.sh"
-    exit 1
+if [ -n "$1" ]; then
+    thread=$1
+else
+    thread=$(basename $0)
+    thread=${thread%%.*}
+    if [ "$thread" = "threaded_multi_importer" ]; then
+	echo "the script must be linked to <thread>.threaded_multi_importer.sh"
+	echo "or receive the thread name as first command-line argument"
+	exit 1
+    fi
 fi
 
 basedir=$WORKDIR_BASE/nwprun
