@@ -15,7 +15,7 @@ import_configured() {
     if [ -n "$format" ]; then
 	format="$format:"
     fi
-    log "importing configured $format$2"
+    log "importing $format$2"
     time $SIMC_TOOLS arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || $SIMC_TOOLS arki-scan --dispatch=$ARKI_CONF $format$2 > /dev/null || true
     if [ -n "$signalfile" -a -n "$signal" ]; then
 	if [ -n "$signal_method" ]; then
@@ -44,7 +44,7 @@ import_configured_end() {
 	rm -f *.sh
 	cd -
 	rmdir $1 || true # better leaving rubbish than failing
-	log "completed importing configured folder $1"
+	log "completed importing folder $1"
     fi
 
 }
@@ -68,7 +68,7 @@ import_one() {
 		    return 1 # 1 = nothing done
 		    ;;
 		*)
-		    log "start importing configured $1"
+		    log "start importing $1"
 # important! (..) is needed in order to use a subshell for not
 # polluting the environment
 		    (
@@ -97,7 +97,7 @@ import_one() {
 			    rm -f $impsubdir/$upfile
 			fi
 		    )
-		    log "done importing $1"
+		    log "completed importing $1"
 		    return
 		    ;;
 	    esac
@@ -141,7 +141,7 @@ import_one() {
 			    )
 			    rm -f $updir/*.sh
 			    rmdir $updir || true # better leaving rubbish than failing
-			    log "done syncing $updir"
+			    log "completed syncing folder $updir"
 			fi
 		    fi
 		    return 1 # 1 = nothing done
@@ -153,7 +153,7 @@ import_one() {
 		*)
 		    # sync only after start
 		    if [ -f "$updir/started.sh" ]; then
-			log "start syncing configured $1"
+			log "start syncing $1"
 			(
 #			    safe_source $syncconf
 			    cd $syncdir
@@ -174,12 +174,13 @@ import_one() {
 				done
 			    fi
 			    if [ -z "$excluded" ]; then
-				rsync -ptR --chmod=ug=rwX --remove-source-files ./$syncsubdir/$upfile $SYNC_DEST
+				    rsync -ptR --chmod=ug=rwX --remove-source-files ./$syncsubdir/$upfile $SYNC_DEST
 			    else
-				rm -f $syncsubdir/$upfile
+			        log "$1 not requested, skipping"
+				    rm -f $syncsubdir/$upfile
 			    fi
 			)
-			log "done syncing $1"
+			log "completed syncing $1"
 		    elif [ ! -f "$updir/start.sh" ]; then
 			# erroneous situation, avoid repeating suddendly
 			return 1 # should we remove $updir?
