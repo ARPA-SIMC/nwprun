@@ -166,7 +166,7 @@ day = icon.suite.add_family("day").add_repeat(
                       20301228))
 
 hdep = None # first repetition has no dependency
-for h in 3,6,9,15,18,21:
+for h in range(0, 24, 3): # 3,6,9,15,18,21:
     famname = "hour_" + ("%02d" % h)
     hour = day.add_family(famname).add_variable("TIME", "%02d" % h)
     #    hrun = "%02d:00" % (h+1 % 24) # start 1h after nominal time
