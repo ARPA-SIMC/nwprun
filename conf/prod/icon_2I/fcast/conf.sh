@@ -7,6 +7,11 @@ PARENTMODEL_FREQANA=6
 PARENTMODEL_FREQFC=1
 
 # Model environment variables
+MODEL_BASE=$WORKDIR_BASE/srcintel/icon_2025-04
+MODEL_BIN=$MODEL_BASE/bin/icon
+ECRAD_DATA=$MODEL_BASE/data
+
+# Model environment variables
 MODEL_BACK=0
 MODEL_STOP=72
 MODEL_BCANA=N

@@ -19,8 +19,6 @@
  num_io_procs                = 10                ! may be more if frequent output is written
  num_restart_procs           = 0
  num_prefetch_proc           = 1
- itype_comm                  = 1
- iorder_sendrecv             = 3
 /
 
 &grid_nml
@@ -72,11 +70,6 @@
  generatingProcessIdentifier = @MODEL_FCAST_GP@
  localtablesversion          = 0
 ! see mo_gribout_nml.f90 for preset behavior
- preset                      = 'none'
- typeOfGeneratingProcess     = 2
- localDefinitionNumber       = 0
- typeOfProcessedData         = 1
-
 /
 
 ! ------------------------------------------------------------------------------------------
@@ -132,7 +125,8 @@ icpl_o3_tp                   = 1
 dt_rad                       = 720.
 dt_conv                      = 120.,
 dt_sso                       = 120.,
-dt_gwd                       = 360.,
+dt_gwd                       = 120.,
+lvariable_rain_n0            = .true.
 /
 
 &nwp_tuning_nml
@@ -150,6 +144,9 @@ tune_box_liq_asy             = 4
 tune_gust_factor             = 7
 icpl_turb_clc                = 2
 max_calibfac_clcl            = 2
+tune_supsat_limfac           = 2.
+tune_zcsg                    = 0.25
+tune_v0snow                  = 20.
 /
 
 &turbdiff_nml
@@ -222,7 +219,6 @@ max_calibfac_clcl            = 2
   divdamp_type    = 32
   divdamp_trans_start = 12500.
   divdamp_trans_end   = 17500.
-  l_open_ubc      = .false.
   igradp_method   = 3
   l_zdiffu_t      = .true.
   thslp_zdiffu    = 0.02
@@ -244,9 +240,9 @@ max_calibfac_clcl            = 2
 
 &dynamics_nml
  iequations     = 3
- idiv_method    = 1
  divavg_cntrwgt = 0.50
  lcoriolis      = .true.
+ lmoist_thdyn   = .false.
 /
 
 &transport_nml
