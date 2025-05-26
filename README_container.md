@@ -26,8 +26,9 @@ The containers available within this project are:
  * `nwprun_f40` same as `nwprun_r8` but based on a recent Fedora
    distribution, thus with more recent versions of some packages
 
- * `bufr2netcdf_r8` minimal container with only the bufr2netcdf tool,
-   mainly for the [Cosmo](https://www.cosmo-model.org/) community
+ * `bufr2netcdf_r8` minimal container with only the bufr2netcdf and
+   dbamsg tools, mainly for the [Cosmo](https://www.cosmo-model.org/)
+   community
 
  * `Singularity.simc_tools_devel_r8` same as `simc_tools_r8` but
    containing also the copilers and development libraries for building
