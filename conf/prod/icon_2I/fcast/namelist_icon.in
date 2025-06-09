@@ -70,6 +70,7 @@
  generatingProcessIdentifier = @MODEL_FCAST_GP@
  localtablesversion          = 0
 ! see mo_gribout_nml.f90 for preset behavior
+ preset                      = 'deterministic'
 /
 
 ! ------------------------------------------------------------------------------------------
