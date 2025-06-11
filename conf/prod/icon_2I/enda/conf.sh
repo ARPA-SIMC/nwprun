@@ -1,8 +1,3 @@
-# Icon bin with EMVORADO
-MODEL_BASE=$WORKDIR_BASE/srcintel/icon-2.6.5.1-emvorado
-MODEL_BIN=$MODEL_BASE/bin/icon
-ECRAD_DATA=$MODEL_BASE/data
-
 # Forecast length 
 MODEL_BACK=1
 MODEL_STOP=1

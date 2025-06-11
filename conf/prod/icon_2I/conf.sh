@@ -1,5 +1,5 @@
 # Model environment variables
-MODEL_BASE=$WORKDIR_BASE/srcintel/icon_2025-04
+MODEL_BASE=$WORKDIR_BASE/srcintel/icon_2025-04-1
 MODEL_BIN=$MODEL_BASE/bin/icon
 ECRAD_DATA=$MODEL_BASE/data
 MODEL_STATIC=$WORKDIR_BASE/data/icon
