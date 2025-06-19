@@ -15,7 +15,7 @@ PARENTMODEL_GRIDFILE=iconeu_dwd_foricon_grid_R03B08_N02_20231113_tiles.nc
 export FI_PROVIDER=tcp
 
 # Model environment variables
-MODEL_BASE=$HOME/srcgnu/icon
+MODEL_BASE=$HOME/srcgnu/icon_test
 MODEL_BIN=$MODEL_BASE/bin/icon
 ECRAD_DATA=$MODEL_BASE/data
 MODEL_STATIC=$HOME/data/icon
@@ -52,8 +52,8 @@ MODEL_NH_LHN=4
 ARKI_DIR=$WORKDIR/arki
 # setup for remote import
 unset ARKI_IMPDIR
-#ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.ftpmodelin
-unset ARKI_DLDIR
+ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.ftpmodelin
+ARKI_DLDIR=$WORKDIR_BASE/download
 CROSS_NETWORK=icon_2I_fci2i_c
 VPROF_NETWORK=icon_2I_fci2i_v
 MODEL_SIGNAL=icon_2I_fci2i
@@ -68,4 +68,4 @@ NWPWAITWAIT=60
 # wait for analysis?
 WAIT_ANALYSIS=N
 # to be removed
-STOP_ON_FAIL=Y
+#STOP_ON_FAIL=Y
