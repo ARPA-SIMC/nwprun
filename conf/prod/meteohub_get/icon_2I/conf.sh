@@ -1,6 +1,7 @@
+# meteohub request name
 MH_REQ=schedtestml
 
-
+# TODO disable output to avoid filling filesystem
 IMPORT_THREAD=output
 # quanti secondi aspetto un determinato file prima di passare al
 # successivo
