@@ -16,6 +16,7 @@ opts, args = parser.parse_args()
 interactive = not opts.yes
 delta = [int(i) for i in opts.delta.split(',')]
 
+hpcenv = os.environ["HPC_SYSTEM"]
 common_extra_env = {
     "NO_FAIL": "FALSE",
     "TASK_PER_CORE": "1",
@@ -26,12 +27,22 @@ common_extra_env = {
 
 # Suite icon test
 extra_env = common_extra_env.copy()
-extra_env.update({
-    "NWPCONF": "test/icon_2I/fcast",
-    "NNODES_PREMODEL": 3,
-    "NNODES_MODEL": 8,
-    "NNODES_ENDA": 6
-})
+if hpcenv == "leonardo":
+    extra_env.update({
+        "NWPCONF": "test/icon_2I/fcast",
+        "NNODES_PREMODEL": 2,
+        "NNODES_MODEL": 12,
+        "NNODES_ENDA": 4,
+        "NTASKS_POSTPROC": 2
+    })
+else: # default g100
+    extra_env.update({
+        "NWPCONF": "test/icon_2I/fcast",
+        "NNODES_PREMODEL": 2,
+        "NNODES_MODEL": 16,
+        "NNODES_ENDA": 6,
+        "NTASKS_POSTPROC": 2
+    })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
@@ -66,12 +77,22 @@ icont.replace(interactive=interactive)
 
 # Suite enda test
 extra_env = common_extra_env.copy()
-extra_env.update({
-    "NWPCONF": "test/icon_2I/enda",
-    "NNODES_PREMODEL": 1,
-    "NNODES_MODEL": 3,
-    "NNODES_ENDA": 6
-})
+if hpcenv == "leonardo":
+    extra_env.update({
+        "NWPCONF": "test/icon_2I/enda",
+        "NNODES_PREMODEL": 1,
+        "NNODES_MODEL": 2,
+        "NNODES_ENDA": 6,
+        "NTASKS_POSTPROC": 2
+    })
+else: #default g100
+    extra_env.update({
+        "NWPCONF": "test/icon_2I/enda",
+        "NNODES_PREMODEL": 1,
+        "NNODES_MODEL": 3,
+        "NNODES_ENDA": 8,
+        "NTASKS_POSTPROC": 2
+    })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
