@@ -37,7 +37,7 @@ if [ $MODEL_STOP -gt 0 ]; then
             filename=${MODEL_NAME}_${DATES}${TIMES}00_+${nodays}${nohours}0000.grb
             ln -fs $MODEL_DATADIR/$filename ${MEC_WORKDIR}/input
     
-        # Link ensemble members
+        # Link ensemble members (da rivedere)
         else
             for mem in `seq 1 $ENS_TOTAL_MEMB`; do
                 mem3=`printf "%%03d" $mem`
@@ -59,38 +59,64 @@ else
         ini_date=`date_sub $DATES $TIMES $hh_back hours`
         ini_time=`time_sub $DATES $TIMES $hh_back hours`
 
-        # Retrieve model filename
-        nodays=$(printf "%%02d" $(( ${hh_back} / 24 )))
-        nohours=$(printf "%%02d" $(( ${hh_back} %% 24 )))
-        mod_filename=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
+        # Check if "ini_time" is one of the initialization times that we want
+        # to retrieve. If not, skip to next cycle
+        match_found=0
+        for valid_time in "${INI_TIMES[@]}"; do
+            if [[ "$ini_time" == "$valid_time" ]]; then
+                match_found=1
+                break
+            fi
+        done
+        if [ $match_found == 0 ]; then
+            echo "Not a valid initialization time. Skipping."
+            hh_back=$((hh_back + 1))
+            continue
+        fi
 
-        # Check if this forecast file exists
-        if [[ -s $MODEL_DATADIR/$mod_filename ]]; then
-            echo "   Retrieved forecast $ini_date $initime for lead time +${hh_back}h"
-            ln -fs $MODEL_DATADIR/$mod_filename ${MEC_WORKDIR}/input
-            
-            # Save firt model filename to be used as "fg_filr
-            if [ ${#INI_DATE_LIST[@]} -eq 0 ]; then
-                filename=$mod_filename
+        # Retrieve model filenames for this initialization date and time
+        for hh in `seq 0 $MODEL_OUT_FREQ $VER_FREQ`; do
+            # Skip negative values of hh_back-hh
+            if [ $((hh_back - hh )) -lt 0 ]; then
+                break
             fi
 
-            # Update arrays 
-            ld_time_hhmm=`printf "%%03d" $(( $hh_back * 100 ))`
-            INI_DATE_LIST+=($ini_date)
-            LEAD_TIME_LIST+=($ld_time_hhmm)
-        fi
+            # Retrieve lead time in hours and days and filename
+            nodays=$(printf "%%02d" $(( $((hh_back - hh)) / 24 )))
+            nohours=$(printf "%%02d" $(( $((hh_back - hh)) %% 24 )))
+            mod_filename=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
+
+            # Check if this forecast file exists
+            if [[ -s $MODEL_DATADIR/$mod_filename ]]; then
+                echo "   Retrieved forecast $ini_date $initime for lead time +${hh_back}h"
+                ln -fs $MODEL_DATADIR/$mod_filename ${MEC_WORKDIR}/input
+                
+                # Save firt model filename to be used as "fg_file"
+                if [ ${#INI_DATE_LIST[@]} -eq 0 ]; then
+                    filename=$mod_filename
+                fi
+    
+                # Update arrays 
+                ld_time_hhmm=`printf "%%03d" $(( $hh_back * 100 ))`
+                INI_DATE_LIST+=($ini_date)
+                LEAD_TIME_LIST+=($ld_time_hhmm)
+            else
+                # No need to check for the same initialization date and time
+                break
+            fi
+        done
     done
 fi
 
-# !!! ATTENZIONE!! Per i cmapi costanti preso un file esterno
-# Link constant file for ICON and reference atmosphere ("fg_file" in the namellist). It must
-# be the last forecast file, that is the last file linked ("filename")
+# Link model constant fields
 echo "Link constant fields and reference atmosphere"
-if [[ "$MODEL_NAME" == "icon2I" ]]; then
-    ln -fs /g100_work/smr_prod/thomas/ICON-2I_const.grib  ${MEC_WORKDIR}/const
-elif [[ "$MODEL_NAME" == "ifs" ]]; then
-    ln -fs /g100_work/smr_prod/thomas/IFS-HRES_const.grib ${MEC_WORKDIR}/const
+if [[ "$MODEL_NAME" == "icon_2I" ]]; then
+    ln -fs $MODEL_STATIC/$MODEL_NAME/ICON-2I_const.grib  ${MEC_WORKDIR}/const
+elif [[ "$MODEL_NAME" == "hres" ]]; then
+    ln -fs $MODEL_STATIC/$MODEL_NAME/IFS-HRES_const.grib ${MEC_WORKDIR}/const
 fi
+
+# Link reference atmosphere ("fg_file" in the namellist). It must be the last forecast file
 if [[ $ENS_TOTAL_MEMB -eq 0 ]]; then    
     ln -s  $MODEL_DATADIR/$filename ${MEC_WORKDIR}/input/fg_file
 else
@@ -102,7 +128,7 @@ echo "Link constant fields for KENDA"
 ln -s ${LETKF_CONST}/ww15mgh.grd ${MEC_WORKDIR}/const/
 
 # Link ICON grid
-if [[ "$MODEL_NAME" == "icon2I" ]]; then
+if [[ "$MODEL_NAME" == "icon_2I" ]]; then
     echo "Link ICON grid"
     ln -s ${LOCALGRID} ${MEC_WORKDIR}/const/
 fi
@@ -110,8 +136,12 @@ fi
 # Create blacklist
 touch ${MEC_WORKDIR}/input/blklsttmp
 
-# Create namelist (VSTART necessary in VFM approach, LDTIMES in VFO)
-export VSTART=-$(( MODEL_STOP * 60 ))      
+# Create namelist 
+if [ $MODEL_STOP -gt 0 ]; then
+    export VSTART=-$(( MODEL_STOP * 60 ))      
+else
+    export VSTART=-$(( VER_FREQ * 60 ))
+fi
 export LD_TIMES=${LEAD_TIME_LIST[*]}
 conf_template namelist_mec
 mv namelist_mec run/namelist

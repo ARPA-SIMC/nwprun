@@ -71,33 +71,42 @@ else
             continue
         fi
 
-        # Retrieve lead time in hours and days
-        nodays=$(printf "%%02d" $(( ${hh_back} / 24 )))
-        nohours=$(printf "%%02d" $(( ${hh_back} %% 24 )))
-
-        # Extract data
-        ntry=2
-        reftime=`getarki_datetime $ini_date $ini_time`
-        timerange="timerange:Timedef,${hh_back}h,254"
-        ofile=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
-        while [ "$ntry" -gt 0 ]; do
-            $SIMC_TOOLS arki-query --data -o $ofile \
-            "reftime:=$reftime;$timerange;$MODEL_ARKI_PARAM" $MODEL_ARKI_DS
-
-            # if file is empty retry, otherwise exit
-            if __check_msg_num $ofile; then
+        # Retrieve all lead time for this verification step
+        for hh in `seq 0 $MODEL_OUT_FREQ $VER_FREQ`; do
+            # Skip negative values of hh_back-hh (it happens when considering, for example,
+            # model field at +0h)
+            if [ $((hh_back - hh )) -lt 0 ]; then
                 break
-            fi
-            echo "retrying arki-query"
-            sleep 5
-            ntry=$(($ntry - 1))
-        done
+            fi 
 
-        # If no model field is retrieved, skip to previous hour. 
-        if [[ ! -s "$ofile" ]]; then
-            echo "File $ofile does not exist or is empty. Skipping."
-            rm -f $ofile
-        fi
+            # Retrieve lead time in hours and days
+            nodays=$(printf "%%02d" $(( $((hh_back - hh)) / 24 )))
+            nohours=$(printf "%%02d" $(( $((hh_back - hh)) %% 24 )))
+
+            # Extract data
+            ntry=2
+            reftime=`getarki_datetime $ini_date $ini_time`
+            timerange="timerange:Timedef,$((hh_back - hh))h,254"
+            ofile=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
+            while [ "$ntry" -gt 0 ]; do
+                $SIMC_TOOLS arki-query --data -o $ofile \
+                "reftime:=$reftime;$timerange;$MODEL_ARKI_PARAM" $MODEL_ARKI_DS
+    
+                # if file is empty retry, otherwise exit
+                if __check_msg_num $ofile; then
+                    break
+                fi
+                echo "retrying arki-query"
+                sleep 5
+                ntry=$(($ntry - 1))
+            done
+    
+            # If no model field is retrieved, skip to previous hour. 
+            if [[ ! -s "$ofile" ]]; then
+                echo "File $ofile does not exist or is empty. Skipping."
+                rm -f $ofile
+            fi
+        done
 
         # Incrrease hh_back
         hh_back=$((hh_back + 1))

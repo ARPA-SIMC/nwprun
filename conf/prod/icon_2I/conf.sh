@@ -14,6 +14,7 @@ HDF5_WORKDIR=$WORKDIR/radar_vol
 # Dataset arkimet for observations
 BUFR_ARKI_DS_CONV=$ARKI_DIR/gts_bufr_conv
 BUFR_ARKI_DS_NOCONV=$ARKI_DIR/gts_bufr_noconv
+BUFR_ARKI_DS_SIGNAL=gts_bufr
 BUFR_ARKI_DS_RADARVOL=$ARKI_DIR/radar_vol
 ARKI_LHN_DS=$ARKI_DIR/icon_2I_radar
 MODEL_LHN_DT=600

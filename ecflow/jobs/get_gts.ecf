@@ -19,23 +19,28 @@ safe_rm_rf $BUFR_WORKDIR
 mkdir -p $BUFR_WORKDIR
 cd $BUFR_WORKDIR
 
-set_import_signal_method $BUFR_ARKI_DS_CONV
-if import_signal_wait gts_bufr $DATE$TIME "*"; then
-    if [[ "%SUITE%" == "icon"* ]]; then
-        icon_getarki_obsncdf
-
-        # Archive cdfin files
-        if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
-            subdir=%SUITE%/$DATE$TIME
-            mkdir -p $CINECA_ARCHIVE_POST/$subdir
-            rsync -pt --copy-links cdfin_*.nc $CINECA_ARCHIVE_POST/$subdir || true
+# Switch to avoid recreating import_signal folders for verification
+if [[ "%SUITE%" == *"verif"* ]]; then
+    icon_getarki_obsncdf
+else
+    set_import_signal_method $BUFR_ARKI_DS_CONV
+    if import_signal_wait $BUFR_ARKI_DS_SIGNAL $DATE$TIME "*"; then
+        if [[ "%SUITE%" == "icon"* ]]; then
+            icon_getarki_obsncdf
+    
+            # Archive cdfin files
+            if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
+                subdir=%SUITE%/$DATE$TIME
+                mkdir -p $CINECA_ARCHIVE_POST/$subdir
+                rsync -pt --copy-links cdfin_*.nc $CINECA_ARCHIVE_POST/$subdir || true
+            fi
+        else
+            cosmo_getarki_obsncdf
         fi
     else
-        cosmo_getarki_obsncdf
+        touch noobs
+        touch blklsttmp
     fi
-else
-    touch noobs
-    touch blklsttmp
 fi
 
 %include <tail.h>
