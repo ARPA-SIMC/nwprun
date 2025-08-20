@@ -62,7 +62,7 @@ basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     ntries=2,
                     extra_env=extra_env)
 
-conf = ModelConfig({"gts": True, "lhn": True, "radarvol": True, "membrange": "0-40",
+conf = ModelConfig({"gts": True, "lhn": True, "radarvol": True, "sma": True, "membrange": "0-40",
                     "postprocrange": "0",
                     "modelname": "icon",
                     "runlist": [GetObs, EpsMembers, EndaAnalysis]}).getconf()
@@ -313,7 +313,8 @@ icon = ModelSuite("icon_2I_verif_obs")
 basicenv.add_to(icon.suite)
 day = icon.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",
-                      int((datetime.datetime.now()-datetime.timedelta(days=delta[3])).strftime("%Y%m%d")),
+#                      int((datetime.datetime.now()-datetime.timedelta(days=delta[3])).strftime("%Y%m%d")),
+                      20241201,
                       20301228))
 
 hdep = None # first repetition has no dependency

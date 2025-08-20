@@ -16,6 +16,11 @@ RADLIST="16101 16102 16103 16105 16106 16107 16112 16144 16199 16998 16999"
 MODEL_LHN=.TRUE.
 MODEL_NH_LHN=3
 
+# for SMA interpolation and nudging
+SMA_INPUT=icon_eu_dwd
+SMA_ARKI_DS=$ARKI_DIR/$SMA_INPUT
+#SMA_TIME=03
+
 # Time difference between model and parent reftime 
 case $TIME in
     01 | 07 | 13 | 19)
@@ -92,11 +97,14 @@ NBC_PER_TASK=1
 MEC_WORKDIR=$WORKDIR/mec
 LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data
+SMA_WORKDIR=$WORKDIR/sma
 
 # MEC and LETKF executables
 DACE_BASE=$WORKDIR_BASE/srcintel/dace_code_2.15
-MEC_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/mec
-LETKF_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/var3d
+DACE_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin
+DACE_INTERP=$DACE_BIN/interpolate_soil_flake
+MEC_BIN=$DACE_BIN/mec
+LETKF_BIN=$DACE_BIN/var3d
 LETKF_CONST=$DACE_BASE/data
 
 # suite timing

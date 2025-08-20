@@ -54,7 +54,7 @@ class ModelConfig:
     def __init__(self, conf={}):
         self.conf = {"runlist": [],
                      "membrange": "0", "nofail": False, "modelname": "cosmo",
-                     "gts": True, "lhn": True, "radarvol": False,
+                     "gts": True, "lhn": True, "radarvol": False, "sma": False,
                      "preprocname": None, "getparentname": "get_parent",
                      "postprocrange": None, "postproctype": "async", 
                      "timer": None, "cronfreq": 10,
@@ -111,7 +111,7 @@ class GetObs:
 
     def add_to(self, node):
         fam = node.add_family("get_obs") # experimental is it complete if empty?
-        if self.conf['gts'] or self.conf['lhn'] or self.conf['radarvol']:
+        if self.conf['gts'] or self.conf['lhn'] or self.conf['radarvol'] or self.conf['sma']:
 #            SchedEnv("sh").add_to(fam) # interactive because net access required for galileo
 #            fam = node.add_family("get_obs")
             if self.conf['gts']: fam.add_task("get_gts")
@@ -124,6 +124,7 @@ class GetObs:
                     else:
                         fam.add_task("get_radarlhn").add_variable("NO_FAIL", "TRUE")
             if self.conf['radarvol']: fam.add_task("get_radarvol")
+            if self.conf['sma']: fam.add_task("get_sma").add_event("found")
 
 # Add a model data access family to a suite. o be called by WaitAndRun.
 class GetModel:
