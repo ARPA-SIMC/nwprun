@@ -168,7 +168,6 @@ class Model:
         if GetObs in self.conf['runlist']: 
             if self.conf['modelname'] == "icon":
                 if self.conf["lhn"]:      trig+= " && ../../get_obs/get_radarlhn_icon == complete"
-#                if self.conf["radarvol"]: trig+= " && ../../get_obs/get_radarvol == complete"
             else:
                 trig+= " && ../../get_obs == complete"
         fam.add_trigger(trig)
@@ -419,8 +418,9 @@ class WaitAndRun:
             task.add_variable("ECF_DUMMY_TASK","Y")
             fam = node.add_family("run")
             if self.dep is not None:
-                fam.add_trigger("../"+self.dep+" == complete")
-            fam.add_trigger("./continue == complete")
+                fam.add_trigger("../"+self.dep+" == complete && ./continue == complete")
+            else:
+                fam.add_trigger("./continue == complete")
 
         elif self.conf['startmethod'] == "starttime_time":
             fam = node.add_family("run")
