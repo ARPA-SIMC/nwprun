@@ -111,6 +111,20 @@
 /
 
 ! ==================================================================================
+! external analysis (soil moisture), if extana_file is empty nothing is done
+! ==================================================================================
+&EXTANA
+   extana_file    = '@SMA_FILE@'
+   ext_snow       = .false.
+   ext_sst        = .false.
+   ext_sma        = @EXT_SMA@
+   par_extana     = ''
+   opt_extana     = 'tsurf'
+   ext_sma_weight = 0.5
+   ext_sma_top    = 1
+   ext_sma_bot    = 8
+/
+! ==================================================================================
 ! RUN settings
 ! ==================================================================================
 &run

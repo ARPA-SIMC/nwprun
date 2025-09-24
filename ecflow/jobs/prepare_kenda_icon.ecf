@@ -299,6 +299,13 @@ if [ "$rad_obs" = Y ]; then
 fi
 
 # prepare kenda namelist and remove old files
+export SMA_FILE=$SMA_WORKDIR/data/sma_$DATE$TIME.grib
+if [ -s "$SMA_FILE" ]; then
+    export EXT_SMA=.true.
+else
+    SMA_FILE=''
+    export EXT_SMA=.false.
+fi
 conf_template namelist_kenda
 mv namelist_kenda namelist
 

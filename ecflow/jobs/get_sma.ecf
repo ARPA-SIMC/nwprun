@@ -1,0 +1,46 @@
+%include <sched_wait.h>
+%include <%HPCENV%/modules_kenda_icon.h>
+%include <head.h>
+
+# source other optional modules
+. $NWPCONFBINDIR/nwptime.sh
+if [[ "%SUITE%" == icon* ]]; then
+    . $NWPCONFBINDIR/icon_model.sh
+else
+    . $NWPCONFBINDIR/cosmo_model.sh
+fi
+. $NWPCONFBINDIR/nwpwait.sh
+. $NWPCONFBINDIR/getarki.sh
+. $NWPCONFBINDIR/arki_tools.sh
+# end of setup
+
+set -x
+if [ -z "$SMA_TIME" ]; then
+    exit_0
+fi
+safe_rm_rf $SMA_WORKDIR
+mkdir -p $SMA_WORKDIR
+mkdir -p $SMA_WORKDIR/data
+cd $SMA_WORKDIR
+
+if [[ "%SUITE%" != *enda* || "$TIME" != "$SMA_TIME" ]]; then
+    exit_0
+fi
+# from kenda, improve
+export GRIB_DEFINITION_PATH=$GRIB_API_EDZW/1.16.0/definitions.cnmc:$GRIB_API_EDZW/1.16.0/definitions
+export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.16.0/samples
+
+set_import_signal_method $SMA_INPUT
+if import_signal_wait $SMA_INPUT ${DATE}00 "*"; then
+# retrieve Icon-EU soil moisture and interpolate it to the target grid
+# with the special DACE tool `interpolate_soil_flake`
+# improve timerange management!
+   $SIMC_TOOLS arki-query --data -o sma_$DATE$TIME.grib \
+     "Reftime:=`getarki_datetime $DATE 00`; timerange:Timedef,${SMA_TIME}h,254;product:GRIB2,,2,3,18 or GRIB2,,2,3,20;" \
+     $SMA_ARKI_DS
+   conf_template namelist.interpolate_soil_flake
+   $DACE_INTERP
+   $ecflow_client --event=found
+fi
+
+%include <tail.h>

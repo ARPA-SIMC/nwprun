@@ -1,0 +1,20 @@
+&interpolate
+  file_s     = '@SMA_WORKDIR@/sma_@DATE@@TIME@.grib' ! input  GRIB file name
+  file_d     = '@SMA_WORKDIR@/data/sma_@DATE@@TIME@.grib' ! output GRIB file name
+  ifile_s    = '@WORKDIR_BASE@/data/icon/icon_eu_dwd/icon_extpar_0027_R03B08_N02_20231113_tiles_reduced.g2' ! invariant file (source)
+  ifile_d    = '@MODEL_STATIC@/domain_@DOMAIN@/external_parameter_icon_ICON_REG3_DOM01_tiles_reduced.g2' ! invariant file (output) documentare come fare _reduced
+  gfile_s    = '@WORKDIR_BASE@/data/icon/icon_eu_dwd/icon_grid_0027_R03B08_N02.nc' ! grid-file (source)
+  gfile_d    = '@LOCALGRID@' ! grid-file (output)
+  grid_d     = 'icon'                 ! destination grid (icon, gme, latlon)
+  var        = 'w_so t_so'                ! variables to interpolate
+  var_inc    = ''            ! variables to interpolate as increments
+  l_ana      = .true.                 ! write result as analysis
+  fr_lake = 0.5 0.5 ! lower bound for fr_lake (source, destination
+!  gpi        = 11                  ! generatingProcessIdentifier
+!  bp         = 2                      ! backgroundProcess
+/
+!var = 'T_SO W_SO W_SO_ICE Z0 T_G T_ICE H_ICE FR_ICE QV_S W_I W_SNOW RHO_SNOW
+! H_SNOW FRESHSNW T_SNOW T_MNW_LK T_WML_LK H_ML_LK T_BOT_LK C_T_LK'
+var = 'T_SO W_SO W_SO_ICE T_G H_ICE QV_S FRESHSNW T_SNOW T_MNW_LK T_WML_LK H_ML_LK C_T_LK'
+! variables to interpolate
+
