@@ -30,12 +30,12 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/icon_2I/fci2i",
     "NNODES_PREMODEL": 2,
-    "NNODES_MODEL": 8,
+    "NNODES_MODEL": 10,
     "NTASKS_PREMODEL": 64,
-    "NTASKS_MODEL": 256,
+    "NTASKS_MODEL": 320,
     "NTASKS_POSTPROC": 1,
     "WALL_TIME_PREMODEL": "00:20:00",
-    "WALL_TIME_MODEL": "03:00:00"
+    "WALL_TIME_MODEL": "04:00:00"
 })
 basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"], "nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
