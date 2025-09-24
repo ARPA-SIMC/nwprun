@@ -26,13 +26,16 @@ get_one() {
     echo $list|grep -q "|$MH_REQ|.*|$DATE$TIME|"
 
     file=${MH_REQ}_${DATE}${TIME}.grib
-    # download from meteohub (consider --verbose?)
-    meteo-hub-cli --configfile $WORKDIR_BASE/nwprun/.auth/mh.cfg \
-		  --output=$file scheddl $MH_REQ:$DATE$TIME
+    # download from meteohub
+    mhlog=`meteo-hub-cli --verbose --configfile $WORKDIR_BASE/nwprun/.auth/mh.cfg \
+        --output=$file scheddl $MH_REQ:$DATE$TIME`
+    log "$mhlog"
     log "request $MH_REQ for $DATE$TIME downloaded successfully"
 
     if [ -s "$file" ]; then
 	putarki_configured_archive $PROCNAME $file
+    else
+	false # if file is empty, retry
     fi
 
 }
