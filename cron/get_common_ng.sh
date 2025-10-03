@@ -86,7 +86,8 @@ main_loop() {
 	TIME=${DATETIME:8:4}
 
 	get_setup
-	get_one && get_cleanup
+	get_one
+	get_cleanup
     else # automatic run
 	nonunique_exit
 	# redirect all to logfile
