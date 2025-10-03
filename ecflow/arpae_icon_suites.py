@@ -31,7 +31,7 @@ extra_env.update({
     "NWPCONF": "prod/icon_2I/fci2i",
     "NNODES_PREMODEL": 2,
     "NNODES_MODEL": 10,
-    "NTASKS_PREMODEL": 64,
+    "NTASKS_PREMODEL": 96,
     "NTASKS_MODEL": 320,
     "NTASKS_POSTPROC": 1,
     "WALL_TIME_PREMODEL": "00:20:00",
