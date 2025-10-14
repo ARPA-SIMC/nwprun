@@ -29,7 +29,7 @@ $SIMC_TOOLS python3 $basedir/ecflow/script_python3/check_analysis.py \
 
 # Send email if alert_message.txt is present
 if [ -s "alert_message.txt" ]; then
-    EMAIL_SUBJECT="ALERT: ICON-2I-KENDA issue detected"
+    EMAIL_SUBJECT="ALERT: ICON-2I-KENDA issue detected on $HPC_SYSTEM"
     echo "$(cat alert_message.txt)" | /usr/bin/mailx -s "$EMAIL_SUBJECT" -S sendwait ${EMAIL_ADDRESS[@]}
     echo $?
 

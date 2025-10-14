@@ -1,5 +1,4 @@
 %include <sched_wait.h>
-%include <%HPCENV%/sendmail.h>
 %include <%HPCENV%/modules.h>
 %include <head.h>
 
