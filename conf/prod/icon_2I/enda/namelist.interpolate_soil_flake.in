@@ -1,9 +1,11 @@
 &interpolate
-  file_s     = '@SMA_WORKDIR@/sma_@DATE@@TIME@.grib' ! input  GRIB file name
+  file_s     = '@SMA_WORKDIR@/sma_@DATE@@TIME@.grib' ! input GRIB file name
   file_d     = '@SMA_WORKDIR@/data/sma_@DATE@@TIME@.grib' ! output GRIB file name
-  ifile_s    = '@WORKDIR_BASE@/data/icon/icon_eu_dwd/icon_extpar_0027_R03B08_N02_20231113_tiles_reduced.g2' ! invariant file (source)
+!  ifile_s    = '@WORKDIR_BASE@/data/icon/icon_eu_dwd/icon_extpar_0027_R03B08_N02_20231113_tiles_reduced.g2' ! invariant file (source)
+  ifile_s    = '@WORKDIR_BASE@/data/icon/icon_eu_dwd_forsma/icon_extpar_iconeu_dwd_foricon_reduced.g2' ! invariant file (source)
   ifile_d    = '@MODEL_STATIC@/domain_@DOMAIN@/external_parameter_icon_ICON_REG3_DOM01_tiles_reduced.g2' ! invariant file (output) documentare come fare _reduced
-  gfile_s    = '@WORKDIR_BASE@/data/icon/icon_eu_dwd/icon_grid_0027_R03B08_N02.nc' ! grid-file (source)
+!  gfile_s    = '@WORKDIR_BASE@/data/icon/icon_eu_dwd/icon_grid_0027_R03B08_N02.nc' ! grid-file (source)
+  gfile_s    = '@WORKDIR_BASE@/data/icon/icon_eu_dwd_forsma/iconeu_dwd_foricon_grid_R03B08_N02_20231113_tiles.nc' ! grid-file (source)
   gfile_d    = '@LOCALGRID@' ! grid-file (output)
   grid_d     = 'icon'                 ! destination grid (icon, gme, latlon)
   var        = 'w_so t_so'                ! variables to interpolate

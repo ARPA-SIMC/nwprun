@@ -16,7 +16,7 @@ RADLIST="16101 16102 16103 16105 16106 16107 16112 16144 16199 16998 16999"
 MODEL_LHN=.TRUE.
 MODEL_NH_LHN=3
 
-# for SMA interpolation and nudging
+# for SMA interpolation and nudging, if SMA_TIME is unset SMA is not used
 SMA_INPUT=icon_eu_dwd
 SMA_ARKI_DS=$ARKI_DIR/$SMA_INPUT
 #SMA_TIME=03
