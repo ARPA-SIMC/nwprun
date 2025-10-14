@@ -5,7 +5,7 @@
 
 get_init() {
     export PROCNAME=assimm12_cineca_get
-    export EXTRA_CONF=cosmo_5M/
+    export CONF_PREFIX=cosmo_5M/
     export ECF_MONITOR=Y
 }
 

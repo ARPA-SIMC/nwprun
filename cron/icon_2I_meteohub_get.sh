@@ -6,7 +6,7 @@
 # define custom functions
 get_init() {
     export PROCNAME=icon_2I
-    export EXTRA_CONF=meteohub_get/
+    export CONF_PREFIX=meteohub_get/
     export ECF_MONITOR=
 }
 

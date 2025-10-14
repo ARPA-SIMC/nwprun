@@ -59,7 +59,7 @@ main_loop() {
     # basic variables
     export NWPCONFDIR=$basedir/conf
     export NWPCONFBINDIR=$basedir/libexec/nwpconf
-    export NWPCONF=prod/$EXTRA_CONF$PROCNAME
+    export NWPCONF=prod/$CONF_PREFIX$PROCNAME
 
 #    set -x
     set -e
@@ -70,7 +70,7 @@ main_loop() {
     . $NWPCONFBINDIR/arki_tools.sh
     . $NWPCONFBINDIR/nwpwait.sh
     if [ -n "$ECF_MONITOR" ]; then
-	export ECF_NAME=/cron_get/${EXTRA_CONF////_}${PROCNAME%_get}
+	export ECF_NAME=/cron_get/${CONF_PREFIX////_}${PROCNAME%_get}
 	export ECF_PASS=FREE
 	export ECF_TIMEOUT=10 # probably not what i meant
 	export ECF_TRYNO=0

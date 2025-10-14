@@ -5,7 +5,7 @@
 
 get_init() {
     export PROCNAME=fcast_cineca_get
-    export EXTRA_CONF=icon_2I/
+    export CONF_PREFIX=icon_2I/
     export ECF_MONITOR=
 }
 

@@ -4,7 +4,7 @@
 # define custom functions
 get_init() {
     export PROCNAME=eps_get
-    export EXTRA_CONF=ifsens_am/
+    export CONF_PREFIX=ifsens_am/
     export ECF_MONITOR=Y
 }
 

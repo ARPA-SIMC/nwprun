@@ -7,10 +7,11 @@ modalità cron, senza necessariamente la supervisione di ecflow.
 
 La maggior parte degli script effettua scaricamento dati e si appoggia
 al framework comune get_common, costituito dal modulo di shell
-`get_common_ng.sh`. Get_common fornisce una funzione principale
-`main_loop` che esegue le seguenti operazioni:
+`get_common_ng.sh`, oltre che agli script del pacchetto
+nwpconf. Get_common fornisce una funzione principale `main_loop` che
+esegue le seguenti operazioni:
 
- * carica una configurazione specifica `prod/$EXTRA_CONF$PROCNAME` nel
+ * carica una configurazione specifica `prod/$CONF_PREFIX$PROCNAME` nel
    ramo `nwprun/conf/`
  * evita l'esecuzione concorrente di diverse istanze dello script
  * ridireziona stdout e stderr su un file di log `$LOGDIR/`basename
@@ -22,10 +23,10 @@ al framework comune get_common, costituito dal modulo di shell
      configurazione, anche qui evitando perdite di dati
  * ripulisce, ricrea ed entra nella cartella `$WORKDIR` definita in
    `npwrun/conf/conf.sh` (normalmente termina con la configurazione
-   specifica dello script `prod/$EXTRA_CONF$PROCNAME`)
+   specifica dello script `prod/$CONF_PREFIX$PROCNAME`)
  * ricarica dal ramo specifico di configurazione lo stato precedente
    dello script (tipicamente dal file
-   `prod/$EXTRA_CONF$PROCNAME`/$PROCNAME.state` recupera la data
+   `prod/$CONF_PREFIX$PROCNAME`/$PROCNAME.state` recupera la data
    dell'ultimo reference time scaricato)
  * incrementa la data di `$PROC_STEP` secondi (da definire nella
    configurazione specifica dello script `conf.sh`)
@@ -48,9 +49,15 @@ e numero identificativo del processo.
 Le funzioni rilevanti chiamate da `main_loop` e che possono essere
 definite nello script dell'utente sono:
 
-`get_init`: viene chiamata prima di fare il sourcing della configurazione
+`get_init`: viene chiamata prima di fare il sourcing della
+configurazione; è il punto consigliato per definire le variabili
+`$PROCNAME` e, opzionalmente, `$CONF_PREFIX` che definiscono il
+percorso di configurazione; `$CONF_PREFIX` è tipicamente un prefisso,
+terminante con `/` che riunisce diversi script con diverso
+`$PROCNAME`.
 
-`get_post`: viene chiamata subito dopo il sourcing della configurazione, è opzionale
+`get_post`: viene chiamata subito dopo il sourcing della
+configurazione, è opzionale.
 
 `get_setup`: viene chiamata dopo la fase di "demonizzazione"
 (ridirezionamento output in log, cambio di directory di lavoro,
@@ -109,7 +116,6 @@ get_one() {
 # enter main loop
 main_loop "$@"
 ```
-
 
 
 ## script multi_importer_common ##
