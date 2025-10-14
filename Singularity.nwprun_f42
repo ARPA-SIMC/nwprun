@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: fedora:40
+From: fedora:42
 
 %runscript
     exec "$@"
