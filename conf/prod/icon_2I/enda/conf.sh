@@ -84,7 +84,9 @@ else # deterministic run or analysis
     # setup for remote import and download
     ARKI_SCAN_METHOD=configured_importer
     unset ARKI_IMPDIR
-    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
+    if [ -n "$CINECA_MAIN_SYSTEM" ]; then
+        ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
+    fi
     ARKI_DLDIR=$WORKDIR_BASE/download
     MODEL_SIGNAL=icon_2I_assim
 fi
