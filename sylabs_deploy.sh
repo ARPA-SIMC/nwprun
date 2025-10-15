@@ -9,7 +9,8 @@ echo "from cloud.sylabs.io by executing `singularity remote login`"
 
 set -e
 set -x
-for img in Singularity.*_r8 Singularity.*_f40; do
+#for img in Singularity.*_r8 Singularity.*_f42; do
+for img in Singularity.*_f42; do
 	suff=${img#*.}
 	singularity build --remote library://$SYLABS_REPO/$SYLABS_PACKAGE:$suff $img
 done
