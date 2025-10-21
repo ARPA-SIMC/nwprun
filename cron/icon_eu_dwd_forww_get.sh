@@ -16,7 +16,7 @@ get_setup() {
     if [ ${TIME:0:2} = "00" ]; then
 	nh=72
     else
-	nh=3
+	nh=2
     fi
     #00/pmsl/icon-eu_europe_regular-lat-lon_single-level_2025100300_000_PMSL.grib2.bz2
 

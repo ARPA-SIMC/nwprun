@@ -1,7 +1,7 @@
 BASEURL=https://opendata.dwd.de/weather/nwp/icon-eu/grib
 # setup for remote import
 IMPORT_THREAD=input_bc
-unset ARKI_IMPDIR
+#unset ARKI_IMPDIR
 ARKI_DLDIR=$WORKDIR_BASE/download
 
 # quanti secondi aspetto un determinato file prima di passare al
