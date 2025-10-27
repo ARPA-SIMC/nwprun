@@ -80,6 +80,7 @@
 @INCLUDE output_nml_main@
 @INCLUDE output_nml_mlev@
 @INCLUDE output_nml_hzero@
+@INCLUDE output_nml_blend@
 
 &run_nml
  num_lev                     = 65

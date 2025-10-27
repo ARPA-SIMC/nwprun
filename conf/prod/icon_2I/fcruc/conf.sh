@@ -39,7 +39,7 @@ LETKF_CONST=$DACE_BASE/data
 # setup for arkilocal
 ARKI_DIR=$WORKDIR/arki
 # setup for remote import
-unset ARKI_IMPDIR
+#unset ARKI_IMPDIR
 if [ -n "$CINECA_MAIN_SYSTEM" ]; then
     ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
 fi
