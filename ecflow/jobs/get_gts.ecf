@@ -4,7 +4,7 @@
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
-if [[ "%SUITE%" == "icon"* ]]; then
+if ([[ "%SUITE%" == "icon"* ]] || [[ "%SUITE%" == *"verif"* ]]); then
     . $NWPCONFBINDIR/icon_model.sh
 else
     . $NWPCONFBINDIR/cosmo_model.sh

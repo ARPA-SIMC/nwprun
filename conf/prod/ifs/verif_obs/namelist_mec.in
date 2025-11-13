@@ -14,12 +14,12 @@
    output         = '@MEC_WORKDIR@/output'   ! output            data to   working directory
    yyyymmddhh_ana = @DATES@@TIMES@           ! analysis time  (ccccmmddhh)   
    fg_file        = "fg_file"
+   fc_hours       = 1,
    read_fields    = 'ps t u v pf q t2m td2m'
-   opt_fields     = 'tsurf psr qcl fr_ice t2m td2m pf'   ! may be not present
+   opt_fields     = 'tsurf psr qcl fr_ice pf'   ! may be not present
    grib_library   = 2                        ! GRIB-API used: 1=GRIBEX  2=GRIB2-API
-   invar_det      = '@MEC_WORKDIR@/const/IFS-HRES_const.grib'   ! optional: file with invariant fields
-!   cosmo_refatm   = 2                       ! reference atmosphere to be used for COSMO:1or2
-!   cosmo_ivctype  = 2                       ! vertical coordinate type to be used for COSMO:1to4 
+   invar_det      = '@MEC_WORKDIR@/const/const.grib'   ! optional: file with invariant fields
+  invar_det      = ''
  /
 
  !===============================
@@ -47,28 +47,30 @@
  &veri_obs
   fc_times      = @LD_TIMES@                 ! forecast lead times (hhmm)
   rm_old        = 2                          ! overwrite entries in verification file ?
+  tinc_fields   = @MODEL_OUT_FREQ@00         ! time increments of model fields (hhmm)
   fc_file       = '@MODEL_NAME@__FCR_TIME_00_+DDVVMMSS.grb'   ! template for forecast file name
-  time_range    = 1
   prefix_out    = 'ver'
   ens_suffix    ='._ENS_'                    ! suffix for ensemble file name
   det_suffix    = ''                         ! suffix for determ. file name
-  fg_check      = 0                          ! quality check switch
+  fg_check      = 1                          ! quality check switch
                                              !  0: no QC (quality control)
                                              !  1: QC against deterministic run
                                              !  2: QC against ensemble mean
                                              !  3: QC against all ensemble members
                                              !  4: check for blacklisting + gross
-  interpolation = 1                          ! time interpolation 
+                                             ! -1: set inside the code: =1 if read_cdfin=T
+                                             !     =0 otherwise (-1 is the default, used at
+                                             !     DWD for verification)
+  interpolation = -1                         ! time interpolation 
                                              ! -1: linear
                                              !  0: nearest leadtime
                                              ! >0: use nth slot (nearest upper leadtime)
+  time_range    = 1                          ! handle time range variables
  /
 
  &report
   time_e =     0                             ! (hhmm, inclusive)+
-  time_b =  -@FC_LENGTH@01                   ! (hhmm, exclusive)-
-!  time_e =     1                             ! (hhmm, inclusive)+
-!  time_b =  -@FC_LENGTH@00                   ! (hhmm, exclusive)-
+  time_b =  -@VER_FREQ@00                    ! (hhmm, exclusive)-
  /
 
 ! &rules        ! Commentato
@@ -79,7 +81,7 @@
 ! /
 
  &cosmo_obs
-   verification_start =  @VSTART@            ! (min, inclusive)
+   verification_start =   @VSTART@           ! (min, inclusive)
    verification_end   =     0                ! COSMO time window end   (inclusive)(hhmm)
    altopsu(1)         =  5000.               ! max height for single level wind observations
    thairh             =     0.               ! multilevel observation collection

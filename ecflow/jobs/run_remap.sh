@@ -67,7 +67,7 @@ if [ $SLURM_PROCID -eq 0 ] ; then
       if (indicatorOfParameter == 39 || indicatorOfParameter == 40 || indicatorOfParameter == 41 || indicatorOfParameter == 42) {
         write "soil.[indicatorOfParameter:i].grb";
       } else {
-        if (indicatorOfParameter == 129 || indicatorOfParameter == 173 || indicatorOfParameter == 172|| indicatorOfParameter == 43) {
+        if (indicatorOfParameter == 129 || indicatorOfParameter == 173 || indicatorOfParameter == 172 || indicatorOfParameter == 43 || indicatorOfParameter == 167 || indicatorOfParameter == 168) {
           write "surface_dummy.grb";
         } else {
           write "surface.grb";
@@ -225,7 +225,7 @@ else
         # Copy input removing topographies and converting all to GRIB2
 	cat << EOF > topo_g2.filt
         if (editionNumber == 1) {
-          if (indicatorOfParameter == 129 || indicatorOfParameter == 173) {
+          if (indicatorOfParameter == 129 || indicatorOfParameter == 173 || indicatorOfParameter == 167 || indicatorOfParameter == 168) {
             write "surface_dummy.grb";
           } else {
             set editionNumber = 2;

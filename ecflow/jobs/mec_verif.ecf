@@ -110,11 +110,7 @@ fi
 
 # Link model constant fields
 echo "Link constant fields and reference atmosphere"
-if [[ "$MODEL_NAME" == "icon_2I" ]]; then
-    ln -fs $MODEL_STATIC/$MODEL_NAME/ICON-2I_const.grib  ${MEC_WORKDIR}/const
-elif [[ "$MODEL_NAME" == "hres" ]]; then
-    ln -fs $MODEL_STATIC/$MODEL_NAME/IFS-HRES_const.grib ${MEC_WORKDIR}/const
-fi
+ln -fs $MODEL_STATIC/$MODEL_NAME/const.grib  ${MEC_WORKDIR}/const
 
 # Link reference atmosphere ("fg_file" in the namellist). It must be the last forecast file
 if [[ $ENS_TOTAL_MEMB -eq 0 ]]; then    
@@ -151,16 +147,12 @@ chmod 755 run/namelist
 cd $MEC_WORKDIR/run
 parcomp_mpirun $EXTRA_MPIRUN $MEC_BIN
 
-# !!! ATTENZIONE!! Per adesso archivio locale
 # Save verification files
-mkdir -p $ARC_LOC/${DATES}${TIMES}00
-rsync -pt $MEC_WORKDIR/output/* $ARC_LOC/${DATES}${TIMES}00
-rsync -pt $MEC_WORKDIR/run/YU*  $ARC_LOC/${DATES}${TIMES}00
-
-#if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
-#    subdir=%SUITE%/$DATE$TIME
-#    mkdir -p $CINECA_ARCHIVE_POST/$subdir
-#    rsync -pt $MEC_WORKDIR/run/YU*  $CINECA_ARCHIVE_POST/$subdir || true
-#fi
+if [[ -n "$CINECA_ARCHIVE_POST" ]]; then
+    subdir=%SUITE%/${DATES}${TIMES}00
+    mkdir -p $CINECA_ARCHIVE_POST/$subdir
+    rsync -pt $MEC_WORKDIR/output/* $CINECA_ARCHIVE_POST/$subdir
+    rsync -pt $MEC_WORKDIR/run/YU*  $CINECA_ARCHIVE_POST/$subdir
+fi
 
 %include <tail.h>
