@@ -18,7 +18,7 @@
    read_fields    = 'ps t u v pf q t2m td2m clct clcl clcm clch'
    opt_fields     = 'ps h_snow clct clcl clcm clch'
    grib_library   = 2                        ! GRIB-API used: 1=GRIBEX  2=GRIB2-API
-   invar_det      = '@MEC_WORKDIR@/const/ICON-2I_const.grib' ! optional: file with invariant fields
+   invar_det      = '@MEC_WORKDIR@/const/const.grib' ! optional: file with invariant fields
    grid_file      = '@MEC_WORKDIR@/const/@DOMAIN@.nc'
    chk_icon_grid  = 1                        ! check neighbour references  0/1=off/on
  /
@@ -54,7 +54,7 @@
   prefix_out    = 'ver'
   ens_suffix    ='._ENS_'                    ! suffix for ensemble file name
   det_suffix    = ''                         ! suffix for determ. file name
-  fg_check      = 1                         ! quality check switch
+  fg_check      = 1                          ! quality check switch
                                              !  0: no QC (quality control)
                                              !  1: QC against deterministic run
                                              !  2: QC against ensemble mean

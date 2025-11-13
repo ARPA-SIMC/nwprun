@@ -19,7 +19,7 @@ BUFR_ARKI_DS_SIGNAL=mars_bufr
 MEC_WORKDIR=$WORKDIR/mec
 
 # MEC verification (modified version of executables)
-DACE_BASE=/g100_work/smr_prod/srcintel/dace_code_2.15_verif
+DACE_BASE=$WORKDIR_BASE/srcintel/dace_code_2.25_verif
 MEC_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/mec
 LETKF_CONST=$DACE_BASE/data
 
