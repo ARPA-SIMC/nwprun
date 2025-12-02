@@ -182,7 +182,7 @@ else
 fi
 
 # Handle radar volumes for namelist
-if [ "%RADVOL%" == "Y" ] && ls $HDF5_WORKDIR/* >/dev/null 2>&1; then
+if [ -n "$ACT_EMVORADO" ] && ls $HDF5_WORKDIR/* >/dev/null 2>&1; then
     # Namelist for EMVORADO 
     conf_template NAMELIST_EMVORADO
 
@@ -190,11 +190,9 @@ if [ "%RADVOL%" == "Y" ] && ls $HDF5_WORKDIR/* >/dev/null 2>&1; then
     mkdir -p $WORKDIR/lookup_Mie_write
 
     # Activate EMVORADO in ICON namelist
-    if [ -z "$ACT_EMVORADO" ]; then
-        export ACT_EMVORADO=.true.
-    fi
+    export ACT_EMVORADO=.TRUE.
 else
-    export ACT_EMVORADO=.false.
+    export ACT_EMVORADO=.FALSE.
 fi
 
 # Define new variable for perturbationNumber

@@ -345,12 +345,6 @@ class WipeRun:
             task.add_complete("../run == complete")
             task.add_trigger(fulldep) # || ../check_run == aborted")
 
-        # Add variable to recognize the use of radar volumes
-        if self.conf["radarvol"]:
-            node.add_variable("RADVOL", "Y")
-        else:
-            node.add_variable("RADVOL", "N")
-
 # Add basic environment (suite definition variables) to a suite node,
 # usually to root node.
 class BasicEnv():
@@ -433,6 +427,12 @@ class WaitAndRun:
             if self.dep is not None:
                 fam.add_trigger("../"+self.dep+" == complete")
             fam.add_cron(cron_set_time(self.conf['starttime']))     # UTC time
+
+        # Add variable to recognize the use of radar volumes
+        if self.conf["radarvol"]:
+            node.add_variable("RADVOL", "Y")
+        else:
+            node.add_variable("RADVOL", "N")
 
         # instantiate with general configuration and add all
         # components of runlist
