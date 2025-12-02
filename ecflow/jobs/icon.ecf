@@ -18,7 +18,6 @@ cp $ECRAD_DATA/rrtmg_lw.nc $MODEL_WORKDIR
 cp $ECRAD_DATA/ECHAM6_CldOptProps.nc $MODEL_WORKDIR
 
 # Run ICON
-$ecflow_client --event=started # trigger start of postproc
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN
 
 # Archive first guess for next ICON assimilation cycle

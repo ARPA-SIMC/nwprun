@@ -51,7 +51,6 @@ if [ "$MODEL_PUBLISH_CONF" = "Y" -a -z "$ENS_MEMB" ]; then
     (rsync -t INPUT* "$MODEL_CONF_ARCHIVE" || true) &
 fi
 rm -f YU*
-$ecflow_client --event=started # trigger start of postproc
 parcomp_mpirun $EXTRA_MPIRUN $MODEL_BIN
 
 # Save YU* files for diagnostic
