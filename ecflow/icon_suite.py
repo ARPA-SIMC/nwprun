@@ -203,10 +203,10 @@ else: #default g100
         "ECF_TIMEOUT": "14400"
     })
 
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    client_wrap=os.path.join(os.environ["WORKDIR_BASE"],"nwprun","ecflow","ec_wrap"),
                     ntries=2,
                     extra_env=extra_env)
 
@@ -351,7 +351,7 @@ basicenv.add_to(ifs.suite)
 day = ifs.suite.add_family("day").add_repeat(
     ecflow.RepeatDate("YMD",
 #                      int((datetime.datetime.now()-datetime.timedelta(days=delta[3])).strftime("%Y%m%d")),
-                      20240711,
+                      20241201,
                       20301228))
 
 hdep = None # first repetition has no dependency

@@ -66,7 +66,7 @@ modules may conflict. The wrapper sets the environment on the fly only
 for a single command, but it may require update from time to time:
 
 ```
-$OPE/ecflow/ec_wrap <ecflow_command> <arguments>...
+$WORKDIR_BASE/nwprun/ecflow/ec_wrap <ecflow_command> <arguments>...
 ```
 
 ### Use

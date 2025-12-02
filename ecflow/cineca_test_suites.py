@@ -31,10 +31,10 @@ extra_env.update({
     "NNODES_MODEL": 2,
     "NNODES_ENDA": 4
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    client_wrap=os.path.join(os.environ["WORKDIR_BASE"],"nwprun","ecflow","ec_wrap"),
                     ntries=2,
                     extra_env=extra_env)
 
@@ -67,10 +67,10 @@ extra_env.update({
     "NNODES_MODEL": 12,
     "NNODES_ENDA": 4
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    client_wrap=os.path.join(os.environ["WORKDIR_BASE"],"nwprun","ecflow","ec_wrap"),
                     ntries=2,
                     extra_env=extra_env)
 
@@ -104,10 +104,10 @@ extra_env.update({
     "NNODES_ENDA": 4,
     "ECF_TIMEOUT": "14400"
 })
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="slurm",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    client_wrap=os.path.join(os.environ["WORKDIR_BASE"],"nwprun","ecflow","ec_wrap"),
                     ntries=2,
                     extra_env=extra_env)
 

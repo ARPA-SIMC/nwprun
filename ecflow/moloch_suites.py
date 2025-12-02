@@ -21,7 +21,7 @@ extra_env.update({
     "NNODES_MODEL": 6,
 })
 
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORK"], "ecflow"),
                     sched="slurm",
                     client_wrap="",

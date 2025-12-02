@@ -21,10 +21,10 @@ famlist = ["cosmo_5M_assimm18_cineca", "cosmo_5M_assimm12_cineca",
            "radar_lhn", "radar_sri", "radar_vol"]
 
 
-basicenv = BasicEnv(srctree=os.environ["OPE"],
+basicenv = BasicEnv(srctree=os.path.join(os.environ["WORKDIR_BASE"],"nwprun"),
                     worktree=os.path.join(os.environ["WORKDIR_BASE"], "ecflow"),
                     sched="sh",
-                    client_wrap=os.path.join(os.environ["OPE"],"ecflow","ec_wrap"),
+                    client_wrap=os.path.join(os.environ["WORKDIR_BASE"],"nwprun","ecflow","ec_wrap"),
                     ntries=2,
                     extra_env={"ECF_PASS": "FREE", "ECF_DUMMY_TASK": "", "ECF_TIMEOUT": "7200", "ECF_DENIED": ""})
 
