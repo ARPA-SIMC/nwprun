@@ -18,10 +18,10 @@ export LOG4C_APPENDER=stderr
 set -x
 cd $MODEL_DATADIR
 
-case "%SUITE%" in
+case "$SUITE" in
     *reassim*)
-        mkdir -p $ARCHIVE/%SUITE%
-        cp -p laf?????????? $ARCHIVE/%SUITE%
+        mkdir -p $ARCHIVE/$SUITE
+        cp -p laf?????????? $ARCHIVE/$SUITE
         ;;
     cosmo_2I_fcens*)
         putarki_configured_model_output $(($MODEL_STOP + 1))

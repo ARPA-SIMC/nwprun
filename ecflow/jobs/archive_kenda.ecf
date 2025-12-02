@@ -6,7 +6,7 @@
 # module load singularity || true
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
-if [[ "%SUITE%" == "icon"* ]]; then
+if [[ "$SUITE" == "icon"* ]]; then
     . $NWPCONFBINDIR/icon_model.sh
 else    
     . $NWPCONFBINDIR/cosmo_model.sh
@@ -39,7 +39,7 @@ archive_putarki() {
 archive_suite() {
     if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
 	# ICON model
-	if [[ "%SUITE%" == "icon"* ]]; then
+	if [[ "$SUITE" == "icon"* ]]; then
             if [ "$TIME" = "21" ]; then # all members for fcens
                 # local copy
                 mkdir -p $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}
@@ -94,11 +94,11 @@ archive_suite() {
 archive_perm() {
     if [ -n "$CINECA_ARCHIVE_POST" ]; then
 	# Create archive folder and save deterministic analysis
-        subdir=%SUITE%/$DATE$TIME
+        subdir=$SUITE/$DATE$TIME
 	mkdir -p $CINECA_ARCHIVE_POST/$subdir
 	rsync -pt $detfile $CINECA_ARCHIVE_POST/$subdir
 
-	if [[ "%SUITE%" == "icon_2I_enda"* ]]; then
+	if [[ "$SUITE" == "icon_2I_enda"* ]]; then
 	    # Retrieve first guess lead time
 	    model_stop_min=$((MODEL_STOP * 60))
 	    dt_shift_min=$((DT_IAU / 120))
@@ -160,7 +160,7 @@ archive_perm &
 
 # archive locally, for next suite cycle, including daily cleaning
 archive_arki $detfile &
-if [[ "%SUITE%" == "icon"* ]]; then
+if [[ "$SUITE" == "icon"* ]]; then
     archive_arki $detfile_inc &
 fi
 # put a barrier here to avoid challenging Zeus
@@ -169,7 +169,7 @@ wait
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
     n3=`printf "%%03d" $n`
     archive_arki $LETKF_DATADIR/laf${DATE}${TIME}0000.$n3 $WORKDIR/arki.$n
-    if [[ "%SUITE%" == "icon"* ]]; then
+    if [[ "$SUITE" == "icon"* ]]; then
         archive_arki $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.$n3 $WORKDIR/arki.$n
     fi
 done

@@ -150,7 +150,7 @@ parcomp_mpirun $EXTRA_MPIRUN $MEC_BIN
 
 # Save verification files
 if [[ -n "$CINECA_ARCHIVE_POST" ]]; then
-    subdir=%SUITE%/${DATES}${TIMES}00
+    subdir=$SUITE/${DATES}${TIMES}00
     mkdir -p $CINECA_ARCHIVE_POST/$subdir
     rsync -pt $MEC_WORKDIR/output/* $CINECA_ARCHIVE_POST/$subdir
     rsync -pt $MEC_WORKDIR/run/YU*  $CINECA_ARCHIVE_POST/$subdir

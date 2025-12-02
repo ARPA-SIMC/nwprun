@@ -14,7 +14,7 @@ if [ "$STOP_ON_FAIL" != "Y" ]; then
 fi
 
 # once a day clean:
-if [ "%SUITE%" = "cosmo_2I_enda" -a "$TIME" = "21" ]; then
+if [ "$SUITE" = "cosmo_2I_enda" -a "$TIME" = "21" ]; then
 # held pbs jobs
 #    qstat -u $USER | awk -e '{if ($10 == "H") {a=gensub("\\..*$","","g",$1); print "cleaning job"a; system("qdel "a);}}' || true
 # old analyses

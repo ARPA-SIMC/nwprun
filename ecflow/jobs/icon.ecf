@@ -47,7 +47,7 @@ if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
 fi
 
 # Save LHN diagnostics for deterministic member of KENDA
-if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
+if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "$SUITE" == "icon_2I_enda"* ]]); then
     # Define file suffix
     if [ -z "$ENS_MEMB" ]; then
         n3=det
@@ -56,7 +56,7 @@ if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
     fi
 
     # Create folder
-    subdir=%SUITE%/$DATE$TIME
+    subdir=$SUITE/$DATE$TIME
     mkdir -p $CINECA_ARCHIVE_POST/$subdir
 
     # Save deterministic diagnostic file every hour and lhn

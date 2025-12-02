@@ -5,7 +5,7 @@
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
-if [[ "%SUITE%" == icon* ]]; then
+if [[ "$SUITE" == icon* ]]; then
     . $NWPCONFBINDIR/icon_model.sh
 else
     . $NWPCONFBINDIR/cosmo_model.sh
@@ -24,7 +24,7 @@ mkdir -p $SMA_WORKDIR
 mkdir -p $SMA_WORKDIR/data
 cd $SMA_WORKDIR
 
-if [[ "%SUITE%" != *enda* || "$TIME" != "$SMA_TIME" ]]; then
+if [[ "$SUITE" != *enda* || "$TIME" != "$SMA_TIME" ]]; then
     exit_0
 fi
 # from kenda, improve

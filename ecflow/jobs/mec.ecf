@@ -114,8 +114,8 @@ cd $MEC_WORKDIR/run
 parcomp_mpirun $EXTRA_MPIRUN $MEC_BIN
 
 # Save YUSTATS files for diagnostics
-if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
-    subdir=%SUITE%/$DATE$TIME
+if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "$SUITE" == "icon_2I_enda"* ]]); then
+    subdir=$SUITE/$DATE$TIME
     mkdir -p $CINECA_ARCHIVE_POST/$subdir
     rsync -pt $MEC_WORKDIR/run/YU*  $CINECA_ARCHIVE_POST/$subdir || true
 fi

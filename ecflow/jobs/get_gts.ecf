@@ -5,7 +5,7 @@
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh
-if ([[ "%SUITE%" == "icon"* ]] || [[ "%SUITE%" == *"verif"* ]]); then
+if ([[ "$SUITE" == "icon"* ]] || [[ "$SUITE" == *"verif"* ]]); then
     . $NWPCONFBINDIR/icon_model.sh
 else
     . $NWPCONFBINDIR/cosmo_model.sh
@@ -21,17 +21,17 @@ mkdir -p $BUFR_WORKDIR
 cd $BUFR_WORKDIR
 
 # Switch to avoid recreating import_signal folders for verification
-if [[ "%SUITE%" == *"verif"* ]]; then
+if [[ "$SUITE" == *"verif"* ]]; then
     icon_getarki_obsncdf
 else
     set_import_signal_method $BUFR_ARKI_DS_CONV
     if import_signal_wait $BUFR_ARKI_DS_SIGNAL $DATE$TIME "*"; then
-        if [[ "%SUITE%" == "icon"* ]]; then
+        if [[ "$SUITE" == "icon"* ]]; then
             icon_getarki_obsncdf
     
             # Archive cdfin files
-            if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "%SUITE%" == "icon_2I_enda"* ]]); then
-                subdir=%SUITE%/$DATE$TIME
+            if ([[ -n "$CINECA_ARCHIVE_POST" ]] && [[ "$SUITE" == "icon_2I_enda"* ]]); then
+                subdir=$SUITE/$DATE$TIME
                 mkdir -p $CINECA_ARCHIVE_POST/$subdir
                 rsync -pt --copy-links cdfin_*.nc $CINECA_ARCHIVE_POST/$subdir || true
             fi

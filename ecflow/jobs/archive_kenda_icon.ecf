@@ -38,7 +38,7 @@ archive_suite() {
 archive_perm() {
     if [ -n "$CINECA_ARCHIVE_POST" ]; then
         # Create archive folder and save deterministic analysis increments
-        subdir=%SUITE%/$DATE$TIME
+        subdir=$SUITE/$DATE$TIME
             mkdir -p $CINECA_ARCHIVE_POST/$subdir
             rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.det  \
                   $CINECA_ARCHIVE_POST/$subdir     || true

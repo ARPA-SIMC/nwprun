@@ -27,7 +27,7 @@ set -a ma
 lma=
 for n in `seq 1 $ENS_TOTAL_MEMB`; do
     ma[$n]=N
-    if [[ "%SUITE%" == "icon"* ]]; then
+    if [[ "$SUITE" == "icon"* ]]; then
         last_file=icon_${DATE}${TIME}00_surf_all2km_A2P0_+02030000.grb
         if [ -f "$WORKDIR/icon.$n/data/$last_file" ]; then
                 ma[$n]=Y
@@ -59,7 +59,7 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
     # rm -r $FXTR_WORKDIR/input.$n3 # senza la barra
     n3=`printf "%%03d" $n`
     if [ "${ma[$n]}" = Y ]; then
-        if [[ "%SUITE%" == "icon"* ]]; then
+        if [[ "$SUITE" == "icon"* ]]; then
             # Rename file using cosmo convection
             mkdir -p $FXTR_WORKDIR/input.$n3
             icon_name_gen=icon_${DATE}${TIME}00_surf_all2km_A2P0_+????????.grb
@@ -72,7 +72,7 @@ for n in `seq 1 $ENS_TOTAL_MEMB`; do
         fi
 
     elif [ -n "$lma" ]; then # use another member
-        if [[ "%SUITE%" == "icon"* ]]; then
+        if [[ "$SUITE" == "icon"* ]]; then
             mkdir -p $FXTR_WORKDIR/input.$n3
             icon_name_gen=icon_${DATE}${TIME}00_surf_all2km_A2P0_+????????.grb
             for file in $WORKDIR/icon.$lma/data/$icon_name_gen; do
@@ -119,7 +119,7 @@ $FXTR_BIN fxtr_wmaxp1h.nl &
 wait
 
 # Is this necessary also for ICON?
-if [[ "%SUITE%" == "cosmo"* ]]; then
+if [[ "$SUITE" == "cosmo"* ]]; then
     # correct grib table number for old grib_api versions
     for file in $FXTR_DATADIR/*.grib; do
         $SIMC_TOOLS grib_set -s tablesVersion=11 $file $file.tmp
@@ -138,7 +138,7 @@ done
 putarki_configured_end $dirname
 
 # copy to archive
-if [[ "%SUITE%" == "icon"* ]]; then
+if [[ "$SUITE" == "icon"* ]]; then
     subdir=icon_2I_fcens/$DATE$TIME
 else
     subdir=cosmo_2I_fcens/$DATE$TIME

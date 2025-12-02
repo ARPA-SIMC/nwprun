@@ -29,7 +29,7 @@ fi
 # archiving process
 if [ -f "$LETKF_WORKDIR/letkf_skip" -o "$KENDA_CRASH" = "Y" ]; then
     # ICON model
-    if [[ "%SUITE%" == "icon"* ]]; then
+    if [[ "$SUITE" == "icon"* ]]; then
 	    # Create file with zero analysis incrementes for determinitic
         cp $(conf_getfile ana_inc_0.det) $LETKF_WORKDIR
 	    $SIMC_TOOLS grib_set -s dataDate=$DATE,dataTime=$TIME ana_inc_0.det \
