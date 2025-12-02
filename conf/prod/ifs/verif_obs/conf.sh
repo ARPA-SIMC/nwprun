@@ -1,6 +1,6 @@
 # Model environment variables
 MODEL_NAME=ifs-hres
-MODEL_ARKI_DS=$ARKI_DIR/hres_am_foricon
+MODEL_ARKI_DS=$ARKI_URL/hres_am_foricon
 MODEL_DATADIR=$WORKDIR/ifs/data
 MODEL_STOP=0
 FC_LENGTH=72

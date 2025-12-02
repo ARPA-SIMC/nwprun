@@ -1,6 +1,6 @@
 ## Model environment variables
 MODEL_NAME=icon_2I
-MODEL_ARKI_DS=$ARKI_DIR/icon_2I_unstr
+MODEL_ARKI_DS=$ARKI_URL/icon_2I_unstr
 #MODEL_DATADIR=$WORKDIR/model
 MODEL_DATADIR=$WORKDIR/icon/data
 MODEL_STOP=72
@@ -11,8 +11,8 @@ MODEL_DELTABD=0
 MODEL_BACK=0
 
 # Dataset arkimet for observations
-BUFR_ARKI_DS_CONV=$ARKI_DIR/mars_bufr_conv
-BUFR_ARKI_DS_NOCONV=$ARKI_DIR/mars_bufr_noconv
+BUFR_ARKI_DS_CONV=$ARKI_URL/mars_bufr_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_URL/mars_bufr_noconv
 BUFR_ARKI_DS_SIGNAL=mars_bufr
 
 # Environment variable definition for MEC and LETKF

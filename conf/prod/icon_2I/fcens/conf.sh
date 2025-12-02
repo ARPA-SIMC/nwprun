@@ -1,6 +1,6 @@
 # Parent model environment variables
 PARENTMODEL=IFS
-PARENTMODEL_ARKI_DS=$ARKI_DIR/ifsens_am_foricon
+PARENTMODEL_ARKI_DS=$ARKI_URL/ifsens_am_foricon
 PARENTMODEL_SIGNAL=(ifsens_am_enda ifsens_am_endabak ifsens_am_eps)
 PARENTMODEL_FREQINI=6
 PARENTMODEL_FREQANA=6
@@ -20,7 +20,7 @@ MODEL_WORKDIR=$WORKDIR/icon.$ENS_MEMB
 MODEL_DATADIR=$WORKDIR/icon.$ENS_MEMB/data
 
 # setup for arkilocal
-ARKI_DIR=$WORKDIR/arki.$ENS_MEMB    # forse inutile
+ARKI_LOCALDIR=$WORKDIR/arki.$ENS_MEMB    # forse inutile
 
 # eps postprocessing
 FXTR_HOME=$WORKDIR_BASE/srcgnu/Fieldextra_14.0.0
@@ -65,8 +65,6 @@ MEC_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/mec
 MEC_WORKDIR=$WORKDIR/mec
 LETKF_CONST=$DACE_BASE/data
 
-# setup for arkilocal
-ARKI_DIR=$WORKDIR/arki
 # setup for remote import
 unset ARKI_IMPDIR
 if [ -n "$CINECA_MAIN_SYSTEM" ]; then

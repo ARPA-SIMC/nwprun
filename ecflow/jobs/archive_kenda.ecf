@@ -131,7 +131,7 @@ archive_perm() {
 archive_arki() {
     # override conf.sh if required
     if [ -n "$2" ]; then
-	ARKI_DIR=$2
+	ARKI_LOCALDIR=$2
     fi
     if [ -f "$1" ]; then
         arkilocal_setup

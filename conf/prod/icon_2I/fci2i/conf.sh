@@ -1,6 +1,6 @@
 # Parent model environment variables
 PARENTMODEL=ICON
-PARENTMODEL_ARKI_DS=$ARKI_DIR/icon_eu_dwd_foricon
+PARENTMODEL_ARKI_DS=$ARKI_URL/icon_eu_dwd_foricon
 PARENTMODEL_SIGNAL=icon_eu_dwd_foricon
 PARENTMODEL_FREQINI=12
 PARENTMODEL_FREQANA=12
@@ -22,7 +22,7 @@ MODEL_STATIC=$HOME/data/icon
 MODEL_PRE_BINDIR=$HOME/srcgnu/dwd_icon_tools/icontools
 
 # Dataset arkimet for observations
-ARKI_LHN_DS=$ARKI_DIR/icon_2I_radar
+ARKI_LHN_DS=$ARKI_URL/icon_2I_radar
 MODEL_LHN_DT=600
 
 # ICON-2I domain and grid files
@@ -48,8 +48,6 @@ NBC_PER_TASK=1
 MODEL_LHN=.TRUE.
 MODEL_NH_LHN=4
 
-# setup for arkilocal
-ARKI_DIR=$WORKDIR/arki
 # setup for remote import
 unset ARKI_IMPDIR
 ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.ftpmodelin

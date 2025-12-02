@@ -1,6 +1,6 @@
 # Model environment variables
 MODEL_NAME=icon_2I
-MODEL_ARKI_DS=$ARKI_DIR/icon_2I_unstr
+MODEL_ARKI_DS=$ARKI_URL/icon_2I_unstr
 MODEL_DATADIR=$WORKDIR/icon/data
 MODEL_STOP=0
 FC_LENGTH=72
@@ -21,8 +21,8 @@ LETKF_CONST=$DACE_BASE/data
 MEC_WORKDIR=$WORKDIR/mec
 
 # Dataset arkimet for observations
-BUFR_ARKI_DS_CONV=$ARKI_DIR/mars_bufr_conv
-BUFR_ARKI_DS_NOCONV=$ARKI_DIR/mars_bufr_noconv
+BUFR_ARKI_DS_CONV=$ARKI_URL/mars_bufr_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_URL/mars_bufr_noconv
 BUFR_ARKI_DS_SIGNAL=mars_bufr
 
 # Archiviazione locale files di verifica

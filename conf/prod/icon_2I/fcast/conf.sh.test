@@ -1,6 +1,6 @@
 # Parent model environment variables
 PARENTMODEL=IFS
-PARENTMODEL_ARKI_DS=$ARKI_DIR/hres_am_foricon
+PARENTMODEL_ARKI_DS=$ARKI_URL/hres_am_foricon
 PARENTMODEL_SIGNAL=hres_am_foricon
 PARENTMODEL_FREQINI=6
 PARENTMODEL_FREQANA=6
@@ -37,8 +37,6 @@ MEC_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/mec
 MEC_WORKDIR=$WORKDIR/mec
 LETKF_CONST=$DACE_BASE/data
 
-# setup for arkilocal
-ARKI_DIR=$WORKDIR/arki
 # setup for remote import
 #unset ARKI_IMPDIR
 ARKI_IMPDIR=$WORKDIR_BASE/import_test

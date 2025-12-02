@@ -32,8 +32,6 @@ MODEL_FREQINI=24
 # for distinguishing assimilation from forecast results
 MODEL_ARKI_TIMERANGE_ASSIM="timerange:Timedef,0,254;proddef:GRIB:tod=0"
 MODEL_ARKI_TIMERANGE_FCAST="timerange:Timedef,0,254;proddef:GRIB:tod=1"
-# setup for arkilocal
-ARKI_DIR=$WORKDIR/arki
 MODEL_ASSIM_GP=41
 MODEL_FCAST_GP=42
 MODEL_FCRUC_GP=44

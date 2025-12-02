@@ -1,5 +1,5 @@
 # RADAR for LHN
-ARKI_LHN_DS=$ARKI_DIR/cosmo_5I_radar
+ARKI_LHN_DS=$ARKI_URL/cosmo_5I_radar
 RADAR_LHN_GP=10
 MODEL_LHN=.TRUE.
 MODEL_LHN_WORKDIR=$WORKDIR/lhn
@@ -8,9 +8,8 @@ MODEL_LHN_DT=10
 # observations for nudging
 BUFR_WORKDIR=$WORKDIR/bufr
 MODEL_NUDG=.TRUE.
-# warning ARKI_DIR is redefined later for other purposes, find a better way!
-BUFR_ARKI_DS_CONV=$ARKI_DIR/gts_bufr_conv
-BUFR_ARKI_DS_NOCONV=$ARKI_DIR/gts_bufr_noconv
+BUFR_ARKI_DS_CONV=$ARKI_URL/gts_bufr_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_URL/gts_bufr_noconv
 
 # _GP=10(radarobs),11(an),12(fc)
 # definitions for parent model
@@ -68,14 +67,12 @@ MODEL_ARKI_TIMERANGE_ASSIM="timerange:Timedef,0,254;proddef:GRIB:tod=0"
 MODEL_ARKI_TIMERANGE_FCAST="timerange:Timedef,0,254;proddef:GRIB:tod=1"
 ARKI_DS_ASSIM=$ARKI_URL/COSMO_5I
 ARKI_DS_FCAST=$ARKI_URL/COSMO_5I
-#ARKI_DS_INTER=$ARKI_URL/COSMO_5I_inter
 MODEL_ASSIM_GP=31
 MODEL_FCAST_GP=32
 #MODEL_FCRUC_GP=34
 #MODEL_FCENS_GP=35
 MODEL_INTER_GP=33
 GRIB_CENTER=80
-ARKI_DIR=$WORKDIR/arki
 IMPORT_THREAD=output
 
 LD_LIBRARY_PATH=$HOME/srcgnu_centos8/install/lib:$LD_LIBRARY_PATH

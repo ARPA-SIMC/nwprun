@@ -6,10 +6,17 @@ case "$HPC_SYSTEM" in
 # General
     WORKDIR=$WORK/$NWPCONF
     LOGDIR=$WORKDIR_BASE/log
+# directory for arkilocal (legacy intrasuite archive)
+    ARKI_LOCALDIR=$WORKDIR/arki
+# url or directory of input arkimet archive
+    ARKI_URL=http://maialinux.metarpa:8091/dataset
+# not really used after 202512, only for ease of definition
     ARKI_DIR=$WORKDIR_BASE/arkimet
+# configuration for arki-scan (likely matches $ARKI_URL archive)
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=configured_importer
     IMPORT_SIGNAL_METHOD=filesystem
+# used both for importing and retrieving
     IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT
@@ -43,10 +50,17 @@ case "$HPC_SYSTEM" in
 	    WORKDIR=$WORKDIR_RELOC/$NWPCONF
     fi
     LOGDIR=$WORKDIR_BASE/log
+# directory for arkilocal (legacy intrasuite archive)
+    ARKI_LOCALDIR=$WORKDIR/arki
+# url or directory of input arkimet archive
+    ARKI_URL=http://login05:8090/dataset
+# not really used after 202512, only for ease of definition
     ARKI_DIR=$WORKDIR_BASE/arkimet
+# configuration for arki-scan (likely matches $ARKI_URL archive)
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=configured_importer
     IMPORT_SIGNAL_METHOD=filesystem
+# used both for importing and retrieving
     IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT
@@ -64,10 +78,17 @@ case "$HPC_SYSTEM" in
 # General
     WORKDIR=$WORKDIR_BASE/$NWPCONF
     LOGDIR=$WORKDIR_BASE/log
+# directory for arkilocal (legacy intrasuite archive)
+    ARKI_LOCALDIR=$WORKDIR/arki
+# url or directory of input arkimet archive
+    ARKI_URL=http://login01.leonardo.local:8090/dataset
+# not really used after 202512, only for ease of definition
     ARKI_DIR=$WORKDIR_BASE/arkimet
+# configuration for arki-scan (likely matches $ARKI_URL archive)
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=configured_importer
     IMPORT_SIGNAL_METHOD=filesystem
+# used both for importing and retrieving
     IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT

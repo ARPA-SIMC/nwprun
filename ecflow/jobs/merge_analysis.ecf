@@ -15,7 +15,7 @@
 # end of setup
 
 set -x
-if [ -n "$ARKI_DIR" ]; then
+if [ -n "$ARKI_LOCALDIR" ]; then
     # analysis is managed locally
     # create local dataset if not existing
     arkilocal_setup

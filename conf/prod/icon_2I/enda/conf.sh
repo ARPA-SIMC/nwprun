@@ -18,7 +18,7 @@ MODEL_NH_LHN=3
 
 # for SMA interpolation and nudging, if SMA_TIME is unset SMA is not used
 SMA_INPUT=icon_eu_dwd
-SMA_ARKI_DS=$ARKI_DIR/$SMA_INPUT
+SMA_ARKI_DS=$ARKI_URL/$SMA_INPUT
 #SMA_TIME=03
 
 # Time difference between model and parent reftime 
@@ -46,7 +46,7 @@ esac
 # Environment variable definition for model and parent
 PARENTMODEL=IFS
 if [ -n "$ENS_MEMB" ]; then
-    PARENTMODEL_ARKI_DS=$ARKI_DIR/ifsens_am_foricon
+    PARENTMODEL_ARKI_DS=$ARKI_URL/ifsens_am_foricon
     PARENTMODEL_SIGNAL=ifsens_am_enda
     PARENTMODEL_FREQINI=6
     PARENTMODEL_FREQANA=6
@@ -66,12 +66,12 @@ if [ -n "$ENS_MEMB" ]; then
     MODEL_DATADIR=$WORKDIR/icon.$ENS_MEMB/data
 
     # setup for arkilocal
-    ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
+    ARKI_LOCALDIR=$WORKDIR/arki.$ENS_MEMB
 
     # setup for remote import and download
     unset ARKI_IMPDIR
 else # deterministic run or analysis
-    PARENTMODEL_ARKI_DS=$ARKI_DIR/hres_am_foricon
+    PARENTMODEL_ARKI_DS=$ARKI_URL/hres_am_foricon
     PARENTMODEL_SIGNAL=hres_am_foricon
     PARENTMODEL_FREQINI=6
     PARENTMODEL_FREQANA=6
@@ -79,7 +79,7 @@ else # deterministic run or analysis
     GET_ICBC_MINCOUNT=1035 # exactly 1040
 
     # setup for arkilocal
-    ARKI_DIR=$WORKDIR/arki
+    ARKI_LOCALDIR=$WORKDIR/arki
 
     # setup for remote import and download
     ARKI_SCAN_METHOD=configured_importer

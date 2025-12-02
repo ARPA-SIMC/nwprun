@@ -11,10 +11,9 @@ MODEL_FREQINI=3
 ENS_TOTAL_MEMB=24
 ENS_DET_MEMB=Y
 
-# warning ARKI_DIR is redefined later for other purposes, find a better way!
-BUFR_ARKI_DS_CONV=$ARKI_DIR/gts_bufr_conv
-BUFR_ARKI_DS_NOCONV=$ARKI_DIR/gts_bufr_noconv
-BUFR_ARKI_DS_RADARVOL=$ARKI_DIR/radar_vol
+BUFR_ARKI_DS_CONV=$ARKI_URL/gts_bufr_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_URL/gts_bufr_noconv
+BUFR_ARKI_DS_RADARVOL=$ARKI_URL/radar_vol
 FREQ_FILE_BUFR=1 #improve
 
 # redefine directories for perturbed members
@@ -39,7 +38,7 @@ if [ -n "$ENS_MEMB" ]; then
         MODEL_DELTABD=5
         ;;
     esac
-    PARENTMODEL_ARKI_DS=$ARKI_DIR/cosmo_am_enda
+    PARENTMODEL_ARKI_DS=$ARKI_URL/cosmo_am_enda
     PARENTMODEL_SIGNAL=cosmo_am_enda
     PARENTMODEL_FREQINI=3
     PARENTMODEL_FREQANA=3
@@ -56,7 +55,7 @@ if [ -n "$ENS_MEMB" ]; then
     MODEL_WORKDIR=$WORKDIR/cosmo.$ENS_MEMB 
     MODEL_DATADIR=$WORKDIR/cosmo.$ENS_MEMB/data
 # setup for arkilocal
-    ARKI_DIR=$WORKDIR/arki.$ENS_MEMB
+    ARKI_LOCALDIR=$WORKDIR/arki.$ENS_MEMB
 else # deterministic run or analysis
     PARENTMODEL_ARKI_DS=o_lm5_ope_forecast
     PARENTMODEL_FREQINI=12
@@ -102,7 +101,7 @@ else # deterministic run or analysis
         ;;
     esac
 # setup for arkilocal
-    ARKI_DIR=$WORKDIR/arki
+    ARKI_LOCALDIR=$WORKDIR/arki
 # setup for remote import and download
     ARKI_SCAN_METHOD=configured_importer
     unset ARKI_IMPDIR
