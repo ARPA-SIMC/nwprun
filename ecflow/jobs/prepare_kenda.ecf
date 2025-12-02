@@ -1,5 +1,6 @@
 %include <sched_light.h>
 %include <head.h>
+%include <nwpconf.h>
 
 
 # source other optional modules

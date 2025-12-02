@@ -1,6 +1,7 @@
 %include <sched_heavy.h>
 #include <%HPCENV%/smnd.h>
 %include <head.h>
+%include <nwpconf.h>
 
 # source other optional modules
 . $NWPCONFBINDIR/parcomp.sh

@@ -2,6 +2,7 @@
 %include <%HPCENV%/smnd.h>
 %include <%HPCENV%/modules_preicon.h>
 %include <head.h>
+%include <nwpconf.h>
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh

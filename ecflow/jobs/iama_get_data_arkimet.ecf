@@ -1,6 +1,7 @@
 %include <sched_wait.h>
 %include <%HPCENV%/smnd.h>
 %include <head.h>
+%include <nwpconf.h>
 %include <head_iama.h>
 
 echo "Running: iama_get_data_arkimet.ecf"

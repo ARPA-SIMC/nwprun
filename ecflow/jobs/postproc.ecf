@@ -1,6 +1,7 @@
 %include <sched_postproc.h>
 %include <%HPCENV%/smnd.h>
 %include <head.h>
+%include <nwpconf.h>
 
 # which singularity >/dev/null 2>&1 || module load singularity || true
 export LOG4C_PRIORITY=debug

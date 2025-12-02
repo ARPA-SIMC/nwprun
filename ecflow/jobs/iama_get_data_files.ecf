@@ -2,6 +2,7 @@
 %include <sched_wait.h>
 %include <%HPCENV%/smnd.h>
 %include <head.h>
+%include <nwpconf.h>
 %include <head_iama.h>
 #
 # This script looks for a complete 12h data tranche: select analysis if they are available, otherwise the shortest available forecast.

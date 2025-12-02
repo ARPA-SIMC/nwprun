@@ -2,6 +2,7 @@
 echo $SMND_PROFILE
 %include <%HPCENV%/smnd.h>
 %include <head.h>
+%include <nwpconf.h>
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh

@@ -1,5 +1,6 @@
 %include <sched_archive.h>
 %include <head.h>
+%include <nwpconf.h>
 
 # module load singularity || true
 # source other optional modules

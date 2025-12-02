@@ -1,5 +1,6 @@
 %include <sched_transfer.h>
 %include <head.h>
+%include <nwpconf.h>
 
 cd $POSTPROC_EPS_DATADIR
 if [ -n "$INFOMET_UP_BASEDIR" -a -n "$CINECA_MAIN_SYSTEM" ]; then

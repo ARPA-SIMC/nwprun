@@ -1,6 +1,7 @@
 %include <sched_mpi.h>
 %include <%HPCENV%/modules_icon.h>
 %include <head.h>
+%include <nwpconf.h>
 
 # source other optional modules
 . $NWPCONFBINDIR/nwptime.sh

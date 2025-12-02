@@ -1,5 +1,6 @@
 %include <sched_heavy.h>
 %include <head.h>
+%include <nwpconf.h>
 
 set -x
 

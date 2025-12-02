@@ -2,6 +2,7 @@
 %include <sched_wait.h>
 %include <%HPCENV%/modules_iama.h>
 %include <head.h>
+%include <nwpconf.h>
 %include <head_iama.h>
 set -x
 echo "Hello world!"
@@ -61,8 +62,8 @@ fi
 
 # 4) Convert reference times and timeranges to analysis
 
-for file in $(ls *.grib.zoom) ; do
-  $SIMC_TOOLS grib_forc2ana.exe -proc $file ${file}.ana
+for file in $(ls 1_*_*_*_*.grib 11_*_*_*_*.grib) ; do
+  $SIMC_TOOLS /usr/libexec/ma_utils/grib_forc2ana.exe -proc $file ${file}.ana
 done
 
 %include <tail.h>

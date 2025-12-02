@@ -2,6 +2,7 @@
 %include <%HPCENV%/modules_icon.h>
 #module load python
 %include <head.h>
+%include <nwpconf.h>
 
 
 # source other optional modules

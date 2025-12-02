@@ -1,5 +1,6 @@
 %include <sched_wait.h>
 %include <head.h>
+%include <nwpconf.h>
 
 # end of setup
 

@@ -1,5 +1,6 @@
 %include <sched_postproc.h>
 %include <head.h>
+%include <nwpconf.h>
 %include <%HPCENV%/modules_preicon.h>
 
 # source other optional modules

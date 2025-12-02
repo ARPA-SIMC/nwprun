@@ -1,6 +1,7 @@
 %include <sched_mpi_enda.h>
 %include <%HPCENV%/modules_kenda_icon.h>
 %include <head.h>
+%include <nwpconf.h>
 
 # source other optional modules
 . $NWPCONFBINDIR/parcomp.sh
