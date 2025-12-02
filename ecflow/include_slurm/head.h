@@ -95,13 +95,16 @@ $ecflow_client --init=$ECF_RID
 
 # diagnostics
 env|grep SLURM || true
+
 # optional nwpconf setup, NWPCONF comes from the suite def
 export NWPCONF=%NWPCONF:%
+export DATE=%YMD:%
+export TIME=%TIME:00%
+export SUITE=%SUITE%
+
 if [ -n "$NWPCONF" ]; then
-    export NWPCONFDIR=%BASEDIR%/conf
-    export NWPCONFBINDIR=%BASEDIR%/libexec/nwpconf
-    export DATE=%YMD:%
-    export TIME=%TIME:00%
+    export NWPCONFDIR=$WORKDIR_BASE/nwprun/conf
+    export NWPCONFBINDIR=$WORKDIR_BASE/nwprun/libexec/nwpconf
 # source the main nwpconf library module, other modules must be sourced
 # in the job
     . $NWPCONFBINDIR/nwpconf.sh

@@ -8,7 +8,6 @@
 # dirty trick
 MODEL_BACK=$MODEL_STOP
 . $NWPCONFBINDIR/nwptime.sh
-#. $NWPCONFBINDIR/cosmo_model.sh
 # end of setup
 
 safe_rm_rf $LETKF_DATADIR
@@ -254,7 +253,7 @@ elif ([[ "$do_rad" == N ]] && [[ -n "$lmo_rad" ]]); then
         cp ${WORKDIR}/icon.$lmo_rad/data/${ID} \
             ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000.nc
 #        source $WORKDIR_BASE/env_python3/bin/activate
-        $SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/change_variable_netcdf.py                 \
+        $SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/change_variable_netcdf.py                 \
             --path ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000.nc \
             --variable veri_ens_member --value -1
     done
@@ -280,7 +279,7 @@ if [ "$rad_obs" = Y ]; then
                 cp ${WORKDIR}/icon.$lmo_rad/data/${ID} \
                     ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
 #                source $WORKDIR_BASE/env_python3/bin/activate
-                $SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/change_variable_netcdf.py                        \
+                $SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/change_variable_netcdf.py                        \
                     --path ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc \
                     --variable veri_ens_member --value $n
             done
@@ -290,7 +289,7 @@ if [ "$rad_obs" = Y ]; then
                 cp ${WORKDIR}/icon/data/${ID} \
                     ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc
 #                source $WORKDIR_BASE/env_python3/bin/activate
-                $SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/change_variable_netcdf.py                        \
+                $SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/change_variable_netcdf.py                        \
                     --path ${LETKF_WORKDIR}/input/fof_radar_id-${ID:13:6}_${DATES}${TIMES}0000_ens$n3.nc \
                     --variable veri_ens_member --value $n
             done

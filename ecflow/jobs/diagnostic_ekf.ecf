@@ -23,14 +23,14 @@ cp $NWPCONFDIR/$NWPCONF/mail.txt .
 #source $WORKDIR_BASE/env_python3/bin/activate
 
 # Read ekf data
-$SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/read_ekf.py --folder $LETKF_ARCHIVE --report $REPORT
+$SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/read_ekf.py --folder $LETKF_ARCHIVE --report $REPORT
 
 # Read LHN data
 if [[ "%SUITE%" == "icon"* ]]; then
-    $SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/read_data_lhn.py --folder $LETKF_ARCHIVE \
+    $SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/read_data_lhn.py --folder $LETKF_ARCHIVE \
                 --lencyc $LEN_CYCLE --leniau $(( DT_IAU / 120 )) --timestep $TIME_STEP
 elif [[ "%SUITE%" == "cosmo"* ]]; then
-    $SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/read_data_lhn_cosmo.py --folder $LETKF_ARCHIVE \
+    $SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/read_data_lhn_cosmo.py --folder $LETKF_ARCHIVE \
                 --lencyc $LEN_CYCLE --sri_freq $MODEL_LHN_DT
 fi
 
@@ -38,12 +38,12 @@ fi
 last_date=$(head -n 1 'last_date.txt')
 
 # Plot EKF and LHN data (using the same value of "last_date")
-$SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/plot_ekf.py --report $REPORT --lencyc \
+$SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/plot_ekf.py --report $REPORT --lencyc \
                 $LEN_CYCLE  --last_date $last_date
 if [[ "%SUITE%" == "icon"* ]]; then
-    $SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/plot_data_lhn.py --csv_folder $WORKDIR
+    $SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/plot_data_lhn.py --csv_folder $WORKDIR
 elif [[ "%SUITE%" == "cosmo"* ]]; then
-    $SIMC_TOOLS python3 %BASEDIR%/ecflow/script_python3/plot_data_lhn_cosmo.py --lencyc $LEN_CYCLE  \
+    $SIMC_TOOLS python3 $WORKDIR_BASE/nwprun/ecflow/script_python3/plot_data_lhn_cosmo.py --lencyc $LEN_CYCLE  \
                 --last_date $last_date
 fi
 
