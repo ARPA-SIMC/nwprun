@@ -174,7 +174,7 @@ class Model:
         fam.add_task(self.conf['modelname']) #.add_event("started")
         if self.conf['postproc']:
             if self.conf['postproctype'] == "async":
-                fam.add_task(self.conf['postprocname']) #.add_trigger("./"+self.conf['modelname']+":started == set")
+                fam.add_task(self.conf['postprocname']).add_trigger("./"+self.conf['modelname']+" == active")
             else:
 # in this case WALL_TIME should be adapted (reduced)
                 fam.add_task(self.conf['postprocname']).add_trigger("./"+self.conf['modelname']+" == complete")
