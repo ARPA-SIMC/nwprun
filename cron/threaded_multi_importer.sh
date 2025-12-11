@@ -196,19 +196,6 @@ import_one() {
 }
 
 
-periodic_check() {
-# need a dataset cleanup?
-    local now
-    now=`date -u '+%Y%m%d'`
-    if [ "$now" != "$lastcleanup" ]; then
-	log "performing daily cleanup"
-	arki_dailycleanup $ARKI_CONF
-#	arki-check --fix --repack --config=$ARKI_CONF
-	import_signal_dailycleanup 20 || true
-	lastcleanup=$now
-    fi
-}
-
 unset LANG
 if [ -n "$1" ]; then
     thread=$1

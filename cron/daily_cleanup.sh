@@ -26,13 +26,21 @@ nonunique_exit
 exec >>$LOGDIR/`basename $0`.log 2>&1
 
 log "cleaning import and download directories"
+# should we set ARKI_DLDIR in root conf.sh?
 ARKI_DLDIR=$WORKDIR_BASE/download
 # do not clean download directory on g100 until there is space (Iride project & c.)
 if [ "$HPC_SYSTEM" = "g100" -o "$HPC_SYSTEM" = "leonardo" ]; then
     unset ARKI_DLDIR
 fi
-putarki_configured_dailycleanup 10
-# arkimet and import_signal are cleaned up in configured_multi_importer.sh
+putarki_configured_dailycleanup 10 || true
+
+log "cleaning arkimet datasets from expired data"
+arki_dailycleanup $ARKI_CONF.main
+# almost equivalent to
+# arki-check --fix --repack --config=$ARKI_CONF.main
+
+log "cleaning import signal files"
+import_signal_dailycleanup 20 || true
 
 log "rotating log files"
 PATH=$PATH:/usr/sbin:/sbin

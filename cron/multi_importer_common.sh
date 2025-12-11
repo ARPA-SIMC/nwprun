@@ -80,8 +80,7 @@ import_loop() {
 	    [ -n "$mustexit" ] && { log "exiting on signal"; exit 1; } || true
 	    [ -n "$mustreload" ] && { log "reloading on signal"; exec "$0" "$@"; } || true
 	    sleep $tmout
-	    log "performing check"
-	    periodic_check
+	    log "nothing to do"
 	fi
     done
 
