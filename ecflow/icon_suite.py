@@ -38,7 +38,7 @@ if hpcenv == "leonardo":
         "NNODES_MEC": 6,
         "NTASKS_POSTPROC": 2,
         "WALL_TIME_PREMODEL": "00:20:00",
-        "WALL_TIME_MODEL": "00:20:00",
+        "WALL_TIME_MODEL": "00:10:00",
         "WALL_TIME_ENDA": "00:30:00",
         "WALL_TIME_MEC": "00:30:00"
     })
@@ -51,7 +51,7 @@ else: #default g100
         "NNODES_MEC": 8,
         "NTASKS_POSTPROC": 2,
         "WALL_TIME_PREMODEL": "00:20:00",
-        "WALL_TIME_MODEL": "00:20:00",
+        "WALL_TIME_MODEL": "00:10:00",
         "WALL_TIME_ENDA": "00:30:00",
         "WALL_TIME_MEC": "00:30:00"
     })
