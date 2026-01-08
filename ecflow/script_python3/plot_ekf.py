@@ -507,15 +507,15 @@ handles_24h = []
 handles_24h.append(Line2D([0], [0], color=cols_st[0], linewidth=15, label="Assimilated"))
 handles_24h.append(Line2D([0], [0], color=cols_st[1], linewidth=15, label="Passive"))
 handles_24h.append(Line2D([0], [0], color=cols_st[2], linewidth=15, label="Rejected"))
-leg_24h = fig_24h.legend(loc='center', handles=handles_24h, handlelength=3, ncol=3,
-                     bbox_to_anchor=(0.5, -0.1), prop={'size': size+2})
-fig_24h.gca().add_artist(leg_24h)
-leg_30d = fig_30d.legend(loc='center', handles=handles_24h, handlelength=3, ncol=3,
-                     bbox_to_anchor=(0.5, -0.1), prop={'size': size+2})
-fig_30d.gca().add_artist(leg_30d)
-leg_365d = fig_365d.legend(loc='center', handles=handles_24h, handlelength=3, ncol=3,
-                     bbox_to_anchor=(0.5, -0.1), prop={'size': size+2})
-fig_365d.gca().add_artist(leg_365d)
+fig_24h.legend(handles=handles_24h, loc='upper center', ncol=3,
+               bbox_to_anchor=(0.5, -0.07), bbox_transform=fig_24h.transFigure,
+               prop={'size': size+2}, frameon=True)
+fig_30d.legend(handles=handles_24h, loc='upper center', ncol=3,
+               bbox_to_anchor=(0.5, -0.07), bbox_transform=fig_30d.transFigure,
+               prop={'size': size+2}, frameon=True)
+fig_365d.legend(handles=handles_24h, loc='upper center', ncol=3,
+                bbox_to_anchor=(0.5, -0.07), bbox_transform=fig_365d.transFigure,
+                prop={'size': size+2}, frameon=True)
 
 # Plot title and save
 plot_title_and_save(fig_24h,  "Available observations", '24 hours', dt_24hbf, dt_last,
@@ -608,10 +608,10 @@ for o_type in report:
                                label=var_dict[int(obs_varno[ov])]))
     ncolumn     = 4
     anchor_y    =  -(0.1 + 0.02*(np.ceil(len(handles_30d_rep)/ncolumn)-1))
-    leg_30d_rep = fig_30d_rep.legend(loc='center', handles=handles_30d_rep, 
-                        handlelength=3, ncol=ncolumn, bbox_to_anchor=(0.5, anchor_y), 
-                        prop={'size': size+2})
-    fig_30d_rep.gca().add_artist(leg_30d_rep)
+    fig_30d_rep.legend(loc='upper center', handles=handles_30d_rep,
+                       handlelength=3, ncol=ncolumn, 
+                       bbox_to_anchor=(0.5, -0.07), bbox_transform=fig_30d_rep.transFigure,
+                       prop={'size': size+2}, frameon=True)
 
     # Plot title and save
     plot_title_and_save(fig_30d_rep, "%s: observations" %o_type, '30 days',  dt_30dbf,
@@ -661,10 +661,10 @@ for o_type in report:
                                label=var_dict[int(obs_varno[ov])]))
     ncolumn      = 4
     anchor_y     =  -(0.1 + 0.02*(np.ceil(len(handles_365d_rep)/ncolumn)-1))
-    leg_365d_rep = fig_365d_rep.legend(loc='center', handles=handles_365d_rep,
-                        handlelength=3, ncol=ncolumn, bbox_to_anchor=(0.5, anchor_y),
-                        prop={'size': size+2})
-    fig_365d_rep.gca().add_artist(leg_365d_rep)
+    fig_365d_rep.legend(loc='upper center', handles=handles_365d_rep,
+                        handlelength=3, ncol=ncolumn,
+                        bbox_to_anchor=(0.5, -0.07), bbox_transform=fig_365d_rep.transFigure,
+                        prop={'size': size+2}, frameon=True)
 
     # Plot title and save
     plot_title_and_save(fig_365d_rep, "%s: observations" %o_type, '365 days',  
@@ -747,10 +747,10 @@ for o_type in report:
                                label=chk_dict[int(lst30d_ind_chk[ov])]))
     ncolumn     = 3
     anchor_y    =  -(0.1 + 0.02*(np.ceil(len(handles_30d_chk)/ncolumn)-1))
-    leg_30d_chk = fig_30d_chk.legend(loc='center', handles=handles_30d_chk,
-                        handlelength=3, ncol=ncolumn, bbox_to_anchor=(0.5, anchor_y),
-                        prop={'size': size+2})
-    fig_30d_chk.gca().add_artist(leg_30d_chk)
+    fig_30d_chk.legend(loc='upper center', handles=handles_30d_chk,
+                       handlelength=3, ncol=ncolumn,
+                       bbox_to_anchor=(0.5, -0.07), bbox_transform=fig_30d_chk.transFigure,
+                       prop={'size': size+2}, frameon=True)
 
     # Plot title and save
     plot_title_and_save(fig_30d_chk, "%s: checks for non assimilated observations" \
@@ -805,10 +805,10 @@ for o_type in report:
                                label=chk_dict[int(lst365d_ind_chk[ov])]))
     ncolumn      = 3
     anchor_y     =  -(0.1 + 0.02*(np.ceil(len(handles_365d_chk)/ncolumn)-1))
-    leg_365d_chk = fig_365d_chk.legend(loc='center', handles=handles_365d_chk,
-                        handlelength=3, ncol=ncolumn, bbox_to_anchor=(0.5, anchor_y),
-                        prop={'size': size+2})
-    fig_365d_chk.gca().add_artist(leg_365d_chk)
+    fig_365d_chk.legend(loc='upper center', handles=handles_365d_chk,
+                        handlelength=3, ncol=ncolumn,
+                        bbox_to_anchor=(0.5, -0.07), bbox_transform=fig_365d_chk.transFigure,
+                        prop={'size': size+2}, frameon=True)
 
     # Plot title and save
     plot_title_and_save(fig_365d_chk, "%s: checks for non assimilated observations" \
