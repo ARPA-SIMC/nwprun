@@ -13,7 +13,7 @@ esegue le seguenti operazioni:
 
  * carica una configurazione specifica `prod/$CONF_PREFIX$PROCNAME` nel
    ramo `nwprun/conf/`
- * evita l'esecuzione concorrente di diverse istanze dello script
+ * evita l'esecuzione concorrente di diverse istanze dello stesso script
  * ridireziona stdout e stderr su un file di log `$LOGDIR/`basename
    $0`
  * gestisce i segnali kill e hangup, in particolare:
@@ -37,8 +37,8 @@ esegue le seguenti operazioni:
    (v. sotto) viene ripetutamente richiamata finché essa non dichiara che
    tutti i dati sono stati scaricati o finché non è passato il tempo massimo
    consentito per lo scaricamento
- * aggiorna lo stato dello script nel ramo di configurazione indipendetemente
-   dal successo o meno dello scaricamento
+ * aggiorna lo stato dello script nel ramo di configurazione
+   indipendentemente dal successo o meno dello scaricamento
  * Passa all'istante successivo (+`$PROC_STEP`) e ricomincia il ciclo
    di lavoro.
 
@@ -71,7 +71,7 @@ indicate a `main_loop` che tutti i dati sono stati scaricati e quindi
 si può passara all'istante di riferimento successivo, `retval=1` per
 indicare che non tutti i dati sono stati scaricati, per cui
 `main_loop` deve effettuare un ciclo di attesa e richiamare `get_one`
-se il tempo totale di attesa non è scaduto`, `getval=2` per indicare
+se il tempo totale di attesa non è scaduto, `getval=2` per indicare
 che il dato corrente non è disponibile o completo ma esiste un dato
 successivo. La funzione dovrebbe gestire gli errori in sé stessa e
 nelle sottofunzioni con le modalità indicate nell'esempio.
