@@ -88,11 +88,13 @@ get_one() {
     retval=0 # default return status: finished
 
     if [ -z "$foundrun" ]; then
+        log "searching for icon_new.bz2"
 	icon_new=$(curl -s --netrc-file $WGETRC https://data.dwd.de/data/$DATE/out${TIME:0:2}/icon_new.bz2 | bunzip2 -c)
 	# if not available the previous command calls error trap and returns
 	# to be picky we should check here the contents of icon_new
 	foundrun=Y
     fi
+    log "icon_new.bz2 found"
 
     while true; do
         donenothing=Y

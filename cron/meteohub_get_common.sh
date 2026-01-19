@@ -3,7 +3,7 @@
 
 # define custom functions
 get_setup() {
-    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=icon_eu_dwd"
+    putarki_configured_setup $PROCNAME "reftime=$DATE$TIME" "format=grib" "signal=$MODEL_SIGNAL"
 }
 
 get_cleanup() {

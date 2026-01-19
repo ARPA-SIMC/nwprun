@@ -1,5 +1,7 @@
 # meteohub request name
 MH_REQ=schedtestml
+# arkimet signal name
+MODEL_SIGNAL=icon_2I_fcast
 
 # TODO disable output to avoid filling filesystem
 IMPORT_THREAD=output
