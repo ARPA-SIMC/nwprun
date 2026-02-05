@@ -230,7 +230,7 @@ class Verification:
 
     def add_to(self, node):
         fam = node.add_family("verification")
-        fam.add_trigger("./get_model == complete && ./get_obs == complete")
+        fam.add_trigger("(./get_model == complete || ./eps_members == complete) && ./get_obs == complete")
         task_mec = fam.add_task("mec_verif")
 
 # Add an ensemble data assimilation family to a suite, to be run
