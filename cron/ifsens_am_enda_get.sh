@@ -40,6 +40,7 @@ get_one() {
             if [ -f "$UPLDIR/$file" ]; then
                 # process $file
                 log "file $file successfully downloaded and unpacked"
+		check_reftime $UPLDIR/$file # if this fails function exits with donenothing set
                 putarki_configured_archive $PROCNAME $UPLDIR/${file}
                 log "file ${file} successfully sent to archive"
                 unset file_list[$i]
@@ -47,6 +48,7 @@ get_one() {
             elif [ -f "$UPLDIR_BAK/$file" ]; then
                 # process $file
                 log "file $file successfully downloaded from backup and unpacked"
+		check_reftime $UPLDIR/$file # if this fails function exits with donenothing set
                 putarki_configured_archive $PROCNAME $UPLDIR_BAK/${file}
                 log "file ${file} successfully sent to archive"
                 unset file_list[$i]

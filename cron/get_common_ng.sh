@@ -16,6 +16,21 @@ increment_datetime() {
 }
 
 
+check_reftime() {
+    local gribtime reftime
+    # :s ensures that they are zero-padded
+    gribtime=$($SIMC_TOOLS grib_get -w count=1 -p dataDate:s,dataTime:s $1)
+    gribtime=${gribtime/ /} # remove space
+    gribtime=${gribtime::10} # remove minutes if present
+    reftime=$DATE$TIME
+    reftime=${reftime::10} # remove minutes if present
+    if [ "$gribtime" != "$reftime" ]; then
+	log "found file with wrong reftime $gribtime instead of $reftime"
+	return 1
+    fi
+    }
+
+
 trap_setup() {
     # setup kill, exit and reload traps
     mustexit=

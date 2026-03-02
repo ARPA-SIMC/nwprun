@@ -71,7 +71,7 @@ indicate a `main_loop` che tutti i dati sono stati scaricati e quindi
 si può passara all'istante di riferimento successivo, `retval=1` per
 indicare che non tutti i dati sono stati scaricati, per cui
 `main_loop` deve effettuare un ciclo di attesa e richiamare `get_one`
-se il tempo totale di attesa non è scaduto, `getval=2` per indicare
+se il tempo totale di attesa non è scaduto, `retval=2` per indicare
 che il dato corrente non è disponibile o completo ma esiste un dato
 successivo. La funzione dovrebbe gestire gli errori in sé stessa e
 nelle sottofunzioni con le modalità indicate nell'esempio.
