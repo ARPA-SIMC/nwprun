@@ -1,5 +1,4 @@
 %include <sched_heavy.h>
-#include <%HPCENV%/smnd.h>
 %include <head.h>
 %include <nwpconf.h>
 
@@ -19,7 +18,6 @@ safe_rm_rf $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
 mkdir -p $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
 
 fix_ensemble_members() {
-#. ~/smnd_profile
 
 # evaluate availability and reference time
 # ensemble members
@@ -168,7 +166,7 @@ $ecflow_client --event=extra_prob
 }
 
 # use plain WMO definitions
-unset ECCODES_DEFINITION_PATH
+unset ECCODES_DEFINITION_PATH SINGULARITYENV_ECCODES_DEFINITION_PATH
 # all functions launched within () so that they use a separate environment
 # due to module incompatibility
 (fix_ensemble_members)

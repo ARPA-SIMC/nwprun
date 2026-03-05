@@ -23,7 +23,7 @@ mappe_dispatch() {
 }
 
 # use plain WMO definitions
-unset ECCODES_DEFINITION_PATH
+unset ECCODES_DEFINITION_PATH SINGULARITYENV_ECCODES_DEFINITION_PATH
 
 # poor man parallelization
 # Maps by output type
