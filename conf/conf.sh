@@ -99,7 +99,7 @@ case "$HPC_SYSTEM" in
     ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/data/definitions/definitions.edzw-2.21.0-1
 # definitions for the container, may need update when container is updated
     SINGULARITYENV_ECCODES_DEFINITION_PATH=$WORKDIR_BASE/data/definitions/definitions.cnmc-2.36.0-2:/usr/share/eccodes/definitions
-    SIMC_TOOLS="singularity exec -B $WORK -B /leonardo_scratch $WORKDIR_BASE/simctools_nwprun_r8.sif"
+    SIMC_TOOLS="singularity exec -B $WORK -B /leonardo_scratch -B /meteo_arch $WORKDIR_BASE/simctools_nwprun_r8.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/leonardo_work/smr_prod/a07smr01/LM_WorkDir/leonardo/lm/PROD/work
     CINECA_RUN_ICON=/leonardo_work/smr_prod/a07smr01/ICON_WorkDir/PROD
