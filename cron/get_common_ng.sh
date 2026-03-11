@@ -99,6 +99,7 @@ main_loop() {
 	DATETIME=$1
 	DATE=${DATETIME:0:8}
 	TIME=${DATETIME:8:4}
+	INTERACTIVE=Y
 
 	get_setup
 	get_one
@@ -112,6 +113,7 @@ main_loop() {
 	safe_rm_rf $PROC_WORKDIR
 	mkdir -p $PROC_WORKDIR
 	cd $PROC_WORKDIR
+	INTERACTIVE=N
 	
 	while true; do
 	    restore_state $PROCNAME.state || touch $NWPCONFDIR/$NWPCONF/$PROCNAME.state
