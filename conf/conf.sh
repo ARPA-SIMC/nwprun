@@ -22,7 +22,7 @@ case "$HPC_SYSTEM" in
     ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
     ECCODES_DEFINITIONS_BASE=$ECCODES_DEFINITION_PATH
-    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/eccodes_definitions/definitions.edzw
+    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/eccodes_definitions/definitions.cnmc
     SIMC_TOOLS=
     SIMC_SITE=Y
     ecflow_client=ecflow_client
