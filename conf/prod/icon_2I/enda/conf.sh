@@ -17,7 +17,7 @@ MODEL_LHN=.TRUE.
 MODEL_NH_LHN=3
 
 # for SMA interpolation and nudging, if SMA_TIME is unset SMA is not used
-SMA_INPUT=icon_eu_dwd
+SMA_INPUT=icon_eu_dwd_foricon
 SMA_ARKI_DS=$ARKI_URL/$SMA_INPUT
 #SMA_TIME=03
 
