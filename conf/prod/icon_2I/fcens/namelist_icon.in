@@ -98,74 +98,8 @@
  ldass_lhn                   = @MODEL_LHN@
 /
 
-&nwp_phy_nml
-lgrayzone_deepconv           = .false.
-inwp_gscp                    = 2,2,
-mu_rain                      = 0.5
-rain_n0_factor               = 0.1
-inwp_convection              = 1
-lshallowconv_only            = .true.
-inwp_radiation               = 4
-inwp_cldcover                = 1
-inwp_turb                    = 1
-inwp_satad                   = 1
-inwp_sso                     = 1
-inwp_gwd                     = 0
-inwp_surface                 = 1
-latm_above_top               = .true.
-ldetrain_conv_prec           = .true.
-efdt_min_raylfric            = 7200.
-itype_z0                     = 2
-icapdcycl                    = 3
-icpl_aero_conv               = 1
-icpl_aero_gscp               = 1
-icpl_o3_tp                   = 1
-dt_rad                       = 720.
-dt_conv                      = 120.,
-dt_sso                       = 120.,
-dt_gwd                       = 120.,
-lvariable_rain_n0            = .true.
-/
+@INCLUDE pertens.in@
 
-&nwp_tuning_nml
-tune_sgsclifac               = 1
-itune_albedo                 = 1
-tune_gkwake                  = 0.25
-tune_zvz0i                   = 0.85
-tune_box_liq                 = 0.04
-tune_rhebc_land              = 0.825
-tune_rcucov                  = 0.075
-tune_gfrcrit                 = 0.333
-tune_gkdrag                  = 0.0
-tune_minsnowfrac             = 0.3
-tune_box_liq_asy             = 4
-tune_gust_factor             = 7
-icpl_turb_clc                = 2
-max_calibfac_clcl            = 2
-tune_supsat_limfac           = 2.
-tune_zcsg                    = 0.25
-tune_v0snow                  = 20.
-/
-
-&turbdiff_nml
-  tkhmin        = 0.5
-  tkmmin        = 0.75
-  pat_len       = 750.
-  tur_len       = 300.
-  rat_sea       = 0.8
-  ltkesso       = .true.
-  frcsmot       = 0.2   ! these 2 switches together apply vertical smoothing of the TKE source terms
-  imode_frcsmot = 2     ! in the tropics (only), which reduces the moist bias in the tropical lower troposphere
- ! use horizontal shear production terms with 1/SQRT(Ri) scaling to prevent unwanted side effects:
-  itype_sher    = 2    
-  ltkeshs       = .true.
-  a_hshr        = 2.0
-  icldm_turb    = 2
-  q_crit        = 2.0
-  imode_tkesso  = 2
-  alpha1        = 0.125
-  rlam_heat     = 10
-/
 &lnd_nml
   ntiles         = 3
   nlev_snow      = 3
