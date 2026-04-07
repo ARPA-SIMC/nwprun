@@ -30,18 +30,24 @@ fi
 # from kenda, improve
 export GRIB_DEFINITION_PATH=$GRIB_API_EDZW/1.16.0/definitions.cnmc:$GRIB_API_EDZW/1.16.0/definitions
 export GRIB_SAMPLES_PATH=$GRIB_API_EDZW/1.16.0/samples
+# reduce NWPWAITSOLAR to avoid useless delays due to missing icon_eu data
+NWPWAITSOLAR=5400
 
+# since this is not a critical task, most errors are forgiven
 set_import_signal_method $SMA_INPUT
-if import_signal_wait $SMA_INPUT ${DATE}00 "*"; then
+import_signal_wait $SMA_INPUT ${DATE}00 "*" || true
 # retrieve Icon-EU soil moisture and interpolate it to the target grid
 # with the special DACE tool `interpolate_soil_flake`
 # improve timerange management!
-   $SIMC_TOOLS arki-query --data -o sma_$DATE$TIME.grib \
-     "Reftime:=`getarki_datetime $DATE 00`; timerange:Timedef,${SMA_TIME}h,254;product:GRIB2,,2,3,18 or GRIB2,,2,3,20;" \
-     $SMA_ARKI_DS
-   conf_template namelist.interpolate_soil_flake
-   $DACE_INTERP
-   $ecflow_client --event=found
+$SIMC_TOOLS arki-query --data -o sma_$DATE$TIME.grib \
+  "Reftime:=`getarki_datetime $DATE 00`; timerange:Timedef,${SMA_TIME}h,254;product:GRIB2,,2,3,18 or GRIB2,,2,3,20;" \
+  $SMA_ARKI_DS
+if [ -s "sma_$DATE$TIME.grib" ]; then
+    conf_template namelist.interpolate_soil_flake
+    $DACE_INTERP || true
+    if [ -s "data/sma_$DATE$TIME.grib" ]; then
+        $ecflow_client --event=found
+    fi
 fi
 
 %include <tail.h>
