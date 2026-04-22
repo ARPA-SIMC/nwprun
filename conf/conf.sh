@@ -11,7 +11,7 @@ case "$HPC_SYSTEM" in
 # url or directory of input arkimet archive
     ARKI_URL=http://maialinux.metarpa:8091/dataset
 # not really used after 202512, only for ease of definition
-    ARKI_DIR=$WORKDIR_BASE/arkimet
+    ARKI_DIR=$WORKDIR_BASE_OPE/arkimet
 # configuration for arki-scan (likely matches $ARKI_URL archive)
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=configured_importer
@@ -22,7 +22,7 @@ case "$HPC_SYSTEM" in
     ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$HOME/srcgnu/grib_api_edzw
     ECCODES_DEFINITIONS_BASE=$ECCODES_DEFINITION_PATH
-    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/eccodes_definitions/definitions.cnmc
+    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE_OPE/eccodes_definitions/definitions.cnmc
     SIMC_TOOLS=
     SIMC_SITE=Y
     ecflow_client=ecflow_client
@@ -55,7 +55,7 @@ case "$HPC_SYSTEM" in
 # url or directory of input arkimet archive
     ARKI_URL=http://login05:8090/dataset
 # not really used after 202512, only for ease of definition
-    ARKI_DIR=$WORKDIR_BASE/arkimet
+    ARKI_DIR=$WORKDIR_BASE_OPE/arkimet
 # configuration for arki-scan (likely matches $ARKI_URL archive)
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=configured_importer
@@ -64,12 +64,12 @@ case "$HPC_SYSTEM" in
     IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT
-    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
-    ECCODES_DEFINITIONS_BASE=$WORKDIR_BASE/data/definitions/definitions.cineca-2.21.0
-    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/data/definitions/definitions.edzw-2.21.0-1
+    GRIB_API_EDZW=$WORKDIR_BASE_OPE/grib_api_edzw
+    ECCODES_DEFINITIONS_BASE=$WORKDIR_BASE_OPE/data/definitions/definitions.cineca-2.21.0
+    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE_OPE/data/definitions/definitions.edzw-2.21.0-1
 # definitions for the container, may need update when container is updated
-    SINGULARITYENV_ECCODES_DEFINITION_PATH=$WORKDIR_BASE/data/definitions/definitions.cnmc-2.36.0-2:/usr/share/eccodes/definitions
-    SIMC_TOOLS="singularity exec -B /ind2/meteo -B /ind2/meteoarch $WORKDIR_BASE/simctools_nwprun_r8.sif"
+    SINGULARITYENV_ECCODES_DEFINITION_PATH=$WORKDIR_BASE_OPE/data/definitions/definitions.cnmc-2.36.0-2:/usr/share/eccodes/definitions
+    SIMC_TOOLS="singularity exec -B /ind2/meteo -B /ind2/meteoarch -B $WORK $WORKDIR_BASE_OPE/simctools_nwprun_r8.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/ind2/meteo/a07smr01/LM_WorkDir/g100/lm/PROD/work
     CINECA_RUN_ICON=/ind2/meteo/a07smr01/ICON_WorkDir/PROD
@@ -85,7 +85,7 @@ case "$HPC_SYSTEM" in
 # url or directory of input arkimet archive
     ARKI_URL=http://login01.leonardo.local:8090/dataset
 # not really used after 202512, only for ease of definition
-    ARKI_DIR=$WORKDIR_BASE/arkimet
+    ARKI_DIR=$WORKDIR_BASE_OPE/arkimet
 # configuration for arki-scan (likely matches $ARKI_URL archive)
     ARKI_CONF=$ARKI_DIR/config
     ARKI_SCAN_METHOD=configured_importer
@@ -94,12 +94,12 @@ case "$HPC_SYSTEM" in
     IMPORT_SIGNAL_BASE=$ARKI_DIR/import_signal
     ARKI_IMPROOT=$WORKDIR_BASE/import
     ARKI_IMPDIR=$ARKI_IMPROOT
-    GRIB_API_EDZW=$WORKDIR_BASE/grib_api_edzw
-    ECCODES_DEFINITIONS_BASE=$WORKDIR_BASE/data/definitions/definitions.cineca-2.21.0
-    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE/data/definitions/definitions.edzw-2.21.0-1
+    GRIB_API_EDZW=$WORKDIR_BASE_OPE/grib_api_edzw
+    ECCODES_DEFINITIONS_BASE=$WORKDIR_BASE_OPE/data/definitions/definitions.cineca-2.21.0
+    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE_OPE/data/definitions/definitions.edzw-2.21.0-1
 # definitions for the container, may need update when container is updated
-    SINGULARITYENV_ECCODES_DEFINITION_PATH=$WORKDIR_BASE/data/definitions/definitions.cnmc-2.36.0-2:/usr/share/eccodes/definitions
-    SIMC_TOOLS="singularity exec -B $WORK -B /leonardo_scratch -B /meteo_arch $WORKDIR_BASE/simctools_nwprun_r8.sif"
+    SINGULARITYENV_ECCODES_DEFINITION_PATH=$WORKDIR_BASE_OPE/data/definitions/definitions.cnmc-2.36.0-2:/usr/share/eccodes/definitions
+    SIMC_TOOLS="singularity exec -B $WORK -B /leonardo_scratch -B /meteo_arch $WORKDIR_BASE_OPE/simctools_nwprun_r8.sif"
     CINECA_ARCHIVE_POST=$WORKDIR_BASE/arkimet/archive
     CINECA_RUN=/leonardo_work/smr_prod/a07smr01/LM_WorkDir/leonardo/lm/PROD/work
     CINECA_RUN_ICON=/leonardo_work/smr_prod/a07smr01/ICON_WorkDir/PROD

@@ -2,8 +2,8 @@
 
 case "$HPC_SYSTEM" in
 g100 | leonardo ) # Cineca HPC Galileo 100
-	export PATH=$WORKDIR_BASE/srcgnu/install/bin:$PATH
-	export PYTHONPATH=$WORKDIR_BASE/srcgnu/install/lib/python3.6/site-packages
+	export PATH=$WORKDIR_BASE_OPE/srcgnu/install/bin:$PATH
+	export PYTHONPATH=$WORKDIR_BASE_OPE/srcgnu/install/lib/python3.6/site-packages
 	;;
 esac
 

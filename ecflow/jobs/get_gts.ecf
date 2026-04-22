@@ -21,7 +21,7 @@ mkdir -p $BUFR_WORKDIR
 cd $BUFR_WORKDIR
 
 # Switch to avoid recreating import_signal folders for verification
-if [[ "$SUITE" == *"verif"* ]]; then
+if ([[ "$SUITE" == *"verif"* ]] || [[ "$BUFR_ARKI_DS_CONV" == *"mars"* ]]); then
     icon_getarki_obsncdf
 else
     set_import_signal_method $BUFR_ARKI_DS_CONV

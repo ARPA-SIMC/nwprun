@@ -15,7 +15,7 @@ MODEL_DELTABD=0
 MODEL_BACK=0
 
 # MEC environment variables
-DACE_BASE=$WORKDIR_BASE/srcintel/dace_code_2.25_verif
+DACE_BASE=$WORKDIR_BASE_OPE/srcintel/dace_code_2.25_verif
 MEC_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin/mec
 LETKF_CONST=$DACE_BASE/data
 MEC_WORKDIR=$WORKDIR/mec

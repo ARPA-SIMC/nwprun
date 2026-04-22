@@ -25,13 +25,13 @@ TIME_STEP=18
 # preprocessing (interpolation)
 MODEL_PRE_WORKDIR=$WORKDIR/int2lm
 MODEL_PRE_DATADIR=$WORKDIR/int2lm/data
-MODEL_PRE_BIN=$WORKDIR_BASE/srcintel/int2lm_180226_2.05/tstint2lm
+MODEL_PRE_BIN=$WORKDIR_BASE_OPE/srcintel/int2lm_180226_2.05/tstint2lm
 # model run
 MODEL_WORKDIR=$WORKDIR/cosmo
 MODEL_DATADIR=$WORKDIR/cosmo/data
-MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1/lmparbin_all
-MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
-MODEL_STATIC=$WORKDIR_BASE/data/cosmo
+MODEL_BIN=$WORKDIR_BASE_OPE/srcintel/cosmo_180802_5.05_1/lmparbin_all
+MODEL_BIN=$WORKDIR_BASE_OPE/srcintel/cosmo_180802_5.05_1_dp/lmparbin_all
+MODEL_STATIC=$WORKDIR_BASE_OPE/data/cosmo
 MODEL_PUBLISH_CONF=Y
 
 # configuration of assimilation

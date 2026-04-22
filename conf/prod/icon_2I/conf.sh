@@ -1,9 +1,9 @@
 # Model environment variables
-MODEL_BASE=$WORKDIR_BASE/srcintel/icon_2025-04-1
+MODEL_BASE=$WORKDIR_BASE_OPE/srcintel/icon_2025-04-1
 MODEL_BIN=$MODEL_BASE/bin/icon
 ECRAD_DATA=$MODEL_BASE/data
-MODEL_STATIC=$WORKDIR_BASE/data/icon
-MODEL_PRE_BINDIR=$WORKDIR_BASE/srcintel/icontools-2.5.0/icontools
+MODEL_STATIC=$WORKDIR_BASE_OPE/data/icon
+MODEL_PRE_BINDIR=$WORKDIR_BASE_OPE/srcintel/icontools-2.5.0/icontools
 PARENTMODEL_DATADIR=$WORKDIR/input/data
 
 # Working directories for observations

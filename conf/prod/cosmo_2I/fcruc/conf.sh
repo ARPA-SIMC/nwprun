@@ -1,4 +1,4 @@
-MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_5.08/radarbin_nud
+MODEL_BIN=$WORKDIR_BASE_OPE/srcintel/cosmo_5.08/radarbin_nud
 PARENTMODEL=COSMO
 PARENTMODEL_ARKI_DS=o_lm5_ope_forecast
 PARENTMODEL_FREQINI=12

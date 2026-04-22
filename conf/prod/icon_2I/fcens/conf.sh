@@ -23,7 +23,7 @@ MODEL_DATADIR=$WORKDIR/icon.$ENS_MEMB/data
 ARKI_LOCALDIR=$WORKDIR/arki.$ENS_MEMB    # forse inutile
 
 # eps postprocessing
-FXTR_HOME=$WORKDIR_BASE/srcgnu/Fieldextra_14.0.0
+FXTR_HOME=$WORKDIR_BASE_OPE/srcgnu/Fieldextra_14.0.0
 FXTR_BIN=$FXTR_HOME/src/fieldextra_gnu_opt_omp
 FXTR_WORKDIR=$WORKDIR/fxtr
 FXTR_DATADIR=$FXTR_WORKDIR/data

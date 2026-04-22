@@ -1,4 +1,4 @@
-MODEL_BIN=$WORKDIR_BASE/srcintel/cosmo_5.08_radial_wind_noclut/radarbin_nud
+MODEL_BIN=$WORKDIR_BASE_OPE/srcintel/cosmo_5.08_radial_wind_noclut/radarbin_nud
 PARENTMODEL=COSMO
 MODEL_NUDG=.FALSE.
 MODEL_LHN=.TRUE.
@@ -116,7 +116,7 @@ MODEL_ARCHIVE_OUTPUT_ANA=$WORKDIR/archive
 # letkf analysis
 LETKF_WORKDIR=$WORKDIR/letkf
 LETKF_DATADIR=$WORKDIR/letkf/data
-LETKF_BIN=$WORKDIR_BASE/srcintel/dace_code_2.06/build/LINUX64.intel-mpi/bin/var3d
+LETKF_BIN=$WORKDIR_BASE_OPE/srcintel/dace_code_2.06/build/LINUX64.intel-mpi/bin/var3d
 
 # Radar volumes assimilation
 ACT_EMVORADO=Y
