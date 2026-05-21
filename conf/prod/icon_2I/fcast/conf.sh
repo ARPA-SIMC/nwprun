@@ -38,9 +38,9 @@ LETKF_CONST=$DACE_BASE/data
 
 # setup for remote import
 unset ARKI_IMPDIR
-if [ -n "$CINECA_MAIN_SYSTEM" ]; then
-    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
-fi
+#if [ -n "$CINECA_MAIN_SYSTEM" ]; then
+#    ARKI_SYNCDIR=$WORKDIR_BASE/import/sync.lami
+#fi
 ARKI_DLDIR=$WORKDIR_BASE/download
 CROSS_NETWORK=icon_2I_fcast_c
 VPROF_NETWORK=icon_2I_fcast_v
