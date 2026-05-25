@@ -10,7 +10,7 @@ IMPORT_THREAD=output
 #NWPWAITELAPS=1800
 # quanti secondi aspetto dopo il tempo nominale per cominciare a
 # cercare un certo dato
-NWPWAITSOLAR_RUN=7200
+NWPWAITSOLAR_RUN=4500
 # quanti secondi aspetto dopo il tempo nominale per rinunciare a
 # cercare un certo dato e passare al successivo
 NWPWAITSOLAR=43200
