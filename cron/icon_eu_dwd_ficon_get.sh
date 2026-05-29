@@ -103,7 +103,7 @@ get_one() {
             file=${file_list[$i]}
 	    rm -f $file
 	    log "starting download of $file"
-	    curl -s --netrc-file $WORKDIR_BASE/nwprun/.auth/dwd.cfg https://data.dwd.de/data/$DATE/out${TIME:0:2}/$file.bz2 | bunzip2 -c > $file
+	    timeout 120s curl -s --netrc-file $WORKDIR_BASE/nwprun/.auth/dwd.cfg https://data.dwd.de/data/$DATE/out${TIME:0:2}/$file.bz2 | bunzip2 -c > $file
 
 	    if [ -s "$file" ]; then
                 # process $file

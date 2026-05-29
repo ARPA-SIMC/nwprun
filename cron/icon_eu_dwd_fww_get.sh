@@ -50,7 +50,7 @@ get_one() {
 	    ofile=`basename $file`
 	    rm -f $ofile
 	    log "starting download of $file"
-	    curl -s "$BASEURL/$file.bz2" | bunzip2 -c > $ofile
+	    timeout 120s curl -s "$BASEURL/$file.bz2" | bunzip2 -c > $ofile
 
 	    if [ -s "$ofile" ]; then
                 # process $file
