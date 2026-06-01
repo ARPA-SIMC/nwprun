@@ -102,20 +102,17 @@ import_one() {
 		    ;;
 	    esac
 	    ;;
-	./sync.$IMPORT_THREAD/*/*) # was sync_*
+	./sync.$IMPORT_THREAD/*/*)
 	    [ -f "$1" ] || return 1
 	    upfile=${1##*/}
 	    updir=${1%/*}
 	    syncdir=${updir%/*}
-#	    syncconf=$syncdir/conf.sh
 	    syncsubdir=${updir##*/}
-#	    [ -f "$syncconf" ] || return 1 # not a sync dir
 	    case $upfile in
 		start.sh)
 		    if [ ! -f "$updir/started.sh" ]; then
 			# -R to create remote dir
-			(cd $syncdir; rsync -ptR --chmod=ug=rwX ./$syncsubdir/$upfile $SYNC_DEST)
-#			(safe_source $syncconf; cd $syncdir; rsync -ptR --chmod=ug=rwX ./$syncsubdir/$upfile $sync_dest)
+			(cd $syncdir; rsync -tR --chmod=ug=rwX ./$syncsubdir/$upfile $SYNC_DEST)
 			touch $updir/started.sh
 		    fi
 		    return 1 # 1 = nothing done
@@ -127,9 +124,8 @@ import_one() {
 			rm -f $updir/.??* $updir/*.tmp
 			if ! ls $updir | grep -v '\.sh$'>/dev/null; then
 			    (
-#				safe_source $syncconf
 				cd $syncdir
-				rsync -ptR --chmod=ug=rwX ./$syncsubdir/$upfile $SYNC_DEST
+				rsync -tR --chmod=ug=rwX ./$syncsubdir/$upfile $SYNC_DEST
 				if [ -n "$LOGSIM_SIGNAL_SYNC" -a -f "./$syncsubdir/start.sh" ]; then
                                     safe_source ./$syncsubdir/start.sh
 				    LOGSIM_PROCESS=$signal
@@ -174,7 +170,7 @@ import_one() {
 				done
 			    fi
 			    if [ -z "$excluded" ]; then
-				    rsync -ptR --chmod=ug=rwX --remove-source-files ./$syncsubdir/$upfile $SYNC_DEST
+				    rsync -tR --chmod=ug=rwX --remove-source-files ./$syncsubdir/$upfile $SYNC_DEST
 			    else
 			        log "$1 not requested, skipping"
 				    rm -f $syncsubdir/$upfile
