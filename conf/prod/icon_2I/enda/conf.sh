@@ -102,7 +102,7 @@ LETKF_DATADIR=$WORKDIR/letkf/data
 SMA_WORKDIR=$WORKDIR/sma
 
 # MEC and LETKF executables
-DACE_BASE=$WORKDIR_BASE_OPE/srcintel/dace_code_2.15
+DACE_BASE=$WORKDIR_BASE_OPE/srcintel/dace_code_2.27
 DACE_BIN=$DACE_BASE/build/LINUX64.intel-mpi/bin
 DACE_INTERP=$DACE_BIN/interpolate_soil_flake
 MEC_BIN=$DACE_BIN/mec
