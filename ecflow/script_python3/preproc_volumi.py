@@ -71,7 +71,7 @@ if usabile == False:
     if dir_quaratine != "": 
         print("Sposto il file in quarantena")
         try:
-            shutil.move(filename, dir_quaratine)
+            shutil.copy2(filename, dir_quaratine)
         except shutil.Error:
             os.remove(filename)
     else:

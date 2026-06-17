@@ -1,6 +1,7 @@
  &RADARSIM_PARAMS
   dom=1,
   icountry=3,
+  labort_if_problems_obsfiles=.true.,
   ldebug_radsim=.true.,
   lout_geom=.false.,
   loutradwind=.true.,
