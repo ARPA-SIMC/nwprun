@@ -300,7 +300,7 @@
               ! [+ default: '']
 
    ! Variables to take from deterministic run:
-   par_fc_det = ''! 'SMA_ANA'
+   par_fc_det = 'SMA_ANA'
 
    ! Write analysis increments
    out_anin    = T          ! write analysis increments
