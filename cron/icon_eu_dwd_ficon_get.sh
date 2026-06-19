@@ -98,8 +98,17 @@ get_one() {
 
     while true; do
         donenothing=Y
-
-        for i in ${!file_list[@]}; do # ! extract keys from array
+	# next trick numerically sorts the file_list keys, file_list
+	# is an unordered dictionary, not an array, so
+	# ${!file_list[*]} is in random order; sorting allows to
+	# download the files in approximate order of appearance on the
+	# server and speeds up transfer; IFS=Internal Field Separator,
+	# not Integrated Forecast System
+	IFSBAK=$IFS
+	IFS=$'\n'
+	l=`echo "${!file_list[*]}"|sort -g` # ! extract keys from array and sort
+	IFS=$IFSBAK
+	for i in $l; do
             file=${file_list[$i]}
 	    rm -f $file
 	    log "starting download of $file"
