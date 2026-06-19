@@ -2,9 +2,12 @@
 BUFR_WORKDIR=$WORKDIR/bufr
 
 # Dataset arkimet for observations
-BUFR_ARKI_DS_CONV=$ARKI_URL/mars_bufr_conv
-BUFR_ARKI_DS_NOCONV=$ARKI_URL/mars_bufr_noconv
-BUFR_ARKI_DS_SIGNAL=mars_bufr
+#BUFR_ARKI_DS_CONV=$ARKI_URL/mars_bufr_conv
+#BUFR_ARKI_DS_NOCONV=$ARKI_URL/mars_bufr_noconv
+#BUFR_ARKI_DS_SIGNAL=mars_bufr
+BUFR_ARKI_DS_CONV=$ARKI_URL/gts_bufr_conv
+BUFR_ARKI_DS_NOCONV=$ARKI_URL/gts_bufr_noconv
+BUFR_ARKI_DS_SIGNAL=gts_bufr
 FREQ_FILE_BUFR=1 #improve
 
 # eccodes definitions

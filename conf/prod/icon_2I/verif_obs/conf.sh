@@ -21,9 +21,9 @@ LETKF_CONST=$DACE_BASE/data
 MEC_WORKDIR=$WORKDIR/mec
 
 # Dataset arkimet for observations
-BUFR_ARKI_DS_CONV=$ARKI_URL/mars_bufr_conv
-BUFR_ARKI_DS_NOCONV=$ARKI_URL/mars_bufr_noconv
-BUFR_ARKI_DS_SIGNAL=mars_bufr
+#BUFR_ARKI_DS_CONV=$ARKI_URL/mars_bufr_conv
+#BUFR_ARKI_DS_NOCONV=$ARKI_URL/mars_bufr_noconv
+#BUFR_ARKI_DS_SIGNAL=mars_bufr
 
 # Archiviazione locale files di verifica
 ARC_LOC=$WORKDIR/archive
@@ -31,10 +31,10 @@ ARC_LOC=$WORKDIR/archive
 # Stop suite in case of errors
 STOP_ON_FAIL=Y
 
-## suite timing
-#NWPWAITELAPS=14400
-## differenza tra tempo nominale e tempo di attivazione della suite
-#NWPWAITSOLAR_RUN=1800
-## dopo quando tempo rinuncio a girare la suite e passare alla successiva
-#NWPWAITSOLAR=14400
-#NWPWAITWAIT=60
+# suite timing
+NWPWAITELAPS=14400
+# differenza tra tempo nominale e tempo di attivazione della suite
+NWPWAITSOLAR_RUN=259200
+# dopo quando tempo rinuncio a girare la suite e passare alla successiva
+NWPWAITSOLAR=259200
+NWPWAITWAIT=60

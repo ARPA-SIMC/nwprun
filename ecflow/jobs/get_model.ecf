@@ -107,6 +107,13 @@ else
                 echo "File $ofile does not exist or is empty. Skipping."
                 rm -f $ofile
             fi
+
+#            # ELimino il file se ha pochi dati
+#            num_grib=`$SIMC_TOOLS grib_count $ofile`
+#            if [[ $num_grib -lt 10 ]]; then
+#                echo "File $ofile is too small. Skipping."
+#                rm -f $ofile
+#            fi
         done
 
         # Incrrease hh_back

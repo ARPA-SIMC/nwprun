@@ -19,7 +19,6 @@
    opt_fields     = 'tsurf psr qcl fr_ice pf'   ! may be not present
    grib_library   = 2                        ! GRIB-API used: 1=GRIBEX  2=GRIB2-API
    invar_det      = '@MEC_WORKDIR@/const/const.grib'   ! optional: file with invariant fields
-  invar_det      = ''
  /
 
  !===============================
