@@ -38,7 +38,7 @@
  zpbl2                       = 1000.
  lread_ana                   = @LREAD_ANA@      ! true if analysis increments are read
  ifs2icon_filename           = "@MODEL_PRE_DATADIR@/ic_@DATES@@TIMES@.nc"
- dwdfg_filename              = "/g100_work/smr_prod/ICON-EU_restart/2025061100/soil_ICON-EU_2025061100_remapped.nc"
+ dwdfg_filename              = "/g100_work/smr_prod/ICON-EU_restart/2026061700/soil_ICON-EU_2026061700_remapped.nc"
  dwdana_filename             = "@MODEL_PRE_DATADIR@/@FILEAN@"
  filetype                    = @FILETYPE@
  ana_varnames_map_file       = "map_file.ana"
@@ -257,7 +257,8 @@ icpl_o3_tp                   = 1
 dt_rad                       = 720.
 dt_conv                      = 120.,
 dt_sso                       = 120.,
-dt_gwd                       = 360.,
+dt_gwd                       = 120.,
+lvariable_rain_n0            = .true.
 /
 
 &nwp_tuning_nml
@@ -275,6 +276,9 @@ tune_box_liq_asy             = 4
 tune_gust_factor             = 7
 icpl_turb_clc                = 2
 max_calibfac_clcl            = 2
+tune_supsat_limfac           = 2.
+tune_zcsg                    = 0.25
+tune_v0snow                  = 20.
 /
 
 &turbdiff_nml
@@ -370,6 +374,7 @@ max_calibfac_clcl            = 2
  iequations     = 3
  divavg_cntrwgt = 0.50
  lcoriolis      = .true.
+ lmoist_thdyn   = .false.
 /
 
 &transport_nml
