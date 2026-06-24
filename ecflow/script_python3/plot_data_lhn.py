@@ -6,6 +6,7 @@ Script that performs the following tasks:
 -------
 Historia:
 a.d. xv Kal. Iulias anno MMDCCLXXVII A.U.C. (17-06-2024) Adefonsus fecit.
+24/06/2026 - VP - modificati assi per avere titolo figura non sovrapposto a quello dei subplot
 '''
 import argparse
 import datetime as dt
@@ -242,8 +243,18 @@ def plot_summary(df, end_date, period, save_path):
     data = df.set_index('datetime').resample(freq).mean().reset_index() # da controllare
 
     # Setting up panels
-    fig, axs = plt.subplots(nrows=4, ncols=1, figsize=(12, 10))
+    #fig, axs = plt.subplots(nrows=4, ncols=1, figsize=(12, 10))
+    fig, all_axs = plt.subplots(nrows=5, ncols=1, figsize=(12, 10.6),
+                             gridspec_kw={'height_ratios': [1, 1, 1, 1, 0.12]},
+                             constrained_layout=True)
+    axs = all_axs[:4]        # i 4 grafici, come prima
+    legend_ax = all_axs[4]   # riga extra, sottile, solo per la legenda
+    legend_ax.axis('off')    # nessun asse/frame visibile
 
+    # Extra vertical padding between the suptitle and the top subplot title
+    # (also affects spacing between subplots, but more mildly).
+    fig.set_constrained_layout_pads(h_pad=0.08)
+    
     # Panel 1: available timesteps
     ax0 = axs[0]
     ax0.bar(data['datetime'], data['percentage of available timesteps'], width=bar_width,
@@ -300,10 +311,14 @@ def plot_summary(df, end_date, period, save_path):
     plt.suptitle(suptitle_str, fontweight='bold')
 
     # Legend
-    plt.tight_layout()
-    plt.subplots_adjust(bottom=0.08)
-    fig.legend(loc='lower center', ncol=5)
+    #plt.tight_layout()
+    #plt.subplots_adjust(bottom=0.08)
+    #fig.legend(loc='lower center', ncol=5)
 
+    handles, labels = ax3.get_legend_handles_labels()
+    legend_ax.legend(handles, labels, loc='center', ncol=5, frameon=True,
+                      bbox_to_anchor=(0.5, 0.5))  
+    
     plt.savefig(save_path, dpi=DPI)
     plt.close()
 

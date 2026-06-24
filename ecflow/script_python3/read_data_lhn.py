@@ -7,6 +7,7 @@ Script that performs the following tasks:
 Historia:
 a.d. v Non. Maias anno MMDCCLXXVII A.U.C. (03-05-2024) Adefonsus fecit.
 a.d. xv Kal. Iulias anno MMDCCLXXVII A.U.C. (17-06-2024) Adefonsus mutavit.
+24/06/2026 - VP - modificata lettura blocchi file lhn.log
 '''
 import argparse
 import collections
@@ -39,7 +40,7 @@ CSV_DIR_LHN = os.environ["WORKDIR"]
 # Input parameters
 # ================
 # String associated to time information
-TIME_INFO_STR = "Diagnostics of LHN, lhn_t_inc, timestep"
+TIME_INFO_STR = "Diagnostics of RADAR obs time interpolation, lhn_dt_obs" 
 
 # Strings with info to save
 CHOSEN_STR_LIST = [
@@ -54,7 +55,7 @@ CHOSEN_STR_LIST = [
 ]
 
 # Max number of line to check for each time step
-MAX_LINES_PER_SECTION = 33
+MAX_LINES_PER_SECTION = 50 #33
 
 # =================
 # Output parameters
@@ -155,7 +156,7 @@ def read_logfile(log_fpath, empty_data_dict):
                                 data_dict[info_str][time_step_idx] = value
                     
                     # Break the loop if we reached the end of the section
-                    if ("Verification" in line) or (TIME_INFO_STR in line):
+                    if TIME_INFO_STR in line:
                         break
 
                 # Incrementing the time step counter
