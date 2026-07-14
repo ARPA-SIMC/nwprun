@@ -15,11 +15,15 @@
 
 archive_suite() {
     if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA" ]; then
-        # Save all ensemble members and determnistic
+        # Save analysis increments for the deterministic run and, then, for ensemble members
         mkdir -p  $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}
+        rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.det \
+                  $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}  || true
         rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.??? \
 		          $MODEL_ARCHIVE_OUTPUT_ANA/${DATE}${TIME}  || true
         if [ -n "$MODEL_ARCHIVE_OUTPUT_ANA_REMOTE" ]; then
+            rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.det
+                      $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
             rsync -pt $LETKF_DATADIR/laf${DATE}${TIME}0000_inc.??? 	
 		              $MODEL_ARCHIVE_OUTPUT_ANA_REMOTE || true
         fi
