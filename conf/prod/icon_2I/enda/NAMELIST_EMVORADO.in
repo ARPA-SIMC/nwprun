@@ -2,7 +2,7 @@
   dom=1,
   icountry=3,
   labort_if_problems_obsfiles=.true.,
-  ldebug_radsim=.true.,
+  ldebug_radsim=.false.,
   lout_geom=.false.,
   loutradwind=.true.,
   loutdbz=.true.,
