@@ -66,7 +66,7 @@ case "$HPC_SYSTEM" in
     ARKI_IMPDIR=$ARKI_IMPROOT
     GRIB_API_EDZW=$WORKDIR_BASE_OPE/grib_api_edzw
     ECCODES_DEFINITIONS_BASE=$WORKDIR_BASE_OPE/data/definitions/definitions.cineca-2.21.0
-    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE_OPE/data/definitions/definitions.edzw-2.21.0-1
+    ECCODES_DEFINITIONS_DWD=$WORKDIR_BASE_OPE/data/definitions/definitions.cnmc-2.21.0-1
 # definitions for the container, may need update when container is updated
     SINGULARITYENV_ECCODES_DEFINITION_PATH=$WORKDIR_BASE_OPE/data/definitions/definitions.cnmc-2.36.0-2:/usr/share/eccodes/definitions
     SIMC_TOOLS="singularity exec -B /ind2/meteo -B /ind2/meteoarch -B $WORK $WORKDIR_BASE_OPE/simctools_nwprun_r8.sif"
