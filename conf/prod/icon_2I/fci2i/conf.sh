@@ -12,10 +12,10 @@ PARENTMODEL_GRIDFILE=iconeu_dwd_foricon_grid_R03B08_N02_20231113_tiles.nc
 # invent W_SO_ICE and FR_ICE and set them to 0
 #ADD_ICE_FIELDS=Y
 # suggestion by MeteoRomania for running Icon on rocky8
-export FI_PROVIDER=tcp
+#export FI_PROVIDER=tcp
 
 # Model environment variables
-MODEL_BASE=$HOME/srcgnu/icon_test
+MODEL_BASE=$HOME/srcgnu/icon_modbuild
 MODEL_BIN=$MODEL_BASE/bin/icon
 ECRAD_DATA=$MODEL_BASE/data
 MODEL_STATIC=$HOME/data/icon
