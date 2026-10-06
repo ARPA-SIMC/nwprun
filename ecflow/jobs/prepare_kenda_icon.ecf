@@ -16,7 +16,6 @@ safe_rm_rf $LETKF_WORKDIR/input
 mkdir -p $LETKF_WORKDIR $LETKF_DATADIR
 mkdir -p $LETKF_WORKDIR/input
 cd $LETKF_WORKDIR
-set -x
 rm -f $LETKF_WORKDIR/letkf_skip $LETKF_WORKDIR/ekf* $LETKF_WORKDIR/ana_inc_0.*
 
 
@@ -53,9 +52,9 @@ else
 fi
 
 echo "Deterministic analysis:                $da"
-echo "Deterministic foffo radar:             $do_rad"
+echo "Deterministic fof radar:               $do_rad"
 if [ "$do_rad" == "Y" ]; then
-    echo "Deterministic number of foffo radar:   $n_fofrad_det "
+    echo "Deterministic number of fof radar:   $n_fofrad_det "
 fi
 echo ''
 
@@ -107,9 +106,9 @@ done
 # hopefully we have "$lma" = "$lmo" -o -z "$lmo"
 echo "Ensemble member analyses:              ${ma[*]}"
 echo "Last available analysis:               $lma"
-echo "Ensemble member foffi radar:           ${mo_rad[*]}"
-echo "Ensemble member number of foffi radar: ${n_fofrad_ens[*]}"
-echo "Last available foffo radar:            $lmo_rad"
+echo "Ensemble member fof radar:             ${mo_rad[*]}"
+echo "Ensemble member number of fof radar:   ${n_fofrad_ens[*]}"
+echo "Last available fof radar:              $lmo_rad"
 echo ''
 
 
