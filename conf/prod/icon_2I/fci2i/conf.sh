@@ -20,6 +20,11 @@ MODEL_BIN=$MODEL_BASE/bin/icon
 ECRAD_DATA=$MODEL_BASE/data
 MODEL_STATIC=$HOME/data/icon
 MODEL_PRE_BINDIR=$HOME/srcgnu/dwd_icon_tools/icontools
+OMPI_MCA_btl=self,vader,ofi
+OMPI_MCA_pml=ucx
+OMPI_MCA_osc=ucx
+#UCX_LOG_LEVEL=info
+
 
 # Dataset arkimet for observations
 ARKI_LHN_DS=$ARKI_URL/icon_2I_radar

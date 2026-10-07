@@ -1,2 +1,3 @@
-#SBATCH --ntasks=%NTASKS_MODEL%
-#SBATCH --partition=oper32
+##SBATCH --ntasks=%NTASKS_MODEL%
+#SBATCH --ntasks=288
+#SBATCH --partition=oper48
