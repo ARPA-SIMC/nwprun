@@ -43,6 +43,9 @@ $SIMC_TOOLS arki-query --data -o sma_$DATE$TIME.grib \
   "Reftime:=`getarki_datetime $DATE 00`; timerange:Timedef,${SMA_TIME}h,254;product:GRIB2,,2,3,18 or GRIB2,,2,3,20;" \
   $SMA_ARKI_DS
 if [ -s "sma_$DATE$TIME.grib" ]; then
+# temporary, ccsds compression not supported by dace code
+    $SIMC_TOOLS grib_set -s packingType=grid_simple -r sma_$DATE$TIME.grib sma_$DATE$TIME.grib.simple
+    mv sma_$DATE$TIME.grib.simple sma_$DATE$TIME.grib
     conf_template namelist.interpolate_soil_flake
     $DACE_INTERP || true
     if [ -s "data/sma_$DATE$TIME.grib" ]; then
