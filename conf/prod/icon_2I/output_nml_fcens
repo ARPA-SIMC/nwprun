@@ -37,7 +37,8 @@
  ml_varlist                   = 't_2m','td_2m','u_10m','v_10m','gust10',
                                 'tot_prec','rain_con','rain_gsp','snow_con','snow_gsp','graupel_gsp','clct',
                                 'asob_s','pres_msl','pres_sfc',
-                                'cape_ml','lpi'
+                                'cape_ml','lpi',
+                                'rh_2m','vis','dhail_mx','tmax_2m','tmin_2m'
  output_grid                  = .FALSE.
  stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
  remap                        = 1   !0 in case unstructured grid is required                
