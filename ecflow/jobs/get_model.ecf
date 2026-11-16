@@ -1,5 +1,4 @@
 %include <sched_wait.h>
-%include <%HPCENV%/smnd.h>
 %include <head.h>
 %include <nwpconf.h>
 
@@ -11,85 +10,49 @@
 
 set -x
 
-# Clean-up
-if [ -n "$MODEL_DATADIR" ]; then
-    safe_rm_rf $MODEL_DATADIR
-    mkdir -p   $MODEL_DATADIR
-    cd $MODEL_DATADIR
+if [[ $ENS_TOTAL_MEMB -gt 0 ]]; then
+    start=1
+    stop=$ENS_TOTAL_MEMB
+else
+    start=0
+    stop=0
 fi
 
-# Retrive whole forecast
-if [ $MODEL_STOP -gt 0 ]; then
-    # Define initialization date and time
-    reftime=`getarki_datetime $DATES $TIMES`
+for ENS_MEMB in $(seq $start $stop); do
 
-    # Cycle over forecast range
-    for hh in `seq 0 1 $MODEL_STOP`; do
-        # Retrieve lead time in hours and days
-        nodays=$(printf "%%02d" $(( ${hh} / 24 )))
-        nohours=$(printf "%%02d" $(( ${hh} %% 24 )))
+    if [ "$ENS_MEMB" -gt 0 ]; then
+        MODEL_ARKI_PARAM="proddef:GRIB:pf=$ENS_MEMB or GRIB:nn=$ENS_MEMB"
+        MODEL_DATADIR_MEMBER="${MODEL_DATADIR}.${ENS_MEMB}/data"
+    fi
+    # Clean-up (ENSEMBLE+DET)
+    if [ -n "$MODEL_DATADIR_MEMBER" ]; then
+       	safe_rm_rf $MODEL_DATADIR_MEMBER
+	mkdir -p   $MODEL_DATADIR_MEMBER
+	cd $MODEL_DATADIR_MEMBER
+    else
+	safe_rm_rf $MODEL_DATADIR
+	mkdir -p   $MODEL_DATADIR
+	cd $MODEL_DATADIR
+    fi
+
+
+    # Retrieve whole forecast
+    if [ $MODEL_STOP -gt 0 ]; then
+   	 # Define initialization date and time
+  	  reftime=`getarki_datetime $DATES $TIMES`
+   
+	 # Cycle over forecast range
+	 for hh in `seq 0 1 $MODEL_STOP`; do
+       		 # Retrieve lead time in hours and days
+             nodays=$(printf "%%02d" $(( ${hh} / 24 )))
+             nohours=$(printf "%%02d" $(( ${hh} %% 24 )))
     
-        # Extract data
-        ntry=2
-        timerange="timerange:Timedef,${hh}h,254"
-        ofile=${MODEL_NAME}_${DATES}${TIMES}00_+${nodays}${nohours}0000.grb
-        while [ "$ntry" -gt 0 ]; do
-            $SIMC_TOOLS arki-query --data -o $ofile \
-            "reftime:=$reftime;$timerange;$MODEL_ARKI_PARAM" $MODEL_ARKI_DS
-    
-            # if file is empty retry, otherwise exit
-            if __check_msg_num $ofile; then
-                break
-            fi
-            echo "retrying arki-query"
-            sleep 10
-            ntry=$(($ntry - 1))
-        done
-    done
-
-# Retrive all forecasts associated to a specific date (defined by $DATES$TIMES)
-# Modo standard di usare MEC per la verifica: per Enrico
-else
-    # Loop back in time
-    hh_back=0
-    while [ $hh_back -le $FC_LENGTH ]; do
-        # Retrieve forecast initialization date and time 
-        ini_date=`date_sub $DATES $TIMES $hh_back hours`
-        ini_time=`time_sub $DATES $TIMES $hh_back hours`
-
-        # Check if "ini_time" is one of the initialization times that we want
-        # to retrieve. If not, skip to next cycle
-        match_found=0
-        for valid_time in "${INI_TIMES[@]}"; do
-            if [[ "$ini_time" == "$valid_time" ]]; then
-                match_found=1
-                break
-            fi
-        done
-        if [ $match_found == 0 ]; then
-            echo "Not a valid initialization time. Skipping."
-            hh_back=$((hh_back + 1))
-            continue
-        fi
-
-        # Retrieve all lead time for this verification step
-        for hh in `seq 0 $MODEL_OUT_FREQ $VER_FREQ`; do
-            # Skip negative values of hh_back-hh (it happens when considering, for example,
-            # model field at +0h)
-            if [ $((hh_back - hh )) -lt 0 ]; then
-                break
-            fi 
-
-            # Retrieve lead time in hours and days
-            nodays=$(printf "%%02d" $(( $((hh_back - hh)) / 24 )))
-            nohours=$(printf "%%02d" $(( $((hh_back - hh)) %% 24 )))
-
             # Extract data
             ntry=2
-            reftime=`getarki_datetime $ini_date $ini_time`
-            timerange="timerange:Timedef,$((hh_back - hh))h,254"
-            ofile=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
-            while [ "$ntry" -gt 0 ]; do
+            timerange="timerange:Timedef,${hh}h,254"
+	    ofile=${MODEL_NAME}_${DATES}${TIMES}00_+${nodays}${nohours}0000.grb
+	               
+	    while [ "$ntry" -gt 0 ]; do
                 $SIMC_TOOLS arki-query --data -o $ofile \
                 "reftime:=$reftime;$timerange;$MODEL_ARKI_PARAM" $MODEL_ARKI_DS
     
@@ -98,10 +61,9 @@ else
                     break
                 fi
                 echo "retrying arki-query"
-                sleep 5
+                sleep 10
                 ntry=$(($ntry - 1))
             done
-    
             # If no model field is retrieved, skip to previous hour. 
             if [[ ! -s "$ofile" ]]; then
                 echo "File $ofile does not exist or is empty. Skipping."
@@ -116,9 +78,71 @@ else
 #            fi
         done
 
-        # Incrrease hh_back
-        hh_back=$((hh_back + 1))
-    done
-fi
+    # Retrieve all forecasts associated to a specific date (defined by $DATES$TIMES)
+    # Modo standard di usare MEC per la verifica: per Enrico
+    else
+   	 # Loop back in time
+   	 hh_back=0
+   	 while [ $hh_back -le $FC_LENGTH ]; do
+       	     # Retrieve forecast initialization date and time 
+             ini_date=`date_sub $DATES $TIMES $hh_back hours`
+             ini_time=`time_sub $DATES $TIMES $hh_back hours`
 
+             # Check if "ini_time" is one of the initialization times that we want
+             # to retrieve. If not, skip to next cycle
+             match_found=0
+             for valid_time in "${INI_TIMES[@]}"; do
+	     if [[ "$ini_time" == "$valid_time" ]]; then
+                 match_found=1
+                 break
+             fi
+            done
+            if [ $match_found == 0 ]; then
+                echo "Not a valid initialization time. Skipping."
+                hh_back=$((hh_back + 1))
+                continue
+            fi
+
+            # Retrieve all lead time for this verification step
+            for hh in `seq 0 $MODEL_OUT_FREQ $VER_FREQ`; do
+                # Skip negative values of hh_back-hh (it happens when considering, for example,
+                # model field at +0h)
+                if [ $((hh_back - hh )) -lt 0 ]; then
+                    break
+                fi 
+
+                # Retrieve lead time in hours and days
+                nodays=$(printf "%%02d" $(( $((hh_back - hh)) / 24 )))
+                nohours=$(printf "%%02d" $(( $((hh_back - hh)) %% 24 )))
+
+                # Extract data
+                ntry=2
+                reftime=`getarki_datetime $ini_date $ini_time`
+                timerange="timerange:Timedef,$((hh_back - hh))h,254"
+	        ofile=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
+                while [ "$ntry" -gt 0 ]; do
+                    $SIMC_TOOLS arki-query --data -o $ofile \
+                    "reftime:=$reftime;$timerange;$MODEL_ARKI_PARAM" $MODEL_ARKI_DS
+    
+                    # if file is empty retry, otherwise exit
+                    if __check_msg_num $ofile; then
+                        break
+                    fi
+                    echo "retrying arki-query"
+                    sleep 5
+                    ntry=$(($ntry - 1))
+                done
+    
+                # If no model field is retrieved, skip to previous hour. 
+                if [[ ! -s "$ofile" ]]; then
+                    echo "File $ofile does not exist or is empty. Skipping."
+                    rm -f $ofile
+                fi
+            done
+
+             # Increase hh_back
+            hh_back=$((hh_back + 1))
+        done
+    fi
+done
 %include <tail.h>
