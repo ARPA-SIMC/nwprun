@@ -1,0 +1,21 @@
+! Complete domain; 2km; high frequency precipitation for blending nowcasting
+
+&output_nml
+! Surface
+ filetype                     = 2                        ! output format: 2=GRIB2, 4=NETCDFv2
+ dom                          = 1
+ output_time_unit             = 2                        ! output in minutes
+ output_bounds                = 0.,360.,10.               ! start, end, increment
+ steps_per_file               = 1
+ mode                         = 1                        ! 1: forecast mode (relative t-axis), 2: climate mode (absolute t-axis)
+ include_last                 = .FALSE.
+ output_filename              = "@MODEL_DATADIR@/icon_@DATES@@TIMES@00_blend_all2km_A1P0"
+ filename_format              = '<output_filename>_+<ddhhmmss>'                   ! file name base
+ ready_file                   = '@MODEL_DATADIR@/icon_@DATES@@TIMES@00_+<ddhhmmss>.rf'
+ ml_varlist                   = 'tot_prec_rate'
+ output_grid                  = .FALSE.
+ stream_partitions_ml         = 1 ! needs to be adapted if num_io_procs is increased
+ remap                        = 1   !0 in case unstructured grid is required                
+ reg_lon_def                  = 3.0,0.025,22.001
+ reg_lat_def                  = 33.7,0.02,48.901
+/
