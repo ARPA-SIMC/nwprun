@@ -55,7 +55,8 @@ export POSTPROC_FUNC=icon_postproc
 rm -f icon_*_hzero_all2km_*_*.grb
 case "$SUITE" in
     *fcruc*)
-        putarki_configured_model_output $(($MODEL_STOP + 1 + 30)) # add 5 10' extra output time levels for the first 6h
+#        putarki_configured_model_output $(($MODEL_STOP + 1 + 30)) # add 5 10' extra output time levels for the first 6h
+        putarki_configured_model_output $(($MODEL_STOP + 1))
         ;;
     *)
         putarki_configured_model_output $(($MODEL_STOP + 1))

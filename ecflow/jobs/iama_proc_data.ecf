@@ -4,18 +4,26 @@
 %include <head.h>
 %include <nwpconf.h>
 %include <head_iama.h>
+
+#---------------------------------------------------------------------------------------------------
+# Common post-processing of raw kenda outputs for IAMA analysis 
+# 1) subarea
+# 2) re-arrange data to one file for each typeOfLevel/parameter
+# 3) convert processing lenght of non-instantaneous data to 1 hour (only forecasts)
+# 4) convert all timeranges to analysis
+#---------------------------------------------------------------------------------------------------
+
 set -x
-echo "Hello world!"
 echo "Running: iama_proc_data.ecf "$(date -u)
 
 # Setup dependent on iama resolution
 if [ $RESOLUTION = 5 ] ; then
   IAMA_ZOOM=$IAMA5_ZOOM
-  IAMA_USE_FOR=IAMA5_USE_FOR
+  IAMA_USE_FOR=$IAMA5_USE_FOR
 
 elif [ $RESOLUTION = 2 ] ; then
   IAMA_ZOOM=$IAMA2_ZOOM
-  IAMA_USE_FOR=IAMA2_USE_FOR
+  IAMA_USE_FOR=$IAMA2_USE_FOR
 
 fi
 
@@ -29,7 +37,8 @@ else
   in_range=$(head -n 1 ${SOURCE_TAG} |cut -d \  -f 1)
 fi
 
-# 1) cut required subdomain
+#---------------------------------------------------------------------------------------------------
+# 1) Cut required subdomain
 
 rm -f ??.grib.zoom
 zw=$(echo $IAMA_ZOOM | awk '{print $1}')
@@ -38,9 +47,10 @@ ze=$(echo $IAMA_ZOOM | awk '{print $3}')
 zn=$(echo $IAMA_ZOOM | awk '{print $4}')
 
 for file in $(ls ??.grib static.grib) ; do
-  $SIMC_TOOLS vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=index --ix=$zw --iy=$zs --fx=$ze --fy=$zn ${file} ${file}.zoom
+  $SIMC_TOOLS_IAMA vg6d_transform --trans-mode=s --trans-type=zoom --sub-type=index --ix=$zw --iy=$zs --fx=$ze --fy=$zn ${file} ${file}.zoom
 done
 
+#---------------------------------------------------------------------------------------------------
 # 2) Re-arrange input grib: write separate files with 12 timestamps for each typeOfLevel/parameter/
 # - modify reftime and timerange: istantaneous fields are written as anlysis with reftime+1h,
 #   non-instanteous are written as processed analysis with reftime unchanged (ie. beginning of processing interval)
@@ -48,22 +58,31 @@ done
 # Encoding for type of levels (grib2: typeOfFirstFixedSurface):
 #   1=surface, 100=isobaric (cloud layers), 101=MSL, 103=height above ground, 106=depth, 150=model level/layer
 
-rm -f split.filt *_*_*_*.grib
+rm -f split.filt *_*_*_*_*.grib
 echo write \"[productDefinitionTemplateNumber]_[typeOfFirstFixedSurface:i]_[discipline]_[parameterCategory]_[parameterNumber].grib\"\; > split.filt
 grib_filter split.filt ??.grib.zoom static.grib.zoom
 
-%include <tail.h>
-
-# 3) If processing forecast, de-cumulate processed fields
+#---------------------------------------------------------------------------------------------------
+# 3) If processing forecast, adjust processed fields: set PDTN 0->1 8->11, set lenght of timerange to 1 hour
 
 if [ $in_range -gt 0 ] ; then
-  echo "ToDo"
+  for file in $(ls 0_*_*_*_*.grib) ; do
+    fileout=$(echo $file | sed 's/^0/1/')
+    grib_set -s productDefinitionTemplateNumber=1 $file $fileout
+  done
+  for file in $(ls 8_*_*_*_*.grib) ; do
+    fileout=$(echo $file | sed 's/^8/11/')
+    grib_set -s productDefinitionTemplateNumber=11,typeOfTimeIncrement=2 $file ${fileout}.org
+    tosp=$(grib_get -p typeOfStatisticalProcessing ${fileout}.org | head -n 1)
+    $SIMC_TOOLS_IAMA vg6d_transform --trans-mode=p --comp-stat-proc=${tosp} --comp-step='0 01' ${fileout}.org $fileout
+  done
 fi
 
+#---------------------------------------------------------------------------------------------------
 # 4) Convert reference times and timeranges to analysis
 
 for file in $(ls 1_*_*_*_*.grib 11_*_*_*_*.grib) ; do
-  $SIMC_TOOLS /usr/libexec/ma_utils/grib_forc2ana.exe -proc $file ${file}.ana
+  $SIMC_TOOLS_IAMA /usr/libexec/ma_utils/grib_forc2ana.exe -proc $file ${file}.ana
 done
 
 %include <tail.h>

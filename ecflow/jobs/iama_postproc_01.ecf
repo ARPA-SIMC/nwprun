@@ -1,10 +1,76 @@
+#!/bin/bash
 %include <sched_wait.h>
-%include <%HPCENV%/smnd.h>
+%include <%HPCENV%/modules_iama.h>
 %include <head.h>
 %include <nwpconf.h>
 %include <head_iama.h>
 
-echo "Running: iama_postproc_01.ecf"
+#---------------------------------------------------------------------------------------------------
+# Post-processing of "phyiscal" turbulent fields (U*, MO and PTG based on model surface fluxes)
+# Input: one file per each parameter, each with 12 timestamps, encodes as grib2 analysis
+#   Input file names have the form: $a_$b_$c_$d_$d.grib.ana
+#   $a=productDefinitionTemplateNumber
+#   $b=typeOfFirstFixedSurface:i
+#   $c=discipline
+#   $d=parameterCategory
+#   $e=parameterNumber
+#
+# Output: 3 files, with the same structre of input files
+#---------------------------------------------------------------------------------------------------
 
+set -x
+echo "Running: iama_postproc_01.ecf"
+cd $WORKDIR/${RESOLUTION}km
+
+#---------------------------------------------------------------------------------------------------
+# 1) Stability class
+
+echo "Process Stabilty Class"
+rm -f tmp1.grb tmp2.grb 11_1_0_4_9.grib.ana2 11_1_0_5_5.grib.ana2
+
+# Input fields must be instantaneous: re-run grib_forc2ana without the "-proc" option 
+$SIMC_TOOLS_IAMA /usr/libexec/ma_utils/grib_forc2ana.exe 11_1_0_4_9.grib 11_1_0_4_9.grib.ana2
+$SIMC_TOOLS_IAMA /usr/libexec/ma_utils/grib_forc2ana.exe 11_1_0_5_5.grib 11_1_0_5_5.grib.ana2
+
+fu10=1_103_0_2_2.grib.ana     # B11003
+fv10=1_103_0_2_3.grib.ana     # B11004
+sw_budg=11_1_0_4_9.grib.ana2  # B14197
+lw_budg=11_1_0_5_5.grib.ana2  # B14196
+alb=1_1_0_19_1.grib.ana       # B14019
+cat $fu10 $fv10 $sw_budg $lw_budg $alb >> tmp1.grb
+
+# Encode all input fields as "surface"
+grib_set -s typeOfFirstFixedSurface=1,scaleFactorOfFirstFixedSurface=0,scaledValueOfFirstFixedSurface=0 tmp1.grb tmp2.grb
+
+# Evaluate PGT
+$SIMC_TOOLS_IAMA vg6d_transform --output-variable-list=B11193 tmp2.grb 1_1_0_7_202.grib.ana
+
+#---------------------------------------------------------------------------------------------------
+# 2) Physical-derived turbolence fields
+
+echo "Process Physical-derived turbolence fields"
+rm -f 11_1_0_2_17.grib.ana2 11_1_0_2_18.grib.ana2 11_1_0_0_11.grib.ana2 *.grib.ana*.sup ustar.grb mo.grb
+
+# Input fields must be instantaneous: re-run grib_forc2ana without the "-proc" option 
+$SIMC_TOOLS_IAMA /usr/libexec/ma_utils/grib_forc2ana.exe 11_1_0_2_17.grib 11_1_0_2_17.grib.ana2
+$SIMC_TOOLS_IAMA /usr/libexec/ma_utils/grib_forc2ana.exe 11_1_0_2_18.grib 11_1_0_2_18.grib.ana2
+$SIMC_TOOLS_IAMA /usr/libexec/ma_utils/grib_forc2ana.exe 11_1_0_0_11.grib 11_1_0_0_11.grib.ana2
+
+t2m=1_103_0_0_0.grib.ana
+td2m=1_103_0_0_6.grib.ana
+ps=1_1_0_3_0.grib.ana
+umfl=11_1_0_2_17.grib.ana2
+vmfl=11_1_0_2_18.grib.ana2
+shf=11_1_0_0_11.grib.ana2
+
+#  Encode all input fields as "surface"
+for file in $t2m $td2m $ps $umfl $vmfl $shf ; do
+  grib_set -s typeOfFirstFixedSurface=1,scaleFactorOfFirstFixedSurface=0,scaledValueOfFirstFixedSurface=0  $file ${file}.sup
+done
+
+# Evaluate U* and MO
+$SIMC_TOOLS_IAMA /usr/libexec/ma_utils/calc_ustar_mo.exe ${t2m}.sup ${td2m}.sup ${ps}.sup ${umfl}.sup ${vmfl}.sup ${shf}.sup
+mv ustar.grb 1_1_0_7_201.grib.ana
+mv mo.grb 1_1_0_7_200.grib.ana
 
 %include <tail.h>

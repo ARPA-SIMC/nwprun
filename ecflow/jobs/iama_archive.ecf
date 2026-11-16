@@ -1,12 +1,128 @@
+#!/bin/bash
 %include <sched_wait.h>
-%include <%HPCENV%/smnd.h>
+%include <%HPCENV%/modules_iama.h>
 %include <head.h>
 %include <nwpconf.h>
 %include <head_iama.h>
 
-echo "Running: iama_archive.ecf"
+#---------------------------------------------------------------------------------------------------
+# Post-processing of "phyiscal" turbulent fields (U*, MO and PTG based on model surface fluxes)
+# - select required fields and timestamps
+# - apply jpeg compression (and other post-processing for archive)
+#
+# Output: 3*.arc files in working dir (one for each parameter); comprehensive file for arkimet
+#---------------------------------------------------------------------------------------------------
 
-# remove initial time
-# send to archive
+#---------------------------------------------------------------------------------------------------
+# Function to parse command file
+
+function parse_cmd
+{
+  local line=$1
+
+  levid=$(echo $line | cut -d , -f 1)
+  toffs=$(echo $line | cut -d , -f 2)
+  dis=$(echo $line | cut -d , -f 3)
+  cat=$(echo $line | cut -d , -f 4)
+  num=$(echo $line | cut -d , -f 5)
+  alias=$(echo $line | cut -d , -f 6)
+  trange=$(echo $line | cut -d , -f 7)
+  ext=$(echo $line | cut -d , -f 8)
+  arc=$(echo $line | cut -d , -f 9)
+  jpg=$(echo $line | cut -d , -f 10)
+  arclev=$(echo $line | cut -d , -f 11)
+
+  if [ $trange = 254 ] ; then
+    pdtn=1
+  elif [ $trange = 0 -o $trange = 1 -o $trange = 2 ] ; then
+    pdtn=11
+  fi
+
+  return
+}
+
+#---------------------------------------------------------------------------------------------------
+
+set -x
+echo "Running: iama_archive.ecf"
+cd $WORKDIR/${RESOLUTION}km
+
+#---------------------------------------------------------------------------------------------------
+# 1) Setup 
+
+# Initial timme (yyyymmddhh)
+PROCTIME2=$(printf "%%02d" $PROCTIME)
+datac=${PROCDATE}${PROCTIME2}
+hhc=$PROCTIME
+
+# /ind2/meteo/a07smr03/lami/nwprun/conf/prod/icon_2I/iama
+conf_dir=${NWPCONFDIR}/${NWPCONF}
+
+# /ind2/meteo/a07smr03/lami/prod/icon_2I/iama/arc
+# arc_dir=$WORKDIR/arc
+arc_dir=/g100_scratch/usera07smr/a07smr03/iama
+
+cmd_file=${conf_dir}/iama5_control.txt
+arc_file=iama_${datac}.grib
+
+# List of levels to be archived (may be moved to a "conf" file...)
+expr_layers_uvtp="hl64566 or hld6465 or hld6364 or hld6263 or hld6162 or hld6061 or hld5960 or hld5859 or hld5758 or hld5657 hld5556 or hld5455 or hld5354 or hld5253 or hld5152 or hld5051 or hld4950 or hld4849 or hld4748 or hld4647 hld4546 or hld4445 or hld4344 or hld4243 or hld4142 or hld4041 or hld3940 or hld3839 or hld3738 or hld3637 or hld3536 or hld3435 or hld3334 or hld3233 or hld3132 or hld3031 or hld2930 or hld2829 or hld2728 or hld2627 or hld2526 or hld2425 or hld2324 or hld2223 or hld2122 or hld2021 or hld1920 or hld1819 or hld1718 or hld1617 or hld1516 or hld1415"
+expr_layers_q="hld4546 or hld4445 or hld4344 or hld4243 or hld4142 or hld4041 or hld3940 or hld3839 or hld3738 or hld3637 or hld3536 or hld3435 or hld3334 or hld3233 or hld3132 or hld3031 or hld2930 or hld2829 or hld2728 or hld2627 or hld2526 or hld2425 or hld2324 or hld2223 or hld2122 or hld2021 or hld1920 or hld1819 or hld1718 or hld1617 or hld1516 or hld1415"
+expr_levels="hl065 or hl064 or hl063 or hl062 or hl061 or hl060 or hl059 or hl058 or hl057 or hl056 or hl055 or hl054 or hl053 or hl052 or hl051 or hl050 or hl049 or hl048 or hl047 or hl046 or hl045 or hl044 or hl043 or hl042 or hl041 or hl040 or hl039 or hl038 or hl037 or hl036 or hl035 or hl034 or hl033 or hl032 or hl031 or hl030 or hl029 or hl028 or hl027 or hl026 or hl025 or hl024 or hl023 or hl022 or hl021 or hl020 or hl019 or hl018 or hl017 or hl016 or hl015 or hl014"
+
+#---------------------------------------------------------------------------------------------------
+# 2) Process
+
+# Remove comments and empty lines form command file
+rm -f tmp.cmd
+grep -vE "^\!|^$" $cmd_file > tmp.cmd
+
+# Loop on command file lines
+rm -f ${arc_dir}/${arc_file}
+while read line ; do
+  line2=$(echo $line | sed 's/  *//g')
+  parse_cmd $line2
+  if [ $arc = "N" ] ; then
+    continue
+  fi
+  filein="${pdtn}_${toffs}_${dis}_${cat}_${num}.grib.ana" 
+  echo "Process "$filein
+  rm -f ${filein}.arc
+
+  if [ $pdtn = "1" ] ; then        # Instantaneous
+    hh_mask=$hhc
+#   gs_keys="productDefinitionTemplateNumber=0,significanceOfReferenceTime=0,typeOfProcessedData=0,typeOfGeneratingProcess=0"
+    gs_keys="significanceOfReferenceTime=0,typeOfProcessedData=0,typeOfGeneratingProcess=0"
+
+  elif [ $pdtn = "11" ] ; then     # Statistically processsed
+    if [ $hhc -eq 0 ] ; then
+      hh_mask=23
+    else
+      hh_mask=$(($hhc-1))
+    fi
+#   gs_keys="productDefinitionTemplateNumber=8,significanceOfReferenceTime=0,typeOfProcessedData=0,typeOfGeneratingProcess=0"
+    gs_keys="significanceOfReferenceTime=0,typeOfProcessedData=0,typeOfGeneratingProcess=0"
+
+  fi
+  gs_cmd="-w hour!=${hh_mask}"
+
+  if [ $jpg = "Y" ] ; then
+    echo "  JPEG compression"
+    gs_cmd=${gs_cmd}" -r"
+    gs_keys=${gs_keys}",dataRepresentationTemplateNumber=40"
+  fi
+
+  if [ -z $gs_keys ] ; then
+    grib_copy $gs_cmd $filein ${filein}.arc
+  else
+    echo "grib_set -S $gs_cmd -s $gs_keys $filein ${filein}.arc"
+    grib_set -S $gs_cmd -s $gs_keys $filein ${filein}.arc
+  fi
+  cat ${filein}.arc >> ${arc_dir}/${arc_file}
+
+done < tmp.cmd
+
+tag=$(cat $SOURCE_TAG)
+echo "${PROCDATE}${PROCTIME2} $tag" >> ${arc_dir}/${SOURCE_TAG}.all
 
 %include <tail.h>

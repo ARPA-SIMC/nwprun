@@ -1,6 +1,4 @@
 %include <sched_wait.h>
-echo $SMND_PROFILE
-%include <%HPCENV%/smnd.h>
 %include <head.h>
 %include <nwpconf.h>
 

@@ -1,5 +1,4 @@
 %include <sched_heavy.h>
-#include <%HPCENV%/smnd.h>
 %include <head.h>
 %include <nwpconf.h>
 
@@ -19,7 +18,6 @@ safe_rm_rf $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
 mkdir -p $POSTPROC_EPS_WORKDIR $POSTPROC_EPS_DATADIR
 
 fix_ensemble_members() {
-. ~/smnd_profile
 
 # evaluate availability and reference time
 # ensemble members
@@ -63,7 +61,6 @@ done
 
 fxtr_compute_prob() {
 %include <%HPCENV%/modules.h>
-. ~/smnd_profile
 export OMP_NUMTHREADS=16
 
 cd $FXTR_WORKDIR
@@ -101,7 +98,6 @@ cp -a $FXTR_DATADIR/*.grib $CINECA_ARCHIVE_POST/$subdir
 
 fxtr_compute_prob_extra() {
 %include <%HPCENV%/modules.h>
-. ~/smnd_profile
 export OMP_NUMTHREADS=16
 
 cd $FXTR_WORKDIR

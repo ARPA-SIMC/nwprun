@@ -19,6 +19,7 @@ cd $MEC_WORKDIR
 # Create folders necessary for MEC
 mkdir const input output run tmp
 
+
 # Link observations
 echo "Link observations"
 for f in `ls $BUFR_WORKDIR/cdfin*.nc`; do
@@ -29,20 +30,20 @@ done
 echo "Link model output files"
 if [ $MODEL_STOP -gt 0 ]; then
     for hh in `seq 0 1 $MODEL_STOP`; do
-        # Retrieve lead time in hours and days
+    # Retrieve lead time in hours and days
         nodays=$(printf "%%02d" $(( ${hh} / 24 )))
         nohours=$(printf "%%02d" $(( ${hh} %% 24 )))
+        filename=${MODEL_NAME}_${DATES}${TIMES}00_+${nodays}${nohours}0000.grb
     
-        # Link deterministic
+    # Link deterministic
         if [[ $ENS_TOTAL_MEMB -eq 0 ]]; then 
-            filename=${MODEL_NAME}_${DATES}${TIMES}00_+${nodays}${nohours}0000.grb
             ln -fs $MODEL_DATADIR/$filename ${MEC_WORKDIR}/input
-    
+     
         # Link ensemble members (da rivedere)
         else
-            for mem in `seq 1 $ENS_TOTAL_MEMB`; do
-                mem3=`printf "%%03d" $mem`
-                ln -fs ${MODEL_DATADIR}.${mem}/$filename    \
+	    for mem in $(seq 1 $ENS_TOTAL_MEMB); do
+	    	mem3=$(printf "%%03d" $mem)
+	   	 ln -fs ${MODEL_DATADIR}.${mem}/data/$filename    \
                        ${MEC_WORKDIR}/input/${filename}.${mem3}
             done
         fi
@@ -50,74 +51,143 @@ if [ $MODEL_STOP -gt 0 ]; then
 
 # Link forecast files (same validity time)
 else
-    # Initialize arrays
-    INI_DATE_LIST=()
-    LEAD_TIME_LIST=()
+    if [ $ENS_TOTAL_MEMB -eq 0 ]; then
+    	# Initialize arrays
+        INI_DATE_LIST=()
+        LEAD_TIME_LIST=()
 
-    # Loop back in time
-    for hh_back in `seq 0 $FC_LENGTH`; do
-        # Retrieve forecast initialization date and time 
-        ini_date=`date_sub $DATES $TIMES $hh_back hours`
-        ini_time=`time_sub $DATES $TIMES $hh_back hours`
+        # Loop back in time
+        for hh_back in `seq 0 $FC_LENGTH`; do
+            # Retrieve forecast initialization date and time
+            ini_date=`date_sub $DATES $TIMES $hh_back hours`
+            ini_time=`time_sub $DATES $TIMES $hh_back hours`
 
-        # Check if "ini_time" is one of the initialization times that we want
-        # to retrieve. If not, skip to next cycle
-        match_found=0
-        for valid_time in "${INI_TIMES[@]}"; do
-            if [[ "$ini_time" == "$valid_time" ]]; then
-                match_found=1
-                break
-            fi
-        done
-        if [ $match_found == 0 ]; then
-            echo "Not a valid initialization time. Skipping."
-            hh_back=$((hh_back + 1))
-            continue
-        fi
-
-        # Retrieve model filenames for this initialization date and time
-        for hh in `seq 0 $MODEL_OUT_FREQ $VER_FREQ`; do
-            # Skip negative values of hh_back-hh
-            if [ $((hh_back - hh )) -lt 0 ]; then
-                break
-            fi
-
-            # Retrieve lead time in hours and days and filename
-            nodays=$(printf "%%02d" $(( $((hh_back - hh)) / 24 )))
-            nohours=$(printf "%%02d" $(( $((hh_back - hh)) %% 24 )))
-            mod_filename=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
-
-            # Check if this forecast file exists
-            if [[ -s $MODEL_DATADIR/$mod_filename ]]; then
-                echo "   Retrieved forecast $ini_date $initime for lead time +${hh_back}h"
-                ln -fs $MODEL_DATADIR/$mod_filename ${MEC_WORKDIR}/input
-                
-                # Save firt model filename to be used as "fg_file"
-                if [ ${#INI_DATE_LIST[@]} -eq 0 ]; then
-                    filename=$mod_filename
+            # Check if "ini_time" is one of the initialization times that we want
+            # to retrieve. If not, skip to next cycle
+            match_found=0
+            for valid_time in "${INI_TIMES[@]}"; do
+                if [[ "$ini_time" == "$valid_time" ]]; then
+		            match_found=1
+                    break
                 fi
-    
-                # Update arrays 
-                ld_time_hhmm=`printf "%%03d" $(( $hh_back * 100 ))`
-                INI_DATE_LIST+=($ini_date)
-                LEAD_TIME_LIST+=($ld_time_hhmm)
-            else
-                # No need to check for the same initialization date and time
-                break
+            done
+            if [ $match_found == 0 ]; then
+		        echo "Not a valid initialization time. Skipping."
+                hh_back=$((hh_back + 1))
+                continue
             fi
-        done
-    done
+    
+            # Retrieve model filenames for this initialization date and time
+            for hh in `seq 0 $MODEL_OUT_FREQ $VER_FREQ`; do
+                # Skip negative values of hh_back-hh
+                if [ $((hh_back - hh )) -lt 0 ]; then
+                    break
+                fi
+
+                # Retrieve lead time in hours and days and filename
+                nodays=$(printf "%%02d" $(( $((hh_back - hh)) / 24 )))
+                nohours=$(printf "%%02d" $(( $((hh_back - hh)) %% 24 )))
+                mod_filename=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
+
+                # Check if this forecast file exists
+                if [[ -s $MODEL_DATADIR/$mod_filename ]]; then
+                    echo "   Retrieved forecast $ini_date $ini_time for lead time +${hh_back}h"
+                    ln -fs $MODEL_DATADIR/$mod_filename ${MEC_WORKDIR}/input
+
+                    # Save first model filename to be used as "fg_file"
+                    if [ ${#INI_DATE_LIST[@]} -eq 0 ]; then
+                        filename=$mod_filename
+                    fi
+
+                    # Update arrays
+                    ld_time_hhmm=`printf "%%03d" $(( $hh_back * 100 ))`
+                    INI_DATE_LIST+=($ini_date)
+                    LEAD_TIME_LIST+=($ld_time_hhmm)
+                else
+                    # No need to check for the same initialization date and time
+                    break
+                fi
+            done
+        done    
+
+    else
+	for ENS_MEMB in $(seq 1 ${ENS_TOTAL_MEMB}); do
+	    memb3r=$(printf "%%03d" $ENS_MEMB)
+	    # Initialize arrays
+            if [ $ENS_MEMB -gt 1 ]; then
+		:
+	    else
+	        INI_DATE_LIST=()
+            LEAD_TIME_LIST=()
+	    fi
+
+        # Loop back in time
+        for hh_back in `seq 0 $FC_LENGTH`; do
+            # Retrieve forecast initialization date and time
+            ini_date=`date_sub $DATES $TIMES $hh_back hours`
+            ini_time=`time_sub $DATES $TIMES $hh_back hours`
+
+            # Check if "ini_time" is one of the initialization times that we want
+            # to retrieve. If not, skip to next cycle
+            match_found=0
+            for valid_time in "${INI_TIMES[@]}"; do
+                if [[ "$ini_time" == "$valid_time" ]]; then
+			        match_found=1
+              	    break
+                fi
+            done
+            if [ $match_found == 0 ]; then
+		        echo "Not a valid initialization time. Skipping."
+                hh_back=$((hh_back + 1))
+                continue
+            fi
+            # Retrieve model filenames for this initialization date and time
+            for hh in `seq 0 $MODEL_OUT_FREQ $VER_FREQ`; do
+                # Skip negative values of hh_back-hh
+                if [ $((hh_back - hh )) -lt 0 ]; then
+                    break
+                fi
+                # Retrieve lead time in hours and days and filename
+                nodays=$(printf "%%02d" $(( (hh_back - hh) / 24 )))
+                nohours=$(printf "%%02d" $(( (hh_back - hh) %% 24 )))	    	        
+                mod_filename=${MODEL_NAME}_${ini_date}${ini_time}00_+${nodays}${nohours}0000.grb
+	           		      	   	
+	        # Check if this forecast file exists
+	            if [[ -s $MODEL_DATADIR.${ENS_MEMB}/data/$mod_filename ]]; then
+                    echo "   Retrieved forecast $ini_date $ini_time for lead time +${hh_back}h"
+                    ln -fs $MODEL_DATADIR.${ENS_MEMB}/data/${mod_filename} ${MEC_WORKDIR}/input/${mod_filename}.${memb3r}
+                    if [ $ENS_MEMB -gt 1 ]; then
+		            :
+		            else
+                        # Save first model filename to be used as "fg_file"
+                        if [ ${#INI_DATE_LIST[@]} -eq 0 ]; then
+			filename=$mod_filename
+                        fi
+                        # Update arrays
+                        ld_time_hhmm=`printf "%%04d" $(( $hh_back * 100 ))`
+                        INI_DATE_LIST+=($ini_date)
+                        LEAD_TIME_LIST+=($ld_time_hhmm)
+                    fi
+		else
+                    # No need to check for the same initialization date and time
+                    break
+	 	fi
+	    done
+    	done
+	done
+    fi
 fi
 
 # Link model constant fields
 echo "Link constant fields and reference atmosphere"
 ln -fs $MODEL_STATIC/$MODEL_NAME/const.grib  ${MEC_WORKDIR}/const
 
-# Link reference atmosphere ("fg_file" in the namellist). It must be the last forecast file
-if [[ $ENS_TOTAL_MEMB -eq 0 ]]; then    
+# Link reference atmosphere ("fg_file" in the namelist). It must be the last forecast file
+
+if [[ $ENS_TOTAL_MEMB -eq 0 ]]; then
     ln -s  $MODEL_DATADIR/$filename ${MEC_WORKDIR}/input/fg_file
 else
-    ln -s  ${MODEL_DATADIR}.${mem}/$filename ${MEC_WORKDIR}/input/fg_file
+    ln -s  $MODEL_DATADIR.${ENS_TOTAL_MEMB}/data/$filename ${MEC_WORKDIR}/input/fg_file
 fi
 
 # Link constant file for KENDA
@@ -135,7 +205,7 @@ touch ${MEC_WORKDIR}/input/blklsttmp
 
 # Create namelist 
 if [ $MODEL_STOP -gt 0 ]; then
-    export VSTART=-$(( MODEL_STOP * 60 ))      
+   export VSTART=-$(( MODEL_STOP * 60 ))      
 else
     export VSTART=-$(( VER_FREQ * 60 ))
 fi
@@ -153,7 +223,6 @@ if [[ -n "$CINECA_ARCHIVE_POST" ]]; then
     subdir=$SUITE/${DATES}${TIMES}00
     mkdir -p $CINECA_ARCHIVE_POST/$subdir
     rsync -pt $MEC_WORKDIR/output/* $CINECA_ARCHIVE_POST/$subdir
-    rsync -pt $MEC_WORKDIR/run/YU*  $CINECA_ARCHIVE_POST/$subdir
+   rsync -pt $MEC_WORKDIR/run/YU*  $CINECA_ARCHIVE_POST/$subdir
 fi
-
 %include <tail.h>

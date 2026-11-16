@@ -1,6 +1,6 @@
 #!/bin/bash
 %include <sched_wait.h>
-%include <%HPCENV%/smnd.h>
+%include <%HPCENV%/modules_iama.h>
 %include <head.h>
 %include <nwpconf.h>
 %include <head_iama.h>
@@ -12,7 +12,6 @@
 # - manage incomplete input files (chech size / number of messages?)
 #
 set -x
-echo "Hello world!"
 echo "Running: iama_get_data_files.ecf "$(date -u)
 
 # Setup dependent on iama resolution
@@ -21,25 +20,24 @@ if [ $RESOLUTION = 5 ] ; then
   IAMA_INPUT_SUFFIX_ANAST=$IAMA5_INPUT_SUFFIX_ANAST
   IAMA_INPUT_SUFFIX_FOR=$IAMA5_INPUT_SUFFIX_FOR
   IAMA_INPUT_SUFFIX_FORST=$IAMA5_INPUT_SUFFIX_FORST
-  IAMA_USE_FOR=IAMA5_USE_FOR
+  IAMA_USE_FOR=$IAMA5_USE_FOR
 
 elif [ $RESOLUTION = 2 ] ; then
   IAMA_INPUT_SUFFIX_ANA=$IAMA2_INPUT_SUFFIX_ANA
   IAMA_INPUT_SUFFIX_ANAST=$IAMA2_INPUT_SUFFIX_ANAST
   IAMA_INPUT_SUFFIX_FOR=$IAMA2_INPUT_SUFFIX_FOR
   IAMA_INPUT_SUFFIX_FORST=$IAMA2_INPUT_SUFFIX_FORST
-  IAMA_USE_FOR=IAMA2_USE_FOR
+  IAMA_USE_FOR=$IAMA2_USE_FOR
 
 fi
 
 cd $WORKDIR/${RESOLUTION}km
 
 input_root=$ARKI_DLDIR/configured
-rm -f $SOURCE_TAG
-rm -f ??.grib static.grib
 
 # 1) Check input files: Kenda +1h forecasts
 nok=0
+rm -f ??.grib ??.grib.zoom *.grib.org static.grib static.grib.zoom *_*_*_*_*.grib* *.grb* $SOURCE_TAG
 for hh in $(seq 0 12) ; do
   hhm1=$(($hh-1))
   req_vtime=$(date -ud "$PROCDATE $PROCTIME + ${hh}hours" +%%Y%%m%%d%%H)                # $PROCTIME has only 1 digit..
@@ -68,23 +66,24 @@ else
 fi
 
 # Check if input files are complete
-if [ $nok -ne 13 -o oks = "N" ] ; then
-  echo "Incomplete analysis for tranche $PROCDATE $PROCTIME: expected 12, found $nok, static $oks"
-  if [ $IAMA_USE_FOR = N ] ; then
-    exit 1
+if [ $nok -ne 13 -o $oks = "N" ] ; then
+  echo "Incomplete analysis for tranche $PROCDATE $PROCTIME: expected 13, found $nok, static $oks"
+  if [ $IAMA_USE_FOR -eq 0 ] ; then
+    echo "0 $PROCTIME kenda analysis" > $SOURCE_TAG
+%include <tail.h>
   fi
 else
   echo "Analysis ok for tranche $PROCDATE $PROCTIME"
-  echo "00 kenda analysis" > $SOURCE_TAG
+  echo "0 $PROCTIME kenda analysis" > $SOURCE_TAG
 %include <tail.h>
 fi
 
 # 2) If Kenda analysis are incomplete, check Icon_2I forecasts
-for lag in $(seq 0 12 60) ; do
-  rm -f ??.grib static.grib
+for lag in $(seq 0 12 $IAMA_USE_FOR) ; do
+  rm -f ??.grib ??.grib.zoom *.grib.org static.grib static.grib.zoom *_*_*_*_*.grib* *.grb* $SOURCE_TAG
   flag=$(($lag+12))
-  rm -f ??.grib
   nok=0
+  req_rtime=$(date -ud "$PROCDATE $PROCTIME -${lag}hours" +%%Y%%m%%d%%H)
   for hh in $(seq 0 12) ; do
     req_trange_dd=$(( ($hh+$lag)/24 ))
     req_trange_hh=$(( ($hh+$lag)%%24 ))
@@ -101,7 +100,7 @@ for lag in $(seq 0 12 60) ; do
   done
 
 # Static fields
-  static_file=${input_root}/${IAMA_INPUTMODEL_FOR}:${req_vtime}::/icon_${req_rtime}00_${IAMA_INPUT_SUFFIX_FORST}_+00000000.grb.grib
+  static_file=${input_root}/${IAMA_INPUTMODEL_FOR}:${req_rtime}::/icon_${req_rtime}00_${IAMA_INPUT_SUFFIX_FORST}_+00000000.grb.grib
   if [ -s $input_file ] ; then
     ln -s $input_file ./static.grib
     oks="Y"
@@ -110,11 +109,11 @@ for lag in $(seq 0 12 60) ; do
     oks="N"
   fi
 
-  if [ $nok -ne 13 ] ; then
-    echo "Incomplete forecast +${flag} for tranche $PROCDATE $PROCTIME: expected 12, found $nok, static $oks""
+  if [ $nok -ne 13 -o $oks = "N" ] ; then
+    echo "Incomplete forecast +${flag} for tranche $PROCDATE $PROCTIME: expected 13, found $nok, static $oks"
   else
     echo "Forecast +${flag} ok for tranche $PROCDATE $PROCTIME"
-    echo "$flag icon forecast +${lag} +${flag}" > $SOURCE_TAG
+    echo "${flag} icon forecast +${lag} +${flag}" > $SOURCE_TAG
 %include <tail.h>
   fi
 done
