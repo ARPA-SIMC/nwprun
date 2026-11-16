@@ -142,7 +142,7 @@ extra_env = common_extra_env.copy()
 extra_env.update({
     "NWPCONF": "prod/icon_2I/fcruc",
     "NNODES_PREMODEL": 3,
-    "NNODES_MODEL": 16,
+    "NNODES_MODEL": 12,
     "NTASKS_POSTPROC": 2,
     "WALL_TIME_PREMODEL": "00:20:00",
     "WALL_TIME_MODEL": "01:00:00"
