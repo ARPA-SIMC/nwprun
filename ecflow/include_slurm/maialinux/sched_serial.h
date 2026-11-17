@@ -1,1 +1,1 @@
-#SBATCH --partition=net-ope
+#SBATCH --partition=net-disk

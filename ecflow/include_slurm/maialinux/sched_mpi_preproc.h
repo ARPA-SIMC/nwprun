@@ -1,2 +1,2 @@
 #SBATCH --ntasks=%NTASKS_PREMODEL%
-#SBATCH --partition=oper
+#SBATCH --partition=oper48
