@@ -1,7 +1,5 @@
-BootStrap: yum
-OSVersion: 8
-MirrorURL: http://dl.rockylinux.org/pub/rocky/%{OSVERSION}/BaseOS/x86_64/os/
-Include: dnf
+Bootstrap: docker
+From: rockylinux:9
 
 %runscript
     exec "$@"
