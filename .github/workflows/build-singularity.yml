@@ -73,14 +73,32 @@ jobs:
           sudo singularity build ${{ steps.vars.outputs.name }}.sif ${{ matrix.deffile }}
           sudo chown $USER ${{ steps.vars.outputs.name }}.sif
 
+      - name: Install ORAS
+        uses: oras-project/setup-oras@v1
+
       - name: Login to GHCR
         run: |
           echo "${{ secrets.GITHUB_TOKEN }}" | \
-          singularity registry login --username "${{ github.actor }}" --password-stdin oras://ghcr.io
-# for apptainer: singularity remote login --username "${{ github.actor }}" --password-stdin oras://ghcr.io
+          oras login ghcr.io --username "${{ github.actor }}" --password-stdin
 
       - name: Push
         run: |
-          singularity push ${{ steps.vars.outputs.name }}.sif oras://${{ steps.vars.outputs.image }}:${{ steps.vars.outputs.date }}
-          singularity push ${{ steps.vars.outputs.name }}.sif oras://${{ steps.vars.outputs.image }}:latest
+          echo '{}' > config.json
+          for TAG in ${{ steps.vars.outputs.date }} latest; do
+            oras push --image-spec v1.0 \
+              --config config.json:application/vnd.sylabs.sif.config.v1+json \
+              ${{ steps.vars.outputs.image }}:${TAG} \
+              ${{ steps.vars.outputs.name }}.sif:application/vnd.sylabs.sif.layer.v1.sif
+          done
+
+#      - name: Login to GHCR
+#        run: |
+#          echo "${{ secrets.GITHUB_TOKEN }}" | \
+#          singularity registry login --username "${{ github.actor }}" --password-stdin oras://ghcr.io
+## for apptainer: singularity remote login --username "${{ github.actor }}" --password-stdin oras://ghcr.io
+
+#      - name: Push
+#        run: |
+#          singularity push ${{ steps.vars.outputs.name }}.sif oras://${{ steps.vars.outputs.image }}:${{ steps.vars.outputs.date }}
+#          singularity push ${{ steps.vars.outputs.name }}.sif oras://${{ steps.vars.outputs.image }}:latest
 
