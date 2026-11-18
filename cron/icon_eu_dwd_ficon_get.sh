@@ -82,39 +82,51 @@ get_cleanup() {
 
 get_one() {
     # it is already converted to _ng style with retval
-    trap "retval=1; return 0" ERR
+    trap "retval=1; rm -f /tmp/*.$$.bz2; return 0" ERR
     # propagate the error trap to called functions
     set -o errtrace
     retval=0 # default return status: finished
 
     if [ -z "$foundrun" ]; then
         log "searching for icon_new.bz2"
-	icon_new=$(curl -s --netrc-file $WGETRC https://data.dwd.de/data/$DATE/out${TIME:0:2}/icon_new.bz2 | bunzip2 -c)
-	# if not available the previous command calls error trap and returns
-	# to be picky we should check here the contents of icon_new
-	foundrun=Y
+        icon_new=$(curl -s --netrc-file $WGETRC https://data.dwd.de/data/$DATE/out${TIME:0:2}/icon_new.bz2 | bunzip2 -c)
+        # if not available the previous command calls error trap and returns
+        # to be picky we should check here the contents of icon_new
+	log "icon_new.bz2 found"
+        foundrun=Y
     fi
-    log "icon_new.bz2 found"
 
     while true; do
         donenothing=Y
-	# next trick numerically sorts the file_list keys, file_list
-	# is an unordered dictionary, not an array, so
-	# ${!file_list[*]} is in random order; sorting allows to
-	# download the files in approximate order of appearance on the
-	# server and speeds up transfer; IFS=Internal Field Separator,
-	# not Integrated Forecast System
-	IFSBAK=$IFS
-	IFS=$'\n'
-	l=`echo "${!file_list[*]}"|sort -g` # ! extract keys from array and sort
-	IFS=$IFSBAK
-	for i in $l; do
+        # next trick numerically sorts the file_list keys, file_list
+        # is an unordered dictionary, not an array, so
+        # ${!file_list[*]} is in random order; sorting allows to
+        # download the files in approximate order of appearance on the
+        # server and speeds up transfer; IFS=Internal Field Separator,
+        # not Integrated Forecast System
+        IFSBAK=$IFS
+        IFS=$'\n'
+        l=`echo "${!file_list[*]}"|sort -g` # ! extract keys from array and sort
+        IFS=$IFSBAK
+        for i in $l; do
             file=${file_list[$i]}
-	    rm -f $file
-	    log "starting download of $file"
-	    timeout 120s curl -s --netrc-file $WORKDIR_BASE/nwprun/.auth/dwd.cfg https://data.dwd.de/data/$DATE/out${TIME:0:2}/$file.bz2 | bunzip2 -c > $file
+            tmpfile=/tmp/$file.$$.bz2
+            rm -f $file $tmpfile
+            log "starting download of $file"
+	    # file is buffered on disk, bunzip2 possibly tends to
+	    # fail in pipe
+            tmpfile=/tmp/$file.$$.bz2
+            timeout 120s curl -s --netrc-file $WORKDIR_BASE/nwprun/.auth/dwd.cfg https://data.dwd.de/data/$DATE/out${TIME:0:2}/$file.bz2 > $tmpfile
+            if bunzip2 -c $tmpfile > $file; then
+                rm -f $tmpfile
+            else
+                rm -f $tmpfile $file
+                log "error in downloading or unpacking $file"
+		#retval=1 # for continuing
+                false # return and wait before retrying
+            fi
 
-	    if [ -s "$file" ]; then
+            if [ -s "$file" ]; then
                 # process $file
                 log "file $file successfully downloaded and unpacked"
                 putarki_configured_archive $PROCNAME ${file}
