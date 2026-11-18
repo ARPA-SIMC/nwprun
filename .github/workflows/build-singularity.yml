@@ -1,0 +1,85 @@
+name: Build and publish Singularity containers
+
+on:
+  push:
+    branches: [master]
+    paths:
+      - 'Singularity.*'      # il workflow parte solo se cambia uno di questi file
+  workflow_dispatch:         # avvio manuale: ricostruisce tutti i container
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  SINGULARITY_VERSION: 4.2.1   # verifica l'ultima release su github.com/sylabs/singularity/releases
+
+jobs:
+  changes:
+    runs-on: ubuntu-22.04
+    outputs:
+      matrix: ${{ steps.set.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Find changed definition files
+        id: set
+        run: |
+          BEFORE="${{ github.event.before }}"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] \
+             || [ -z "$BEFORE" ] \
+             || [ "$BEFORE" = "0000000000000000000000000000000000000000" ] \
+             || ! git cat-file -e "$BEFORE" 2>/dev/null; then
+            FILES=$(ls Singularity.* 2>/dev/null || true)
+          else
+            FILES=$(git diff --name-only "$BEFORE" "$GITHUB_SHA" -- ':(glob)Singularity.*')
+          fi
+          MATRIX=$(printf '%s\n' $FILES | jq -R . | jq -sc 'map(select(length>0))')
+          echo "matrix=$MATRIX" >> "$GITHUB_OUTPUT"
+          echo "File da costruire: $MATRIX"
+
+  build:
+    needs: changes
+    if: needs.changes.outputs.matrix != '[]'
+    runs-on: ubuntu-22.04
+    strategy:
+      fail-fast: false
+      matrix:
+        deffile: ${{ fromJSON(needs.changes.outputs.matrix) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install SingularityCE
+        run: |
+          wget -q https://github.com/sylabs/singularity/releases/download/v${SINGULARITY_VERSION}/singularity-ce_${SINGULARITY_VERSION}-jammy_amd64.deb
+          sudo apt-get update
+          sudo apt-get install -y ./singularity-ce_${SINGULARITY_VERSION}-jammy_amd64.deb
+
+      - name: Set variables
+        id: vars
+        run: |
+          NAME="${{ matrix.deffile }}"
+          NAME="${NAME#Singularity.}"
+          NAME="$(echo "$NAME" | tr '[:upper:]' '[:lower:]')"
+          REPO="$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')"
+          echo "name=$NAME" >> "$GITHUB_OUTPUT"
+          echo "image=ghcr.io/${REPO}/${NAME}" >> "$GITHUB_OUTPUT"
+          echo "date=$(date -u +%Y%m%d%H%M)" >> "$GITHUB_OUTPUT"
+
+      - name: Build SIF
+        run: |
+          sudo singularity build ${{ steps.vars.outputs.name }}.sif ${{ matrix.deffile }}
+          sudo chown $USER ${{ steps.vars.outputs.name }}.sif
+
+      - name: Login to GHCR
+        run: |
+          echo "${{ secrets.GITHUB_TOKEN }}" | \
+          singularity remote login --username "${{ github.actor }}" --password-stdin oras://ghcr.io
+
+      - name: Push
+        run: |
+          singularity push ${{ steps.vars.outputs.name }}.sif oras://${{ steps.vars.outputs.image }}:${{ steps.vars.outputs.date }}
+          singularity push ${{ steps.vars.outputs.name }}.sif oras://${{ steps.vars.outputs.image }}:latest
+
