@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: rockylinux:9
+From: rockylinux:8
 
 %runscript
     exec "$@"
@@ -8,8 +8,8 @@ From: rockylinux:9
     COMPOPT="--nodocs --setopt install_weak_deps=False"
     dnf install -y $COMPOPT epel-release
     dnf install -y 'dnf-command(config-manager)'
-#    dnf config-manager --set-enabled powertools
-#    dnf config-manager --set-enabled appstream
+    dnf config-manager --set-enabled powertools
+    dnf config-manager --set-enabled appstream
 
     dnf copr enable -y simc/stable
 # install dballe and bufr2netcdf from simc repository
